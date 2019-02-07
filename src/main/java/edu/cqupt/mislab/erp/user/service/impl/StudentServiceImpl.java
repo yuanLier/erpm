@@ -1,6 +1,7 @@
 package edu.cqupt.mislab.erp.user.service.impl;
 
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
+import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.user.dao.MajorInfoRepository;
 import edu.cqupt.mislab.erp.user.dao.UserAvatarRepository;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
@@ -45,7 +46,7 @@ public class StudentServiceImpl implements StudentService {
 
             UserStudentInfoBasicVo studentInfoBasicVo = new UserStudentInfoBasicVo();
 
-            BeanCopyUtil.copyPropertiesSimple(studentInfo,studentInfoBasicVo);
+            EntityVoUtil.copyFieldsFromStudentEntityToBasicVo(studentInfo,studentInfoBasicVo);
 
             return studentInfoBasicVo;
         }
@@ -101,9 +102,16 @@ public class StudentServiceImpl implements StudentService {
             //将需要更改的数据复制过去
             BeanCopyUtil.copyPropertiesWithNonNullSourceFields(updateDto,studentBasicInfo);
 
-            if(updateDto.getMajorInfo() != null){
+            //专业信息特殊处理
+            if(updateDto.getMajorInfoId() != null){
 
-                studentBasicInfo.setMajorInfo(getAgencyInfo(updateDto.getMajorInfo()));
+                studentBasicInfo.setMajorInfo(getAgencyInfo(updateDto.getMajorInfoId()));
+            }
+
+            //头像信息特殊处理
+            if(updateDto.getUserAvatarInfoId() != null){
+
+                studentBasicInfo.setUserAvatarInfo(getAvatarInfo(updateDto.getUserAvatarInfoId()));
             }
 
             //将数据同步到数据库
@@ -114,7 +122,7 @@ public class StudentServiceImpl implements StudentService {
                 UserStudentInfoBasicVo studentBasicInfoVo = new UserStudentInfoBasicVo();
 
                 //将更改后的数据转载入视图对象
-                BeanCopyUtil.copyPropertiesSimple(studentBasicInfo,studentBasicInfoVo);
+                EntityVoUtil.copyFieldsFromStudentEntityToBasicVo(studentBasicInfo,studentBasicInfoVo);
 
                 return studentBasicInfoVo;
             }
@@ -177,5 +185,17 @@ public class StudentServiceImpl implements StudentService {
     public MajorInfo getAgencyInfo(Long majorInfo){
 
         return majorInfoRepository.findOne(majorInfo);
+    }
+
+    @Override
+    public boolean checkAvatarExist(Long userAvatarInfo){
+
+        return getAgencyInfo(userAvatarInfo) != null;
+    }
+
+    @Override
+    public UserAvatarInfo getAvatarInfo(Long userAvatarInfo){
+
+        return avatarRepository.findOne(userAvatarInfo);
     }
 }

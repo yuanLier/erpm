@@ -14,8 +14,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-
 import static edu.cqupt.mislab.erp.commons.response.ResponseUtil.*;
 import static edu.cqupt.mislab.erp.commons.util.BeanCopyUtil.copyPropertiesSimple;
 
@@ -68,7 +66,7 @@ public class StudentTaskImpl implements StudentTask {
         //默认性别为男
         studentInfo.setGender(UserGender.Man);
         //设置专业信息
-        studentInfo.setMajorInfo(studentService.getAgencyInfo(registerDto.getMajorInfo()));
+        studentInfo.setMajorInfo(studentService.getAgencyInfo(registerDto.getMajorInfoId()));
 
         //存储并立即持久化到数据库
         studentInfo = studentRepository.saveAndFlush(studentInfo);

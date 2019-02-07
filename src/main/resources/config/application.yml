@@ -1,14 +1,16 @@
 # 服务器配置
 server:
   port: 8081
-
+spring:
+  profiles:
+    active: dev
 ---
 # 开发环境数据库可以自己单独配置
 spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true

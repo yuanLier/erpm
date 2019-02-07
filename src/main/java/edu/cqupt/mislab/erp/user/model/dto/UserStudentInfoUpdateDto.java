@@ -20,14 +20,11 @@ public class UserStudentInfoUpdateDto {
     @ApiModelProperty(value = "代理主键，必须要这个",required = true)
     private Long id;
 
-    @ApiModelProperty("真实姓名")
-    private String studentName;
-
     @ApiModelProperty("性别")
     private UserGender gender;
 
     @ApiModelProperty("学生的专业学院信息")
-    private Long majorInfo;
+    private Long majorInfoId;
 
     @ApiModelProperty("班级")
     private String studentClass;
@@ -41,5 +38,5 @@ public class UserStudentInfoUpdateDto {
     private String phone;
 
     @ApiModelProperty("头像")
-    private String userAvatarInfo;
+    private Long userAvatarInfoId;
 }

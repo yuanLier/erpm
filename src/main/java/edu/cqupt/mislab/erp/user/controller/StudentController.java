@@ -43,7 +43,7 @@ public class StudentController extends UserController<UserStudentInfoBasicVo>{
         }
 
         //校验专业信息是否错误
-        if(!studentService.checkAgencyExist(registerDto.getMajorInfo())){
+        if(!studentService.checkAgencyExist(registerDto.getMajorInfoId())){
 
             return toFailResponseVo(HttpStatus.BAD_REQUEST,"专业信息不存在");
         }
@@ -56,11 +56,19 @@ public class StudentController extends UserController<UserStudentInfoBasicVo>{
     @PostMapping("/basicInfo/update")
     public ResponseVo<UserStudentInfoBasicVo> updateStudentBasicInfo(@Valid @RequestBody UserStudentInfoUpdateDto updateDto,HttpSession httpSession){
 
-        if(updateDto.getMajorInfo() != null){
+        if(updateDto.getMajorInfoId() != null){
 
-            if(!studentService.checkAgencyExist(updateDto.getMajorInfo())){
+            if(!studentService.checkAgencyExist(updateDto.getMajorInfoId())){
 
                 return toFailResponseVo(HttpStatus.BAD_REQUEST,"专业信息不存在，更新失败");
+            }
+        }
+
+        if(updateDto.getUserAvatarInfoId() != null){
+
+            if(!studentService.checkAvatarExist(updateDto.getUserAvatarInfoId())){
+
+                return toFailResponseVo(HttpStatus.BAD_REQUEST,"头像信息不存在，更新失败");
             }
         }
 
@@ -71,7 +79,6 @@ public class StudentController extends UserController<UserStudentInfoBasicVo>{
             return toFailResponseVo(HttpStatus.NOT_FOUND,"该账户不存在或正在等待审核");
         }
 
-        //将数据缓存
         httpSession.setAttribute(UserConstant.USER_COMMON_INFO_SESSION_ATTR_NAME,studentBasicInfoVo);
 
         return toSuccessResponseVo(studentBasicInfoVo);
@@ -94,7 +101,7 @@ public class StudentController extends UserController<UserStudentInfoBasicVo>{
     @Override
     public boolean isTheAccountIsRight(String userAccount,UserStudentInfoBasicVo userBasicInfoVo){
 
-        return userAccount.equals(userBasicInfoVo.getStudentCount());
+        return userAccount.equals(userBasicInfoVo.getStudentAccount());
     }
 
     @Override

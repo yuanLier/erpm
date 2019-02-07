@@ -1,6 +1,7 @@
 package edu.cqupt.mislab.erp.user.model.vo;
 
 import edu.cqupt.mislab.erp.user.model.entity.MajorInfo;
+import edu.cqupt.mislab.erp.user.model.entity.UserAvatarInfo;
 import edu.cqupt.mislab.erp.user.model.entity.UserGender;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -17,7 +18,7 @@ public class UserStudentInfoBasicVo {
     private Long id;
 
     @ApiModelProperty("学号，作为系统账号")
-    private String studentCount;
+    private String studentAccount;
 
     @ApiModelProperty("真实姓名")
     private String studentName;
@@ -41,5 +42,5 @@ public class UserStudentInfoBasicVo {
     private Long teacherId;
 
     @ApiModelProperty("头像位置信息")
-    private String avatarLocation;
+    private UserAvatarInfo userAvatarInfo;
 }

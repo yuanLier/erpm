@@ -29,4 +29,8 @@ public interface StudentService {
     boolean checkAgencyExist(Long majorInfo);
 
     MajorInfo getAgencyInfo(Long majorInfo);
+
+    boolean checkAvatarExist(Long userAvatarInfo);
+
+    UserAvatarInfo getAvatarInfo(Long userAvatarInfo);
 }

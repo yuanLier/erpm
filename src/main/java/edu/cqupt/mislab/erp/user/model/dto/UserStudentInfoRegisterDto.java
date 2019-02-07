@@ -27,7 +27,7 @@ public class UserStudentInfoRegisterDto {
 
     @NotNull
     @ApiModelProperty("学生的专业学院信息")
-    private Long majorInfo;
+    private Long majorInfoId;
 
     @NotNull
     @ApiModelProperty("班级")
