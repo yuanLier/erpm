@@ -30,25 +30,25 @@ public class UserStudentInfo implements Serializable {
     @Enumerated(EnumType.STRING)
     private UserGender gender;//性别
 
-    @Basic(optional = false)
-    private String college;//学院
+    @OneToOne
+    @JoinColumn
+    private MajorInfo majorInfo;//专业信息
 
     @Basic(optional = false)
-    private String major;//专业
-
-    @Basic(optional = false)
-    private String studentClass;//班级
+    private String studentClass;//班级，教师班级
 
     private String email;//电子邮箱
 
     private String phone;//电话
 
-    private String userAvatarInfo;//头像位置信息
+    @OneToOne
+    @JoinColumn
+    private UserAvatarInfo userAvatarInfo;//头像位置信息
 
     @Basic(optional = false)
     private boolean accountEnable;//账户是否可用
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "id",unique = true,insertable = false,updatable = false)
+    @JoinColumn(updatable = false)
     private UserTeacherInfo userTeacherInfo;//教师信息
 }

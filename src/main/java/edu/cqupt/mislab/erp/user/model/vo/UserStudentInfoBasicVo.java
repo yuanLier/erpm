@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.user.model.vo;
 
+import edu.cqupt.mislab.erp.user.model.entity.MajorInfo;
 import edu.cqupt.mislab.erp.user.model.entity.UserGender;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,11 +25,8 @@ public class UserStudentInfoBasicVo {
     @ApiModelProperty("性别")
     private UserGender gender;
 
-    @ApiModelProperty("学院")
-    private String college;
-
-    @ApiModelProperty("专业")
-    private String major;
+    @ApiModelProperty("专业信息，包含专业和学员")
+    private MajorInfo majorInfo;
 
     @ApiModelProperty("班级")
     private String studentClass;

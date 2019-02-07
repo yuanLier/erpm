@@ -18,5 +18,5 @@ public class UserAvatarInfo implements Serializable {
     private Long id;
 
     @Column(unique = true,nullable = false,updatable = false)
-    private String avatarLocation;
+    private String avatarLocation;//头像位置信息
 }

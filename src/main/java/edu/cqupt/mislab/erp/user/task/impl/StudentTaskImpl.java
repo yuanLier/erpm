@@ -1,7 +1,6 @@
 package edu.cqupt.mislab.erp.user.task.impl;
 
 import edu.cqupt.mislab.erp.commons.response.ResponseVo;
-import edu.cqupt.mislab.erp.user.dao.CollegeInfoRepository;
 import edu.cqupt.mislab.erp.user.dao.MajorInfoRepository;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import edu.cqupt.mislab.erp.user.model.dto.UserStudentInfoRegisterDto;
@@ -28,9 +27,6 @@ public class StudentTaskImpl implements StudentTask {
 
     @Autowired
     private StudentService studentService;
-
-    @Autowired
-    private CollegeInfoRepository collegeInfoRepository;
 
     @Autowired
     private MajorInfoRepository majorInfoRepository;
@@ -71,6 +67,8 @@ public class StudentTaskImpl implements StudentTask {
         studentInfo.setAccountEnable(false);
         //默认性别为男
         studentInfo.setGender(UserGender.Man);
+        //设置专业信息
+        studentInfo.setMajorInfo(studentService.getAgencyInfo(registerDto.getMajorInfo()));
 
         //存储并立即持久化到数据库
         studentInfo = studentRepository.saveAndFlush(studentInfo);
@@ -84,31 +82,4 @@ public class StudentTaskImpl implements StudentTask {
         return toFailResponseVo(HttpStatus.INTERNAL_SERVER_ERROR,"注册失败");
     }
 
-    @Override
-    public Map<String,List<String>> getAgencyInfos(){
-
-        Map<String,List<String>> resultMap = new HashMap<>();
-
-        final List<CollegeInfo> collegeInfos = collegeInfoRepository.findAll();
-
-        if(collegeInfos != null){
-
-            for(CollegeInfo collegeInfo : collegeInfos){
-
-                resultMap.put(collegeInfo.getCollege(),new ArrayList<>());
-            }
-
-            final List<MajorInfo> majorInfos = majorInfoRepository.findAll();
-
-            if(majorInfos != null){
-
-                for(MajorInfo majorInfo : majorInfos){
-
-                    resultMap.get(majorInfo.getCollege().getCollege()).add(majorInfo.getMajor());
-                }
-            }
-        }
-
-        return resultMap;
-    }
 }

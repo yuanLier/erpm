@@ -26,14 +26,8 @@ public class UserStudentInfoRegisterDto {
     private String studentName;
 
     @NotNull
-    @Pattern(regexp = "^[\\u4e00-\\u9fa5]{0,}$",message = "汉字")
-    @ApiModelProperty("学院")
-    private String college;
-
-    @NotNull
-    @Pattern(regexp = "^[\\u4e00-\\u9fa5]{0,}$",message = "汉字")
-    @ApiModelProperty("专业")
-    private String major;
+    @ApiModelProperty("学生的专业学院信息")
+    private Long majorInfo;
 
     @NotNull
     @ApiModelProperty("班级")

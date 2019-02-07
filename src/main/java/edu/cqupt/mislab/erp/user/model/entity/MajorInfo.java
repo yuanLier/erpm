@@ -16,10 +16,10 @@ public class MajorInfo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER,optional = false)
-    @JoinColumn(referencedColumnName = "id",unique = true,insertable = false,updatable = false)
-    private CollegeInfo college;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private CollegeInfo college;//学院信息
 
     @Column(unique = true,nullable = false)
-    private String major;
+    private String major;//专业名称
 }

@@ -26,11 +26,8 @@ public class UserStudentInfoUpdateDto {
     @ApiModelProperty("性别")
     private UserGender gender;
 
-    @ApiModelProperty("学院")
-    private String college;
-
-    @ApiModelProperty("专业")
-    private String major;
+    @ApiModelProperty("学生的专业学院信息")
+    private Long majorInfo;
 
     @ApiModelProperty("班级")
     private String studentClass;

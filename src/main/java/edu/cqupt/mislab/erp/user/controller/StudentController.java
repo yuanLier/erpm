@@ -4,6 +4,7 @@ import edu.cqupt.mislab.erp.commons.response.ResponseVo;
 import edu.cqupt.mislab.erp.user.constant.UserConstant;
 import edu.cqupt.mislab.erp.user.model.dto.UserStudentInfoRegisterDto;
 import edu.cqupt.mislab.erp.user.model.dto.UserStudentInfoUpdateDto;
+import edu.cqupt.mislab.erp.user.model.entity.MajorInfo;
 import edu.cqupt.mislab.erp.user.model.vo.UserStudentInfoBasicVo;
 import edu.cqupt.mislab.erp.user.service.StudentService;
 import edu.cqupt.mislab.erp.user.task.StudentTask;
@@ -17,7 +18,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import java.util.List;
-import java.util.Map;
 
 import static edu.cqupt.mislab.erp.commons.response.ResponseUtil.toFailResponseVo;
 import static edu.cqupt.mislab.erp.commons.response.ResponseUtil.toSuccessResponseVo;
@@ -42,12 +42,27 @@ public class StudentController extends UserController<UserStudentInfoBasicVo>{
             return toFailResponseVo(HttpStatus.BAD_REQUEST,"重复密码错误");
         }
 
+        //校验专业信息是否错误
+        if(!studentService.checkAgencyExist(registerDto.getMajorInfo())){
+
+            return toFailResponseVo(HttpStatus.BAD_REQUEST,"专业信息不存在");
+        }
+
+        //进行注册
         return studentTask.userStudentRegister(registerDto);
     }
 
     @ApiOperation(value = "修改学生账户的基本信息",notes = "需要修改那个信息就传那个信息，如果要覆盖就传空字符串而不是null，只有处于启用状态的账号才可以被修改")
     @PostMapping("/basicInfo/update")
     public ResponseVo<UserStudentInfoBasicVo> updateStudentBasicInfo(@Valid @RequestBody UserStudentInfoUpdateDto updateDto,HttpSession httpSession){
+
+        if(updateDto.getMajorInfo() != null){
+
+            if(!studentService.checkAgencyExist(updateDto.getMajorInfo())){
+
+                return toFailResponseVo(HttpStatus.BAD_REQUEST,"专业信息不存在，更新失败");
+            }
+        }
 
         UserStudentInfoBasicVo studentBasicInfoVo = studentService.updateStudentBasicInfo(updateDto);
 
@@ -71,9 +86,9 @@ public class StudentController extends UserController<UserStudentInfoBasicVo>{
 
     @ApiOperation("获取学院专业信息")
     @GetMapping("/agency/get")
-    public ResponseVo<Map<String,List<String>>> getAgencyInfos(){
+    public ResponseVo<List<MajorInfo>> getAgencyInfos(){
 
-        return toSuccessResponseVo(studentTask.getAgencyInfos());
+        return toSuccessResponseVo(studentService.getAgencyInfos());
     }
 
     @Override

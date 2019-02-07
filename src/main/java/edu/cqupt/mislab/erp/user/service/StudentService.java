@@ -2,6 +2,7 @@ package edu.cqupt.mislab.erp.user.service;
 
 import edu.cqupt.mislab.erp.user.model.dto.UserStudentInfoSearchDto;
 import edu.cqupt.mislab.erp.user.model.dto.UserStudentInfoUpdateDto;
+import edu.cqupt.mislab.erp.user.model.entity.MajorInfo;
 import edu.cqupt.mislab.erp.user.model.entity.UserAvatarInfo;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import edu.cqupt.mislab.erp.user.model.vo.UserStudentInfoBasicVo;
@@ -22,4 +23,10 @@ public interface StudentService {
     Example<UserStudentInfo> getUserStudentBasicInfoExampleBySearchDto(UserStudentInfoSearchDto searchDto);
 
     List<UserAvatarInfo> getUserAvatarInfos();
+
+    List<MajorInfo> getAgencyInfos();
+
+    boolean checkAgencyExist(Long majorInfo);
+
+    MajorInfo getAgencyInfo(Long majorInfo);
 }

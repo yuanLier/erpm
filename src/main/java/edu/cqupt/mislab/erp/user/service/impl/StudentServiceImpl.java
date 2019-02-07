@@ -1,14 +1,13 @@
 package edu.cqupt.mislab.erp.user.service.impl;
 
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
+import edu.cqupt.mislab.erp.user.dao.MajorInfoRepository;
 import edu.cqupt.mislab.erp.user.dao.UserAvatarRepository;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import edu.cqupt.mislab.erp.user.model.dto.UserStudentInfoSearchDto;
 import edu.cqupt.mislab.erp.user.model.dto.UserStudentInfoUpdateDto;
-import edu.cqupt.mislab.erp.user.model.entity.UserAvatarInfo;
-import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
+import edu.cqupt.mislab.erp.user.model.entity.*;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo.UserStudentInfoBuilder;
-import edu.cqupt.mislab.erp.user.model.entity.UserTeacherInfo;
 import edu.cqupt.mislab.erp.user.model.vo.UserStudentInfoBasicVo;
 import edu.cqupt.mislab.erp.user.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +25,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private UserStudentRepository studentRepository;
+
+    @Autowired
+    private MajorInfoRepository majorInfoRepository;
 
     @Override
     public UserStudentInfoBasicVo getStudentBasicInfoByAccount(String userAccount){
@@ -99,6 +101,11 @@ public class StudentServiceImpl implements StudentService {
             //将需要更改的数据复制过去
             BeanCopyUtil.copyPropertiesWithNonNullSourceFields(updateDto,studentBasicInfo);
 
+            if(updateDto.getMajorInfo() != null){
+
+                studentBasicInfo.setMajorInfo(getAgencyInfo(updateDto.getMajorInfo()));
+            }
+
             //将数据同步到数据库
             studentBasicInfo = studentRepository.saveAndFlush(studentBasicInfo);
 
@@ -151,5 +158,24 @@ public class StudentServiceImpl implements StudentService {
     public List<UserAvatarInfo> getUserAvatarInfos(){
 
         return avatarRepository.findAll();
+    }
+
+
+    @Override
+    public List<MajorInfo> getAgencyInfos(){
+
+        return majorInfoRepository.findAll();
+    }
+
+    @Override
+    public boolean checkAgencyExist(Long majorInfo){
+
+        return getAgencyInfo(majorInfo) != null;
+    }
+
+    @Override
+    public MajorInfo getAgencyInfo(Long majorInfo){
+
+        return majorInfoRepository.findOne(majorInfo);
     }
 }
