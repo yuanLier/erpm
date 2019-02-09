@@ -28,7 +28,21 @@ public class SwaggerConfig {
                 .build();
     }
 
-    private ApiInfo apiInfo(String description) {
+    @Bean//比赛管理API文档
+    public Docket gameManageApi(){
+
+        String description = "比赛管理的API文档，主要记录的是比赛浏览、比赛创建、历史信息浏览等比赛管理服务";
+
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo(description))
+                .groupName("gama_manage")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("edu.cqupt.mislab.erp.game.manage.controller"))
+                .paths(PathSelectors.any())
+                .build();
+    }
+
+    private ApiInfo apiInfo(final String description) {
         return new ApiInfoBuilder()
                 .title("ERP电子沙盘模拟系统在线API文档")
                 .description(description)

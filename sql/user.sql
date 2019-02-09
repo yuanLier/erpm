@@ -7,3 +7,8 @@ insert into major_info (id, major, college_id) VALUES
 
 # 头像信息
 insert into user_avatar_info (avatar_location) values ('A001.jpg'),('A002.jpg');
+
+# 初始化用户
+insert into user_teacher_info (id) values (1);
+insert into user_student_info (account_enable, email, gender, phone, student_account, student_class, student_name, student_password, major_info_id, user_avatar_info_id, user_teacher_info_id) VALUES
+(1,'75570844@qq.com','Man','15032545895','S2016211050','03011603','管理员','M123456',2,1,1);

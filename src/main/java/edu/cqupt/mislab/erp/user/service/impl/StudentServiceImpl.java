@@ -46,7 +46,7 @@ public class StudentServiceImpl implements StudentService {
 
             UserStudentInfoBasicVo studentInfoBasicVo = new UserStudentInfoBasicVo();
 
-            EntityVoUtil.copyFieldsFromStudentEntityToBasicVo(studentInfo,studentInfoBasicVo);
+            EntityVoUtil.copyFieldsFromEntityToVo(studentInfo,studentInfoBasicVo);
 
             return studentInfoBasicVo;
         }
@@ -122,7 +122,7 @@ public class StudentServiceImpl implements StudentService {
                 UserStudentInfoBasicVo studentBasicInfoVo = new UserStudentInfoBasicVo();
 
                 //将更改后的数据转载入视图对象
-                EntityVoUtil.copyFieldsFromStudentEntityToBasicVo(studentBasicInfo,studentBasicInfoVo);
+                EntityVoUtil.copyFieldsFromEntityToVo(studentBasicInfo,studentBasicInfoVo);
 
                 return studentBasicInfoVo;
             }
@@ -197,5 +197,24 @@ public class StudentServiceImpl implements StudentService {
     public UserAvatarInfo getAvatarInfo(Long userAvatarInfo){
 
         return avatarRepository.findOne(userAvatarInfo);
+    }
+
+    @Override
+    public UserStudentInfo getUserStudentBasicInfoById(Long studentId){
+
+        return studentRepository.findOne(studentId);
+    }
+
+    @Override
+    public List<UserStudentInfo> getStudentsByTeacherId(Long teacherId){
+
+        UserStudentInfoSearchDto studentInfoSearchDto = UserStudentInfoSearchDto.builder()
+                .accountEnable(true)
+                .teacherId(teacherId)
+                .build();
+
+        final Example<UserStudentInfo> example = getUserStudentBasicInfoExampleBySearchDto(studentInfoSearchDto);
+
+        return studentRepository.findAll(example);
     }
 }

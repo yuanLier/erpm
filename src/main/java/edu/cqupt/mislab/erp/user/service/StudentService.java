@@ -33,4 +33,8 @@ public interface StudentService {
     boolean checkAvatarExist(Long userAvatarInfo);
 
     UserAvatarInfo getAvatarInfo(Long userAvatarInfo);
+
+    UserStudentInfo getUserStudentBasicInfoById(Long studentId);
+
+    List<UserStudentInfo> getStudentsByTeacherId(Long teacherId);
 }

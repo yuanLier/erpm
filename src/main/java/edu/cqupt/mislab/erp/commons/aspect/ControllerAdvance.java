@@ -19,6 +19,8 @@ public class ControllerAdvance {
     @ExceptionHandler(Exception.class)
     public ResponseVo<String> totalExceptionHandler(Exception exception){
 
+        exception.printStackTrace();
+
         //参数格式错误异常默认处理方法
         if(exception instanceof MethodArgumentNotValidException){
 
