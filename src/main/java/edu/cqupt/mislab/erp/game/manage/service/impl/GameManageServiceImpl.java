@@ -19,12 +19,9 @@ import edu.cqupt.mislab.erp.user.model.entity.UserTeacherInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
 import java.util.*;
 
 import static edu.cqupt.mislab.erp.commons.response.ResponseUtil.toFailResponseVo;
@@ -41,9 +38,23 @@ public class GameManageServiceImpl implements GameManageService {
     private UserStudentRepository userStudentRepository;
 
     @Override
-    public void deleteOneGame(Long gameId){
+    public ResponseVo<String> deleteOneGame(Long gameId,Long userId){
 
-        gameBasicInfoRepository.delete(gameId);
+        final GameBasicInfo gameBasicInfo = gameBasicInfoRepository.findOne(gameId);
+
+        if(gameBasicInfo.getGameCreator().getId().equals(userId)){
+
+            if(gameBasicInfo.getGameStatus() == GameStatus.CREATE){
+
+                gameBasicInfoRepository.delete(gameId);
+
+                return toSuccessResponseVo("删除比赛成功");
+            }
+
+            return toFailResponseVo(HttpStatus.BAD_REQUEST,"只能删除处于创建状态的比赛");
+        }
+
+        return toFailResponseVo(HttpStatus.BAD_REQUEST,"只有比赛创建者可以删除比赛");
     }
 
     @Override
@@ -71,6 +82,11 @@ public class GameManageServiceImpl implements GameManageService {
         if(searchDto.getGameId() != null){
 
             infoBuilder.id(searchDto.getGameId());
+        }
+
+        if(searchDto.getGameName() != null){
+
+            infoBuilder.gameName(searchDto.getGameName());
         }
 
         if(searchDto.getGameStatus() != null){
@@ -103,11 +119,6 @@ public class GameManageServiceImpl implements GameManageService {
         //检查这个创建者是否真的存在，不存在是不行的
         UserStudentInfo userStudentInfo = userStudentRepository.findOne(createDto.getCreatorId());
 
-        if(userStudentInfo == null){
-
-            return toFailResponseVo(HttpStatus.BAD_REQUEST,"创建者不存在！");
-        }
-
         //获取最新版本的比赛初始化信息
         GameInitInfo gameInitInfo = gameInitInfoRepository.findTop1ByIdIsNotNullOrderByIdDesc();
 
@@ -136,17 +147,11 @@ public class GameManageServiceImpl implements GameManageService {
         //持久化这个比赛信息
         gameBasicInfo = gameBasicInfoRepository.saveAndFlush(gameBasicInfo);
 
-        //判别是否持久化成功
-        if(gameBasicInfo.getId() != null){
+        GameDetailInfoVo gameDetailInfoVo = new GameDetailInfoVo();
 
-            GameDetailInfoVo gameDetailInfoVo = new GameDetailInfoVo();
+        EntityVoUtil.copyFieldsFromEntityToVo(gameBasicInfo,gameDetailInfoVo);
 
-            EntityVoUtil.copyFieldsFromEntityToVo(gameBasicInfo,gameDetailInfoVo);
-
-            return toSuccessResponseVo(gameDetailInfoVo);
-        }
-
-        return toFailResponseVo(HttpStatus.INTERNAL_SERVER_ERROR,"比赛创建失败！");
+        return toSuccessResponseVo(gameDetailInfoVo);
     }
 
     @Override

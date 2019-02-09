@@ -61,7 +61,7 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
         EnterpriseMemberInfo enterpriseMemberInfo = EnterpriseMemberInfo.builder()
                 .enterprise(enterpriseBasicInfo)
                 .studentInfo(userStudentInfo)
-                .gameEnterpriseRole("企业成员")
+                .gameEnterpriseRole("成员")
                 .build();
 
         final EnterpriseMemberInfo info = enterpriseMemberInfoRepository.saveAndFlush(enterpriseMemberInfo);
@@ -86,7 +86,7 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
 
         enterpriseMemberInfoRepository.delete(memberInfo.getId());
 
-        return toSuccessResponseVo("推出企业成功");
+        return toSuccessResponseVo("退出企业成功");
     }
 
     @Override

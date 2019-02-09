@@ -41,7 +41,7 @@ public class UserStudentInfo implements Serializable {
 
     private String phone;//电话
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn
     private UserAvatarInfo userAvatarInfo;//头像位置信息
 

@@ -18,6 +18,7 @@ public abstract class CommonUtil {
      * @param name ：需要检验的字符串
      * @return ：是否符合命名规范
      */
+    @Deprecated
     public static boolean checkNameFormat(String name){
 
         //不能为null

@@ -87,6 +87,16 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
             return toFailResponseVo(HttpStatus.INTERNAL_SERVER_ERROR,"企业创建失败，未知错误！");
         }
 
+        //创建企业的同时需要将企业创建者
+        EnterpriseMemberInfo enterpriseMemberInfo = EnterpriseMemberInfo.builder()
+                .gameEnterpriseRole("创建者")
+                .studentInfo(userStudentInfo)
+                .enterprise(enterpriseBasicInfo)
+                .build();
+
+        //企业成员增加一个
+        enterpriseMemberInfoRepository.save(enterpriseMemberInfo);
+
         EnterpriseDetailInfoVo enterpriseDetailInfoVo = new EnterpriseDetailInfoVo();
 
         EntityVoUtil.copyFieldsFromEntityToVo(enterpriseBasicInfo,enterpriseDetailInfoVo);

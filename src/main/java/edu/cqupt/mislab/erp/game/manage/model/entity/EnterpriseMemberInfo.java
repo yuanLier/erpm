@@ -24,7 +24,7 @@ public class EnterpriseMemberInfo implements Serializable {
     private Long id;//代理主键
 
     @ManyToOne(optional = false,fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false,updatable = false,insertable = false)
+    @JoinColumn(nullable = false,updatable = false)
     private EnterpriseBasicInfo enterprise;//哪一个企业
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)

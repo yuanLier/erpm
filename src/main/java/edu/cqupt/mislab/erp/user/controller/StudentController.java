@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -23,6 +24,7 @@ import static edu.cqupt.mislab.erp.commons.response.ResponseUtil.toFailResponseV
 import static edu.cqupt.mislab.erp.commons.response.ResponseUtil.toSuccessResponseVo;
 
 @Api
+@Validated
 @RestController
 @RequestMapping("/user/student")
 public class StudentController extends UserController<UserStudentInfoBasicVo>{
@@ -42,12 +44,6 @@ public class StudentController extends UserController<UserStudentInfoBasicVo>{
             return toFailResponseVo(HttpStatus.BAD_REQUEST,"重复密码错误");
         }
 
-        //校验专业信息是否错误
-        if(!studentService.checkAgencyExist(registerDto.getMajorInfoId())){
-
-            return toFailResponseVo(HttpStatus.BAD_REQUEST,"专业信息不存在");
-        }
-
         //进行注册
         return studentTask.userStudentRegister(registerDto);
     }
@@ -55,22 +51,6 @@ public class StudentController extends UserController<UserStudentInfoBasicVo>{
     @ApiOperation(value = "修改学生账户的基本信息",notes = "需要修改那个信息就传那个信息，如果要覆盖就传空字符串而不是null，只有处于启用状态的账号才可以被修改")
     @PostMapping("/basicInfo/update")
     public ResponseVo<UserStudentInfoBasicVo> updateStudentBasicInfo(@Valid @RequestBody UserStudentInfoUpdateDto updateDto,HttpSession httpSession){
-
-        if(updateDto.getMajorInfoId() != null){
-
-            if(!studentService.checkAgencyExist(updateDto.getMajorInfoId())){
-
-                return toFailResponseVo(HttpStatus.BAD_REQUEST,"专业信息不存在，更新失败");
-            }
-        }
-
-        if(updateDto.getUserAvatarInfoId() != null){
-
-            if(!studentService.checkAvatarExist(updateDto.getUserAvatarInfoId())){
-
-                return toFailResponseVo(HttpStatus.BAD_REQUEST,"头像信息不存在，更新失败");
-            }
-        }
 
         UserStudentInfoBasicVo studentBasicInfoVo = studentService.updateStudentBasicInfo(updateDto);
 

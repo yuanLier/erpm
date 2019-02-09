@@ -97,38 +97,30 @@ public class StudentServiceImpl implements StudentService {
 
         UserStudentInfo studentBasicInfo = studentRepository.findOne(updateDto.getId());
 
-        if(studentBasicInfo != null){
+        //将需要更改的数据复制过去
+        BeanCopyUtil.copyPropertiesWithNonNullSourceFields(updateDto,studentBasicInfo);
 
-            //将需要更改的数据复制过去
-            BeanCopyUtil.copyPropertiesWithNonNullSourceFields(updateDto,studentBasicInfo);
+        //专业信息特殊处理
+        if(updateDto.getMajorInfoId() != null){
 
-            //专业信息特殊处理
-            if(updateDto.getMajorInfoId() != null){
-
-                studentBasicInfo.setMajorInfo(getAgencyInfo(updateDto.getMajorInfoId()));
-            }
-
-            //头像信息特殊处理
-            if(updateDto.getUserAvatarInfoId() != null){
-
-                studentBasicInfo.setUserAvatarInfo(getAvatarInfo(updateDto.getUserAvatarInfoId()));
-            }
-
-            //将数据同步到数据库
-            studentBasicInfo = studentRepository.saveAndFlush(studentBasicInfo);
-
-            if(studentBasicInfo != null){
-
-                UserStudentInfoBasicVo studentBasicInfoVo = new UserStudentInfoBasicVo();
-
-                //将更改后的数据转载入视图对象
-                EntityVoUtil.copyFieldsFromEntityToVo(studentBasicInfo,studentBasicInfoVo);
-
-                return studentBasicInfoVo;
-            }
+            studentBasicInfo.setMajorInfo(getAgencyInfo(updateDto.getMajorInfoId()));
         }
 
-        return null;
+        //头像信息特殊处理
+        if(updateDto.getUserAvatarInfoId() != null){
+
+            studentBasicInfo.setUserAvatarInfo(getAvatarInfo(updateDto.getUserAvatarInfoId()));
+        }
+
+        //将数据同步到数据库
+        studentBasicInfo = studentRepository.saveAndFlush(studentBasicInfo);
+
+        UserStudentInfoBasicVo studentBasicInfoVo = new UserStudentInfoBasicVo();
+
+        //将更改后的数据转载入视图对象
+        EntityVoUtil.copyFieldsFromEntityToVo(studentBasicInfo,studentBasicInfoVo);
+
+        return studentBasicInfoVo;
     }
 
     @Override
@@ -173,12 +165,6 @@ public class StudentServiceImpl implements StudentService {
     public List<MajorInfo> getAgencyInfos(){
 
         return majorInfoRepository.findAll();
-    }
-
-    @Override
-    public boolean checkAgencyExist(Long majorInfo){
-
-        return getAgencyInfo(majorInfo) != null;
     }
 
     @Override

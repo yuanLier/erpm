@@ -2,12 +2,14 @@ package edu.cqupt.mislab.erp.user.controller;
 
 import com.google.code.kaptcha.Producer;
 import edu.cqupt.mislab.erp.commons.response.ResponseVo;
+import edu.cqupt.mislab.erp.commons.validators.annotations.NameFormat;
 import edu.cqupt.mislab.erp.user.constant.UserConstant;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,58 +18,58 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import static edu.cqupt.mislab.erp.commons.response.ResponseUtil.*;
 import static edu.cqupt.mislab.erp.commons.util.CommonUtil.checkNameFormat;
 
-
+/**
+ * 用于抽取用户的公共模板方法
+ * @param <V>：该用户的基本VO
+ */
+@Validated
 public abstract class UserController<V> {
 
     @ApiOperation(value = "通过用户账户获取用户的基本信息",notes = "该账户必须处于启用状态才行，也就是说正在等待审核和未注册的账户将不行")
     @ApiImplicitParam(name = "userAccount",value = "用户账号",paramType = "query",required = true)
     @GetMapping("/basicInfo/get")
-    public ResponseVo<V> getStudentBasicInfo(@RequestParam String userAccount,HttpSession httpSession){
+    public ResponseVo<V> getStudentBasicInfo(
+            @NameFormat @RequestParam String userAccount
+            ,HttpSession httpSession){
 
-        if(checkNameFormat(userAccount)){
+        //试图从Session里面获取缓存数据
+        V userBasicInfoVo = (V) httpSession.getAttribute(UserConstant.USER_COMMON_INFO_SESSION_ATTR_NAME);
 
-            //试图从Session里面获取缓存数据
-            V userBasicInfoVo = (V) httpSession.getAttribute(UserConstant.USER_COMMON_INFO_SESSION_ATTR_NAME);
+        //缓存击中
+        if(userBasicInfoVo != null){
 
-            //缓存击中
-            if(userBasicInfoVo != null){
-
-                //判断缓存中的数据是否是需要的数据
-                if(isTheAccountIsRight(userAccount,userBasicInfoVo)){
-
-                    return toSuccessResponseVo(userBasicInfoVo);
-                }else {
-
-                    //清空错误的缓存
-                    httpSession.removeAttribute(UserConstant.USER_COMMON_INFO_SESSION_ATTR_NAME);
-                }
-            }
-
-            //缓存未击中，试图去数据库里面查询数据
-            userBasicInfoVo = getUserBasicInfoVoFromDatabase(userAccount);
-
-            //数据库里面有数据
-            if(userBasicInfoVo != null){
-
-                //将数据缓存在session里面
-                httpSession.setAttribute(UserConstant.USER_COMMON_INFO_SESSION_ATTR_NAME,userBasicInfoVo);
+            //判断缓存中的数据是否是需要的数据
+            if(isTheAccountIsRight(userAccount,userBasicInfoVo)){
 
                 return toSuccessResponseVo(userBasicInfoVo);
             }else {
 
-                //账户不存在
-                return toFailResponseVo(HttpStatus.NOT_FOUND,"该账户不存在或待审核");
+                //清空错误的缓存
+                httpSession.removeAttribute(UserConstant.USER_COMMON_INFO_SESSION_ATTR_NAME);
             }
+        }
 
+        //缓存未击中，试图去数据库里面查询数据
+        userBasicInfoVo = getUserBasicInfoVoFromDatabase(userAccount);
+
+        //数据库里面有数据
+        if(userBasicInfoVo != null){
+
+            //将数据缓存在session里面
+            httpSession.setAttribute(UserConstant.USER_COMMON_INFO_SESSION_ATTR_NAME,userBasicInfoVo);
+
+            return toSuccessResponseVo(userBasicInfoVo);
         }else {
 
-            return toFailResponseVo(HttpStatus.BAD_REQUEST,"账户格式有问题，请检查账户的格式是否正确");
+            //账户不存在
+            return toFailResponseVo(HttpStatus.NOT_FOUND,"该账户不存在或待审核");
         }
     }
 
@@ -94,68 +96,65 @@ public abstract class UserController<V> {
             @ApiImplicitParam(name = "verificationCode",value = "验证码，如果需要的话",paramType = "query")
     })
     @PostMapping("/login")
-    public ResponseVo<Integer> userLogin(@RequestParam String userAccount,@RequestParam String userPassword,@RequestParam(required = false) String verificationCode,HttpSession httpSession){
+    public ResponseVo<Integer> userLogin(
+            @NameFormat @RequestParam String userAccount
+            ,@NameFormat @RequestParam String userPassword,
+            @RequestParam(required = false) String verificationCode,HttpSession httpSession){
 
-        if(checkNameFormat(userAccount) && checkNameFormat(userPassword)){
+        //移除登录状态，也就是说如果在登录状态进行登录却失败了将被登出
+        httpSession.removeAttribute(UserConstant.USER_LOGIN_SUCCESS_SESSION_ATTR_TOKEN_NAME);
 
-            //移除登录状态，也就是说如果在登录状态进行登录却失败了将被登出
-            httpSession.removeAttribute(UserConstant.USER_LOGIN_SUCCESS_SESSION_ATTR_TOKEN_NAME);
+        //查看当前是第几次进行登录
+        Integer warnTimes = (Integer) httpSession.getAttribute(UserConstant.USER_LOGIN_WARN_TIMES_SESSION_ATTR_NAME);
 
-            //查看当前是第几次进行登录
-            Integer warnTimes = (Integer) httpSession.getAttribute(UserConstant.USER_LOGIN_WARN_TIMES_SESSION_ATTR_NAME);
-
-            if(warnTimes == null){
-                //第一次登录，初始化
-                httpSession.setAttribute(UserConstant.USER_LOGIN_WARN_TIMES_SESSION_ATTR_NAME,0);
-            }else {
-
-                //判断是否需要验证码
-                if(warnTimes >= UserConstant.USER_MAX_WARN_TIMES_WITHOUT_VERIFICATION_CODE){
-
-                    //进行验证码校验，获取会话里面的验证码
-                    final String sessionVerificationCode = (String) httpSession.getAttribute(UserConstant.USER_LOGIN_VERIFICATION_CODE_ATTR_NAME);
-
-                    if(sessionVerificationCode == null){
-
-                        return toFailResponseVo(HttpStatus.BAD_REQUEST,"验证码没有正确被前端加载，试着刷新一下再试");
-                    }
-
-                    //判断验证码是否正确
-                    if(!sessionVerificationCode.equalsIgnoreCase(verificationCode)){
-
-                        return toFailResponseVo(HttpStatus.BAD_REQUEST,"验证码错误");
-                    }
-                }
-            }
-
-            //验证码验证正确或者还不需要进行验证
-
-            boolean right = checkUserAccountAndPassword(userAccount,userPassword);
-
-            //如果校验成功
-            if(right){
-
-                //设置登陆成功标志位
-                httpSession.setAttribute(UserConstant.USER_LOGIN_SUCCESS_SESSION_ATTR_TOKEN_NAME,true);
-
-                //清空登录失败的记录
-                httpSession.removeAttribute(UserConstant.USER_LOGIN_WARN_TIMES_SESSION_ATTR_NAME);
-
-                return toSuccessResponseVoWithNoData();
-            }else {
-
-                //重新获取记录错误登陆的标志位
-                warnTimes = (Integer) httpSession.getAttribute(UserConstant.USER_LOGIN_WARN_TIMES_SESSION_ATTR_NAME);
-
-                //错误次数增加1
-                httpSession.setAttribute(UserConstant.USER_LOGIN_WARN_TIMES_SESSION_ATTR_NAME,warnTimes + 1);
-
-                //返回已经错误的次数
-                return toResponseVo(HttpStatus.UNAUTHORIZED,"账户或密码错误，或者正在等待审核",warnTimes + 1);
-            }
+        if(warnTimes == null){
+            //第一次登录，初始化
+            httpSession.setAttribute(UserConstant.USER_LOGIN_WARN_TIMES_SESSION_ATTR_NAME,0);
         }else {
 
-            return toFailResponseVo(HttpStatus.BAD_REQUEST,"账户或密码格式有问题，请检查后重试");
+            //判断是否需要验证码
+            if(warnTimes >= UserConstant.USER_MAX_WARN_TIMES_WITHOUT_VERIFICATION_CODE){
+
+                //进行验证码校验，获取会话里面的验证码
+                final String sessionVerificationCode = (String) httpSession.getAttribute(UserConstant.USER_LOGIN_VERIFICATION_CODE_ATTR_NAME);
+
+                if(sessionVerificationCode == null){
+
+                    return toFailResponseVo(HttpStatus.BAD_REQUEST,"验证码没有正确被前端加载，试着刷新一下再试");
+                }
+
+                //判断验证码是否正确
+                if(!sessionVerificationCode.equalsIgnoreCase(verificationCode)){
+
+                    return toFailResponseVo(HttpStatus.BAD_REQUEST,"验证码错误");
+                }
+            }
+        }
+
+        //验证码验证正确或者还不需要进行验证
+
+        boolean right = checkUserAccountAndPassword(userAccount,userPassword);
+
+        //如果校验成功
+        if(right){
+
+            //设置登陆成功标志位
+            httpSession.setAttribute(UserConstant.USER_LOGIN_SUCCESS_SESSION_ATTR_TOKEN_NAME,true);
+
+            //清空登录失败的记录
+            httpSession.removeAttribute(UserConstant.USER_LOGIN_WARN_TIMES_SESSION_ATTR_NAME);
+
+            return toSuccessResponseVoWithNoData();
+        }else {
+
+            //重新获取记录错误登陆的标志位
+            warnTimes = (Integer) httpSession.getAttribute(UserConstant.USER_LOGIN_WARN_TIMES_SESSION_ATTR_NAME);
+
+            //错误次数增加1
+            httpSession.setAttribute(UserConstant.USER_LOGIN_WARN_TIMES_SESSION_ATTR_NAME,warnTimes + 1);
+
+            //返回已经错误的次数
+            return toResponseVo(HttpStatus.UNAUTHORIZED,"账户或密码错误，或者正在等待审核",warnTimes + 1);
         }
     }
 
@@ -244,22 +243,18 @@ public abstract class UserController<V> {
             @ApiImplicitParam(name = "newPassword",value = "新密码",paramType = "query",required = true)
     })
     @PostMapping("/password/update")
-    public ResponseVo<String> updateUserPassword(@RequestParam String userAccount,@RequestParam String oldPassword,@RequestParam String newPassword){
+    public ResponseVo<String> updateUserPassword(
+            @NameFormat @RequestParam String userAccount
+            ,@NameFormat @RequestParam String oldPassword
+            ,@NameFormat @RequestParam String newPassword){
 
-        if(checkNameFormat(userAccount) && checkNameFormat(oldPassword) && checkNameFormat(newPassword)){
+        if(resetUserPassword(userAccount,oldPassword,newPassword)){
 
-            if(resetUserPassword(userAccount,oldPassword,newPassword)){
-
-                return toSuccessResponseVoWithNoData();
-
-            }else {
-
-                return toFailResponseVo(HttpStatus.UNAUTHORIZED,"密码不正确或账户不存在");
-            }
+            return toSuccessResponseVoWithNoData();
 
         }else {
 
-            return toFailResponseVo(HttpStatus.BAD_REQUEST,"请检查账号或密码的格式是否符合要求");
+            return toFailResponseVo(HttpStatus.UNAUTHORIZED,"密码不正确或账户不存在");
         }
     }
 
@@ -305,27 +300,22 @@ public abstract class UserController<V> {
     @ApiOperation("判断一个账户是否存在")
     @ApiImplicitParam(name = "userAccount",value = "用户账号",paramType = "query",required = true)
     @GetMapping("/basicInfo/exist")
-    public ResponseVo<Boolean> checkUserAccountExist(@RequestParam String userAccount,HttpSession httpSession){
+    public ResponseVo<Boolean> checkUserAccountExist(
+            @NameFormat @RequestParam String userAccount,HttpSession httpSession){
 
-        if(checkNameFormat(userAccount)){
+        //从数据库里面查取数据
+        final V basicInfoVo = this.getUserBasicInfoVoFromDatabase(userAccount);
 
-            //从数据库里面查取数据
-            final V basicInfoVo = this.getUserBasicInfoVoFromDatabase(userAccount);
+        //如果该账户不存在
+        if(basicInfoVo == null){
 
-            //如果该账户不存在
-            if(basicInfoVo == null){
-
-                return toFailResponseVo(HttpStatus.NOT_FOUND,"该账户不存在");
-            }
-
-            //缓存该数据
-            httpSession.setAttribute(UserConstant.USER_COMMON_INFO_SESSION_ATTR_NAME,basicInfoVo);
-
-            //返回该用户数据存在
-            return toSuccessResponseVoWithNoData();
-        }else {
-
-            return toFailResponseVo(HttpStatus.BAD_REQUEST,"账号的格式有问题，请检查账号格式");
+            return toFailResponseVo(HttpStatus.NOT_FOUND,"该账户不存在");
         }
+
+        //缓存该数据
+        httpSession.setAttribute(UserConstant.USER_COMMON_INFO_SESSION_ATTR_NAME,basicInfoVo);
+
+        //返回该用户数据存在
+        return toSuccessResponseVoWithNoData();
     }
 }

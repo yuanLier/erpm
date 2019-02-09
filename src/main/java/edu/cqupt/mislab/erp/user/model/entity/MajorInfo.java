@@ -16,10 +16,10 @@ public class MajorInfo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false)
-    private CollegeInfo college;//学院信息
+    private CollegeInfo college;//学院,一个专业的学院是不可以改变的，也是非空的
 
     @Column(unique = true,nullable = false)
-    private String major;//专业名称
+    private String major;//专业名称是唯一的
 }

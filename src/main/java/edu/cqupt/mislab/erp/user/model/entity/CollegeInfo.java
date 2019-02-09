@@ -17,5 +17,5 @@ public class CollegeInfo {
     private Long id;
 
     @Column(unique = true,nullable = false,updatable = false)
-    private String college;//学院信息
+    private String college;//学院名称，唯一
 }

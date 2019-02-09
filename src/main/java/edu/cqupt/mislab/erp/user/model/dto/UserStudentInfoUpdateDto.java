@@ -1,5 +1,9 @@
 package edu.cqupt.mislab.erp.user.model.dto;
 
+import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
+import edu.cqupt.mislab.erp.user.dao.MajorInfoRepository;
+import edu.cqupt.mislab.erp.user.dao.UserAvatarRepository;
+import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import edu.cqupt.mislab.erp.user.model.entity.UserGender;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -16,6 +20,7 @@ import javax.validation.constraints.Pattern;
 public class UserStudentInfoUpdateDto {
 
     @NonNull
+    @Exist(repository = UserStudentRepository.class)
     @Min(value = 1L)
     @ApiModelProperty(value = "代理主键，必须要这个",required = true)
     private Long id;
@@ -23,6 +28,7 @@ public class UserStudentInfoUpdateDto {
     @ApiModelProperty("性别")
     private UserGender gender;
 
+    @Exist(repository = MajorInfoRepository.class)
     @ApiModelProperty("学生的专业学院信息")
     private Long majorInfoId;
 
@@ -37,6 +43,7 @@ public class UserStudentInfoUpdateDto {
     @ApiModelProperty("电话，移动电话，支持移动、联通、电信")
     private String phone;
 
+    @Exist(repository = UserAvatarRepository.class)
     @ApiModelProperty("头像")
     private Long userAvatarInfoId;
 }

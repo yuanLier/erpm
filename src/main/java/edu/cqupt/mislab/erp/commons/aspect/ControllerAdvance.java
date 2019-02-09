@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 @ControllerAdvice
 public class ControllerAdvance {
@@ -41,6 +45,27 @@ public class ControllerAdvance {
                 stringBuilder.append("格式错误字段：").append(field).append('\n');
                 stringBuilder.append("你传输的字段值：").append(rejectedValue).append('\n');
                 stringBuilder.append("需要的格式规则为：").append(defaultMessage).append('\n');
+            }
+
+            return ResponseUtil.<String>toFailResponseVo(HttpStatus.BAD_REQUEST,stringBuilder.toString());
+        }
+
+        //校验错误默认处理流程
+        if(exception instanceof ConstraintViolationException){
+
+            ConstraintViolationException violationException = (ConstraintViolationException) exception;
+
+            final Set<ConstraintViolation<?>> violations = violationException.getConstraintViolations();
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            final Iterator<ConstraintViolation<?>> iterator = violations.iterator();
+
+            while(iterator.hasNext()){
+
+                final ConstraintViolation<?> violation = iterator.next();
+
+                stringBuilder.append("校验错误提示：").append(violation.getMessage()).append(';');
             }
 
             return ResponseUtil.<String>toFailResponseVo(HttpStatus.BAD_REQUEST,stringBuilder.toString());

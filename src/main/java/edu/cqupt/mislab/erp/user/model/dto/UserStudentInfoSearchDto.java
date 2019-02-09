@@ -1,5 +1,7 @@
 package edu.cqupt.mislab.erp.user.model.dto;
 
+import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
+import edu.cqupt.mislab.erp.user.dao.UserTeacherRepository;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -17,6 +19,7 @@ public class UserStudentInfoSearchDto {
     @ApiModelProperty("密码")
     private String studentPassword;
 
+    @Exist(repository = UserTeacherRepository.class)
     @ApiModelProperty("教师编号")
     private Long teacherId;
 

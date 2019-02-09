@@ -1,5 +1,8 @@
 package edu.cqupt.mislab.erp.user.model.dto;
 
+import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
+import edu.cqupt.mislab.erp.commons.validators.annotations.NameFormat;
+import edu.cqupt.mislab.erp.user.dao.MajorInfoRepository;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -26,6 +29,7 @@ public class UserStudentInfoRegisterDto {
     private String studentName;
 
     @NotNull
+    @Exist(repository = MajorInfoRepository.class)
     @ApiModelProperty("学生的专业学院信息")
     private Long majorInfoId;
 
