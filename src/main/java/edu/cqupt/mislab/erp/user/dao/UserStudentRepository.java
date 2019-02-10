@@ -21,5 +21,5 @@ public interface UserStudentRepository extends JpaSpecificationExecutor, JpaRepo
     List<UserStudentInfo> findAllByUserTeacherInfo_Id(Long teacherId);
 
     //根据账号和密码查询一条数据
-    UserStudentInfo findDistinctByStudentAccountAndStudentPassword(String studentAccount,String studentPassword);
+    UserStudentInfo findByStudentAccountAndStudentPasswordAndAccountEnable(String studentAccount,String studentPassword,boolean accountEnable);
 }

@@ -59,6 +59,7 @@ public abstract class EntityVoUtil {
         displayVo.setStudentName(enterpriseMemberInfo.getStudentInfo().getStudentName());
         displayVo.setCollege(enterpriseMemberInfo.getStudentInfo().getMajorInfo().getCollege().getCollege());
         displayVo.setMajor(enterpriseMemberInfo.getStudentInfo().getMajorInfo().getMajor());
+        displayVo.setGameContributionRate(enterpriseMemberInfo.getGameContributionRate());
         displayVo.setAvatarLocation(enterpriseMemberInfo.getStudentInfo().getUserAvatarInfo().getAvatarLocation());
     }
 }

@@ -48,7 +48,13 @@ public class GameManageController {
 
     @ApiOperation("开始一个比赛")
     @PostMapping("/begin")
-    public void beginOneGame(){ }
+    public ResponseVo<String> beginOneGame(
+            @Exist(repository = GameBasicInfoRepository.class) @RequestParam Long gameId
+            ,@Exist(repository = UserStudentRepository.class) @RequestParam Long userId
+    ){
+
+        return gameManageService.beginOneGame(userId,gameId);
+    }
 
     @ApiOperation("查询指定条件的全部比赛")
     @PostMapping("/gameInfos/search")

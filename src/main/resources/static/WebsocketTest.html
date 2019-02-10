@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <input type="text" id="content">
+    <input type="text" id="text">
+    <button type="button" onclick="send()">点击发送</button>
+    <button type="button" onclick="socket()">点击连接</button>
+
+    <script type="application/javascript">
+
+        var websocket;
+
+        function socket() {
+
+            websocket = new WebSocket("ws://localhost:8081/gameManageWebsocket?gameId=1");
+
+            websocket.onopen = function(event) {
+                console.log("WebSocket:已连接");
+                console.log(event);
+            };
+
+            websocket.onmessage = function(event) {
+                console.log("WebSocket:收到一条消息",event.data);
+                document.getElementById("text").value = event.data;
+            };
+
+            websocket.onerror = function(event) {
+                console.log("WebSocket:发生错误 ");
+                console.log(event);
+            };
+            websocket.onclose = function(event) {
+                console.log("WebSocket:已关闭");
+                console.log(event);
+            }
+        }
+
+        function send() {
+
+            var content = document.getElementById("content").value;
+
+            websocket.send(content);
+
+            document.getElementById("content").value = "";
+        }
+    </script>
+</body>
+</html>

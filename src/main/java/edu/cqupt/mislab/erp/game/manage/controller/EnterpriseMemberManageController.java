@@ -4,6 +4,7 @@ import edu.cqupt.mislab.erp.commons.response.ResponseVo;
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.dto.EnterpriseJoinDto;
+import edu.cqupt.mislab.erp.game.manage.model.dto.UserContributionRateSureDto;
 import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseMemberDisplayVo;
 import edu.cqupt.mislab.erp.game.manage.service.EnterpriseMemberManageService;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
@@ -58,5 +59,12 @@ public class EnterpriseMemberManageController {
         }
 
         return toSuccessResponseVo(displayVos);
+    }
+
+    @ApiOperation("确定成员的贡献度")
+    @PostMapping("/enterpriseMember/gameContributionRate/sure")
+    public ResponseVo<String> sureGameContributionRate(@Valid @RequestBody UserContributionRateSureDto rateSureDto){
+
+        return enterpriseMemberManageService.sureGameContributionRate(rateSureDto);
     }
 }

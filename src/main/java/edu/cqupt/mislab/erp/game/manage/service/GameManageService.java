@@ -15,12 +15,7 @@ public interface GameManageService {
 
     GamesSearchDto getGameDetailVosBySearchDto(GamesSearchDto gamesSearchDto);//查询指定的比赛数据
 
+    Example<GameBasicInfo> getGameBasicInfoExampleBySearchDto(GamesSearchDto searchDto);//用于比赛的搜索接口
 
-    GameDetailInfoVo getOneGameDetailVo(Long gameId);
-
-    Example<GameBasicInfo> getGameBasicInfoExampleBySearchDto(GamesSearchDto searchDto);
-
-
-
-
+    ResponseVo<String> beginOneGame(Long userId,Long gameId);//开启一个比赛
 }

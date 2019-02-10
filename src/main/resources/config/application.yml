@@ -1,6 +1,10 @@
 # 服务器配置
 server:
   port: 8081
+  session:
+    cookie:
+      max-age: 1800
+      http-only: true
 spring:
   profiles:
     active: dev

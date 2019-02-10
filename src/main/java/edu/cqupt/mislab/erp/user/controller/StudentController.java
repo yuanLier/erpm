@@ -64,7 +64,7 @@ public class StudentController extends UserController<UserStudentInfoBasicVo>{
         return toSuccessResponseVo(studentBasicInfoVo);
     }
 
-    @ApiOperation("获取全部的头像位置信息，注意这个接口前端显示有问题，请直接 try it out!")
+    @ApiOperation(value = "获取全部的头像位置信息",notes = "注意这个接口前端显示有问题，请直接 try it out!")
     @GetMapping("/avatar/get")
     public ResponseVo<Object> getUserAvatarInfos(HttpSession httpSession){
 

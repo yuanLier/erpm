@@ -199,7 +199,7 @@ public abstract class UserController<V> {
     @Autowired
     private Producer verificationCodeProducer;
 
-    @ApiOperation("获取验证码")
+    @ApiOperation(value = "获取验证码",notes = "这个接口返回值是二进制数据，需要复制这个链接到浏览器其它窗口才可以进行测试")
     @GetMapping("/verificationCode/get")
     public void getVerificationCode(HttpServletResponse response,HttpSession httpSession){
 

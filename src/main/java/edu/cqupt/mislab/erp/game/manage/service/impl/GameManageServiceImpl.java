@@ -2,16 +2,18 @@ package edu.cqupt.mislab.erp.game.manage.service.impl;
 
 import edu.cqupt.mislab.erp.commons.response.ResponseVo;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
+import edu.cqupt.mislab.erp.game.compete.init.GameCompeteInitService;
+import edu.cqupt.mislab.erp.game.manage.constant.ManageConstant;
+import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.GameInitInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.dto.GameCreateDto;
 import edu.cqupt.mislab.erp.game.manage.model.dto.GamesSearchDto;
-import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
+import edu.cqupt.mislab.erp.game.manage.model.entity.*;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo.GameBasicInfoBuilder;
-import edu.cqupt.mislab.erp.game.manage.model.entity.GameInitInfo;
-import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatus;
 import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailInfoVo;
 import edu.cqupt.mislab.erp.game.manage.service.GameManageService;
+import edu.cqupt.mislab.erp.game.manage.websocket.WebSocketMessagePublisher;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo.UserStudentInfoBuilder;
@@ -21,6 +23,7 @@ import org.springframework.data.domain.*;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.TextMessage;
 
 import java.util.*;
 
@@ -36,17 +39,40 @@ public class GameManageServiceImpl implements GameManageService {
     private GameBasicInfoRepository gameBasicInfoRepository;
     @Autowired
     private UserStudentRepository userStudentRepository;
+    @Autowired
+    private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
+    @Autowired
+    private GameCompeteInitService gameCompeteInitService;
+    @Autowired
+    private WebSocketMessagePublisher webSocketMessagePublisher;
 
     @Override
     public ResponseVo<String> deleteOneGame(Long gameId,Long userId){
 
+        //校验保证这个比赛信息存在
         final GameBasicInfo gameBasicInfo = gameBasicInfoRepository.findOne(gameId);
 
+        //防止同一个用户很接近的两个请求
+        if(gameBasicInfo == null){
+
+            return toSuccessResponseVo("已经被先一步删除了！");
+        }
+
+        //只有比赛的创建者才可以删除一个比赛，两个ID都是一定存在的
         if(gameBasicInfo.getGameCreator().getId().equals(userId)){
 
+            //只有处于创建状态的比赛才能够被删除
             if(gameBasicInfo.getGameStatus() == GameStatus.CREATE){
 
-                gameBasicInfoRepository.delete(gameId);
+                //这个地方如果所对应的数据不存在会报异常，不过不影响结果
+                try{
+                    gameBasicInfoRepository.delete(gameId);
+
+                    //通知前端该比赛被删除
+                    webSocketMessagePublisher.publish(gameId,new TextMessage(ManageConstant.GAME_DELETE_KEY_NAME + gameBasicInfo));
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
 
                 return toSuccessResponseVo("删除比赛成功");
             }
@@ -55,23 +81,6 @@ public class GameManageServiceImpl implements GameManageService {
         }
 
         return toFailResponseVo(HttpStatus.BAD_REQUEST,"只有比赛创建者可以删除比赛");
-    }
-
-    @Override
-    public GameDetailInfoVo getOneGameDetailVo(Long gameId){
-
-        final GameBasicInfo basicInfo = gameBasicInfoRepository.findOne(gameId);
-
-        if(basicInfo != null){
-
-            GameDetailInfoVo detailInfoVo = new GameDetailInfoVo();
-
-            EntityVoUtil.copyFieldsFromEntityToVo(basicInfo,detailInfoVo);
-
-            return detailInfoVo;
-        }
-
-        return null;
     }
 
     @Override
@@ -114,23 +123,79 @@ public class GameManageServiceImpl implements GameManageService {
     }
 
     @Override
+    public ResponseVo<String> beginOneGame(Long userId,Long gameId){
+
+        final GameBasicInfo gameBasicInfo = gameBasicInfoRepository.findOne(gameId);
+
+        if(gameBasicInfo != null){
+
+            if(gameBasicInfo.getGameStatus() == GameStatus.CREATE){
+
+                if(gameId.equals(gameBasicInfo.getGameCreator().getId())){
+
+                    final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameInfo_Id(gameId);
+
+                    //如果这个比赛一个企业都没有也无法开启比赛
+                    if(enterpriseBasicInfos == null || enterpriseBasicInfos.size() == 0){
+
+                        return toFailResponseVo(HttpStatus.BAD_REQUEST,"该比赛还没有一个企业，无法开始比赛");
+                    }
+
+                    boolean existsCreate = enterpriseBasicInfoRepository.existsByGameInfo_IdAndEnterpriseStatus(gameId,EnterpriseStatus.CREATE);
+
+                    if(existsCreate){
+
+                        return toFailResponseVo(HttpStatus.BAD_REQUEST,"还有企业没有准备完毕，无法开始比赛");
+                    }
+
+                    //比赛正在初始化
+                    gameBasicInfo.setGameStatus(GameStatus.INITIALING);
+                    gameBasicInfoRepository.save(gameBasicInfo);
+
+                    //初始化竞赛信息
+                    gameCompeteInitService.gameInit(gameId);
+
+                    //比赛初始化完成
+                    gameBasicInfo.setGameStatus(GameStatus.PLAYING);
+                    gameBasicInfoRepository.save(gameBasicInfo);
+
+                    return toSuccessResponseVo("比赛初始化成功，请开启你的比赛！");
+                }
+
+                return toFailResponseVo(HttpStatus.BAD_REQUEST,"只有比赛创建者才可以开启这个比赛");
+            }
+
+            return toFailResponseVo(HttpStatus.BAD_REQUEST,"只有创建状态的比赛才可以进行开启");
+        }
+
+        return toFailResponseVo(HttpStatus.BAD_REQUEST,"比赛不存在");
+    }
+
+    @Override
     public ResponseVo<GameDetailInfoVo> createNewGame(GameCreateDto createDto){
 
-        //检查这个创建者是否真的存在，不存在是不行的
-        UserStudentInfo userStudentInfo = userStudentRepository.findOne(createDto.getCreatorId());
+        //校验保证该条数据存在却不保证一定被审核通过，所以需要确认该用户已经被审核通过
+        final UserStudentInfo userStudentInfo = userStudentRepository.findByIdAndAccountEnable(createDto.getCreatorId(),true);
 
-        //获取最新版本的比赛初始化信息
+        if(userStudentInfo == null){
+
+            return toFailResponseVo(HttpStatus.BAD_REQUEST,"该用户还没有审核通过，无法创建比赛");
+        }
+
+        //获取最新版本的比赛初始化信息，这个方法保证管理员将应用初始化更改后会响应在后面创建的比赛上
         GameInitInfo gameInitInfo = gameInitInfoRepository.findTop1ByIdIsNotNullOrderByIdDesc();
 
         if(gameInitInfo == null){
 
-            return toFailResponseVo(HttpStatus.INTERNAL_SERVER_ERROR,"应用初始化参数出错，请联系管理员");
+            return toFailResponseVo(HttpStatus.INTERNAL_SERVER_ERROR,"应用比赛初始化信息出错，请联系管理员");
         }
 
-        //纠正企业的最大个数
-        if(createDto.getMaxEnterpriseNumber() > gameInitInfo.getMaxEnterpriseNumber() || createDto.getMaxEnterpriseNumber() < 1){
+        //纠正企业的最大个数，企业的最大个数在1-管理员设置的最大值之间，验证保证这个值最小为1
+        Integer maxEnterpriseNumber = createDto.getMaxEnterpriseNumber();
 
-            createDto.setMaxEnterpriseNumber(gameInitInfo.getMaxEnterpriseNumber());
+        if(maxEnterpriseNumber > gameInitInfo.getMaxEnterpriseNumber()){
+
+            maxEnterpriseNumber = gameInitInfo.getMaxEnterpriseNumber();
         }
 
         //创建这个比赛实体
@@ -138,20 +203,27 @@ public class GameManageServiceImpl implements GameManageService {
                 .gameCreator(userStudentInfo)
                 .gameInitInfo(gameInitInfo)
                 .gameName(createDto.getGameName())
-                .gameMaxEnterpriseNumber(createDto.getMaxEnterpriseNumber())
+                .gameMaxEnterpriseNumber(maxEnterpriseNumber)
                 .gameCreateTime(new Date())
                 .gameCurrentYear(1)//初始化为当年
                 .gameStatus(GameStatus.CREATE)//比赛状态为创建状态
                 .build();
 
-        //持久化这个比赛信息
-        gameBasicInfo = gameBasicInfoRepository.saveAndFlush(gameBasicInfo);
+        try{
+            //持久化这个比赛信息，这一步有可能会出现异常
+            gameBasicInfo = gameBasicInfoRepository.saveAndFlush(gameBasicInfo);
 
-        GameDetailInfoVo gameDetailInfoVo = new GameDetailInfoVo();
+            GameDetailInfoVo gameDetailInfoVo = new GameDetailInfoVo();
 
-        EntityVoUtil.copyFieldsFromEntityToVo(gameBasicInfo,gameDetailInfoVo);
+            EntityVoUtil.copyFieldsFromEntityToVo(gameBasicInfo,gameDetailInfoVo);
 
-        return toSuccessResponseVo(gameDetailInfoVo);
+            return toSuccessResponseVo(gameDetailInfoVo);
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return toFailResponseVo(HttpStatus.INTERNAL_SERVER_ERROR,"服务器内部持久化失败！");
     }
 
     @Override
@@ -192,14 +264,18 @@ public class GameManageServiceImpl implements GameManageService {
 
                 List<GameDetailInfoVo> detailInfoVos = new ArrayList<>();
 
-                basicInfos.forEach(gameBasicInfo -> {
+                //放在只有一条数据还被人删除了的情况
+                if(basicInfos != null){
 
-                    GameDetailInfoVo detailInfoVo = new GameDetailInfoVo();
+                    basicInfos.forEach(gameBasicInfo -> {
 
-                    EntityVoUtil.copyFieldsFromEntityToVo(gameBasicInfo,detailInfoVo);
+                        GameDetailInfoVo detailInfoVo = new GameDetailInfoVo();
 
-                    detailInfoVos.add(detailInfoVo);
-                });
+                        EntityVoUtil.copyFieldsFromEntityToVo(gameBasicInfo,detailInfoVo);
+
+                        detailInfoVos.add(detailInfoVo);
+                    });
+                }
 
                 gamesSearchDto.setPageData(detailInfoVos);
 
@@ -216,6 +292,7 @@ public class GameManageServiceImpl implements GameManageService {
                     start = (concurrentPage - 1) * pageSize;
                 }
 
+                //查询比赛信息，进行分页查询，按照创建时间排序，也就是说后创建的在最前面
                 final Page<GameBasicInfo> infos = gameBasicInfoRepository.findAll(example,
                         new PageRequest(concurrentPage-1,pageSize,
                                 new Sort(new Sort.Order(Direction.DESC,"gameCreateTime"))));

@@ -23,6 +23,9 @@ public class EnterpriseMemberDisplayVo {
     @ApiModelProperty("专业名称")
     private String major;
 
+    @ApiModelProperty("成员的贡献率，按100分计算")
+    private Integer gameContributionRate;
+
     @ApiModelProperty("头像位置信息")
     private String avatarLocation;
 }

@@ -57,14 +57,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public boolean checkStudentAccountAndPassword(String userAccount,String userPassword){
 
-        UserStudentInfoSearchDto searchDto = UserStudentInfoSearchDto.builder()
-                .studentAccount(userAccount)
-                .studentPassword(userPassword)
-                .accountEnable(true).build();
-
-        final Example<UserStudentInfo> example = getUserStudentBasicInfoExampleBySearchDto(searchDto);
-
-        return studentRepository.count(example) == 1;
+        return studentRepository.findByStudentAccountAndStudentPasswordAndAccountEnable(userAccount,userPassword,true) != null;
     }
 
     @Override
