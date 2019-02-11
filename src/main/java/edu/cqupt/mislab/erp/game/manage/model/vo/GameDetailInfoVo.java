@@ -29,7 +29,7 @@ public class GameDetailInfoVo {
     @ApiModelProperty("比赛的状态")
     private GameStatus gameStatus;
 
-    @ApiModelProperty("比赛的创建事件")
+    @ApiModelProperty("比赛的创建时间")
     private Date gameCreateTime;
 
     @ApiModelProperty("该场比赛的企业个数")

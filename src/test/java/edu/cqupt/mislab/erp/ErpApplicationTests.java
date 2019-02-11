@@ -9,9 +9,5 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class ErpApplicationTests {
 
-    @Test
-    public void contextLoads(){
-    }
-
 }
 
