@@ -28,20 +28,17 @@ public class ApplicationInitDataListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce){
 
-        if(activeProfiles.equals("dev")){
+        final Map<String,ModelInit> modelInitMap = applicationContext.getBeansOfType(ModelInit.class);
 
-            final Map<String,ModelInit> modelInitMap = applicationContext.getBeansOfType(ModelInit.class);
+        final Set<String> keySet = modelInitMap.keySet();
 
-            final Set<String> keySet = modelInitMap.keySet();
+        final Iterator<String> iterator = keySet.iterator();
 
-            final Iterator<String> iterator = keySet.iterator();
+        while(iterator.hasNext()){
 
-            while(iterator.hasNext()){
+            final String next = iterator.next();
 
-                final String next = iterator.next();
-
-                modelInitMap.get(next).init();
-            }
+            modelInitMap.get(next).init();
         }
     }
     @Override
