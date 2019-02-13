@@ -23,6 +23,7 @@ import static edu.cqupt.mislab.erp.commons.response.ResponseUtil.*;
 
 @Api
 @Validated
+@CrossOrigin
 @RestController
 @RequestMapping("/game/manage/enterprise/member")
 public class EnterpriseMemberManageController {

@@ -25,6 +25,7 @@ import static edu.cqupt.mislab.erp.commons.response.ResponseUtil.toSuccessRespon
 
 @Api
 @Validated
+@CrossOrigin
 @RestController
 @RequestMapping("/user/student")
 public class StudentController extends UserController<UserStudentInfoBasicVo>{

@@ -22,6 +22,7 @@ import java.util.List;
 import static edu.cqupt.mislab.erp.commons.response.ResponseUtil.*;
 
 @Api
+@CrossOrigin
 @Validated
 @RestController
 @RequestMapping("/game/manage/enterprise")
