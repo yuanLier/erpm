@@ -29,11 +29,11 @@ public class UserStudentInfoRegisterDto {
     private String studentName;
 
     @NotNull
-    @Exist(repository = MajorInfoRepository.class)
+    @Exist(repository = MajorInfoRepository.class,message = "专业信息必须存在")
     @ApiModelProperty("学生的专业学院信息")
     private Long majorInfoId;
 
-    @NotNull
+    @NotNull(message = "班级不能为空")
     @ApiModelProperty("班级")
     private String studentClass;
 
@@ -43,7 +43,7 @@ public class UserStudentInfoRegisterDto {
     private String studentPassword;
 
     @NotNull
-    @Pattern(regexp = "^[a-zA-Z]\\w{5,17}$")
+    @Pattern(regexp = "^[a-zA-Z]\\w{5,17}$",message = "重复密码必须和密码相同")
     @ApiModelProperty("密码，长度在6-18个之间，只能包含数字、字母、下划线，以字母开头")
     private String rePassword;
 }

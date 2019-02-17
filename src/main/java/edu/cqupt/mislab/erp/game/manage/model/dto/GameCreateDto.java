@@ -10,23 +10,23 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-@ApiModel("比赛创建数据类")
 @Data
+@ApiModel("比赛创建数据类")
 public class GameCreateDto {
 
-    @NotBlank
-    @NotNull
+    @NotBlank(message = "比赛名称不能为空字符串")
+    @NotNull(message = "比赛名称不能为null")
     @ApiModelProperty(value = "比赛名称",required = true)
     private String gameName;
 
-    @NotNull
     @Min(1L)
-    @Exist(repository = UserStudentRepository.class)
+    @NotNull(message = "创建者不能为null")
+    @Exist(repository = UserStudentRepository.class,message = "比赛创建者必须存在")
     @ApiModelProperty(value = "创建者ID",required = true)
     private Long creatorId;
 
-    @NotNull
     @Min(1)
+    @NotNull(message = "企业最大个数不能为null")
     @ApiModelProperty(value = "比赛的最大企业数，最小值为1",required = true)
     private Integer maxEnterpriseNumber;
 }

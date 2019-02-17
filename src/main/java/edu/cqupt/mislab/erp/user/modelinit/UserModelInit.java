@@ -20,7 +20,7 @@ public class UserModelInit implements ModelInit {
     @Autowired private CollegeInfoRepository collegeInfoRepository;
 
     @Override
-    public void init(){
+    public boolean init(){
 
         log.info("初始化专业信息");
         initMajorInfo();
@@ -31,6 +31,7 @@ public class UserModelInit implements ModelInit {
         log.info("初始化一个用户");
         initUserStudentInfo();
 
+        return true;
     }
 
     /**

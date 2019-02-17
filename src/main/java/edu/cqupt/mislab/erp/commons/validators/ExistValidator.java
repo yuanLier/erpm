@@ -24,7 +24,15 @@ public class ExistValidator implements ConstraintValidator<Exist,Long> , Applica
 
         final Class<? extends CrudRepository> repositoryClass = constraintAnnotation.repository();
 
-        this.crudRepository = applicationContext.getBean(repositoryClass);
+        final CrudRepository bean = applicationContext.getBean(repositoryClass);
+
+        //校验配置是否正确
+        if(bean == null){
+
+            throw new RuntimeException("ExistValidator 校验器所配置的Repository不正确");
+        }
+
+        this.crudRepository = bean;
     }
 
     @Override
@@ -32,12 +40,13 @@ public class ExistValidator implements ConstraintValidator<Exist,Long> , Applica
 
         log.info("验证：" + value + " " + crudRepository.getClass().getSimpleName());
 
-        //如果这个字段是null，标识前端根本就没有传输，这个校验器不去校验null字段
+        //如果这个字段是null，标识前端根本就没有传输，这个校验器不去校验null字段，需要额外的注解去校验
         if(value == null){
 
             return true;
         }
 
+        //查询该主键数据是否存在
         boolean exists = crudRepository.exists(value);
 
         if(exists){
@@ -55,7 +64,7 @@ public class ExistValidator implements ConstraintValidator<Exist,Long> , Applica
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException{
 
-        log.info("初始化：ApplicationContextAware");
+        log.info("初始化ExistValidator校验器：ApplicationContextAware");
 
         this.applicationContext = applicationContext;
     }

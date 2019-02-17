@@ -16,7 +16,7 @@
 
         function socket() {
 
-            websocket = new WebSocket("ws://localhost:8081/gameManageWebsocket?gameId=1");
+            websocket = new WebSocket("ws://localhost:8081/commonWebSocket?gameId=1");
 
             websocket.onopen = function(event) {
                 console.log("WebSocket:已连接");

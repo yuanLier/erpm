@@ -11,11 +11,8 @@ public interface UserStudentRepository extends JpaSpecificationExecutor, JpaRepo
     //选择一个启用状态的学生用户
     UserStudentInfo findByIdAndAccountEnable(Long studentId,boolean accountEnable);
 
-    //判断一个账户是否存在
-    boolean existsByStudentAccountAndAccountEnable(String studentAccount,boolean accountEnable);
-
-    //通过学生账户选择一个学生对象
-    UserStudentInfo findFirstByStudentAccount(String studentAccount);
+    //通过账户查询一个审核是否通过的账户信息
+    UserStudentInfo findByStudentAccountAndAccountEnable(String studentAccount,boolean accountEnable);
 
     //选择一个教师的全部学生
     List<UserStudentInfo> findAllByUserTeacherInfo_Id(Long teacherId);

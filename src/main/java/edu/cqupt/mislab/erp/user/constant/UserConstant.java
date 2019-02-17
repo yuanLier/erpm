@@ -10,7 +10,7 @@ public interface UserConstant {
     /*
     默认多少次登录失败后需要进行验证码校验
      */
-    Integer USER_MAX_WARN_TIMES_WITHOUT_VERIFICATION_CODE = 3;
+    Long USER_MAX_WARN_TIMES_WITHOUT_VERIFICATION_CODE = 3L;
 
     /*
     会话里面存储登录验证码的属性名称

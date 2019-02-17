@@ -15,23 +15,23 @@ import javax.validation.constraints.NotNull;
 public class EnterpriseCreateDto {
 
     @NotNull
-    @ApiModelProperty("企业的名称")
+    @ApiModelProperty(value = "企业的名称",required = true)
     private String enterpriseName;
 
     @Min(1)
     @NotNull
-    @ApiModelProperty("该企业的最大人员数量")
+    @ApiModelProperty(value = "该企业的最大人员数量",required = true)
     private Integer maxMemberNumber;
 
     @NotNull
     @Min(1L)
-    @Exist(repository = UserStudentRepository.class)
-    @ApiModelProperty("创建者的ID")
+    @Exist(repository = UserStudentRepository.class,message = "创建者ID必须存在")
+    @ApiModelProperty(value = "创建者的ID",required = true)
     private Long creatorId;
 
     @NotNull
     @Min(1L)
     @Exist(repository = GameBasicInfoRepository.class)
-    @ApiModelProperty("那一场比赛")
+    @ApiModelProperty(value = "那一场比赛",required = true)
     private Long gameId;
 }

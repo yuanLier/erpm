@@ -16,11 +16,12 @@ public class GameManageModelInit implements ModelInit {
     @Autowired private GameInitInfoRepository gameInitInfoRepository;
 
     @Override
-    public void init(){
+    public boolean init(){
 
         log.info("初始化比赛的基本初始化信息");
         initGameInitInfo();
 
+        return true;
     }
 
     /**

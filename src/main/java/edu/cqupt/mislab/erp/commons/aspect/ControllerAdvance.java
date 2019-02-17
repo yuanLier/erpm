@@ -1,14 +1,11 @@
 package edu.cqupt.mislab.erp.commons.aspect;
 
-import edu.cqupt.mislab.erp.commons.response.ResponseUtil;
-import edu.cqupt.mislab.erp.commons.response.ResponseVo;
+import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -16,61 +13,98 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.*;
+
+/**
+ * ControllerAdvance：用于对Controller层的非业务异常进行处理
+ * 1、未知异常使用统一拦截处理器
+ * 2、具体异常使用具体异常的拦截器，写清楚这个异常会出现的位置和什么情况下回抛出这个异常
+ */
 @ControllerAdvice
 public class ControllerAdvance {
 
+    /**
+     * 这个异常出现在JSR自定义参数校验：validation
+     */
     @ResponseBody
-    @ExceptionHandler(Exception.class)
-    public ResponseVo<String> totalExceptionHandler(Exception exception){
+    @ExceptionHandler(ConstraintViolationException.class)
+    public WebResponseVo<Object> constraintViolationExceptionHandler(ConstraintViolationException exception){
 
+        //打印堆栈信息，每个方法必须要打印，不然就是耍流氓
         exception.printStackTrace();
 
-        //参数格式错误异常默认处理方法
-        if(exception instanceof MethodArgumentNotValidException){
+        //获取校验的错误提示信息
+        final Set<ConstraintViolation<?>> violations = exception.getConstraintViolations();
 
-            MethodArgumentNotValidException methodArgumentNotValidException = (MethodArgumentNotValidException) exception;
+        StringBuilder stringBuilder = new StringBuilder();
 
-            final BindingResult bindingResult = methodArgumentNotValidException.getBindingResult();
+        //拼接全部的错误提示信息
+        for(ConstraintViolation<?> violation : violations){
+
+            stringBuilder.append("校验错误提示：").append(violation.getMessage()).append(';');
+        }
+
+        return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST,stringBuilder.toString());
+    }
+
+    /**
+     * 这个异常出现在参数校验：@Valid @RequestBody ，如果这个对象里面的属性不是符合要求的时候就会包这个异常
+     */
+    @ResponseBody
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public WebResponseVo<Object> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException exception){
+
+        //打印堆栈信息，每个方法必须要打印，不然就是耍流氓
+        exception.printStackTrace();
+
+        //这是一个参数校验异常，后端会将那些参数校验失败的字段的原因返回给前端
+        final BindingResult bindingResult = exception.getBindingResult();
+
+        //如果参数绑定出现问题，将错误的信息返回前端
+        if(bindingResult.hasFieldErrors()){
+
+            StringBuilder stringBuilder = new StringBuilder();
 
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
 
-            StringBuilder stringBuilder = new StringBuilder();
+            if(fieldErrors != null && fieldErrors.size() > 0){
 
-            for(FieldError fieldError : fieldErrors){
+                for(FieldError fieldError : fieldErrors){
 
-                final String field = fieldError.getField();
-                final Object rejectedValue = fieldError.getRejectedValue();
-                final String defaultMessage = fieldError.getDefaultMessage();
+                    //获取校验错误的字段
+                    final String fieldName = fieldError.getField();
+                    //前端传过来的哪一个值是不符合要求的
+                    final Object rejectedValue = fieldError.getRejectedValue();
+                    //需要的格式是什么
+                    final String infoMessage = fieldError.getDefaultMessage();
 
-                stringBuilder.append("格式错误字段：").append(field).append('\n');
-                stringBuilder.append("你传输的字段值：").append(rejectedValue).append('\n');
-                stringBuilder.append("需要的格式规则为：").append(defaultMessage).append('\n');
+                    stringBuilder.append("{").append("错误字段：").append(fieldName).append(";");
+                    stringBuilder.append("前端数据：").append(rejectedValue).append(";");
+                    stringBuilder.append("该字段需要的格式：").append(infoMessage).append(";").append("}");
+                }
             }
 
-            return ResponseUtil.<String>toFailResponseVo(HttpStatus.BAD_REQUEST,stringBuilder.toString());
+            //返回参数校验错误的信息
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST,stringBuilder.toString());
+
+        }else {
+
+            //其他异常将无法处理
+            return this.exceptionHandler(exception);
         }
+    }
 
-        //校验错误默认处理流程
-        if(exception instanceof ConstraintViolationException){
+    /**
+     * 无可奈何的不知名异常就是使用这个处理器来进行处理，最后一道防线
+     */
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    public WebResponseVo<Object> exceptionHandler(Exception exception){
 
-            ConstraintViolationException violationException = (ConstraintViolationException) exception;
+        //打印堆栈信息，每个方法必须要打印，不然就是耍流氓
+        exception.printStackTrace();
 
-            final Set<ConstraintViolation<?>> violations = violationException.getConstraintViolations();
-
-            StringBuilder stringBuilder = new StringBuilder();
-
-            final Iterator<ConstraintViolation<?>> iterator = violations.iterator();
-
-            while(iterator.hasNext()){
-
-                final ConstraintViolation<?> violation = iterator.next();
-
-                stringBuilder.append("校验错误提示：").append(violation.getMessage()).append(';');
-            }
-
-            return ResponseUtil.<String>toFailResponseVo(HttpStatus.BAD_REQUEST,stringBuilder.toString());
-        }
-
-        return ResponseUtil.<String>toFailResponseVo(HttpStatus.INTERNAL_SERVER_ERROR,"服务器内部出现未知错误");
+        //除了直接响应，我实在是没有办法啊
+        return toFailResponseVoWithNoMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR);
     }
 }

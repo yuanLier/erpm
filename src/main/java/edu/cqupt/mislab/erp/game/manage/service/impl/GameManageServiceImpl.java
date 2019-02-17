@@ -1,7 +1,9 @@
 package edu.cqupt.mislab.erp.game.manage.service.impl;
 
-import edu.cqupt.mislab.erp.commons.response.ResponseVo;
+import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
+import edu.cqupt.mislab.erp.commons.response.WebResponseVo.ResponseStatus;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
+import edu.cqupt.mislab.erp.commons.websocket.CommonWebSocketMessagePublisher;
 import edu.cqupt.mislab.erp.game.compete.init.GameCompeteInitService;
 import edu.cqupt.mislab.erp.game.manage.constant.ManageConstant;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
@@ -13,7 +15,6 @@ import edu.cqupt.mislab.erp.game.manage.model.entity.*;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo.GameBasicInfoBuilder;
 import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailInfoVo;
 import edu.cqupt.mislab.erp.game.manage.service.GameManageService;
-import edu.cqupt.mislab.erp.game.manage.websocket.WebSocketMessagePublisher;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo.UserStudentInfoBuilder;
@@ -21,45 +22,46 @@ import edu.cqupt.mislab.erp.user.model.entity.UserTeacherInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 
 import java.util.*;
 
-import static edu.cqupt.mislab.erp.commons.response.ResponseUtil.toFailResponseVo;
-import static edu.cqupt.mislab.erp.commons.response.ResponseUtil.toSuccessResponseVo;
+import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.*;
 
 @Service
 public class GameManageServiceImpl implements GameManageService {
 
-    @Autowired
-    private GameInitInfoRepository gameInitInfoRepository;
-    @Autowired
-    private GameBasicInfoRepository gameBasicInfoRepository;
-    @Autowired
-    private UserStudentRepository userStudentRepository;
-    @Autowired
-    private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
-    @Autowired
-    private GameCompeteInitService gameCompeteInitService;
-    @Autowired
-    private WebSocketMessagePublisher webSocketMessagePublisher;
+    @Autowired private GameInitInfoRepository gameInitInfoRepository;
+    @Autowired private GameBasicInfoRepository gameBasicInfoRepository;
+    @Autowired private UserStudentRepository userStudentRepository;
+    @Autowired private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
+    @Autowired private GameCompeteInitService gameCompeteInitService;
+    @Autowired private CommonWebSocketMessagePublisher webSocketMessagePublisher;
 
     @Override
-    public ResponseVo<String> deleteOneGame(Long gameId,Long userId){
+    public WebResponseVo<Object> deleteOneGame(Long gameId,Long userId,String password){
 
         //校验保证这个比赛信息存在
         final GameBasicInfo gameBasicInfo = gameBasicInfoRepository.findOne(gameId);
 
-        //防止同一个用户很接近的两个请求
+        //如果这个比赛本来就不存在就算是删除成功吧，主要是防止两次请求导致数据库报错
         if(gameBasicInfo == null){
 
-            return toSuccessResponseVo("已经被先一步删除了！");
+            return toSuccessResponseVoWithNoData();
         }
 
         //只有比赛的创建者才可以删除一个比赛，两个ID都是一定存在的
         if(gameBasicInfo.getGameCreator().getId().equals(userId)){
+
+            //查询该用户的数据，该数据肯定存在，因为校验过的，且用户无法被删除
+            final UserStudentInfo userStudentInfo = userStudentRepository.findByIdAndAccountEnable(userId,true);
+
+            //校验用户密码的准确性
+            if(!userStudentInfo.getStudentPassword().equals(password)){
+
+                return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"账户密码错误，无法删除该比赛");
+            }
 
             //只有处于创建状态的比赛才能够被删除
             if(gameBasicInfo.getGameStatus() == GameStatus.CREATE){
@@ -67,20 +69,20 @@ public class GameManageServiceImpl implements GameManageService {
                 //这个地方如果所对应的数据不存在会报异常，不过不影响结果
                 try{
                     gameBasicInfoRepository.delete(gameId);
-
-                    //通知前端该比赛被删除
-                    webSocketMessagePublisher.publish(gameId,new TextMessage(ManageConstant.GAME_DELETE_KEY_NAME + gameBasicInfo));
                 }catch(Exception e){
                     e.printStackTrace();
+                }finally{
+                    //通知前端该比赛被删除：格式为提示符 + 比赛ID
+                    webSocketMessagePublisher.publish(gameId,new TextMessage(ManageConstant.GAME_DELETE_KEY_NAME + gameBasicInfo.getId()));
                 }
 
-                return toSuccessResponseVo("删除比赛成功");
+                return toSuccessResponseVoWithNoData();
             }
 
-            return toFailResponseVo(HttpStatus.BAD_REQUEST,"只能删除处于创建状态的比赛");
+            return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"只能删除处于创建状态的比赛");
         }
 
-        return toFailResponseVo(HttpStatus.BAD_REQUEST,"只有比赛创建者可以删除比赛");
+        return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"只有比赛创建者可以删除比赛");
     }
 
     @Override
@@ -123,14 +125,16 @@ public class GameManageServiceImpl implements GameManageService {
     }
 
     @Override
-    public ResponseVo<String> beginOneGame(Long userId,Long gameId){
+    public WebResponseVo<String> beginOneGame(Long userId,Long gameId){
 
         final GameBasicInfo gameBasicInfo = gameBasicInfoRepository.findOne(gameId);
 
         if(gameBasicInfo != null){
 
+            //只有处于创建状态的企业才能够进行开始操作
             if(gameBasicInfo.getGameStatus() == GameStatus.CREATE){
 
+                //只有创建者才可以开始比赛
                 if(gameId.equals(gameBasicInfo.getGameCreator().getId())){
 
                     final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameInfo_Id(gameId);
@@ -138,56 +142,74 @@ public class GameManageServiceImpl implements GameManageService {
                     //如果这个比赛一个企业都没有也无法开启比赛
                     if(enterpriseBasicInfos == null || enterpriseBasicInfos.size() == 0){
 
-                        return toFailResponseVo(HttpStatus.BAD_REQUEST,"该比赛还没有一个企业，无法开始比赛");
+                        return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"该比赛还没有一个企业，无法开始比赛");
                     }
 
+                    //判断该比赛的企业里面是否还有处于创建状态没有进行确认的企业
                     boolean existsCreate = enterpriseBasicInfoRepository.existsByGameInfo_IdAndEnterpriseStatus(gameId,EnterpriseStatus.CREATE);
 
+                    //还有企业没有准备完成将无法开始比赛
                     if(existsCreate){
 
-                        return toFailResponseVo(HttpStatus.BAD_REQUEST,"还有企业没有准备完毕，无法开始比赛");
+                        return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"还有企业没有准备完毕，无法开始比赛");
                     }
 
-                    //比赛正在初始化
+                    //比赛正在初始化，这个阶段的比赛信息前端将无法获取
                     gameBasicInfo.setGameStatus(GameStatus.INITIALING);
+
+                    //通知前端该比赛已经开始初始化
+                    webSocketMessagePublisher.publish(gameId,new TextMessage(ManageConstant.GAME_TO_INIT_KEY_NAME + gameId));
+
+                    //存储这个比赛信息
                     gameBasicInfoRepository.save(gameBasicInfo);
 
-                    //初始化竞赛信息
-                    gameCompeteInitService.gameInit(gameId);
+                    //初始化竞赛信息，这个阶段会比较消耗时间
+                    final boolean init = gameCompeteInitService.gameInit(gameId);
+
+                    //初始化失败
+                    if(!init){
+
+                        return toFailResponseVoWithMessage(ResponseStatus.INTERNAL_SERVER_ERROR,"比赛初始化失败，请联系管理员");
+                    }
 
                     //比赛初始化完成
                     gameBasicInfo.setGameStatus(GameStatus.PLAYING);
-                    gameBasicInfoRepository.save(gameBasicInfo);
 
-                    return toSuccessResponseVo("比赛初始化成功，请开启你的比赛！");
+                    //向前端广播这个比赛已经初始化完成的信息
+                    webSocketMessagePublisher.publish(gameId,new TextMessage(ManageConstant.GAME_INIT_COMPLETE + gameId));
+
+                    //响应比赛创建者信息
+                    return toSuccessResponseVoWithNoData();
                 }
 
-                return toFailResponseVo(HttpStatus.BAD_REQUEST,"只有比赛创建者才可以开启这个比赛");
+                return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"只有比赛创建者才可以开启这个比赛");
             }
 
-            return toFailResponseVo(HttpStatus.BAD_REQUEST,"只有创建状态的比赛才可以进行开启");
+            return toFailResponseVoWithMessage(ResponseStatus.BAD_REQUEST,"只有创建状态的比赛才可以进行开启");
         }
 
-        return toFailResponseVo(HttpStatus.BAD_REQUEST,"比赛不存在");
+        return toFailResponseVoWithMessage(ResponseStatus.NOT_FOUND,"比赛不存在");
     }
 
     @Override
-    public ResponseVo<GameDetailInfoVo> createNewGame(GameCreateDto createDto){
+    public WebResponseVo<GameDetailInfoVo> createNewGame(GameCreateDto createDto){
 
         //校验保证该条数据存在却不保证一定被审核通过，所以需要确认该用户已经被审核通过
         final UserStudentInfo userStudentInfo = userStudentRepository.findByIdAndAccountEnable(createDto.getCreatorId(),true);
 
+        //校验用户是否能够创建比赛
         if(userStudentInfo == null){
 
-            return toFailResponseVo(HttpStatus.BAD_REQUEST,"该用户还没有审核通过，无法创建比赛");
+            return toFailResponseVoWithMessage(ResponseStatus.BAD_REQUEST,"该用户还没有审核通过或未注册，无法创建比赛");
         }
 
         //获取最新版本的比赛初始化信息，这个方法保证管理员将应用初始化更改后会响应在后面创建的比赛上
         GameInitInfo gameInitInfo = gameInitInfoRepository.findTop1ByIdIsNotNullOrderByIdDesc();
 
+        //校验比赛模块初始化数据是否正确
         if(gameInitInfo == null){
 
-            return toFailResponseVo(HttpStatus.INTERNAL_SERVER_ERROR,"应用比赛初始化信息出错，请联系管理员");
+            return toFailResponseVoWithMessage(ResponseStatus.INTERNAL_SERVER_ERROR,"应用比赛初始化信息出错，请联系管理员");
         }
 
         //纠正企业的最大个数，企业的最大个数在1-管理员设置的最大值之间，验证保证这个值最小为1
@@ -210,20 +232,19 @@ public class GameManageServiceImpl implements GameManageService {
                 .build();
 
         try{
-            //持久化这个比赛信息，这一步有可能会出现异常
+            //持久化这个比赛信息，必须要立马持久化到数据库里面去防止意外
             gameBasicInfo = gameBasicInfoRepository.saveAndFlush(gameBasicInfo);
 
             GameDetailInfoVo gameDetailInfoVo = new GameDetailInfoVo();
 
             EntityVoUtil.copyFieldsFromEntityToVo(gameBasicInfo,gameDetailInfoVo);
 
-            return toSuccessResponseVo(gameDetailInfoVo);
-
+            return toSuccessResponseVoWithData(gameDetailInfoVo);
         }catch(Exception e){
             e.printStackTrace();
         }
 
-        return toFailResponseVo(HttpStatus.INTERNAL_SERVER_ERROR,"服务器内部持久化失败！");
+        return toFailResponseVoWithMessage(ResponseStatus.INTERNAL_SERVER_ERROR,"服务器内部持久化失败！");
     }
 
     @Override

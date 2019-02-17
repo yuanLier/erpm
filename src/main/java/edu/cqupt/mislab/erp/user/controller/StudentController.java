@@ -1,27 +1,24 @@
 package edu.cqupt.mislab.erp.user.controller;
 
-import edu.cqupt.mislab.erp.commons.response.ResponseVo;
+import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.user.constant.UserConstant;
 import edu.cqupt.mislab.erp.user.model.dto.UserStudentInfoRegisterDto;
 import edu.cqupt.mislab.erp.user.model.dto.UserStudentInfoUpdateDto;
 import edu.cqupt.mislab.erp.user.model.entity.MajorInfo;
 import edu.cqupt.mislab.erp.user.model.vo.UserStudentInfoBasicVo;
 import edu.cqupt.mislab.erp.user.service.StudentService;
-import edu.cqupt.mislab.erp.user.task.StudentTask;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import java.util.List;
 
-import static edu.cqupt.mislab.erp.commons.response.ResponseUtil.toFailResponseVo;
-import static edu.cqupt.mislab.erp.commons.response.ResponseUtil.toSuccessResponseVo;
+import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
+import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
 
 @Api
 @Validated
@@ -31,75 +28,79 @@ import static edu.cqupt.mislab.erp.commons.response.ResponseUtil.toSuccessRespon
 public class StudentController extends UserController<UserStudentInfoBasicVo>{
 
     @Autowired
-    private StudentTask studentTask;
-    @Autowired
     private StudentService studentService;
 
     @ApiOperation(value = "学生账户注册",notes = "如果该账号既没有被审核通过使用也没有正在等待审核——》注册成功并等待审核")
     @PostMapping("/register")
-    public ResponseVo<String> userStudentRegister(@Valid @RequestBody UserStudentInfoRegisterDto registerDto){
+    public WebResponseVo<String> userStudentRegister(@Valid @RequestBody UserStudentInfoRegisterDto registerDto){
 
         //校验重复密码是否正确
         if(!registerDto.getStudentPassword().equals(registerDto.getRePassword())){
 
-            return toFailResponseVo(HttpStatus.BAD_REQUEST,"重复密码错误");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST,"重复密码错误");
         }
 
         //进行注册
-        return studentTask.userStudentRegister(registerDto);
+        return studentService.userStudentRegister(registerDto);
     }
 
     @ApiOperation(value = "修改学生账户的基本信息",notes = "需要修改那个信息就传那个信息，如果要覆盖就传空字符串而不是null，只有处于启用状态的账号才可以被修改")
     @PostMapping("/basicInfo/update")
-    public ResponseVo<UserStudentInfoBasicVo> updateStudentBasicInfo(@Valid @RequestBody UserStudentInfoUpdateDto updateDto,HttpSession httpSession){
+    public WebResponseVo<UserStudentInfoBasicVo> updateStudentBasicInfo(@Valid @RequestBody UserStudentInfoUpdateDto updateDto,HttpSession httpSession){
 
         UserStudentInfoBasicVo studentBasicInfoVo = studentService.updateStudentBasicInfo(updateDto);
 
         if(studentBasicInfoVo == null){
 
-            return toFailResponseVo(HttpStatus.NOT_FOUND,"该账户不存在或正在等待审核");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND,"该账户不存在或正在等待审核");
         }
 
+        //缓存数据
         httpSession.setAttribute(UserConstant.USER_COMMON_INFO_SESSION_ATTR_NAME,studentBasicInfoVo);
 
-        return toSuccessResponseVo(studentBasicInfoVo);
+        return toSuccessResponseVoWithData(studentBasicInfoVo);
     }
 
     @ApiOperation(value = "获取全部的头像位置信息",notes = "注意这个接口前端显示有问题，请直接 try it out!")
     @GetMapping("/avatar/get")
-    public ResponseVo<Object> getUserAvatarInfos(HttpSession httpSession){
+    public WebResponseVo<Object> getUserAvatarInfos(){
 
-        return toSuccessResponseVo(studentService.getUserAvatarInfos());
+        return toSuccessResponseVoWithData(studentService.getUserAvatarInfos());
     }
 
     @ApiOperation("获取学院专业信息")
     @GetMapping("/agency/get")
-    public ResponseVo<List<MajorInfo>> getAgencyInfos(){
+    public WebResponseVo<List<MajorInfo>> getAgencyInfos(){
 
-        return toSuccessResponseVo(studentService.getAgencyInfos());
+        return toSuccessResponseVoWithData(studentService.getAgencyInfos());
     }
 
     @Override
-    public boolean isTheAccountIsRight(String userAccount,UserStudentInfoBasicVo userBasicInfoVo){
+    public boolean isTheIdIsRight(Long userId,UserStudentInfoBasicVo userBasicInfoVo){
 
-        return userAccount.equals(userBasicInfoVo.getStudentAccount());
+        //userId绝对非null
+        return userId.equals(userBasicInfoVo.getId());
     }
 
     @Override
-    public UserStudentInfoBasicVo getUserBasicInfoVoFromDatabase(String userAccount){
+    public UserStudentInfoBasicVo getUserBasicInfoVoFromDatabaseById(Long userId){
+
+        return studentService.getStudentBasicInfoByUserId(userId);
+    }
+
+    @Override
+    public UserStudentInfoBasicVo getUserBasicInfoVoFromDatabaseByAccount(String userAccount){
 
         return studentService.getStudentBasicInfoByAccount(userAccount);
     }
 
     @Override
-    public boolean checkStudentAccountAndPassword(String userAccount,String userPassword){
-
+    public Long checkUserAccountAndPassword(String userAccount,String userPassword){
         return studentService.checkStudentAccountAndPassword(userAccount,userPassword);
     }
 
     @Override
-    protected boolean resetUserStudentPassword(String userAccount,String oldPassword,String newPassword){
-
-        return studentService.resetUserStudentPassword(userAccount,oldPassword,newPassword);
+    public boolean resetUserPassword(Long userId,String oldPassword,String newPassword){
+        return studentService.resetUserStudentPassword(userId,oldPassword,newPassword);
     }
 }

@@ -33,5 +33,5 @@ public class GameInitInfo implements Serializable {
 
     @Temporal(TemporalType.DATE)
     @Basic(optional = false)
-    private Date timeStamp;//进行版本控制，每一个比赛使用的版本不一样
+    private Date timeStamp;//进行版本控制，记录该记录的更改时间
 }

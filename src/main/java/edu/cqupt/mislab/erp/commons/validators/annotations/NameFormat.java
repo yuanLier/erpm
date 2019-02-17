@@ -13,7 +13,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = NameFormatValidator.class)
 public @interface NameFormat {
 
-    String message() default "数据不符合命名规范";
+    String message() default "数据不符合命名规范：变量命名规范";
 
     Class<?>[] groups() default {};
 

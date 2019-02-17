@@ -10,7 +10,8 @@ public class GameCompeteModelInit implements ModelInit {
 
 
     @Override
-    public void init(){
+    public boolean init(){
 
+        return true;
     }
 }

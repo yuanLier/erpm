@@ -14,13 +14,15 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * 初始化应用的数据，注意JPA的DDL模式必须为create才可以配合使用，目前是开发阶段，运行阶段将使用另外的方式
+ * 1、依靠ModeInit接口实现对模块的基本元数据进行初始化
+ * //todo
+ */
 @Slf4j
 @Component
 @WebListener
-public class ApplicationInitDataListener implements ServletContextListener {
-
-    @Value("${spring.profiles.active}")
-    private String activeProfiles;
+public class ApplicationDataInitListener implements ServletContextListener {
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -28,6 +30,7 @@ public class ApplicationInitDataListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce){
 
+        //获取容器里面所有实现了模块初始化接口的对象，使用这些对象来进行模块的元数据初始化
         final Map<String,ModelInit> modelInitMap = applicationContext.getBeansOfType(ModelInit.class);
 
         final Set<String> keySet = modelInitMap.keySet();
@@ -38,6 +41,7 @@ public class ApplicationInitDataListener implements ServletContextListener {
 
             final String next = iterator.next();
 
+            //初始化该模块数据
             modelInitMap.get(next).init();
         }
     }

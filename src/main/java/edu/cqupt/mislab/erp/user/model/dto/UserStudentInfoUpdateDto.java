@@ -20,7 +20,7 @@ import javax.validation.constraints.Pattern;
 public class UserStudentInfoUpdateDto {
 
     @NonNull
-    @Exist(repository = UserStudentRepository.class)
+    @Exist(repository = UserStudentRepository.class,message = "更改的这个user必须存在才有意义")
     @Min(value = 1L)
     @ApiModelProperty(value = "代理主键，必须要这个",required = true)
     private Long id;
@@ -39,11 +39,11 @@ public class UserStudentInfoUpdateDto {
     @ApiModelProperty("电子邮箱")
     private String email;
 
-    @Pattern(regexp = "^1(?:3\\d|4[4-9]|5[0-35-9]|6[67]|7[013-8]|8\\d|9\\d)\\d{8}$")
+    @Pattern(regexp = "^1(?:3\\d|4[4-9]|5[0-35-9]|6[67]|7[013-8]|8\\d|9\\d)\\d{8}$",message = "支持移动联通电信哦，别乱填")
     @ApiModelProperty("电话，移动电话，支持移动、联通、电信")
     private String phone;
 
-    @Exist(repository = UserAvatarRepository.class)
+    @Exist(repository = UserAvatarRepository.class,message = "头像必须还是要存在的")
     @ApiModelProperty("头像")
     private Long userAvatarInfoId;
 }

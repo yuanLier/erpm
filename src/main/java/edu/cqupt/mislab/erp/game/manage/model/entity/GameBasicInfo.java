@@ -69,48 +69,4 @@ public class GameBasicInfo implements Serializable {
     public int hashCode(){
         return new HashCodeBuilder(17,37).append(id).toHashCode();
     }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @ApiModel(value = "基本VO对象")
-    public static class GameBasicInfoVo {
-
-        @ApiModelProperty("代理主键")
-        Long id;
-
-        @ApiModelProperty("比赛的名称，比赛名称可以重复")
-        String gameName;
-
-        @ApiModelProperty("比赛的创建者，拥有可以开始比赛的权利")
-        Long gameCreatorId;
-
-        @ApiModelProperty("创建者姓名")
-        String gameCreatorName;
-
-        @ApiModelProperty("这场比赛允许参加的最大企业数目，用于限制企业创建")
-        Integer gameMaxEnterpriseNumber;
-
-        @ApiModelProperty("未开始时是已经参加的企业个数，开始后是真正参加的企业个数")
-        Integer gameEnterpriseActualNumber;
-
-        @ApiModelProperty("一场比赛中还存活的企业个数，用于订单处理")
-        Integer gameEnterpriseAliveNumber;
-
-        @ApiModelProperty("比赛最多需要进行的年数，默认为六年")
-        Integer gameYears;
-
-        @ApiModelProperty("每一年的周期数量，默认为4个周期")
-        Integer gamePeriodsOfYear;
-
-        @ApiModelProperty("当前游戏处于哪一个年，用于比赛数据的推进")
-        Integer gameCurrentYear;
-
-        @ApiModelProperty("比赛的状态：0标识创建状态，1标识正在初始化状态，2标识初始化完成并正常开始运营状态，3标识完结状态，所有的企业都已经破产或者推进完所有的周期")
-        Integer gameStatus;
-
-        @ApiModelProperty("创建这个比赛的时间，可以用来进行比赛管理信息排序")
-        Date gameCreateTime;
-    }
 }

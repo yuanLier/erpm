@@ -1,22 +1,21 @@
 package edu.cqupt.mislab.erp.game.manage.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.cqupt.mislab.erp.commons.response.ResponseVo;
+import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
+import edu.cqupt.mislab.erp.commons.response.WebResponseVo.ResponseStatus;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
+import edu.cqupt.mislab.erp.commons.websocket.CommonWebSocketMessagePublisher;
 import edu.cqupt.mislab.erp.game.manage.constant.ManageConstant;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseMemberInfoRepository;
-import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.dto.EnterpriseJoinDto;
 import edu.cqupt.mislab.erp.game.manage.model.dto.UserContributionRateSureDto;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseMemberInfo;
+import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatus;
 import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseMemberDisplayVo;
 import edu.cqupt.mislab.erp.game.manage.service.EnterpriseMemberManageService;
 import edu.cqupt.mislab.erp.game.manage.service.GameUserRoleService;
 import edu.cqupt.mislab.erp.game.manage.service.GameUserRoleService.GameEnterpriseUserRole;
-import edu.cqupt.mislab.erp.game.manage.websocket.WebSocketMessagePublisher;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ import org.springframework.web.socket.TextMessage;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static edu.cqupt.mislab.erp.commons.response.ResponseUtil.*;
+import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.*;
 
 @Service
 public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManageService {
@@ -41,26 +40,28 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
     @Autowired
     private GameUserRoleService gameUserRoleService;
     @Autowired
-    private WebSocketMessagePublisher webSocketMessagePublisher;
+    private CommonWebSocketMessagePublisher webSocketMessagePublisher;
 
     @Override
-    public ResponseVo<String> joinOneEnterprise(EnterpriseJoinDto joinDto){
+    public WebResponseVo<String> joinOneEnterprise(EnterpriseJoinDto joinDto){
 
         final GameEnterpriseUserRole role = gameUserRoleService.getUserRoleInOneGame(joinDto.getGameId(),joinDto.getUserId());
 
         //只有路人甲可以加入企业
         if(role != GameEnterpriseUserRole.PASSERBY){
 
-            return toFailResponseVo(HttpStatus.BAD_REQUEST,role.getMessage());
+            return toFailResponseVoWithMessage(ResponseStatus.BAD_REQUEST,role.getMessage());
         }
 
+        //获取企业信息
         final EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findOne(joinDto.getEnterpriseId());
 
         if(enterpriseBasicInfo == null){
 
-            return toFailResponseVo(HttpStatus.NOT_FOUND,"该企业不存在");
+            return toFailResponseVoWithMessage(ResponseStatus.NOT_FOUND,"该企业不存在");
         }
 
+        //获取企业成员，企业成员至少有一个：创始人
         final Set<EnterpriseMemberInfo> memberInfos = enterpriseBasicInfo.getMemberInfos();
 
         int memberNumber = 0;
@@ -70,10 +71,25 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
             memberNumber = memberInfos.size();
         }
 
-        //必须要小于企业最大成员数
-        if(memberNumber >= enterpriseBasicInfo.getGameInfo().getGameInitInfo().getMaxMemberNumber()){
+        //如果是运行时添加人员，需要密码
+        if(joinDto.getPassword() != null){
 
-            return toFailResponseVo(HttpStatus.BAD_REQUEST,"企业成员个数达到最大，不能够再加入");
+            //需要密码通过才行
+            if(enterpriseBasicInfo.getEnterpriseCeo().getStudentPassword().equals(joinDto.getPassword())){
+
+                //这里的人数限制是比赛初始化信息的最大人数
+                //必须要小于企业最大成员数
+                if(memberNumber >= enterpriseBasicInfo.getGameInfo().getGameInitInfo().getMaxMemberNumber()){
+
+                    return toFailResponseVoWithMessage(ResponseStatus.BAD_REQUEST,"企业成员个数达到最大，不能够再添加成员了");
+                }
+            }
+        }else {
+            //如果是直接主动加入，必须小于企业设定的最大成员数
+            if(memberNumber >= enterpriseBasicInfo.getEnterpriseMaxMemberNumber()){
+
+                return toFailResponseVoWithMessage(ResponseStatus.BAD_REQUEST,"企业成员个数达到最大，不能够再主动加入了");
+            }
         }
 
         //这个用户绝对会存在，非null
@@ -87,45 +103,52 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
 
         final EnterpriseMemberInfo info = enterpriseMemberInfoRepository.saveAndFlush(enterpriseMemberInfo);
 
+        //存储成功
         if(info.getId() != null){
 
-            return toSuccessResponseVo("加入企业成功");
+            return toSuccessResponseVoWithNoData();
         }
 
-        return toFailResponseVo(HttpStatus.INTERNAL_SERVER_ERROR,"内部出现未知错误");
+        return toFailResponseVoWithMessage(ResponseStatus.INTERNAL_SERVER_ERROR,"内部出现未知错误");
     }
 
     @Override
-    public ResponseVo<String> outOneEnterprise(Long userId,Long enterpriseId){
+    public WebResponseVo<String> outOneEnterprise(Long userId,Long enterpriseId){
 
         final EnterpriseMemberInfo memberInfo = enterpriseMemberInfoRepository.findByEnterprise_IdAndStudentInfo_Id(enterpriseId,userId);
 
         if(memberInfo == null){
 
-            return toFailResponseVo(HttpStatus.NOT_FOUND,"该企业没有该成员");
+            //没有该成员就是成功
+            return toSuccessResponseVoWithNoData();
         }
 
         final EnterpriseBasicInfo basicInfo = enterpriseBasicInfoRepository.findOne(enterpriseId);
 
         if(basicInfo != null){
 
+            //如果是创始人退出企业将删除这个企业
             if(basicInfo.getEnterpriseCeo().getId().equals(userId)){
 
                 final Long gameInfoId = basicInfo.getGameInfo().getId();
 
-                //通知前端
+                //通知前端这个企业已经被删除了
                 webSocketMessagePublisher.publish(gameInfoId,new TextMessage(ManageConstant.ENTERPRISE_DELETE_KEY_NAME + enterpriseId));
 
                 //当创始人退出企业时将删除这个企业，级联删除了这个企业的全部成员
                 enterpriseBasicInfoRepository.delete(enterpriseId);
 
-                return toSuccessResponseVo("创始人退出企业，删除企业");
+                return toSuccessResponseVoWithData("创始人退出企业，删除企业");
             }
+
+            //删除这个成员
+            enterpriseMemberInfoRepository.delete(memberInfo.getId());
+
+            //删除成功响应
+            return toSuccessResponseVoWithNoData();
         }
 
-        enterpriseMemberInfoRepository.delete(memberInfo.getId());
-
-        return toSuccessResponseVo("退出企业成功");
+        return toFailResponseVoWithMessage(ResponseStatus.NOT_FOUND,"该企业不存在");
     }
 
     @Override
@@ -153,7 +176,7 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
     }
 
     @Override
-    public ResponseVo<String> sureGameContributionRate(UserContributionRateSureDto rateSureDto){
+    public WebResponseVo<String> sureGameContributionRate(UserContributionRateSureDto rateSureDto){
 
         final Long enterpriseId = rateSureDto.getEnterpriseId();
 
@@ -162,7 +185,7 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
         //这个企业必须要存在
         if(enterpriseBasicInfo == null){
 
-            return toFailResponseVo(HttpStatus.BAD_REQUEST,"该企业不存在");
+            return toFailResponseVoWithMessage(ResponseStatus.NOT_FOUND,"该企业不存在");
         }
 
         final Boolean rateSure = enterpriseBasicInfo.getGameContributionRateSure();
@@ -170,7 +193,13 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
         //贡献度只能够确认一次
         if(rateSure != null && rateSure){
 
-            return toFailResponseVo(HttpStatus.BAD_REQUEST,"该企业贡献度已经被确认，不能再被修改");
+            return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"该企业贡献度已经被确认，不能再被修改");
+        }
+
+        //只能确定已经完结的企业的贡献度
+        if(enterpriseBasicInfo.getEnterpriseStatus() != EnterpriseStatus.OVER || enterpriseBasicInfo.getEnterpriseStatus() != EnterpriseStatus.BANKRUPT){
+
+            return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"只能确认已经完结或者破产的企业的成员贡献度");
         }
 
         final Long creatorId = rateSureDto.getCreatorId();
@@ -178,7 +207,7 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
         //只有创建者才能够确认贡献度
         if(!creatorId.equals(enterpriseBasicInfo.getEnterpriseCeo().getId())){
 
-            return toFailResponseVo(HttpStatus.BAD_REQUEST,"只有企业创建者才可以进行贡献度确认操作");
+            return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"只有企业创建者才可以进行贡献度确认操作");
         }
 
         Set<Long> memberIds = new HashSet<>();
@@ -193,7 +222,7 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
         //企业成员贡献度只能够一次确认全部
         if(!keySet.containsAll(memberIds)){
 
-            return toFailResponseVo(HttpStatus.BAD_REQUEST,"企业贡献度必须确认全部成员的贡献度");
+            return toFailResponseVoWithMessage(ResponseStatus.BAD_REQUEST,"企业贡献度必须确认全部成员的贡献度");
         }
 
         AtomicInteger rateTotal = new AtomicInteger(0);
@@ -203,7 +232,7 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
         //企业成员贡献度的总和必须等于100
         if(rateTotal.get() != 100){
 
-            return toFailResponseVo(HttpStatus.BAD_REQUEST,"成员贡献度的总和必须为100");
+            return toFailResponseVoWithMessage(ResponseStatus.BAD_REQUEST,"成员贡献度的总和必须为100");
         }
 
         //更新贡献度
@@ -221,6 +250,7 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
 
         enterpriseBasicInfoRepository.save(enterpriseBasicInfo);
 
-        return toSuccessResponseVo("更新成功");
+        //响应前端
+        return toSuccessResponseVoWithNoData();
     }
 }

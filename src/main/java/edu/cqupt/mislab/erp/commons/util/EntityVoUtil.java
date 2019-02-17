@@ -9,6 +9,9 @@ import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailInfoVo;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import edu.cqupt.mislab.erp.user.model.vo.UserStudentInfoBasicVo;
 
+/**
+ * 用于转换Entity和VO的工具类，方法全部使用重载，第一个参数是Entity对象，第二个参数是VO对象
+ */
 public abstract class EntityVoUtil {
 
     public static void copyFieldsFromEntityToVo(UserStudentInfo userStudentInfo,UserStudentInfoBasicVo infoBasicVo){

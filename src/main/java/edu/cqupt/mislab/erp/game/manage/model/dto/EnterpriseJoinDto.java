@@ -18,18 +18,21 @@ public class EnterpriseJoinDto {
     @NotNull
     @Min(1L)
     @Exist(repository = GameBasicInfoRepository.class)
-    @ApiModelProperty("哪一个比赛")
+    @ApiModelProperty(value = "哪一个比赛",required = true)
     private Long gameId;
 
     @NotNull
     @Min(1L)
     @Exist(repository = EnterpriseBasicInfoRepository.class)
-    @ApiModelProperty("哪一个企业")
+    @ApiModelProperty(value = "哪一个企业",required = true)
     private Long enterpriseId;
 
     @NotNull
     @Min(1L)
     @Exist(repository = UserStudentRepository.class)
-    @ApiModelProperty("哪一个用户")
+    @ApiModelProperty(value = "哪一个用户",required = true)
     private Long userId;
+
+    @ApiModelProperty(value = "当这个接口用于运行时添加用户时，需要CEO的密码",required = false)
+    private String password;
 }
