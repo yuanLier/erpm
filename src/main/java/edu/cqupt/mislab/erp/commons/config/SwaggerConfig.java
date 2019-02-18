@@ -42,6 +42,20 @@ public class SwaggerConfig {
                 .build();
     }
 
+    @Bean//比赛运行API文档
+    public Docket gameCompeteApi(){
+
+        String description = "比赛操作的API文档，所有的比赛操作";
+
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo(description))
+                .groupName("gama_compete")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("edu.cqupt.mislab.erp.game.compete"))
+                .paths(PathSelectors.any())
+                .build();
+    }
+
     private ApiInfo apiInfo(final String description) {
         return new ApiInfoBuilder()
                 .title("ERP电子沙盘模拟系统在线API文档")

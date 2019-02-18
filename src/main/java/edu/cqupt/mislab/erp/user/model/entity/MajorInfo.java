@@ -3,6 +3,7 @@ package edu.cqupt.mislab.erp.user.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @Builder
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table
-public class MajorInfo {
+public class MajorInfo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

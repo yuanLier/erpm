@@ -4,7 +4,7 @@ import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo.ResponseStatus;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.commons.websocket.CommonWebSocketMessagePublisher;
-import edu.cqupt.mislab.erp.game.compete.init.GameCompeteInitService;
+import edu.cqupt.mislab.erp.game.compete.basic.impl.GameModelInitService;
 import edu.cqupt.mislab.erp.game.manage.constant.ManageConstant;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
@@ -36,7 +36,7 @@ public class GameManageServiceImpl implements GameManageService {
     @Autowired private GameBasicInfoRepository gameBasicInfoRepository;
     @Autowired private UserStudentRepository userStudentRepository;
     @Autowired private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
-    @Autowired private GameCompeteInitService gameCompeteInitService;
+    @Autowired private GameModelInitService gameCompeteInitService;
     @Autowired private CommonWebSocketMessagePublisher webSocketMessagePublisher;
 
     @Override
@@ -164,7 +164,7 @@ public class GameManageServiceImpl implements GameManageService {
                     gameBasicInfoRepository.save(gameBasicInfo);
 
                     //初始化竞赛信息，这个阶段会比较消耗时间
-                    final boolean init = gameCompeteInitService.gameInit(gameId);
+                    final boolean init = gameCompeteInitService.initGameModel(gameId);
 
                     //初始化失败
                     if(!init){

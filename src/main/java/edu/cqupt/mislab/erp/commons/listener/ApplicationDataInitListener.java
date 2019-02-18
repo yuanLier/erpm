@@ -42,7 +42,9 @@ public class ApplicationDataInitListener implements ServletContextListener {
             final String next = iterator.next();
 
             //初始化该模块数据
-            modelInitMap.get(next).init();
+            if(!modelInitMap.get(next).init()){
+                throw new RuntimeException("应用初始化数据异常！！！");
+            }
         }
     }
     @Override

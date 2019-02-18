@@ -11,5 +11,9 @@
     <property name="hbm2ddl.auto">update</property>
     <mapping package="edu.cqupt.mislab.erp.user.model.entity"/>
     <mapping package="edu.cqupt.mislab.erp.game.manage.model.entity"/>
+    <mapping package="edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity"/>
+    <mapping package="edu.cqupt.mislab.erp.game.compete.operation.market.model.entity"/>
+    <mapping package="edu.cqupt.mislab.erp.game.compete.operation.product.model.entity"/>
+    <mapping package="edu.cqupt.mislab.erp.game.compete.operation.order.model.entity"/>
   </session-factory>
 </hibernate-configuration>
