@@ -135,7 +135,7 @@ public class GameManageServiceImpl implements GameManageService {
             if(gameBasicInfo.getGameStatus() == GameStatus.CREATE){
 
                 //只有创建者才可以开始比赛
-                if(gameId.equals(gameBasicInfo.getGameCreator().getId())){
+                if(userId.equals(gameBasicInfo.getGameCreator().getId())){
 
                     final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameInfo_Id(gameId);
 
