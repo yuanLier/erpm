@@ -14,7 +14,7 @@ public interface IsoDevelopInfoRepository extends JpaRepository<IsoDevelopInfo, 
      * @param enterpriseId
      * @return
      */
-    List<IsoDevelopInfo> findByEnterpriseId(Long enterpriseId);
+    List<IsoDevelopInfo> findByEnterpriseBasicInfo_Id(Long enterpriseId);
 
 
     /**
@@ -23,7 +23,7 @@ public interface IsoDevelopInfoRepository extends JpaRepository<IsoDevelopInfo, 
      * @param isoStatus
      * @return
      */
-    List<IsoDevelopInfo> findByEnterpriseIdAndAndIsoStatus(Long enterpriseId, IsoStatusEnum isoStatus);
+    List<IsoDevelopInfo> findByEnterpriseBasicInfo_IdAndIsoStatus(Long enterpriseId, IsoStatusEnum isoStatus);
 
 
     /**

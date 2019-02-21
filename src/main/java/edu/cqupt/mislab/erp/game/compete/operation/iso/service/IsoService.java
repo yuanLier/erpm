@@ -23,7 +23,7 @@ public interface IsoService {
      * @param isoStatus
      * @return
      */
-    List<IsoDisplayVo> findByEnterpriseIdAndAndIsoStatus(Long enterpriseId, IsoStatusEnum isoStatus);
+    List<IsoDisplayVo> findByEnterpriseIdAndIsoStatus(Long enterpriseId, IsoStatusEnum isoStatus);
 
 
     /**

@@ -45,7 +45,7 @@ public class IsoController {
 
     @ApiOperation(value = "获取某企业中处于某认证状态的iso")
     @PostMapping("/iso/infos/get/{status}")
-    public WebResponseVo<List<IsoDisplayVo>> findByEnterpriseIdAndAndIsoStatus(@Exist(repository = EnterpriseBasicInfoRepository.class)
+    public WebResponseVo<List<IsoDisplayVo>> findByEnterpriseIdAndIsoStatus(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                    @RequestParam Long enterpriseId,
                                                                                @PathVariable IsoStatusEnum isoStatus) {
 
@@ -53,7 +53,7 @@ public class IsoController {
             return toFailResponseVoWithMessage(null, "iso认证状态有误");
         }
 
-        List<IsoDisplayVo> isoDisplayVoList = isoService.findByEnterpriseIdAndAndIsoStatus(enterpriseId, isoStatus);
+        List<IsoDisplayVo> isoDisplayVoList = isoService.findByEnterpriseIdAndIsoStatus(enterpriseId, isoStatus);
 
         if(isoDisplayVoList == null) {
             return toFailResponseVoWithMessage(null, "该企业对应的iso认证不存在");
@@ -82,7 +82,7 @@ public class IsoController {
     @PostMapping("/iso/basic/update")
     public WebResponseVo<IsoBasicInfo> updateIsoBasicInfo(@RequestBody IsoBasicInfo isoBasicInfo) {
         if(isoBasicInfo != null) {
-            return toSuccessResponseVoWithData(isoBasicInfo);
+            return toSuccessResponseVoWithData(isoService.updateIsoBasicInfo(isoBasicInfo));
         } else {
             return toFailResponseVoWithMessage(null,"所传信息为空");
         }

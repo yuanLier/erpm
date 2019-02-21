@@ -1,6 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.order.model.entity;
 
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.MaterialBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;

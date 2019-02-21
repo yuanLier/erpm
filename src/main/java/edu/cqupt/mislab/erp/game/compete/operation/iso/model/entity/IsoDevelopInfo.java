@@ -1,6 +1,7 @@
 package edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity;
 
 
+import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,7 +25,7 @@ public class IsoDevelopInfo implements Serializable {
     private IsoBasicInfo isoBasicInfo;//ISO认证的基本信息
 
     @Column(nullable = false, updatable = false)
-    private Long enterpriseId;//哪一个企业的ISO认证信息
+    private EnterpriseBasicInfo enterpriseBasicInfo;//哪一个企业的ISO认证信息
 
     @Column(columnDefinition = "null", updatable = false)
     private Integer developBeginPeriod = null;//认证开始的周期
@@ -44,8 +45,8 @@ public class IsoDevelopInfo implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         IsoDevelopInfo that = (IsoDevelopInfo) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(enterpriseId, that.enterpriseId) &&
                 Objects.equals(isoBasicInfo, that.isoBasicInfo) &&
+                Objects.equals(enterpriseBasicInfo, that.enterpriseBasicInfo) &&
                 Objects.equals(developBeginPeriod, that.developBeginPeriod) &&
                 Objects.equals(developEndPeriod, that.developEndPeriod) &&
                 Objects.equals(researchedPeriod, that.researchedPeriod) &&
@@ -55,6 +56,6 @@ public class IsoDevelopInfo implements Serializable {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, enterpriseId, isoBasicInfo, developBeginPeriod, developEndPeriod, researchedPeriod, isoStatus);
+        return Objects.hash(id, isoBasicInfo, enterpriseBasicInfo, developBeginPeriod, developEndPeriod, researchedPeriod, isoStatus);
     }
 }

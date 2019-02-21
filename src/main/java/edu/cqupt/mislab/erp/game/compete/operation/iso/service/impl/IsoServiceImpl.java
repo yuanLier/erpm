@@ -26,7 +26,12 @@ public class IsoServiceImpl implements IsoService {
     public List<IsoDisplayVo> findByEnterpriseId(Long enterpriseId) {
 
         // 根据企业id获取全部iso认证信息
-        List<IsoDevelopInfo> isoDevelopInfoList = isoDevelopInfoRepository.findByEnterpriseId(enterpriseId);
+        List<IsoDevelopInfo> isoDevelopInfoList = isoDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId);
+
+        // 非空判断
+        if(isoDevelopInfoList == null || isoDevelopInfoList.size() == 0) {
+            return null;
+        }
 
         // 将认证信息依次转换为vo实体
         List<IsoDisplayVo> isoDisplayVoList = new ArrayList<>();
@@ -39,10 +44,15 @@ public class IsoServiceImpl implements IsoService {
     }
 
     @Override
-    public List<IsoDisplayVo> findByEnterpriseIdAndAndIsoStatus(Long enterpriseId, IsoStatusEnum isoStatus) {
+    public List<IsoDisplayVo> findByEnterpriseIdAndIsoStatus(Long enterpriseId, IsoStatusEnum isoStatus) {
 
         // 根据企业id及认证状态获取iso认证信息
-        List<IsoDevelopInfo> isoDevelopInfoList = isoDevelopInfoRepository.findByEnterpriseIdAndAndIsoStatus(enterpriseId, isoStatus);
+        List<IsoDevelopInfo> isoDevelopInfoList = isoDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndIsoStatus(enterpriseId, isoStatus);
+
+        // 非空判断
+        if(isoDevelopInfoList == null || isoDevelopInfoList.size() == 0) {
+            return null;
+        }
 
         // 将认证信息依次转换为vo实体
         List<IsoDisplayVo> isoDisplayVoList = new ArrayList<>();
@@ -59,6 +69,11 @@ public class IsoServiceImpl implements IsoService {
 
         // 根据id获取对应要修改的那条iso认证
         IsoDevelopInfo isoDevelopInfo = isoDevelopInfoRepository.findOne(isoDevelopId);
+
+        // 非空判断
+        if(isoDevelopInfo == null) {
+            return null;
+        }
 
         // 修改认证状态
         isoDevelopInfo.setIsoStatus(isoStatus);
