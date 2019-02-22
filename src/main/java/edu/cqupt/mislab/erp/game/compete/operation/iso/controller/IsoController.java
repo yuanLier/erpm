@@ -29,13 +29,14 @@ public class IsoController {
     private IsoService isoService;
 
     @ApiOperation(value = "获取某个企业的全部ISO认证信息")
-    @PostMapping("/iso/infos/get")
+    @PostMapping("/iso/infos/get")//todo 这里为什么使用POST诶？是因为使用了两个参数？
     public WebResponseVo<List<IsoDisplayVo>> findByEnterpriseId(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                     @RequestParam Long enterpriseId) {
 
         List<IsoDisplayVo> isoDisplayVoList = isoService.findByEnterpriseId(enterpriseId);
 
         if(isoDisplayVoList == null) {
+            //todo 状态一定要写清楚，必须要有，参见edu.cqupt.mislab.erp.commons.response.WebResponseVo.ResponseStatus
             return toFailResponseVoWithMessage(null, "该企业对应的iso认证不存在");
         }
 
@@ -48,7 +49,7 @@ public class IsoController {
     public WebResponseVo<List<IsoDisplayVo>> findByEnterpriseIdAndIsoStatus(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                    @RequestParam Long enterpriseId,
                                                                                @PathVariable IsoStatusEnum isoStatus) {
-
+        //todo springmvc自动转换，不需要这个方法来判断，转换失败是会直接抛异常的
         if(!EnumUtil.isInclude(isoStatus.toString())) {
             return toFailResponseVoWithMessage(null, "iso认证状态有误");
         }
@@ -78,8 +79,9 @@ public class IsoController {
     }
 
 
+    //todo 业务逻辑错误，修改基本信息会产生新的数据，而不是更改原来的数据
     @ApiOperation(value = "（管理员）修改iso基本信息")
-    @PostMapping("/iso/basic/update")
+    @PostMapping("/iso/basic/update")//todo 使用DTO代替 IsoBasicInfo
     public WebResponseVo<IsoBasicInfo> updateIsoBasicInfo(@RequestBody IsoBasicInfo isoBasicInfo) {
         if(isoBasicInfo != null) {
             return toSuccessResponseVoWithData(isoService.updateIsoBasicInfo(isoBasicInfo));

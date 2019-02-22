@@ -4,6 +4,8 @@ import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoDevelopIn
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoDisplayVo;
 
 public class VoUtil {
+
+    //todo 建议把这个工具类转移到edu.cqupt.mislab.erp.commons.util.EntityVoUtil
     public static IsoDisplayVo castEntityToVo(IsoDevelopInfo isoDevelopInfo) {
         IsoDisplayVo isoDisplayVo = new IsoDisplayVo();
 
