@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ModelAdvanceServiceImpl implements ModelAdvance {
 
-
     @Override
     public boolean advance(Long gameId){
         return false;

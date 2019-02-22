@@ -20,6 +20,7 @@ import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo.UserStudentInfoBuilder;
 import edu.cqupt.mislab.erp.user.model.entity.UserTeacherInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.*;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public class GameManageServiceImpl implements GameManageService {
     @Autowired private UserStudentRepository userStudentRepository;
     @Autowired private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
     @Autowired private GameModelInitService gameCompeteInitService;
-    @Autowired private CommonWebSocketMessagePublisher webSocketMessagePublisher;
+    @Autowired @Qualifier("commonWebSocketService") private CommonWebSocketMessagePublisher webSocketMessagePublisher;
 
     @Override
     public WebResponseVo<Object> deleteOneGame(Long gameId,Long userId,String password){

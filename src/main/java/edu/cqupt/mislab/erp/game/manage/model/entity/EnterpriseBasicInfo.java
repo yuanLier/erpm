@@ -42,7 +42,10 @@ public class EnterpriseBasicInfo implements Serializable {
     private Integer enterpriseCurrentPeriod;//这个企业所处于的周期
 
     @Basic(optional = false)
-    private Boolean enterpriseCostAd;//企业是否该年已经投过广告了，0标识没有，1标识投过了
+    private Boolean advertising;//企业是否会投广告
+
+    @Basic(optional = false)
+    private Boolean advertisingCost;//企业是否投过了广告
 
     @Enumerated(EnumType.STRING)
     @Basic(optional = false)

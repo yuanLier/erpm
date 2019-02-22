@@ -19,6 +19,7 @@ import edu.cqupt.mislab.erp.game.manage.service.GameUserRoleService.GameEnterpri
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -39,7 +40,7 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
     private UserStudentRepository userStudentRepository;
     @Autowired
     private GameUserRoleService gameUserRoleService;
-    @Autowired
+    @Autowired @Qualifier("commonWebSocketService")
     private CommonWebSocketMessagePublisher webSocketMessagePublisher;
 
     @Override

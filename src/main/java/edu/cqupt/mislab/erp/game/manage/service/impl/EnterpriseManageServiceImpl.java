@@ -15,6 +15,7 @@ import edu.cqupt.mislab.erp.game.manage.service.GameUserRoleService.GameEnterpri
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -31,7 +32,7 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
     @Autowired private EnterpriseMemberInfoRepository enterpriseMemberInfoRepository;
     @Autowired private UserStudentRepository userStudentRepository;
     @Autowired private GameUserRoleService gameUserRoleService;
-    @Autowired private CommonWebSocketMessagePublisher webSocketMessagePublisher;
+    @Autowired @Qualifier("commonWebSocketService") private CommonWebSocketMessagePublisher webSocketMessagePublisher;
 
     @Override
     public WebResponseVo<EnterpriseDetailInfoVo> createNewEnterprise(EnterpriseCreateDto createDto){
@@ -85,7 +86,8 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
         //构建这个企业
         EnterpriseBasicInfo enterpriseBasicInfo = EnterpriseBasicInfo.builder()
                 .enterpriseCeo(userStudentInfo)
-                .enterpriseCostAd(false)//默认没有花费广告
+                .advertising(true)//默认会投
+                .advertisingCost(false)//默认未投广告费
                 .enterpriseName(createDto.getEnterpriseName())
                 .enterpriseMaxMemberNumber(maxMemberNumber)
                 .enterpriseCurrentPeriod(1)//当前周期为第一期

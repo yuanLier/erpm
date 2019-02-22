@@ -8,6 +8,7 @@ import edu.cqupt.mislab.erp.game.manage.constant.ManageConstant;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.server.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
@@ -25,12 +26,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CommonWebSocketService extends AbstractWebSocketHandler implements HandshakeInterceptor, CommonWebSocketMessagePublisher {
 
     @Autowired
-    private GameBasicInfoRepository gameBasicInfoRepository;
+    protected GameBasicInfoRepository gameBasicInfoRepository;
 
     /*
     用于存储每一个比赛里面的session数据，每一个比赛的所有的session数据被存在同一个集合里面
      */
-    private static final Map<Long,List<WebSocketSession>> webSocketSessionsMap = new ConcurrentHashMap<>();
+    protected final Map<Long,List<WebSocketSession>> webSocketSessionsMap = new ConcurrentHashMap<>();
 
     @Override//回显测试的作用
     public void handleMessage(WebSocketSession session,WebSocketMessage<?> message) throws Exception{
