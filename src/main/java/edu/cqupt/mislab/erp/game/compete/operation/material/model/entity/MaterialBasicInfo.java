@@ -1,12 +1,11 @@
-package edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity;
+package edu.cqupt.mislab.erp.game.compete.operation.material.model.entity;
 
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -15,25 +14,23 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @Table
-public class IsoDevelopedInfo implements Serializable {
+public class MaterialBasicInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;//代理主键
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
-    @JoinColumn(nullable = false,updatable = false)
-    private EnterpriseBasicInfo enterpriseBasicInfo;//哪一个企业的ISO认证信息
-
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
-    @JoinColumn(nullable = false,updatable = false)
-    private IsoBasicInfo isoBasicInfo;//ISO认证的基本信息
+    @Column(unique = true,nullable = false,updatable = false)
+    private String materialName;//原料的名称
 
     @Column(nullable = false,updatable = false)
-    private Integer developBeginPeriod;//认证开始的周期
+    private Double materialPrice;//原料的价格
 
     @Column(nullable = false,updatable = false)
-    private Integer developEndPeriod;//认证完成的周期
+    private Integer materialDelayTime;//指原料从采购开始到原料运到仓库，需要等待的周期数
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date timeStamp;//时间戳
 
     @Override
     public boolean equals(Object o){
@@ -43,7 +40,7 @@ public class IsoDevelopedInfo implements Serializable {
         if(o == null||getClass() != o.getClass())
             return false;
 
-        IsoDevelopedInfo that = (IsoDevelopedInfo) o;
+        MaterialBasicInfo that = (MaterialBasicInfo) o;
 
         return new EqualsBuilder().append(id,that.id).isEquals();
     }

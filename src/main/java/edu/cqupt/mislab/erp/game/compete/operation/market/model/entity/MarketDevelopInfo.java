@@ -1,4 +1,4 @@
-package edu.cqupt.mislab.erp.game.compete.operation.product.model.entity;
+package edu.cqupt.mislab.erp.game.compete.operation.market.model.entity;
 
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
@@ -15,7 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @Table
-public class ProductToDevelopInfo implements Serializable {
+public class MarketDevelopInfo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,11 +23,23 @@ public class ProductToDevelopInfo implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    private EnterpriseBasicInfo enterpriseBasicInfo;//哪一个企业的产品研发信息
+    private MarketBasicInfo marketBasicInfo;//市场开发的基本信息
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    private ProductBasicInfo productBasicInfo;//产品研发的基本信息
+    private EnterpriseBasicInfo enterpriseBasicInfo;//哪一个企业的市场开发信息
+
+    @Column(columnDefinition = "null",updatable = false)
+    private Integer developBeginPeriod;//市场开始开发的周期
+
+    @Column(columnDefinition = "null",updatable = false)
+    private Integer developEndPeriod;//市场完成开发的周期
+
+    @Column(nullable = false, columnDefinition = "0",updatable = false)
+    private Integer researchedPeriod;//已经市场开发了多少个周期
+
+    @Column(nullable = false, columnDefinition = "UNDEVELOP",updatable = false)
+    private MarketStatusEnum marketStatus;//当前市场的开发状态
 
     @Override
     public boolean equals(Object o){
@@ -37,7 +49,7 @@ public class ProductToDevelopInfo implements Serializable {
         if(o == null||getClass() != o.getClass())
             return false;
 
-        ProductToDevelopInfo that = (ProductToDevelopInfo) o;
+        MarketDevelopInfo that = (MarketDevelopInfo) o;
 
         return new EqualsBuilder().append(id,that.id).isEquals();
     }

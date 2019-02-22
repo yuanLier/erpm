@@ -33,9 +33,6 @@ public class MarketBasicInfo implements Serializable {
     @Column(nullable = false,updatable = false)
     private Double marketMaintainCost;//市场开发完成后，维持该市场每个周期需要支付的费用
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date timeStamp;//时间戳
-
     @Override
     public boolean equals(Object o){
         if(this == o)

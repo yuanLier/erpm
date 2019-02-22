@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-
 @Slf4j
 @Service
 public class IsoModelInit implements ModelInit {
@@ -37,8 +35,7 @@ public class IsoModelInit implements ModelInit {
                 .isoResearchCost(0.5)
                 .isoResearchPeriod(4)
                 .isoMaintainCost(0.2)
-                .extraValue(0.2)
-                .timeStamp(new Date()).build());
+                .extraValue(0.2).build());
 
         isoBasicInfoRepository.save(
                 IsoBasicInfo.builder()
@@ -46,7 +43,6 @@ public class IsoModelInit implements ModelInit {
                         .isoResearchCost(0.6)
                         .isoResearchPeriod(5)
                         .isoMaintainCost(0.4)
-                        .extraValue(0.5)
-                        .timeStamp(new Date()).build());
+                        .extraValue(0.5).build());
     }
 }

@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.model.entity;
 
+import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -30,9 +31,6 @@ public class ProductMaterialBasicInfo {
 
     @Basic(optional = false)
     private Integer materialNumber;//需要该种原料多少种
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date timeStamp;//时间戳
 
     @Override
     public boolean equals(Object o){

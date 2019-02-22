@@ -30,8 +30,14 @@ public class ProductBasicInfo implements Serializable {
     @Column(nullable = false,updatable = false)
     private Double productResearchCost;//在产品研发过程中，每个周期需要支付的费用
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date timeStamp;//时间戳
+    @Column(nullable = false,updatable = false)
+    private Integer produceProductPeriod;//生产该产品所需的基本周期数
+
+    @Column(nullable = false,updatable = false)
+    private Double produceProductCost;//在产品生产过程中，每个周期需要支付的费用
+
+    @Column(nullable = false,updatable = false)
+    private Double productSellingPrice;//产品的基本售价
 
     @Override
     public boolean equals(Object o){
