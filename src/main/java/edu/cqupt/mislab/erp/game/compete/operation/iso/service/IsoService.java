@@ -1,7 +1,9 @@
 package edu.cqupt.mislab.erp.game.compete.operation.iso.service;
 
+import edu.cqupt.mislab.erp.game.compete.operation.iso.model.dto.IsoBasicDto;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoStatusEnum;
+import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoDisplayVo;
 import org.springframework.stereotype.Service;
 
@@ -37,8 +39,8 @@ public interface IsoService {
 
     /**
      * （管理员）修改iso基本信息
-     * @param isoBasicInfo
+     * @param isoBasicDto
      * @return
      */
-    IsoBasicInfo updateIsoBasicInfo(IsoBasicInfo isoBasicInfo);
+    IsoBasicVo updateIsoBasicInfo(IsoBasicDto isoBasicDto);
 }

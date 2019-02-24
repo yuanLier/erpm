@@ -1,10 +1,12 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.service;
 
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.dto.ProductBasicDto;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.dto.ProductMaterialBasicDto;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductStatusEnum;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialVo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialBasicVo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialDisplayVo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,24 +42,24 @@ public interface ProductService {
 
     /**
      * （管理员）修改产品基本信息
-     * @param productBasicInfo
+     * @param productBasicDto
      * @return
      */
-    ProductBasicInfo updateProductBasicInfo(ProductBasicInfo productBasicInfo);
+    ProductBasicVo updateProductBasicInfo(ProductBasicDto productBasicDto);
 
     /**
      * （管理员）修改产品组成原料的基本信息
-     * @param productMaterialBasicInfo
+     * @param productMaterialBasicDto
      * @return
      */
-    ProductMaterialBasicInfo updateProductMaterialBasicInfo(ProductMaterialBasicInfo productMaterialBasicInfo);
+    ProductMaterialBasicVo updateProductMaterialBasicInfo(ProductMaterialBasicDto productMaterialBasicDto);
 
     /**
      * 查询某个企业所有产品的原材料构成情况
      * @param enterpriseId
      * @return
      */
-    List<ProductMaterialVo> findProductMaterialInfoByEnterpriseId(Long enterpriseId);
+    List<ProductMaterialDisplayVo> findProductMaterialInfoByEnterpriseId(Long enterpriseId);
 
     /**
      * 查询某个企业出于某种状态的产品的原材料构成情况
@@ -65,5 +67,5 @@ public interface ProductService {
      * @param productStatus
      * @return
      */
-    List<ProductMaterialVo> findProductMaterialInfoByEnterpriseIdAndProductStatus(Long enterpriseId, ProductStatusEnum productStatus);
+    List<ProductMaterialDisplayVo> findProductMaterialInfoByEnterpriseIdAndProductStatus(Long enterpriseId, ProductStatusEnum productStatus);
 }

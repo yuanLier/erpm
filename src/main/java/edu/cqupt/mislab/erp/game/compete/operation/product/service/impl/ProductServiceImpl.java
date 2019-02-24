@@ -1,8 +1,13 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.service.impl;
 
+import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
+import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductMaterialBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialVo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.util.VoUtil;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.dto.ProductBasicDto;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.dto.ProductMaterialBasicDto;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductBasicVo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialBasicVo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
@@ -28,8 +33,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductDevelopInfoRepository productDevelopInfoRepository;
-    
-    
+
+
     @Override
     public List<ProductDisplayVo> findByEnterpriseId(Long enterpriseId) {
         // 获取entity集
@@ -44,7 +49,7 @@ public class ProductServiceImpl implements ProductService {
         // 转换为vo集
         List<ProductDisplayVo> productDisplayVoList = new ArrayList<>();
         for (ProductDevelopInfo productDevelopInfo : productDevelopInfoList) {
-            productDisplayVoList.add(VoUtil.castEntityToVo(productDevelopInfo));
+            productDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(productDevelopInfo));
         }
 
         // 返回vo集
@@ -65,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
         // 转换为vo集
         List<ProductDisplayVo> productDisplayVoList = new ArrayList<>();
         for (ProductDevelopInfo productDevelopInfo : productDevelopInfoList) {
-            productDisplayVoList.add(VoUtil.castEntityToVo(productDevelopInfo));
+            productDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(productDevelopInfo));
         }
 
         // 返回vo集
@@ -89,25 +94,45 @@ public class ProductServiceImpl implements ProductService {
         productDevelopInfoRepository.save(productDevelopInfo);
 
         // 转换为vo实体并返回
-        return VoUtil.castEntityToVo(productDevelopInfo);
+        return EntityVoUtil.copyFieldsFromEntityToVo(productDevelopInfo);
     }
 
     @Override
-    public ProductBasicInfo updateProductBasicInfo(ProductBasicInfo productBasicInfo) {
+    public ProductBasicVo updateProductBasicInfo(ProductBasicDto productBasicDto) {
+        // 将接受到的dto中的数据复制给productBasicInfo
+        ProductBasicInfo productBasicInfo = new ProductBasicInfo();
+        BeanCopyUtil.copyPropertiesSimple(productBasicDto,productBasicInfo);
 
-        // 保存修改并返回
-        return productBasicInfoRepository.save(productBasicInfo);
+        // 保存修改
+        productBasicInfo = productBasicInfoRepository.save(productBasicInfo);
+
+        // 将获取了新id的info数据复制给productBasicVo
+        ProductBasicVo productBasicVo = new ProductBasicVo();
+        BeanCopyUtil.copyPropertiesSimple(productBasicInfo, productBasicVo);
+
+        // 返回vo
+        return productBasicVo;
     }
 
     @Override
-    public ProductMaterialBasicInfo updateProductMaterialBasicInfo(ProductMaterialBasicInfo productMaterialBasicInfo) {
+    public ProductMaterialBasicVo updateProductMaterialBasicInfo(ProductMaterialBasicDto productMaterialBasicDto) {
+        // 将接受到的dto中的数据复制给productMaterialBasicInfo
+        ProductMaterialBasicInfo productMaterialBasicInfo = new ProductMaterialBasicInfo();
+        BeanCopyUtil.copyPropertiesSimple(productMaterialBasicDto,productMaterialBasicInfo);
 
-        // 保存修改并返回
-        return productMaterialBasicInfoRepository.save(productMaterialBasicInfo);
+        // 保存修改
+        productMaterialBasicInfo = productMaterialBasicInfoRepository.save(productMaterialBasicInfo);
+
+        // 将获取了新id的info数据复制给productMaterialBasicVo
+        ProductMaterialBasicVo productMaterialBasicVo = new ProductMaterialBasicVo();
+        BeanCopyUtil.copyPropertiesSimple(productMaterialBasicInfo, productMaterialBasicVo);
+
+        // 返回vo
+        return productMaterialBasicVo;
     }
 
     @Override
-    public List<ProductMaterialVo> findProductMaterialInfoByEnterpriseId(Long enterpriseId) {
+    public List<ProductMaterialDisplayVo> findProductMaterialInfoByEnterpriseId(Long enterpriseId) {
 
         // 首先根据企业id获取该企业的所有产品研发信息
         List<ProductDevelopInfo> productDevelopInfoList =
@@ -124,8 +149,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductMaterialVo> findProductMaterialInfoByEnterpriseIdAndProductStatus(Long enterpriseId, ProductStatusEnum productStatus) {
-        List<ProductMaterialVo> productMaterialVoList = new ArrayList<>();
+    public List<ProductMaterialDisplayVo> findProductMaterialInfoByEnterpriseIdAndProductStatus(Long enterpriseId, ProductStatusEnum productStatus) {
+        List<ProductMaterialDisplayVo> productMaterialDisplayVoList = new ArrayList<>();
 
         // 获取该企业处于该中状态下的的所有产品研发信息
         List<ProductDevelopInfo> productDevelopInfoList =
@@ -146,9 +171,9 @@ public class ProductServiceImpl implements ProductService {
      * @param productDevelopInfoList 接收一个productDevelopInfo集合
      * @return 返回productDevelopInfo集合中每个产品对应的原材料信息Vo
      */
-    public List<ProductMaterialVo> getProductMaterialVoByProductDevelopInfo(List<ProductDevelopInfo> productDevelopInfoList) {
+    public List<ProductMaterialDisplayVo> getProductMaterialVoByProductDevelopInfo(List<ProductDevelopInfo> productDevelopInfoList) {
 
-        List<ProductMaterialVo> productMaterialVoList = new ArrayList<>();
+        List<ProductMaterialDisplayVo> productMaterialDisplayVoList = new ArrayList<>();
 
         // 对该企业的每一个产品研发信息
         for (ProductDevelopInfo productDevelopInfo : productDevelopInfoList) {
@@ -170,19 +195,19 @@ public class ProductServiceImpl implements ProductService {
             }
 
             // 构建一个ProductMaterialVo
-            ProductMaterialVo productMaterialVo = new ProductMaterialVo();
+            ProductMaterialDisplayVo productMaterialDisplayVo = new ProductMaterialDisplayVo();
             // 产品构成-id（同ProductDevelopId
-            productMaterialVo.setId(productDevelopInfo.getId());
+            productMaterialDisplayVo.setId(productDevelopInfo.getId());
             // 产品构成-原材料map
-            productMaterialVo.setMaterialMap(materialMap);
+            productMaterialDisplayVo.setMaterialMap(materialMap);
             // 产品构成-售价（该字段是否需要？是否必要？存疑 todo 等这一块下一版原型图出来再改
-            productMaterialVo.setProductSellingPrice(productDevelopInfo.getProductBasicInfo().getProductSellingPrice());
+            productMaterialDisplayVo.setProductSellingPrice(productDevelopInfo.getProductBasicInfo().getProductSellingPrice());
 
             // 将该Vo加入集合
-            productMaterialVoList.add(productMaterialVo);
+            productMaterialDisplayVoList.add(productMaterialDisplayVo);
         }
 
         // 返回该企业所有产品的原材料构成集合
-        return productMaterialVoList;
+        return productMaterialDisplayVoList;
     }
 }

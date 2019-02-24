@@ -24,7 +24,8 @@ public class IsoDevelopInfo implements Serializable {
     @JoinColumn(nullable = false,updatable = false)
     private IsoBasicInfo isoBasicInfo;//ISO认证的基本信息
 
-    @Column(nullable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(nullable = false,updatable = false)
     private EnterpriseBasicInfo enterpriseBasicInfo;//哪一个企业的ISO认证信息
 
     @Column(columnDefinition = "null", updatable = false)
@@ -36,6 +37,7 @@ public class IsoDevelopInfo implements Serializable {
     @Column(nullable = false, columnDefinition = "0", updatable = false)
     private Integer researchedPeriod = 0;//已经认证了多少个周期
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "UNDEVELOP", updatable = false)
     private IsoStatusEnum isoStatus = IsoStatusEnum.UNDEVELOP;//当前认证状态
 

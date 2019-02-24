@@ -38,6 +38,7 @@ public class MarketDevelopInfo implements Serializable {
     @Column(nullable = false, columnDefinition = "0",updatable = false)
     private Integer researchedPeriod;//已经市场开发了多少个周期
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "UNDEVELOP",updatable = false)
     private MarketStatusEnum marketStatus;//当前市场的开发状态
 

@@ -38,6 +38,7 @@ public class ProductDevelopInfo implements Serializable {
     @Column(nullable = false, columnDefinition = "0",updatable = false)
     private Integer researchedPeriod;//已经产品研发了多少个周期
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "UNDEVELOP",updatable = false)
     private ProductStatusEnum productStatus;//当前产品的研发状态
 

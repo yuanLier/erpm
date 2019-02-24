@@ -1,13 +1,16 @@
 package edu.cqupt.mislab.erp.game.compete.operation.iso.service.impl;
 
+import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
+import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoDevelopInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.iso.model.dto.IsoBasicDto;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoStatusEnum;
+import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.service.IsoService;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.util.VoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -36,7 +39,7 @@ public class IsoServiceImpl implements IsoService {
         // 将认证信息依次转换为vo实体
         List<IsoDisplayVo> isoDisplayVoList = new ArrayList<>();
         for (IsoDevelopInfo isoDevelopInfo : isoDevelopInfoList) {
-            isoDisplayVoList.add(VoUtil.castEntityToVo(isoDevelopInfo));
+            isoDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(isoDevelopInfo));
         }
 
         // 返回vo实体集
@@ -57,7 +60,7 @@ public class IsoServiceImpl implements IsoService {
         // 将认证信息依次转换为vo实体
         List<IsoDisplayVo> isoDisplayVoList = new ArrayList<>();
         for (IsoDevelopInfo isoDevelopInfo : isoDevelopInfoList) {
-            isoDisplayVoList.add(VoUtil.castEntityToVo(isoDevelopInfo));
+            isoDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(isoDevelopInfo));
         }
 
         // 返回vo实体集
@@ -75,19 +78,31 @@ public class IsoServiceImpl implements IsoService {
             return null;
         }
 
-        // 修改认证状态 todo 可以把认证完成的状态改为未认证状态？
+        // 修改认证状态
         isoDevelopInfo.setIsoStatus(isoStatus);
 
         // 保存修改
         isoDevelopInfoRepository.save(isoDevelopInfo);
 
         // 转换为vo实体并返回
-        return VoUtil.castEntityToVo(isoDevelopInfo);
+        return EntityVoUtil.copyFieldsFromEntityToVo(isoDevelopInfo);
     }
 
     @Override
-    public IsoBasicInfo updateIsoBasicInfo(IsoBasicInfo isoBasicInfo) {
-        // 保存修改并返回
-        return isoBasicInfoRepository.save(isoBasicInfo);
+    public IsoBasicVo updateIsoBasicInfo(IsoBasicDto isoBasicDto) {
+
+        // 将接受到的dto中的数据复制给isoBasicInfo
+        IsoBasicInfo isoBasicInfo = new IsoBasicInfo();
+        BeanCopyUtil.copyPropertiesSimple(isoBasicDto,isoBasicInfo);
+
+        // 保存修改
+        isoBasicInfo = isoBasicInfoRepository.save(isoBasicInfo);
+
+        // 将获取了新id的info数据复制给isoBasicVo
+        IsoBasicVo isoBasicVo = new IsoBasicVo();
+        BeanCopyUtil.copyPropertiesSimple(isoBasicInfo, isoBasicVo);
+
+        // 返回vo
+        return isoBasicVo;
     }
 }

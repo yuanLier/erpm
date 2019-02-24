@@ -3,11 +3,11 @@ package edu.cqupt.mislab.erp.game.compete.operation.iso.controller;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoDevelopInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.iso.model.dto.IsoBasicDto;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoStatusEnum;
+import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.service.IsoService;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.util.EnumUtil;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,15 +29,14 @@ public class IsoController {
     private IsoService isoService;
 
     @ApiOperation(value = "获取某个企业的全部ISO认证信息")
-    @PostMapping("/iso/infos/get")//todo 这里为什么使用POST诶？是因为使用了两个参数？
+    @GetMapping("/iso/infos/get")
     public WebResponseVo<List<IsoDisplayVo>> findByEnterpriseId(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                     @RequestParam Long enterpriseId) {
 
         List<IsoDisplayVo> isoDisplayVoList = isoService.findByEnterpriseId(enterpriseId);
 
         if(isoDisplayVoList == null) {
-            //todo 状态一定要写清楚，必须要有，参见edu.cqupt.mislab.erp.commons.response.WebResponseVo.ResponseStatus
-            return toFailResponseVoWithMessage(null, "该企业对应的iso认证不存在");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业对应的iso认证不存在");
         }
 
         return toSuccessResponseVoWithData(isoDisplayVoList);
@@ -49,15 +48,11 @@ public class IsoController {
     public WebResponseVo<List<IsoDisplayVo>> findByEnterpriseIdAndIsoStatus(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                    @RequestParam Long enterpriseId,
                                                                                @PathVariable IsoStatusEnum isoStatus) {
-        //todo springmvc自动转换，不需要这个方法来判断，转换失败是会直接抛异常的
-        if(!EnumUtil.isInclude(isoStatus.toString())) {
-            return toFailResponseVoWithMessage(null, "iso认证状态有误");
-        }
 
         List<IsoDisplayVo> isoDisplayVoList = isoService.findByEnterpriseIdAndIsoStatus(enterpriseId, isoStatus);
 
         if(isoDisplayVoList == null) {
-            return toFailResponseVoWithMessage(null, "该企业对应的iso认证不存在");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业对应的iso认证不存在");
         }
 
         return toSuccessResponseVoWithData(isoDisplayVoList);
@@ -70,10 +65,6 @@ public class IsoController {
                                                            @RequestParam Long isoDevelopId,
                                                        @PathVariable IsoStatusEnum isoStatus) {
 
-        if(!EnumUtil.isInclude(isoStatus.toString())) {
-            return toFailResponseVoWithMessage(null, "iso认证状态有误");
-        }
-
         return toSuccessResponseVoWithData(isoService.updateIsoStatus(isoDevelopId, isoStatus));
 
     }
@@ -82,11 +73,11 @@ public class IsoController {
     //todo 业务逻辑错误，修改基本信息会产生新的数据，而不是更改原来的数据
     @ApiOperation(value = "（管理员）修改iso基本信息")
     @PostMapping("/iso/basic/update")//todo 使用DTO代替 IsoBasicInfo
-    public WebResponseVo<IsoBasicInfo> updateIsoBasicInfo(@RequestBody IsoBasicInfo isoBasicInfo) {
-        if(isoBasicInfo != null) {
-            return toSuccessResponseVoWithData(isoService.updateIsoBasicInfo(isoBasicInfo));
+    public WebResponseVo<IsoBasicVo> updateIsoBasicInfo(@RequestBody IsoBasicDto isoBasicDto) {
+        if(isoBasicDto != null) {
+            return toSuccessResponseVoWithData(isoService.updateIsoBasicInfo(isoBasicDto));
         } else {
-            return toFailResponseVoWithMessage(null,"所传信息为空");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND,"所传信息为空");
         }
     }
 }

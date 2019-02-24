@@ -1,13 +1,16 @@
 package edu.cqupt.mislab.erp.game.compete.operation.market.service.impl;
 
+import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
+import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketDevelopInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.dto.MarketBasicDto;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketStatusEnum;
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.service.MarketService;
-import edu.cqupt.mislab.erp.game.compete.operation.market.util.VoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -36,7 +39,7 @@ public class MarketServiceImpl implements MarketService {
         // 转换为vo集
         List<MarketDisplayVo> marketDisplayVoList = new ArrayList<>();
         for (MarketDevelopInfo marketDevelopInfo : marketDevelopInfoList) {
-            marketDisplayVoList.add(VoUtil.castEntityToVo(marketDevelopInfo));
+            marketDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(marketDevelopInfo));
         }
 
         // 返回vo集
@@ -58,7 +61,7 @@ public class MarketServiceImpl implements MarketService {
         // 转换为vo集
         List<MarketDisplayVo> marketDisplayVoList = new ArrayList<>();
         for (MarketDevelopInfo marketDevelopInfo : marketDevelopInfoList) {
-            marketDisplayVoList.add(VoUtil.castEntityToVo(marketDevelopInfo));
+            marketDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(marketDevelopInfo));
         }
 
         // 返回vo集
@@ -83,12 +86,23 @@ public class MarketServiceImpl implements MarketService {
         marketDevelopInfoRepository.save(marketDevelopInfo);
 
         // 转换为vo实体并返回
-        return VoUtil.castEntityToVo(marketDevelopInfo);
+        return EntityVoUtil.copyFieldsFromEntityToVo(marketDevelopInfo);
     }
 
     @Override
-    public MarketBasicInfo updateMarketBasicInfo(MarketBasicInfo marketBasicInfo) {
-        // 保存修改并返回
-        return marketBasicInfoRepository.save(marketBasicInfo);
+    public MarketBasicVo updateMarketBasicInfo(MarketBasicDto marketBasicDto) {
+        // 将接受到的dto中的数据复制给marketBasicInfo
+        MarketBasicInfo marketBasicInfo = new MarketBasicInfo();
+        BeanCopyUtil.copyPropertiesSimple(marketBasicDto,marketBasicInfo);
+
+        // 保存修改
+        marketBasicInfo = marketBasicInfoRepository.save(marketBasicInfo);
+
+        // 将获取了新id的info数据复制给marketBasicVo
+        MarketBasicVo marketBasicVo = new MarketBasicVo();
+        BeanCopyUtil.copyPropertiesSimple(marketBasicInfo, marketBasicVo);
+
+        // 返回vo
+        return marketBasicVo;
     }
 }

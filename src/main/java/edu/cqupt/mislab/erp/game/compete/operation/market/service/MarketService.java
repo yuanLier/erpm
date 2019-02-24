@@ -1,7 +1,9 @@
 package edu.cqupt.mislab.erp.game.compete.operation.market.service;
 
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.dto.MarketBasicDto;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketStatusEnum;
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
 import org.springframework.stereotype.Service;
 
@@ -38,9 +40,9 @@ public interface MarketService {
 
     /**
      * （管理员）修改市场基本信息
-     * @param marketBasicInfo
+     * @param marketBasicDto
      * @return
      */
-    MarketBasicInfo updateMarketBasicInfo(MarketBasicInfo marketBasicInfo);
+    MarketBasicVo updateMarketBasicInfo(MarketBasicDto marketBasicDto);
 
 }

@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Data
 @ApiModel("产品构成展示视图")
-public class ProductMaterialVo {
+public class ProductMaterialDisplayVo {
 
     @ApiModelProperty("代理主键，值同ProductDevelopInfo的主键")
     private Long id;

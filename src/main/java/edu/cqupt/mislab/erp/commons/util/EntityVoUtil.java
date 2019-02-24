@@ -2,6 +2,10 @@ package edu.cqupt.mislab.erp.commons.util;
 
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.*;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.*;
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseMemberInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
@@ -64,4 +68,73 @@ public abstract class EntityVoUtil {
         displayVo.setGameContributionRate(enterpriseMemberInfo.getGameContributionRate());
         displayVo.setAvatarLocation(enterpriseMemberInfo.getStudentInfo().getUserAvatarInfo().getAvatarLocation());
     }
+
+    public static IsoDisplayVo copyFieldsFromEntityToVo(IsoDevelopInfo isoDevelopInfo) {
+        IsoDisplayVo isoDisplayVo = new IsoDisplayVo();
+
+        isoDisplayVo.setId(isoDevelopInfo.getId());
+
+        // 每期维护费用
+        isoDisplayVo.setIsoMaintainCost(isoDevelopInfo.getIsoBasicInfo().getIsoMaintainCost());
+        // ISO认证名称
+        isoDisplayVo.setIsoName(isoDevelopInfo.getIsoBasicInfo().getIsoName());
+        // 每期认证费用
+        isoDisplayVo.setIsoResearchCost(isoDevelopInfo.getIsoBasicInfo().getIsoResearchCost());
+        // 需要认证的总期数
+        isoDisplayVo.setIsoResearchPeriod(isoDevelopInfo.getIsoBasicInfo().getIsoResearchPeriod());
+
+        // 认证状态
+        isoDisplayVo.setIsoStatus(isoDevelopInfo.getIsoStatus());
+        // 已经认证的期数
+        isoDisplayVo.setResearchedPeriod(isoDevelopInfo.getResearchedPeriod());
+
+        return isoDisplayVo;
+    }
+
+    public static MarketDisplayVo copyFieldsFromEntityToVo(MarketDevelopInfo marketDevelopInfo) {
+
+        MarketDisplayVo marketDisplayVo = new MarketDisplayVo();
+
+        // id同marketDevelopId
+        marketDisplayVo.setId(marketDevelopInfo.getId());
+
+        // 每期维护费用
+        marketDisplayVo.setMarketMaintainCost(marketDevelopInfo.getMarketBasicInfo().getMarketMaintainCost());
+        // 市场名称
+        marketDisplayVo.setMarketName(marketDevelopInfo.getMarketBasicInfo().getMarketName());
+        // 每期开拓费用
+        marketDisplayVo.setMarketResearchCost(marketDevelopInfo.getMarketBasicInfo().getMarketResearchCost());
+        // 完成开发所需要的总周期
+        marketDisplayVo.setMarketResearchPeriod(marketDevelopInfo.getMarketBasicInfo().getMarketResearchPeriod());
+
+        // 已经开拓的周期数
+        marketDisplayVo.setResearchedPeriod(marketDevelopInfo.getResearchedPeriod());
+        // 当前开拓状态
+        marketDisplayVo.setMarketStatus(marketDevelopInfo.getMarketStatus());
+
+        return marketDisplayVo;
+    }
+
+    public static ProductDisplayVo copyFieldsFromEntityToVo(ProductDevelopInfo productDevelopInfo) {
+
+        ProductDisplayVo productDisplayVo = new ProductDisplayVo();
+
+        productDisplayVo.setId(productDevelopInfo.getId());
+
+        // 产品名称
+        productDisplayVo.setProductName(productDevelopInfo.getProductBasicInfo().getProductName());
+        // 每期研发费用
+        productDisplayVo.setProductResearchCost(productDevelopInfo.getProductBasicInfo().getProductResearchCost());
+        // 研发总期数
+        productDisplayVo.setProductResearchPeriod(productDevelopInfo.getProductBasicInfo().getProductResearchPeriod());
+
+        // 当前研发状态
+        productDisplayVo.setProductStatus(productDevelopInfo.getProductStatus());
+        // 已研发的周期数
+        productDisplayVo.setResearchedPeriod(productDevelopInfo.getResearchedPeriod());
+
+        return productDisplayVo;
+    }
+
+
 }

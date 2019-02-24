@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel("ISO基本数据视图")
+@ApiModel("ISO数据展示视图")
 public class IsoDisplayVo {
 
     @ApiModelProperty("代理主键，值同IsoDevelopInfo的主键")
