@@ -33,6 +33,9 @@ public class IsoBasicInfo implements Serializable {
     @Column(nullable = false, updatable = false)
     private Double extraValue;//该认证对订单价格的影响程度，每一个产品价格影响
 
+    @Column(nullable = false, updatable = false)
+    private IsoStatusEnum isoStatus;//该认证的默认初始状态
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -43,12 +46,13 @@ public class IsoBasicInfo implements Serializable {
                 Objects.equals(isoResearchPeriod, that.isoResearchPeriod) &&
                 Objects.equals(isoResearchCost, that.isoResearchCost) &&
                 Objects.equals(isoMaintainCost, that.isoMaintainCost) &&
-                Objects.equals(extraValue, that.extraValue);
+                Objects.equals(extraValue, that.extraValue) &&
+                isoStatus == that.isoStatus;
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, isoName, isoResearchPeriod, isoResearchCost, isoMaintainCost, extraValue);
+        return Objects.hash(id, isoName, isoResearchPeriod, isoResearchCost, isoMaintainCost, extraValue, isoStatus);
     }
 }

@@ -16,6 +16,7 @@ import java.util.Objects;
 @Entity
 @Table
 public class IsoDevelopInfo implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;//代理主键
@@ -28,18 +29,17 @@ public class IsoDevelopInfo implements Serializable {
     @JoinColumn(nullable = false,updatable = false)
     private EnterpriseBasicInfo enterpriseBasicInfo;//哪一个企业的ISO认证信息
 
-    @Column(columnDefinition = "null", updatable = false)
-    private Integer developBeginPeriod = null;//认证开始的周期
+    @Column(nullable = false, updatable = false, columnDefinition = "int default 0")
+    private Integer developBeginPeriod = 0;//认证开始的周期，默认为0
 
-    @Column(columnDefinition = "null", updatable = false)
-    private Integer developEndPeriod = null;//认证完成的周期
+    @Column(nullable = false, updatable = false, columnDefinition = "int default 0")
+    private Integer developEndPeriod = 0;//认证完成的周期，默认为0
 
-    @Column(nullable = false, columnDefinition = "0", updatable = false)
-    private Integer researchedPeriod = 0;//已经认证了多少个周期
+    @Column(nullable = false, updatable = false, columnDefinition = "int default 0")
+    private Integer researchedPeriod = 0;//已经认证了多少个周期，默认为0
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "UNDEVELOP", updatable = false)
-    private IsoStatusEnum isoStatus = IsoStatusEnum.UNDEVELOP;//当前认证状态
+    private IsoStatusEnum isoStatus;//当前认证状态（默认同iso基本认证中的初始认证状态，需要手动控制）
 
     @Override
     public boolean equals(Object o) {

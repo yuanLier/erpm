@@ -12,10 +12,12 @@ import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketBasicVo
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.service.MarketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class MarketServiceImpl implements MarketService {
 
     @Autowired

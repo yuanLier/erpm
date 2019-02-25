@@ -44,10 +44,10 @@ public class MarketController {
 
 
     @ApiOperation(value = "获取某企业中处于某开拓状态的市场")
-    @PostMapping("/market/infos/get/{status}")
+    @GetMapping("/market/infos/get/status")
     public WebResponseVo<List<MarketDisplayVo>> findByEnterpriseIdAndAndMarketStatus(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                @RequestParam Long enterpriseId,
-                                                                               @PathVariable MarketStatusEnum marketStatus) {
+                                                                               @RequestParam MarketStatusEnum marketStatus) {
 
         List<MarketDisplayVo> marketDisplayVoList = marketService.findByEnterpriseIdAndMarketStatus(enterpriseId, marketStatus);
 
@@ -60,10 +60,10 @@ public class MarketController {
 
 
     @ApiOperation(value = "修改某个市场的开拓状态")
-    @PostMapping("/market/infos/update/{status}")
+    @PostMapping("/market/infos/update/status")
     public WebResponseVo<MarketDisplayVo> updateMarketStatus(@Exist(repository = MarketDevelopInfoRepository.class)
                                                        @RequestParam Long marketDevelopId,
-                                                       @PathVariable MarketStatusEnum marketStatus) {
+                                                       @RequestParam MarketStatusEnum marketStatus) {
 
         return toSuccessResponseVoWithData(marketService.updateMarketStatus(marketDevelopId, marketStatus));
     }

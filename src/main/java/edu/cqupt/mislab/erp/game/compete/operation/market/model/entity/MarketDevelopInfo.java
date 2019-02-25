@@ -29,18 +29,17 @@ public class MarketDevelopInfo implements Serializable {
     @JoinColumn(nullable = false,updatable = false)
     private EnterpriseBasicInfo enterpriseBasicInfo;//哪一个企业的市场开发信息
 
-    @Column(columnDefinition = "null",updatable = false)
-    private Integer developBeginPeriod;//市场开始开发的周期
+    @Column(nullable = false,columnDefinition = "int default 0",updatable = false)
+    private Integer developBeginPeriod = 0;//市场开始开发的周期，默认为0
 
-    @Column(columnDefinition = "null",updatable = false)
-    private Integer developEndPeriod;//市场完成开发的周期
+    @Column(nullable = false,columnDefinition = "int default 0",updatable = false)
+    private Integer developEndPeriod = 0;//市场完成开发的周期，默认为0
 
-    @Column(nullable = false, columnDefinition = "0",updatable = false)
-    private Integer researchedPeriod;//已经市场开发了多少个周期
+    @Column(nullable = false, columnDefinition = "int default 0",updatable = false)
+    private Integer researchedPeriod = 0;//已经市场开发了多少个周期，默认为0
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "UNDEVELOP",updatable = false)
-    private MarketStatusEnum marketStatus;//当前市场的开发状态
+    private MarketStatusEnum marketStatus;//当前市场的开发状态（默认同iso基本认证中的初始认证状态，需要手动控制）
 
     @Override
     public boolean equals(Object o){

@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo;
 
+import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoStatusEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -25,5 +26,8 @@ public class IsoBasicVo {
 
     @ApiModelProperty(value = "该认证对订单价格的影响程度，每一个产品价格影响")
     private Double extraValue;
+
+    @ApiModelProperty(value = "该认证的默认初始状态")
+    private IsoStatusEnum isoStatus;//该认证的默认初始状态
 
 }

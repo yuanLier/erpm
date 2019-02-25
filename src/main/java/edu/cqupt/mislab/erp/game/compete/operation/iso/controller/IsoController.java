@@ -44,10 +44,10 @@ public class IsoController {
 
 
     @ApiOperation(value = "获取某企业中处于某认证状态的iso")
-    @PostMapping("/iso/infos/get/{status}")
+    @GetMapping("/iso/infos/get/status")
     public WebResponseVo<List<IsoDisplayVo>> findByEnterpriseIdAndIsoStatus(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                    @RequestParam Long enterpriseId,
-                                                                               @PathVariable IsoStatusEnum isoStatus) {
+                                                                               @RequestParam IsoStatusEnum isoStatus) {
 
         List<IsoDisplayVo> isoDisplayVoList = isoService.findByEnterpriseIdAndIsoStatus(enterpriseId, isoStatus);
 
@@ -60,19 +60,19 @@ public class IsoController {
 
 
     @ApiOperation(value = "修改某个iso的认证状态")
-    @PostMapping("/iso/infos/update/{status}")
+    @PostMapping("/iso/infos/update/status")
     public WebResponseVo<IsoDisplayVo> updateIsoStatus(@Exist(repository = IsoDevelopInfoRepository.class)
                                                            @RequestParam Long isoDevelopId,
-                                                       @PathVariable IsoStatusEnum isoStatus) {
+                                                       @RequestParam IsoStatusEnum isoStatus) {
 
         return toSuccessResponseVoWithData(isoService.updateIsoStatus(isoDevelopId, isoStatus));
 
     }
 
 
-    //todo 业务逻辑错误，修改基本信息会产生新的数据，而不是更改原来的数据
+
     @ApiOperation(value = "（管理员）修改iso基本信息")
-    @PostMapping("/iso/basic/update")//todo 使用DTO代替 IsoBasicInfo
+    @PostMapping("/iso/basic/update")
     public WebResponseVo<IsoBasicVo> updateIsoBasicInfo(@RequestBody IsoBasicDto isoBasicDto) {
         if(isoBasicDto != null) {
             return toSuccessResponseVoWithData(isoService.updateIsoBasicInfo(isoBasicDto));

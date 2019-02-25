@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.market.model.dto;
 
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketStatusEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -31,5 +32,9 @@ public class MarketBasicDto {
     @NotNull
     @ApiModelProperty(value = "市场开发完成后，维持该市场每个周期需要支付的费用",required = true)
     private Double marketMaintainCost;
+
+    @NotNull
+    @ApiModelProperty(value = "该认证的默认初始状态", required = true)
+    private MarketStatusEnum marketStatus;//该认证的默认初始状态
 
 }
