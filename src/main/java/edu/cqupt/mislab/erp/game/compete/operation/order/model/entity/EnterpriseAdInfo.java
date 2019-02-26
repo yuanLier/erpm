@@ -3,6 +3,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.order.model.entity;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
+import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -28,9 +29,16 @@ public class EnterpriseAdInfo implements Serializable {
     @JoinColumn(updatable = false)
     private EnterpriseBasicInfo enterpriseBasicInfo;//哪一个企业
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(updatable = false)
-    private OrderModelInfoBasicInfo orderModelInfoBasicInfo;
+    @ManyToOne
+    @JoinColumn(nullable = false,updatable = false)
+    private ProductBasicInfo productBasicInfo;//哪一个产品
+
+    @ManyToOne
+    @JoinColumn(nullable = false,updatable = false)
+    private MarketBasicInfo marketBasicInfo;//哪一个市场
+
+    @Basic(optional = false)
+    private Integer year;//那一年投的广告费
 
     @Basic(optional = false)
     private Double money;//多少钱

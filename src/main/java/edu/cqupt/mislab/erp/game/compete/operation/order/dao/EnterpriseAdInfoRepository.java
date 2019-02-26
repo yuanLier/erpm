@@ -8,6 +8,4 @@ import java.util.List;
 
 public interface EnterpriseAdInfoRepository extends JpaSpecificationExecutor, JpaRepository<EnterpriseAdInfo, Long> {
 
-    //选取某个阶段的排序的订单
-    List<EnterpriseAdInfo> findByOrderModelInfoBasicInfo_IdAndFinishedIsFalseOrderByMoneyDescIdAsc(long modelInfoId);
 }

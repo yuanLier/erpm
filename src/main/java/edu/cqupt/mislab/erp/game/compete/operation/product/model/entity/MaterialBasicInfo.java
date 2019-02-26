@@ -16,11 +16,15 @@ import java.util.Date;
 @Table
 public class MaterialBasicInfo {
 
+    /**
+     * 产品原材料的基本信息数据表
+     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;//代理主键
 
-    @Column(unique = true,nullable = false,updatable = false)
+    @Column(nullable = false,updatable = false)
     private String materialName;//原料的名称
 
     @Column(nullable = false,updatable = false)
@@ -30,7 +34,8 @@ public class MaterialBasicInfo {
     private Integer materialDelayTime;//指原料从采购开始到原料运到仓库，需要等待的周期数
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date timeStamp;//时间戳
+    @Column(nullable = false,updatable = false)
+    private Date timeStamp = new Date();//时间戳
 
     @Override
     public boolean equals(Object o){
@@ -42,11 +47,11 @@ public class MaterialBasicInfo {
 
         MaterialBasicInfo that = (MaterialBasicInfo) o;
 
-        return new EqualsBuilder().append(id,that.id).isEquals();
+        return new EqualsBuilder().append(id,that.id).append(materialName,that.materialName).append(materialPrice,that.materialPrice).append(materialDelayTime,that.materialDelayTime).append(timeStamp,that.timeStamp).isEquals();
     }
 
     @Override
     public int hashCode(){
-        return new HashCodeBuilder(17,37).append(id).toHashCode();
+        return new HashCodeBuilder(17,37).append(id).append(materialName).append(materialPrice).append(materialDelayTime).append(timeStamp).toHashCode();
     }
 }

@@ -19,15 +19,23 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @Table
-public class AllOrderInfos implements Serializable {
+public class GameAllOrderInfos implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;//代理主键
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(nullable = false,updatable = false)
-    private OrderModelInfoBasicInfo orderModelInfoBasicInfo;//订单公有基本信息
+    private GameBasicInfo gameBasicInfo;//哪一场比赛
+
+    @ManyToOne
+    @JoinColumn(nullable = false,updatable = false)
+    private ProductBasicInfo productBasicInfo;//哪一个产品
+
+    @ManyToOne
+    @JoinColumn(nullable = false,updatable = false)
+    private MarketBasicInfo marketBasicInfo;//哪一个市场
 
     @Basic(optional = false)
     private Integer productNumber;//产品数量
@@ -60,7 +68,7 @@ public class AllOrderInfos implements Serializable {
         if(o == null||getClass() != o.getClass())
             return false;
 
-        AllOrderInfos that = (AllOrderInfos) o;
+        GameAllOrderInfos that = (GameAllOrderInfos) o;
 
         return new EqualsBuilder().append(id,that.id).isEquals();
     }
