@@ -24,17 +24,17 @@ public class MarketBasicInfo implements Serializable {
     @Column(unique = true,nullable = false,updatable = false)
     private String marketName;//市场的名称
 
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false, updatable = false)
     private Integer marketResearchPeriod;//完成市场开发的周期数
 
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false, updatable = false)
     private Double marketResearchCost;//在市场开发过程中，每个周期需要支付的费用
 
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false, updatable = false)
     private Double marketMaintainCost;//市场开发完成后，维持该市场每个周期需要支付的费用
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date timeStamp;//时间戳
+    @Column(nullable = false, updatable = false)
+    private MarketStatusEnum marketStatus;//该认证的默认初始状态
 
     @Override
     public boolean equals(Object o){

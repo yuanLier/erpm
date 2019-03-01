@@ -1,4 +1,4 @@
-package edu.cqupt.mislab.erp.game.compete.operation.product.model.entity;
+package edu.cqupt.mislab.erp.game.compete.operation.material.model.entity;
 
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;

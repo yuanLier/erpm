@@ -2,6 +2,8 @@ package edu.cqupt.mislab.erp.commons.util;
 
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.*;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.*;
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseMemberInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
@@ -65,49 +67,50 @@ public abstract class EntityVoUtil {
         displayVo.setAvatarLocation(enterpriseMemberInfo.getStudentInfo().getUserAvatarInfo().getAvatarLocation());
     }
 
-    public static void copyFieldsFromEntityToVo(IsoBasicInfo isoBasicInfo,IsoBasicInfoDisplayVo displayVo){
+    public static IsoDisplayVo copyFieldsFromEntityToVo(IsoDevelopInfo isoDevelopInfo) {
+        IsoDisplayVo isoDisplayVo = new IsoDisplayVo();
 
-        BeanCopyUtil.copyPropertiesSimple(isoBasicInfo,displayVo);
+        isoDisplayVo.setId(isoDevelopInfo.getId());
+
+        // 每期维护费用
+        isoDisplayVo.setIsoMaintainCost(isoDevelopInfo.getIsoBasicInfo().getIsoMaintainCost());
+        // ISO认证名称
+        isoDisplayVo.setIsoName(isoDevelopInfo.getIsoBasicInfo().getIsoName());
+        // 每期认证费用
+        isoDisplayVo.setIsoResearchCost(isoDevelopInfo.getIsoBasicInfo().getIsoResearchCost());
+        // 需要认证的总期数
+        isoDisplayVo.setIsoResearchPeriod(isoDevelopInfo.getIsoBasicInfo().getIsoResearchPeriod());
+
+        // 认证状态
+        isoDisplayVo.setIsoStatus(isoDevelopInfo.getIsoStatus());
+        // 已经认证的期数
+        isoDisplayVo.setResearchedPeriod(isoDevelopInfo.getResearchedPeriod());
+
+        return isoDisplayVo;
     }
 
-    public static void copyFieldsFromEntityToVo(IsoDevelopedInfo developedInfo,IsoDevelopedInfoDisplayVo developedInfoDisplayVo){
+    public static MarketDisplayVo copyFieldsFromEntityToVo(MarketDevelopInfo marketDevelopInfo) {
 
-        developedInfoDisplayVo.setId(developedInfo.getId());
-        developedInfoDisplayVo.setDevelopBeginPeriod(developedInfo.getDevelopBeginPeriod());
-        developedInfoDisplayVo.setDevelopEndPeriod(developedInfo.getDevelopEndPeriod());
-        developedInfoDisplayVo.setEnterpriseId(developedInfo.getEnterpriseBasicInfo().getId());
+        MarketDisplayVo marketDisplayVo = new MarketDisplayVo();
 
-        final IsoBasicInfo isoBasicInfo = developedInfo.getIsoBasicInfo();
-        IsoBasicInfoDisplayVo isoBasicInfoDisplayVo = new IsoBasicInfoDisplayVo();
-        copyFieldsFromEntityToVo(isoBasicInfo,isoBasicInfoDisplayVo);
+        // id同marketDevelopId
+        marketDisplayVo.setId(marketDevelopInfo.getId());
 
-        developedInfoDisplayVo.setIsoBasicInfoDisplayVo(isoBasicInfoDisplayVo);
+        // 每期维护费用
+        marketDisplayVo.setMarketMaintainCost(marketDevelopInfo.getMarketBasicInfo().getMarketMaintainCost());
+        // 市场名称
+        marketDisplayVo.setMarketName(marketDevelopInfo.getMarketBasicInfo().getMarketName());
+        // 每期开拓费用
+        marketDisplayVo.setMarketResearchCost(marketDevelopInfo.getMarketBasicInfo().getMarketResearchCost());
+        // 完成开发所需要的总周期
+        marketDisplayVo.setMarketResearchPeriod(marketDevelopInfo.getMarketBasicInfo().getMarketResearchPeriod());
+
+        // 已经开拓的周期数
+        marketDisplayVo.setResearchedPeriod(marketDevelopInfo.getResearchedPeriod());
+        // 当前开拓状态
+        marketDisplayVo.setMarketStatus(marketDevelopInfo.getMarketStatus());
+
+        return marketDisplayVo;
     }
 
-    public static void copyFieldsFromEntityToVo(IsoDevelopingInfo developingInfo,IsoDevelopingInfoDisplayVo developingInfoDisplayVo){
-
-        developingInfoDisplayVo.setId(developingInfo.getId());
-        developingInfoDisplayVo.setEnterpriseId(developingInfo.getEnterpriseBasicInfo().getId());
-        developingInfoDisplayVo.setDevelopBeginPeriod(developingInfo.getDevelopBeginPeriod());
-        developingInfoDisplayVo.setResearchedPeriod(developingInfo.getResearchedPeriod());
-        developingInfoDisplayVo.setContinueResearch(developingInfo.getContinueResearch());
-
-        final IsoBasicInfo isoBasicInfo = developingInfo.getIsoBasicInfo();
-        IsoBasicInfoDisplayVo isoBasicInfoDisplayVo = new IsoBasicInfoDisplayVo();
-        copyFieldsFromEntityToVo(isoBasicInfo,isoBasicInfoDisplayVo);
-
-        developingInfoDisplayVo.setIsoBasicInfoDisplayVo(isoBasicInfoDisplayVo);
-    }
-
-    public static void copyFieldsFromEntityToVo(IsoToDevelopInfo toDevelopInfo,IsoToDevelopInfoDisplayVo toDevelopInfoDisplayVo){
-
-        toDevelopInfoDisplayVo.setId(toDevelopInfo.getId());
-        toDevelopInfoDisplayVo.setEnterpriseId(toDevelopInfo.getEnterpriseBasicInfo().getId());
-
-        final IsoBasicInfo isoBasicInfo = toDevelopInfo.getIsoBasicInfo();
-        IsoBasicInfoDisplayVo isoBasicInfoDisplayVo = new IsoBasicInfoDisplayVo();
-        copyFieldsFromEntityToVo(isoBasicInfo,isoBasicInfoDisplayVo);
-
-        toDevelopInfoDisplayVo.setIsoBasicInfoDisplayVo(isoBasicInfoDisplayVo);
-    }
 }

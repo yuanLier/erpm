@@ -1,6 +1,5 @@
 package edu.cqupt.mislab.erp.game.compete.operation.market.model.entity;
 
-import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -16,7 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @Table
-public class MarketDevelopedInfo implements Serializable {
+public class MarketDevelopInfo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,17 +23,23 @@ public class MarketDevelopedInfo implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    private EnterpriseBasicInfo enterpriseBasicInfo;//哪一个企业的市场开发信息
+    private MarketBasicInfo marketBasicInfo;//市场开发的基本信息
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    private MarketBasicInfo marketBasicInfo;//市场开发的基本信息
+    private EnterpriseBasicInfo enterpriseBasicInfo;//哪一个企业的市场开发信息
 
-    @Column(nullable = false,updatable = false)
-    private Integer developBeginPeriod;//市场开发开始的周期
+    @Column(nullable = false,columnDefinition = "int default 0",updatable = false)
+    private Integer developBeginPeriod = 0;//市场开始开发的周期，默认为0
 
-    @Column(nullable = false,updatable = false)
-    private Integer developEndPeriod;//市场开发完成的周期
+    @Column(nullable = false,columnDefinition = "int default 0",updatable = false)
+    private Integer developEndPeriod = 0;//市场完成开发的周期，默认为0
+
+    @Column(nullable = false, columnDefinition = "int default 0",updatable = false)
+    private Integer researchedPeriod = 0;//已经市场开发了多少个周期，默认为0
+
+    @Enumerated(EnumType.STRING)
+    private MarketStatusEnum marketStatus;//当前市场的开发状态（默认同iso基本认证中的初始认证状态，需要手动控制）
 
     @Override
     public boolean equals(Object o){
@@ -44,7 +49,7 @@ public class MarketDevelopedInfo implements Serializable {
         if(o == null||getClass() != o.getClass())
             return false;
 
-        MarketDevelopedInfo that = (MarketDevelopedInfo) o;
+        MarketDevelopInfo that = (MarketDevelopInfo) o;
 
         return new EqualsBuilder().append(id,that.id).isEquals();
     }
