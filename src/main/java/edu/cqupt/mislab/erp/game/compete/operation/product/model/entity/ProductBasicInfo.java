@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.model.entity;
 
+import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
