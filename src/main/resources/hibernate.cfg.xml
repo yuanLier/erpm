@@ -15,5 +15,6 @@
     <mapping package="edu.cqupt.mislab.erp.game.compete.operation.market.model.entity"/>
     <mapping package="edu.cqupt.mislab.erp.game.compete.operation.product.model.entity"/>
     <mapping package="edu.cqupt.mislab.erp.game.compete.operation.order.model.entity"/>
+    <mapping package="edu.cqupt.mislab.erp.game.compete.operation.material.model.entity"/>
   </session-factory>
 </hibernate-configuration>

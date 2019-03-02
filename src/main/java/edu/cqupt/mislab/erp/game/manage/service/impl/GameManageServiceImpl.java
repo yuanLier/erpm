@@ -165,10 +165,10 @@ public class GameManageServiceImpl implements GameManageService {
                     gameBasicInfoRepository.save(gameBasicInfo);
 
                     //初始化竞赛信息，这个阶段会比较消耗时间
-                    final boolean init = gameCompeteInitService.initGameModel(gameId);
+                    final List<String> stringList = gameCompeteInitService.initGameModel(gameId);
 
                     //初始化失败
-                    if(!init){
+                    if(stringList != null){
 
                         return toFailResponseVoWithMessage(ResponseStatus.INTERNAL_SERVER_ERROR,"比赛初始化失败，请联系管理员");
                     }

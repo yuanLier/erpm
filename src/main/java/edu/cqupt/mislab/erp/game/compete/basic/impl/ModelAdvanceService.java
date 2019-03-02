@@ -20,14 +20,13 @@ import java.util.Map;
  */
 @Slf4j
 @Service
-public class ModelAdvanceService implements ModelAdvance , ApplicationContextAware {
+public class ModelAdvanceService implements ApplicationContextAware {
 
     //用于发现Bean模块
     private ApplicationContext applicationContext;
 
     @Autowired GameBasicInfoRepository gameBasicInfoRepository;
 
-    @Override
     public boolean advance(Long gameId){
 
         final GameBasicInfo gameBasicInfo = gameBasicInfoRepository.findOne(gameId);

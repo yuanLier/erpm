@@ -33,6 +33,7 @@ public class IsoBasicInfo implements Serializable {
     @Column(nullable = false, updatable = false)
     private Double extraValue;//该认证对订单价格的影响程度，每一个产品价格影响
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
     private IsoStatusEnum isoStatus;//该认证的默认初始状态
 

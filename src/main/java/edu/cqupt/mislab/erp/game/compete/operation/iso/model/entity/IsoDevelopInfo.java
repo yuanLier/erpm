@@ -29,15 +29,16 @@ public class IsoDevelopInfo implements Serializable {
     @JoinColumn(nullable = false,updatable = false)
     private EnterpriseBasicInfo enterpriseBasicInfo;//哪一个企业的ISO认证信息
 
-    @Column(nullable = false, updatable = false, columnDefinition = "int default 0")
-    private Integer developBeginPeriod = 0;//认证开始的周期，默认为0
+    @Basic
+    private Integer developBeginPeriod ;//认证开始的周期
 
-    @Column(nullable = false, updatable = false, columnDefinition = "int default 0")
-    private Integer developEndPeriod = 0;//认证完成的周期，默认为0
+    @Basic
+    private Integer developEndPeriod ;//认证完成的周期
 
-    @Column(nullable = false, updatable = false, columnDefinition = "int default 0")
-    private Integer researchedPeriod = 0;//已经认证了多少个周期，默认为0
+    @Basic
+    private Integer researchedPeriod ;//已经认证了多少个周期
 
+    @Basic(optional = false)
     @Enumerated(EnumType.STRING)
     private IsoStatusEnum isoStatus;//当前认证状态（默认同iso基本认证中的初始认证状态，需要手动控制）
 

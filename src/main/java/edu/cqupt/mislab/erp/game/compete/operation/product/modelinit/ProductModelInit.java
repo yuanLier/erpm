@@ -1,7 +1,9 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.modelinit;
 
 import edu.cqupt.mislab.erp.commons.basic.ModelInit;
+import edu.cqupt.mislab.erp.game.compete.operation.material.gamemodelinit.MaterialGameModelInit;
 import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.material.modelinit.MaterialModelInit;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.MaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
@@ -31,9 +33,9 @@ public class ProductModelInit implements ModelInit {
     @Override
     public boolean init(){
 
-        log.info("初始化应用的材料基本信息");
+        log.info("产品初始化先决条件初始化");
 
-        initMaterialBasicInfo();
+        initPreInfo();
 
         log.info("初始化应用的产品基本信息");
 
@@ -90,42 +92,14 @@ public class ProductModelInit implements ModelInit {
         }
     }
 
-    /**
-     * 初始化材料基本数据信息
-     */
-    private void initMaterialBasicInfo(){
+    @Autowired private MaterialModelInit materialModelInit;
 
-        materialBasicInfoRepository.save(
-                MaterialBasicInfo.builder()
-                        .materialName("M1")
-                        .materialPrice(1.0D)
-                        .materialDelayTime(1)
-                        .timeStamp(new Date())
-                        .build()
-        );
-        materialBasicInfoRepository.save(
-                MaterialBasicInfo.builder()
-                        .materialName("M2")
-                        .materialPrice(2.0D)
-                        .materialDelayTime(2)
-                        .timeStamp(new Date())
-                        .build()
-        );
-        materialBasicInfoRepository.save(
-                MaterialBasicInfo.builder()
-                        .materialName("M3")
-                        .materialPrice(3.0D)
-                        .materialDelayTime(3)
-                        .timeStamp(new Date())
-                        .build()
-        );
-        materialBasicInfoRepository.save(
-                MaterialBasicInfo.builder()
-                        .materialName("M4")
-                        .materialPrice(4.0D)
-                        .materialDelayTime(4)
-                        .timeStamp(new Date())
-                        .build()
-        );
+    /**
+     * 初始化产品模块依赖模块的信息
+     */
+    private void initPreInfo(){
+
+        //初始化材料模块信息
+        materialModelInit.init();
     }
 }

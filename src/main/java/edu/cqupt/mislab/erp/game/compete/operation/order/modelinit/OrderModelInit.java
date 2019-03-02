@@ -5,10 +5,10 @@ import edu.cqupt.mislab.erp.game.compete.basic.GameModelInit;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OrderModelInit implements GameModelInit {
+public class OrderModelInit implements ModelInit {
 
     @Override
-    public boolean initGameModel(Long gameId){
-        return false;
+    public boolean init(){
+        return true;
     }
 }

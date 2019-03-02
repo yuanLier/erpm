@@ -15,6 +15,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class IsoModelInit implements ModelInit {
 
+    /**
+     * @Author: chuyunfei
+     * @Date: 2019/3/2 20:18
+     * @Description: 用于初始化ISO模块的基本数据信息，在应用启动的时候会被调用
+     **/
+
     @Autowired
     private IsoBasicInfoRepository isoBasicInfoRepository;
 
@@ -40,7 +46,7 @@ public class IsoModelInit implements ModelInit {
                         .isoResearchPeriod(4)
                         .isoMaintainCost(0.2)
                         .extraValue(0.2)
-                        .isoStatus(IsoStatusEnum.UNDEVELOP).build());
+                        .isoStatus(IsoStatusEnum.DEVELOPED).build());
 
         isoBasicInfoRepository.save(
                 IsoBasicInfo.builder()
@@ -49,6 +55,6 @@ public class IsoModelInit implements ModelInit {
                         .isoResearchPeriod(5)
                         .isoMaintainCost(0.4)
                         .extraValue(0.5)
-                        .isoStatus(IsoStatusEnum.UNDEVELOP).build());
+                        .isoStatus(IsoStatusEnum.TODEVELOP).build());
     }
 }

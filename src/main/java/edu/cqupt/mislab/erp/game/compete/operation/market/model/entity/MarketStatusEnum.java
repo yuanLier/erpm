@@ -1,13 +1,18 @@
 package edu.cqupt.mislab.erp.game.compete.operation.market.model.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum MarketStatusEnum {
-    UNDEVELOP("未开拓"),
-    DEVELOPING("开拓中"),
-    DEVELOPED("开拓完成");
 
-    String name;
+    DEVELOPED("研发成功"),
+    DEVELOPING("研发中"),
+    DEVELOPPAUSE("研发暂停"),
+    TODEVELOP("未研发");
 
-    MarketStatusEnum(String name) {
-        this.name = name;
+    private String comment;
+
+    MarketStatusEnum(String comment) {
+        this.comment = comment;
     }
 }

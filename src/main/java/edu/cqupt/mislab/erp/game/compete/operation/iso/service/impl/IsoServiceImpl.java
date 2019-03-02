@@ -28,6 +28,12 @@ public class IsoServiceImpl implements IsoService {
 
 
     @Override
+    public List<IsoBasicInfo> findAllNewestApplicationIsoBasicInfos(){
+
+        return isoBasicInfoRepository.findAllNewestApplicationIsoBasicInfos();
+    }
+
+    @Override
     public List<IsoDisplayVo> findByEnterpriseId(Long enterpriseId) {
 
         // 根据企业id获取全部iso认证信息
