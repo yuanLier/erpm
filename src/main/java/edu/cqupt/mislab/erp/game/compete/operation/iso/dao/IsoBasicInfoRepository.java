@@ -7,13 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface IsoBasicInfoRepository extends JpaRepository<IsoBasicInfo, Long>, JpaSpecificationExecutor {
+public interface IsoBasicInfoRepository extends JpaRepository<IsoBasicInfo, Long> {
 
     /**
      * @Author: chuyunfei
      * @Description: 获取应用里面全部的ISO认证信息
      * @Date: 2019/3/1 19:53
      **/
-    @Query(nativeQuery = true,value = "select * from iso_basic_info where id in (select max(id) from iso_basic_info group by iso_name)")
+    @Query("from IsoBasicInfo isoBasicInfo where isoBasicInfo.enable = true group by isoBasicInfo.isoName")
     List<IsoBasicInfo> findAllNewestApplicationIsoBasicInfos();
 }

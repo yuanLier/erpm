@@ -38,4 +38,7 @@ public class OrderPredictionInfo implements Serializable {
 
     @Basic(optional = false)
     private Integer mount;//市场需求量
+
+    @Basic(optional = false)
+    private Integer year;//那一年的预测信息
 }

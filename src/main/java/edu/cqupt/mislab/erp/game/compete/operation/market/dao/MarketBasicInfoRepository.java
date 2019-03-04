@@ -14,7 +14,6 @@ public interface MarketBasicInfoRepository extends JpaRepository<MarketBasicInfo
      * @Date: 2019/3/2 21:00
      * @Description: 选取最新的版本的市场基本信息
      **/
-    @Query(nativeQuery = true,value = "select * from market_basic_info where id in (select max(id) from market_basic_info group by market_name)")
+    @Query("from MarketBasicInfo m where m.enable = true group by m.marketName")
     List<MarketBasicInfo> findAllNewestApplicationMarketBasicInfos();
-
 }

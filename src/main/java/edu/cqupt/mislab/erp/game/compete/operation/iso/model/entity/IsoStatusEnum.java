@@ -5,6 +5,12 @@ import lombok.Getter;
 @Getter
 public enum IsoStatusEnum {
 
+    /*
+     * @Author: chuyunfei
+     * @Date: 2019/3/4 20:26
+     * @Description: ISO认证信息的状态枚举对象
+     **/
+
     DEVELOPED("研发成功"),
     DEVELOPING("研发中"),
     DEVELOPPAUSE("研发暂停"),

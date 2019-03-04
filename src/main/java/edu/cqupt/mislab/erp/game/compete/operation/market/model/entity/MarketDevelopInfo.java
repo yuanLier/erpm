@@ -1,5 +1,7 @@
 package edu.cqupt.mislab.erp.game.compete.operation.market.model.entity;
 
+import com.google.common.base.Objects;
+import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -17,46 +19,56 @@ import java.io.Serializable;
 @Table
 public class MarketDevelopInfo implements Serializable {
 
+    /*
+     * @Author: chuyunfei
+     * @Date: 2019/3/4 21:21
+     * @Description: 用于存储在比赛过程中每个企业的市场开发信息，在比赛初始化时由MarketBasicInfo生成
+     **/
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;//代理主键
+    @Comment(comment = "代理主键")
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    private MarketBasicInfo marketBasicInfo;//市场开发的基本信息
+    @Comment(comment = "市场开发的基本信息，对应基本市场信息表里面的最新或历史数据")
+    private MarketBasicInfo marketBasicInfo;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    private EnterpriseBasicInfo enterpriseBasicInfo;//哪一个企业的市场开发信息
+    @Comment(comment = "哪一个企业的市场开发信息")
+    private EnterpriseBasicInfo enterpriseBasicInfo;
 
     @Basic
-    private Integer developBeginPeriod ;//市场开始开发的周期
+    @Comment(comment = "市场开始开发的周期，默认为开发状态的值为1")
+    private Integer developBeginPeriod ;
 
     @Basic
-    private Integer developEndPeriod ;//市场完成开发的周期
+    @Comment(comment = "市场完成开发的周期，默认为开发状态的值为1")
+    private Integer developEndPeriod ;
 
     @Basic
-    private Integer researchedPeriod ;//已经市场开发了多少个周期
+    @Comment(comment = "已经市场开发了多少个周期，默认为开发状态的值为0")
+    private Integer researchedPeriod ;
 
     @Enumerated(EnumType.STRING)
     @Basic(optional = false)
-    private MarketStatusEnum marketStatus;//当前市场的开发状态（默认同iso基本认证中的初始认证状态，需要手动控制）
+    @Comment(comment = "当前市场的开发状态（默认同基本市场信息的初始状态，需要在比赛初始化时手动控制转换）")
+    private MarketStatusEnum marketStatus;
 
     @Override
     public boolean equals(Object o){
         if(this == o)
             return true;
-
         if(o == null||getClass() != o.getClass())
             return false;
-
         MarketDevelopInfo that = (MarketDevelopInfo) o;
-
-        return new EqualsBuilder().append(id,that.id).isEquals();
+        return Objects.equal(id,that.id)&&Objects.equal(developBeginPeriod,that.developBeginPeriod)&&Objects.equal(developEndPeriod,that.developEndPeriod)&&Objects.equal(researchedPeriod,that.researchedPeriod)&&marketStatus == that.marketStatus;
     }
 
     @Override
     public int hashCode(){
-        return new HashCodeBuilder(17,37).append(id).toHashCode();
+        return Objects.hashCode(id,developBeginPeriod,developEndPeriod,researchedPeriod,marketStatus);
     }
 }

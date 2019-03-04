@@ -1,37 +1,58 @@
 package edu.cqupt.mislab.erp.user.modelinit;
 
 import edu.cqupt.mislab.erp.commons.basic.ModelInit;
+import edu.cqupt.mislab.erp.commons.basic.ModelInitService;
 import edu.cqupt.mislab.erp.user.dao.*;
 import edu.cqupt.mislab.erp.user.model.entity.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Service
 public class UserModelInit implements ModelInit {
 
+    /**
+     * @Author: chuyunfei
+     * @Date: 2019/3/3 14:11
+     * @Description: 初始化用户模块的原始数据，包括一个用户、几个头像和几个专业信息
+     **/
+
     @Autowired private MajorInfoRepository majorInfoRepository;
     @Autowired private UserAvatarRepository userAvatarRepository;
     @Autowired private UserStudentRepository userStudentRepository;
     @Autowired private CollegeInfoRepository collegeInfoRepository;
+    @Autowired private UserTeacherRepository userTeacherRepository;
+
+    @Autowired private ModelInitService modelInitService;
 
     @Override
-    public boolean init(){
+    public List<String> applicationModelInit(){
 
-        log.info("初始化专业信息");
-        initMajorInfo();
+        if(modelInitService.addInitializedModelIfNotExist(this)){
 
-        log.info("初始化头像信息");
-        initUserAvatarInfo();
+            try{
 
-        log.info("初始化一个用户");
-        initUserStudentInfo();
+                log.info("初始化专业信息");
+                initMajorInfo();
 
-        return true;
+                log.info("初始化头像信息");
+                initUserAvatarInfo();
+
+                log.info("初始化一个用户");
+                initUserStudentInfo();
+
+                return null;
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+            return Collections.singletonList("用户模块初始化出现错误");
+        }
+
+        return null;
     }
 
     /**
@@ -50,9 +71,11 @@ public class UserModelInit implements ModelInit {
      */
     private void initUserStudentInfo(){
 
+        final UserTeacherInfo userTeacherInfo = userTeacherRepository.save(UserTeacherInfo.builder().build());
+
         UserStudentInfo userStudentInfo = UserStudentInfo.builder()
                 .accountEnable(true)
-                .userTeacherInfo(null)
+                .userTeacherInfo(userTeacherInfo)
                 .studentAccount("S2016211050")
                 .studentPassword("M123456")
                 .studentName("楚云飞")

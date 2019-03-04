@@ -1,12 +1,13 @@
 package edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity;
 
 
+import com.google.common.base.Objects;
+import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -17,48 +18,56 @@ import java.util.Objects;
 @Table
 public class IsoDevelopInfo implements Serializable {
 
+    /*
+     * @Author: chuyunfei
+     * @Date: 2019/3/4 20:35
+     * @Description: 比赛运行过程中用于存储某一个企业的具体ISO认证信息的数据表，该数据表在比赛初始化时通过IsoBasicInfo生成
+     **/
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;//代理主键
+    @Comment(comment = "代理主键")
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    private IsoBasicInfo isoBasicInfo;//ISO认证的基本信息
+    @Comment(comment = "ISO认证的基本信息，该数据对于基本数据表里面的一条最新或历史信息")
+    private IsoBasicInfo isoBasicInfo;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    private EnterpriseBasicInfo enterpriseBasicInfo;//哪一个企业的ISO认证信息
+    @Comment(comment = "哪一个企业的ISO认证信息，每一个企业有一或多条认证信息")
+    private EnterpriseBasicInfo enterpriseBasicInfo;
 
     @Basic
-    private Integer developBeginPeriod ;//认证开始的周期
+    @Comment(comment = "认证开始的周期，这个值在未开发ISO认证信息状态时为null，默认为已研发的值为1")
+    private Integer developBeginPeriod ;
 
     @Basic
-    private Integer developEndPeriod ;//认证完成的周期
+    @Comment(comment = "认证完成的周期，这个值在未开发/开发中ISO认证信息状态时为null，默认为已研发的值为1")
+    private Integer developEndPeriod ;
 
     @Basic
-    private Integer researchedPeriod ;//已经认证了多少个周期
+    @Comment(comment = "已经认证了多少个周期，这个值在未开发ISO认证信息状态时为null，默认为已研发的值为0")
+    private Integer researchedPeriod ;
 
     @Basic(optional = false)
     @Enumerated(EnumType.STRING)
-    private IsoStatusEnum isoStatus;//当前认证状态（默认同iso基本认证中的初始认证状态，需要手动控制）
+    @Comment(comment = "当前认证状态（默认同iso基本认证中的初始认证状态，需要手动的在比赛初始化时进行转换）")
+    private IsoStatusEnum isoStatus;
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o){
+        if(this == o)
+            return true;
+        if(o == null||getClass() != o.getClass())
+            return false;
         IsoDevelopInfo that = (IsoDevelopInfo) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(isoBasicInfo, that.isoBasicInfo) &&
-                Objects.equals(enterpriseBasicInfo, that.enterpriseBasicInfo) &&
-                Objects.equals(developBeginPeriod, that.developBeginPeriod) &&
-                Objects.equals(developEndPeriod, that.developEndPeriod) &&
-                Objects.equals(researchedPeriod, that.researchedPeriod) &&
-                isoStatus == that.isoStatus;
+        return Objects.equal(id,that.id)&&Objects.equal(developBeginPeriod,that.developBeginPeriod)&&Objects.equal(developEndPeriod,that.developEndPeriod)&&Objects.equal(researchedPeriod,that.researchedPeriod)&&isoStatus == that.isoStatus;
     }
 
     @Override
-    public int hashCode() {
-
-        return Objects.hash(id, isoBasicInfo, enterpriseBasicInfo, developBeginPeriod, developEndPeriod, researchedPeriod, isoStatus);
+    public int hashCode(){
+        return Objects.hashCode(id,developBeginPeriod,developEndPeriod,researchedPeriod,isoStatus);
     }
 }

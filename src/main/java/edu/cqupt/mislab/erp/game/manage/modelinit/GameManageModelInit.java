@@ -1,34 +1,82 @@
 package edu.cqupt.mislab.erp.game.manage.modelinit;
 
 import edu.cqupt.mislab.erp.commons.basic.ModelInit;
-import edu.cqupt.mislab.erp.game.manage.dao.GameInitInfoRepository;
-import edu.cqupt.mislab.erp.game.manage.model.entity.GameInitInfo;
+import edu.cqupt.mislab.erp.commons.basic.ModelInitService;
+import edu.cqupt.mislab.erp.game.manage.dao.*;
+import edu.cqupt.mislab.erp.game.manage.model.entity.*;
+import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo.GameBasicInfoBuilder;
+import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
+import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
+import edu.cqupt.mislab.erp.user.modelinit.UserModelInit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
 public class GameManageModelInit implements ModelInit {
 
     @Autowired private GameInitInfoRepository gameInitInfoRepository;
+    @Autowired private GameBasicInfoRepository gameBasicInfoRepository;
+    @Autowired private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
+    @Autowired private EnterpriseMemberInfoRepository enterpriseMemberInfoRepository;
+    @Autowired private UserStudentRepository userStudentRepository;
+
+    @Autowired private UserModelInit userModelInit;
+
+    @Autowired private ModelInitService modelInitService;
 
     @Override
-    public boolean init(){
+    public List<String> applicationModelInit(){
 
-        log.info("初始化比赛的基本初始化信息");
-        initGameInitInfo();
+        if(modelInitService.addInitializedModelIfNotExist(this)){
 
-        return true;
+            //先决条件
+            final List<String> strings = preGameManageModelInit();
+
+            //先决条件初始化错误
+            if(strings != null){
+
+                return strings;
+            }
+
+            try{
+                log.info("初始化比赛的基本初始化信息");
+                initGameInitInfo();
+
+                return null;
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+            return Collections.singletonList("比赛管理模块原始数据初始化失败");
+        }
+
+        return null;
     }
 
     /**
-     * 初始化比赛的初始化信息
-     */
+     * @Author: chuyunfei
+     * @Date: 2019/3/3 14:34
+     * @Description: 比赛管理的初始化先决条件是用户模块初始化
+     **/
+    private List<String> preGameManageModelInit(){
+
+        return userModelInit.applicationModelInit();
+    }
+
+    /* 
+     * @Author: chuyunfei
+     * @Date: 2019/3/3 14:41
+     * @Description: 初始化比赛信息，里面有一个等待初始化的比赛
+     **/
     private void initGameInitInfo(){
 
+        //默认初始化比赛信息
         GameInitInfo gameInitInfo = GameInitInfo.builder()
                 .maxEnterpriseNumber(20)
                 .maxMemberNumber(6)
@@ -37,6 +85,47 @@ public class GameManageModelInit implements ModelInit {
                 .timeStamp(new Date())
                 .build();
 
-        gameInitInfoRepository.save(gameInitInfo);
+        gameInitInfo = gameInitInfoRepository.save(gameInitInfo);
+
+        //初始化一个比赛信息
+        final UserStudentInfo userStudentInfo = userStudentRepository.findByStudentAccountAndAccountEnable("S2016211050",true);
+
+        GameBasicInfo gameBasicInfo = GameBasicInfo.builder()
+                .gameInitInfo(gameInitInfo)
+                .gameName("究极比赛")
+                .gameMaxEnterpriseNumber(gameInitInfo.getMaxEnterpriseNumber())
+                .gameCurrentYear(1)
+                .gameStatus(GameStatus.CREATE)
+                .gameCreateTime(new Date())
+                .gameCreator(userStudentInfo)
+                .build();
+
+        gameBasicInfo = gameBasicInfoRepository.save(gameBasicInfo);
+
+        //初始化一个企业
+        EnterpriseBasicInfo enterpriseBasicInfo = EnterpriseBasicInfo.builder()
+                .advertising(true)
+                .advertisingCost(false)
+                .gameContributionRateSure(false)
+                .enterpriseStatus(EnterpriseStatus.SURE)
+                .enterpriseCeo(userStudentInfo)
+                .enterpriseName("究极企业")
+                .enterpriseCurrentPeriod(1)
+                .gameInfo(gameBasicInfo)
+                .enterpriseMaxMemberNumber(gameInitInfo.getMaxMemberNumber())
+                .build();
+
+        enterpriseBasicInfo = enterpriseBasicInfoRepository.save(enterpriseBasicInfo);
+
+        //初始化一个成员信息
+        EnterpriseMemberInfo enterpriseMemberInfo = EnterpriseMemberInfo.builder()
+                .studentInfo(userStudentInfo)
+                .enterprise(enterpriseBasicInfo)
+                .gameEnterpriseRole("创建者")
+                .gameContributionRate(null)
+                .gameExperience("请填写实验报告...")
+                .build();
+
+        enterpriseMemberInfo = enterpriseMemberInfoRepository.save(enterpriseMemberInfo);
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 
-public interface IsoDevelopInfoRepository extends JpaRepository<IsoDevelopInfo, Long>, JpaSpecificationExecutor {
+public interface IsoDevelopInfoRepository extends JpaRepository<IsoDevelopInfo, Long> {
 
     /**
      * 获取某企业的全部iso认证信息

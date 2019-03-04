@@ -20,11 +20,14 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInf
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 @Component
 public class MarketGameModelInit implements GameModelInit {
 
@@ -55,44 +58,47 @@ public class MarketGameModelInit implements GameModelInit {
 
         //判断是否已经被初始化过了
         if(gameModelInitService.addInitializedModelIfNotExist(gameId,this)){
-            //如果没有被初始化过就进行初始化
 
-            //选取所有的基本市场信息
-            final List<MarketBasicInfo> marketBasicInfos = marketBasicInfoRepository.findAllNewestApplicationMarketBasicInfos();
+            try{
+                log.info("开始初始化市场模块的比赛数据");
 
-            //如果没有市场信息就直接返回
-            if(marketBasicInfos == null){
+                //选取所有的基本市场信息
+                final List<MarketBasicInfo> marketBasicInfos = marketBasicInfoRepository.findAllNewestApplicationMarketBasicInfos();
+
+                //选取所有的比赛企业，这些企业是绝对存在的
+                final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameInfo_Id(gameId);
+
+                //为所有的企业生产市场基本信息
+                for(EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfos){
+
+                    for(MarketBasicInfo marketBasicInfo : marketBasicInfos){
+
+                        final MarketDevelopInfoBuilder builder = MarketDevelopInfo.builder()
+                                .marketBasicInfo(marketBasicInfo)
+                                .enterpriseBasicInfo(enterpriseBasicInfo)
+                                .marketStatus(marketBasicInfo.getMarketStatus());
+
+                        //特殊状态认证信息处理
+                        if(marketBasicInfo.getMarketStatus() == MarketStatusEnum.DEVELOPED){
+
+                            builder.developBeginPeriod(1)
+                                    .researchedPeriod(0)
+                                    .developEndPeriod(1);
+                        }
+
+                        final MarketDevelopInfo marketDevelopInfo = builder.build();
+
+                        //存储该信息
+                        marketDevelopInfoRepository.save(marketDevelopInfo);
+                    }
+                }
 
                 return null;
+            }catch(Exception e){
+                e.printStackTrace();
             }
 
-            //选取所有的比赛企业，这些企业是绝对存在的
-            final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameInfo_Id(gameId);
-
-            //为所有的企业生产市场基本信息
-            for(EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfos){
-
-                for(MarketBasicInfo marketBasicInfo : marketBasicInfos){
-
-                    final MarketDevelopInfoBuilder builder = MarketDevelopInfo.builder()
-                            .marketBasicInfo(marketBasicInfo)
-                            .enterpriseBasicInfo(enterpriseBasicInfo)
-                            .marketStatus(marketBasicInfo.getMarketStatus());
-
-                    //特殊状态认证信息处理
-                    if(marketBasicInfo.getMarketStatus() == MarketStatusEnum.DEVELOPED){
-
-                        builder.developBeginPeriod(1)
-                                .researchedPeriod(0)
-                                .developEndPeriod(1);
-                    }
-
-                    final MarketDevelopInfo marketDevelopInfo = builder.build();
-
-                    //存储该信息
-                    marketDevelopInfoRepository.save(marketDevelopInfo);
-                }
-            }
+            return Collections.singletonList("市场模块比赛数据初始化出错，无法初始化比赛");
         }
 
         return null;

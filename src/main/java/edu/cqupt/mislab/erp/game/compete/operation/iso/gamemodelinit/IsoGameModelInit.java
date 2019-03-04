@@ -15,14 +15,17 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInf
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
  * author： chuyunfei date：2019/3/1
  */
+@Slf4j
 @Component
 public class IsoGameModelInit implements GameModelInit {
 
@@ -42,44 +45,48 @@ public class IsoGameModelInit implements GameModelInit {
 
         //判断是否已经被初始化过了
         if(gameModelInitService.addInitializedModelIfNotExist(gameId,this)){
-            //如果没有被初始化过就进行初始化
 
-            //选取所有的基本ISO信息
-            final List<IsoBasicInfo> isoBasicInfos = isoBasicInfoRepository.findAllNewestApplicationIsoBasicInfos();
+            try{
 
-            //如果没有ISO认证信息就直接返回
-            if(isoBasicInfos == null){
+                log.info("开始初始化ISO模块的比赛数据");
+
+                //选取所有的基本ISO信息
+                final List<IsoBasicInfo> isoBasicInfos = isoBasicInfoRepository.findAllNewestApplicationIsoBasicInfos();
+
+                //选取所有的比赛企业，这些企业是绝对存在的
+                final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameInfo_Id(gameId);
+
+                //为所有的企业生产ISO基本信息
+                for(EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfos){
+
+                    for(IsoBasicInfo isoBasicInfo : isoBasicInfos){
+
+                        final IsoDevelopInfoBuilder builder = IsoDevelopInfo.builder()
+                                .isoBasicInfo(isoBasicInfo)
+                                .enterpriseBasicInfo(enterpriseBasicInfo)
+                                .isoStatus(isoBasicInfo.getIsoStatus());
+
+                        //特殊状态认证信息处理
+                        if(isoBasicInfo.getIsoStatus() == IsoStatusEnum.DEVELOPED){
+
+                            builder.developBeginPeriod(1)
+                                    .researchedPeriod(0)
+                                    .developEndPeriod(1);
+                        }
+
+                        final IsoDevelopInfo isoDevelopInfo = builder.build();
+
+                        //存储该信息
+                        isoDevelopInfoRepository.save(isoDevelopInfo);
+                    }
+                }
 
                 return null;
+            }catch(Exception e){
+                e.printStackTrace();
             }
 
-            //选取所有的比赛企业，这些企业是绝对存在的
-            final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameInfo_Id(gameId);
-
-            //为所有的企业生产ISO基本信息
-            for(EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfos){
-
-                for(IsoBasicInfo isoBasicInfo : isoBasicInfos){
-
-                    final IsoDevelopInfoBuilder builder = IsoDevelopInfo.builder()
-                            .isoBasicInfo(isoBasicInfo)
-                            .enterpriseBasicInfo(enterpriseBasicInfo)
-                            .isoStatus(isoBasicInfo.getIsoStatus());
-
-                    //特殊状态认证信息处理
-                    if(isoBasicInfo.getIsoStatus() == IsoStatusEnum.DEVELOPED){
-
-                        builder.developBeginPeriod(1)
-                                .researchedPeriod(0)
-                                .developEndPeriod(1);
-                    }
-
-                    final IsoDevelopInfo isoDevelopInfo = builder.build();
-
-                    //存储该信息
-                    isoDevelopInfoRepository.save(isoDevelopInfo);
-                }
-            }
+            return Collections.singletonList("ISO模块比赛数据初始化出错");
         }
 
         return null;

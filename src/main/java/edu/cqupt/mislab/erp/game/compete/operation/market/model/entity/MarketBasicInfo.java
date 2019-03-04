@@ -1,5 +1,7 @@
 package edu.cqupt.mislab.erp.game.compete.operation.market.model.entity;
 
+import com.google.common.base.Objects;
+import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -17,41 +19,54 @@ import java.util.Date;
 @Table
 public class MarketBasicInfo implements Serializable {
 
+    /*
+     * @Author: chuyunfei
+     * @Date: 2019/3/4 21:11
+     * @Description: 应用市场的基本数据表，当该表不存在可用的数据时将无法正常创建比赛
+     **/
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;//代理主键
+    @Comment(comment = "代理主键")
+    private Long id;
 
-    @Column(unique = true,nullable = false,updatable = false)
-    private String marketName;//市场的名称
-
-    @Column(nullable = false, updatable = false)
-    private Integer marketResearchPeriod;//完成市场开发的周期数
-
-    @Column(nullable = false, updatable = false)
-    private Double marketResearchCost;//在市场开发过程中，每个周期需要支付的费用
+    @Column(nullable = false,updatable = false)
+    @Comment(comment = "市场的名称，相同市场名称的数据中enable为false的为历史信息")
+    private String marketName;
 
     @Column(nullable = false, updatable = false)
-    private Double marketMaintainCost;//市场开发完成后，维持该市场每个周期需要支付的费用
+    @Comment(comment = "完成市场开发的周期数，该值必须大于1")
+    private int marketResearchPeriod;
+
+    @Column(nullable = false, updatable = false)
+    @Comment(comment = "在市场开发过程中，每个周期需要支付的费用，该值必须大于0")
+    private double marketResearchCost;
+
+    @Column(nullable = false, updatable = false)
+    @Comment(comment = "市场开发完成后，维持该市场每个周期需要支付的费用，该值必须大于0")
+    private double marketMaintainCost;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
-    private MarketStatusEnum marketStatus;//该认证的默认初始状态
+    @Comment(comment = "该认证的默认初始状态，该值只能是已研发或者未研发")
+    private MarketStatusEnum marketStatus;
+
+    @Basic(optional = false)
+    @Comment(comment = "该数据是否被启用，当前最新数据是启用，所有的历史数据均为未启用，必须保证同一个市场信息最多只有一个Enable = true")
+    private boolean enable;
 
     @Override
     public boolean equals(Object o){
         if(this == o)
             return true;
-
         if(o == null||getClass() != o.getClass())
             return false;
-
         MarketBasicInfo that = (MarketBasicInfo) o;
-
-        return new EqualsBuilder().append(id,that.id).isEquals();
+        return marketResearchPeriod == that.marketResearchPeriod&&Double.compare(that.marketResearchCost,marketResearchCost) == 0&&Double.compare(that.marketMaintainCost,marketMaintainCost) == 0&&enable == that.enable&&Objects.equal(id,that.id)&&Objects.equal(marketName,that.marketName)&&marketStatus == that.marketStatus;
     }
 
     @Override
     public int hashCode(){
-        return new HashCodeBuilder(17,37).append(id).toHashCode();
+        return Objects.hashCode(id,marketName,marketResearchPeriod,marketResearchCost,marketMaintainCost,marketStatus,enable);
     }
 }

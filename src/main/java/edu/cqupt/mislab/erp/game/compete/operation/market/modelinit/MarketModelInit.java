@@ -1,25 +1,23 @@
 package edu.cqupt.mislab.erp.game.compete.operation.market.modelinit;
 
 import edu.cqupt.mislab.erp.commons.basic.ModelInit;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoDevelopInfoRepository;
+import edu.cqupt.mislab.erp.commons.basic.ModelInitService;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketStatusEnum;
-import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
-import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Component
 public class MarketModelInit implements ModelInit {
 
     @Autowired private MarketBasicInfoRepository marketBasicInfoRepository;
+    @Autowired private ModelInitService modelInitService;
 
     /**
      * @Author: chuyunfei
@@ -28,15 +26,28 @@ public class MarketModelInit implements ModelInit {
      **/
 
     @Override
-    public boolean init(){
+    public List<String> applicationModelInit(){
 
-        log.info("开始初始化Market模块的基本数据信息");
+        //判断当前模块是否已经被初始化过一次了
+        if(modelInitService.addInitializedModelIfNotExist(this)){
 
-        initMarketBasicInfo();
+            try{
+                log.info("开始初始化Market模块的基本数据信息");
 
-        log.info("初始化Market模块的基本数据信息完成");
+                //初始化市场信息
+                initMarketBasicInfo();
 
-        return true;
+                log.info("初始化Market模块的基本数据信息完成");
+
+                return null;
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+            return Collections.singletonList("市场模块应用初始化基本数据类型出错");
+        }
+
+        return null;
     }
 
     /**
@@ -49,30 +60,34 @@ public class MarketModelInit implements ModelInit {
         marketBasicInfoRepository.save(MarketBasicInfo.builder()
                 .marketName("本地市场")
                 .marketResearchPeriod(2)
-                .marketResearchCost(0.5)
-                .marketMaintainCost(0.2)
+                .marketResearchCost(1.5)
+                .marketMaintainCost(0.5)
                 .marketStatus(MarketStatusEnum.DEVELOPED)
+                .enable(true)
                 .build());
         marketBasicInfoRepository.save(MarketBasicInfo.builder()
                 .marketName("区域市场")
-                .marketResearchPeriod(2)
-                .marketResearchCost(0.5)
-                .marketMaintainCost(0.2)
+                .marketResearchPeriod(3)
+                .marketResearchCost(2)
+                .marketMaintainCost(1)
                 .marketStatus(MarketStatusEnum.TODEVELOP)
+                .enable(true)
                 .build());
         marketBasicInfoRepository.save(MarketBasicInfo.builder()
                 .marketName("国内市场")
-                .marketResearchPeriod(2)
-                .marketResearchCost(0.5)
-                .marketMaintainCost(0.2)
+                .marketResearchPeriod(4)
+                .marketResearchCost(2.5)
+                .marketMaintainCost(1.5)
                 .marketStatus(MarketStatusEnum.TODEVELOP)
+                .enable(true)
                 .build());
         marketBasicInfoRepository.save(MarketBasicInfo.builder()
                 .marketName("国际市场")
-                .marketResearchPeriod(2)
-                .marketResearchCost(0.5)
-                .marketMaintainCost(0.2)
+                .marketResearchPeriod(5)
+                .marketResearchCost(3)
+                .marketMaintainCost(2)
                 .marketStatus(MarketStatusEnum.TODEVELOP)
+                .enable(true)
                 .build());
     }
 }

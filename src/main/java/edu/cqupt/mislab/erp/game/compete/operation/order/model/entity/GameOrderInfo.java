@@ -19,7 +19,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @Table
-public class GameAllOrderInfos implements Serializable {
+public class GameOrderInfo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -53,8 +53,11 @@ public class GameAllOrderInfos implements Serializable {
     private Double penalPercent;//违约金比率，超过1期交纳1期的违约金，超过多期，进行累计
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(updatable = false)
+    @JoinColumn
     private IsoBasicInfo isoBasicInfo;//所需要的质量认证信息
+
+    @Basic(optional = false)
+    private Integer year;//那一年的订单
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(updatable = false)
@@ -68,7 +71,7 @@ public class GameAllOrderInfos implements Serializable {
         if(o == null||getClass() != o.getClass())
             return false;
 
-        GameAllOrderInfos that = (GameAllOrderInfos) o;
+        GameOrderInfo that = (GameOrderInfo) o;
 
         return new EqualsBuilder().append(id,that.id).isEquals();
     }

@@ -1,5 +1,7 @@
 package edu.cqupt.mislab.erp.game.compete.operation.material.model.entity;
 
+import com.google.common.base.Objects;
+import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -18,36 +20,38 @@ import java.util.Date;
 public class GameMaterialInfo {
 
     /**
-     * 比赛的材料信息表
-     */
+     * @Author: chuyunfei
+     * @Date: 2019/3/4 21:37
+     * @Description: 比赛的材料信息表用于存储比赛中所用到的所有材料信息
+     **/
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;//代理主键
+    @Comment(comment = "代理主键")
+    private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    private GameBasicInfo gameBasicInfo;//那一场比赛
+    @Comment(comment = "那一场比赛")
+    private GameBasicInfo gameBasicInfo;
 
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    private MaterialBasicInfo materialBasicInfo;//那一种原料
+    @Comment(comment = "那一种原料")
+    private MaterialBasicInfo materialBasicInfo;
 
     @Override
     public boolean equals(Object o){
         if(this == o)
             return true;
-
         if(o == null||getClass() != o.getClass())
             return false;
-
         GameMaterialInfo that = (GameMaterialInfo) o;
-
-        return new EqualsBuilder().append(id,that.id).isEquals();
+        return Objects.equal(id,that.id);
     }
 
     @Override
     public int hashCode(){
-        return new HashCodeBuilder(17,37).append(id).toHashCode();
+        return Objects.hashCode(id);
     }
 }

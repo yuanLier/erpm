@@ -1,10 +1,12 @@
 package edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity;
 
+import com.google.common.base.Objects;
+import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import lombok.*;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -14,46 +16,60 @@ import java.util.Objects;
 @Entity
 @Table
 public class IsoBasicInfo implements Serializable {
+    
+    /* 
+     * @Author: chuyunfei
+     * @Date: 2019/3/4 20:33
+     * @Description: 用于记录应用的ISO基本认证信息，比赛初始化是获取最新的一条数据，而修改将使用到历史数据。
+     * 在这张表里面没有一条可用的认证信息的时候比赛将无法进行初始化操作。
+     **/
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;//代理主键
+    @Comment(comment = "代理主键")
+    private Long id;
 
     @Column(nullable = false, updatable = false)
-    private String isoName;//ISO认证资格的名称
+    @Comment(comment = "ISO认证资格的名称，这个名称用于区分不同ISO认证信息，相同的isoName非最大值ID数据为历史信息")
+    private String isoName;
 
     @Column(nullable = false, updatable = false)
-    private Integer isoResearchPeriod;//完成ISO认证所需的周期数
+    @Comment(comment = "ISO认证信息需要认证的周期，该值必须大于等于1")
+    private int isoResearchPeriod;
 
     @Column(nullable = false, updatable = false)
-    private Double isoResearchCost;//在开拓ISO认证过程中，每个周期需要支付的费用
+    @Comment(comment = "ISO认证过程中每个周期需要支付的费用，该值必须大于0")
+    private double isoResearchCost;
 
     @Column(nullable = false, updatable = false)
-    private Double isoMaintainCost;//ISO认证完成后，维持该认证每个周期需要支付的费用
+    @Comment(comment = "ISO认证完成后维持该认证每个周期需要支付的费用，该值必须大于0")
+    private double isoMaintainCost;
 
     @Column(nullable = false, updatable = false)
-    private Double extraValue;//该认证对订单价格的影响程度，每一个产品价格影响
+    @Comment(comment = "该认证对订单的每一个产品单价的影响程度，该值必须大于0")
+    private double extraValue;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
-    private IsoStatusEnum isoStatus;//该认证的默认初始状态
+    @Comment(comment = "该认证的默认初始状态，标识该ISO在比赛初始化时将以什么状态出现在比赛默认信息里面，只能是研发成功或者未研发")
+    private IsoStatusEnum isoStatus;
+
+    @Basic(optional = false)
+    @Comment(comment = "该数据是否被启用，当前最新数据是启用，所有的历史数据均为未启用，必须保证同一个ISO认证信息最多只有一个Enable = true")
+    private boolean enable;
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o){
+        if(this == o)
+            return true;
+        if(o == null||getClass() != o.getClass())
+            return false;
         IsoBasicInfo that = (IsoBasicInfo) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(isoName, that.isoName) &&
-                Objects.equals(isoResearchPeriod, that.isoResearchPeriod) &&
-                Objects.equals(isoResearchCost, that.isoResearchCost) &&
-                Objects.equals(isoMaintainCost, that.isoMaintainCost) &&
-                Objects.equals(extraValue, that.extraValue) &&
-                isoStatus == that.isoStatus;
+        return isoResearchPeriod == that.isoResearchPeriod&&Double.compare(that.isoResearchCost,isoResearchCost) == 0&&Double.compare(that.isoMaintainCost,isoMaintainCost) == 0&&Double.compare(that.extraValue,extraValue) == 0&&enable == that.enable&&Objects.equal(id,that.id)&&Objects.equal(isoName,that.isoName)&&isoStatus == that.isoStatus;
     }
 
     @Override
-    public int hashCode() {
-
-        return Objects.hash(id, isoName, isoResearchPeriod, isoResearchCost, isoMaintainCost, extraValue, isoStatus);
+    public int hashCode(){
+        return Objects.hashCode(id,isoName,isoResearchPeriod,isoResearchCost,isoMaintainCost,extraValue,isoStatus,enable);
     }
 }

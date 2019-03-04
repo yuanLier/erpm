@@ -20,7 +20,7 @@ public class GameInitInfo implements Serializable {
     private Long id;//代理主键
 
     @Basic(optional = false)
-    private Integer totalYear;//一场比赛年数，默认6年
+    private Integer totalYear;//一场比赛年数，默认6年，设置必须大于1年才行
 
     @Basic(optional = false)
     private Integer period;//一年的周期数，默认4期
