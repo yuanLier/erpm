@@ -3,6 +3,7 @@ package edu.cqupt.mislab.erp.game.manage.controller;
 import edu.cqupt.mislab.erp.commons.response.WebResponseUtil;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
+import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.dto.GameCreateDto;
 import edu.cqupt.mislab.erp.game.manage.model.dto.GamesSearchDto;
 import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailInfoVo;
@@ -42,7 +43,7 @@ public class GameManageController {
 
     @ApiOperation("开始一个比赛")
     @PostMapping("/begin")
-    public WebResponseVo<String> beginOneGame(@RequestParam Long gameId,@Exist(repository = UserStudentRepository.class) @RequestParam Long userId){
+    public WebResponseVo<String> beginOneGame(@Exist(repository = GameBasicInfoRepository.class) @RequestParam Long gameId,@Exist(repository = UserStudentRepository.class) @RequestParam Long userId){
 
         return gameManageService.beginOneGame(userId,gameId);
     }

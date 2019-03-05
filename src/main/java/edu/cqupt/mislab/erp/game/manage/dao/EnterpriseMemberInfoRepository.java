@@ -13,4 +13,6 @@ public interface EnterpriseMemberInfoRepository extends JpaSpecificationExecutor
     EnterpriseMemberInfo findByEnterprise_IdAndStudentInfo_Id(Long enterpriseId,Long userId);//查询指定的企业里面的用户数据
 
     List<EnterpriseMemberInfo> findByEnterprise_Id(Long enterpriseId);//查询一个企业里面的全部成员信息
+
+    void deleteByEnterprise_Id(long enterpriseId);//删除某个企业里面的全部数据
 }

@@ -38,7 +38,7 @@ public class GameManageServiceImpl implements GameManageService {
     @Autowired private UserStudentRepository userStudentRepository;
     @Autowired private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
     @Autowired private GameModelInitService gameCompeteInitService;
-    @Autowired @Qualifier("commonWebSocketService") private CommonWebSocketMessagePublisher webSocketMessagePublisher;
+    @Autowired private CommonWebSocketMessagePublisher webSocketMessagePublisher;
 
     @Override
     public WebResponseVo<Object> deleteOneGame(Long gameId,Long userId,String password){
@@ -176,6 +176,9 @@ public class GameManageServiceImpl implements GameManageService {
                     //比赛初始化完成
                     gameBasicInfo.setGameStatus(GameStatus.PLAYING);
 
+                    //存储这个比赛信息
+                    gameBasicInfoRepository.save(gameBasicInfo);
+
                     //向前端广播这个比赛已经初始化完成的信息
                     webSocketMessagePublisher.publish(gameId,new TextMessage(ManageConstant.GAME_INIT_COMPLETE + gameId));
 
@@ -205,7 +208,7 @@ public class GameManageServiceImpl implements GameManageService {
         }
 
         //获取最新版本的比赛初始化信息，这个方法保证管理员将应用初始化更改后会响应在后面创建的比赛上
-        GameInitInfo gameInitInfo = gameInitInfoRepository.findTop1ByIdIsNotNullOrderByIdDesc();
+        GameInitInfo gameInitInfo = gameInitInfoRepository.findNewestGameInitInfo().get(0);
 
         //校验比赛模块初始化数据是否正确
         if(gameInitInfo == null){

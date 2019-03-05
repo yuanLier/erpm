@@ -36,7 +36,7 @@ public class EnterpriseManageController {
 
     @ApiOperation(value = "删除一个企业",notes = "敏感操作，需要提供密码")
     @DeleteMapping("/delete")
-    public WebResponseVo<String> deleteOneEnterprise(@RequestParam Long enterpriseId,@Exist(repository = UserStudentRepository.class) @RequestParam Long userId,@RequestParam String password){
+    public WebResponseVo<String> deleteOneEnterprise(@Exist(repository = EnterpriseBasicInfoRepository.class) @RequestParam Long enterpriseId,@Exist(repository = UserStudentRepository.class) @RequestParam Long userId,@RequestParam String password){
 
         return enterpriseManageService.deleteOneEnterprise(enterpriseId,userId,password);
     }

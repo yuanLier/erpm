@@ -62,15 +62,8 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
             return toFailResponseVoWithMessage(ResponseStatus.NOT_FOUND,"该企业不存在");
         }
 
-        //获取企业成员，企业成员至少有一个：创始人
-        final Set<EnterpriseMemberInfo> memberInfos = enterpriseBasicInfo.getMemberInfos();
-
-        int memberNumber = 0;
-
-        if(memberInfos != null){
-
-            memberNumber = memberInfos.size();
-        }
+        //获取已有的成员个数
+        int memberNumber = enterpriseMemberInfoRepository.findByEnterprise_Id(enterpriseBasicInfo.getId()).size();
 
         //如果是运行时添加人员，需要密码
         if(joinDto.getPassword() != null){
@@ -136,7 +129,7 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
                 //通知前端这个企业已经被删除了
                 webSocketMessagePublisher.publish(gameInfoId,new TextMessage(ManageConstant.ENTERPRISE_DELETE_KEY_NAME + enterpriseId));
 
-                //当创始人退出企业时将删除这个企业，级联删除了这个企业的全部成员
+                //当创始人退出企业时将删除这个企业
                 enterpriseBasicInfoRepository.delete(enterpriseId);
 
                 return toSuccessResponseVoWithData("创始人退出企业，删除企业");
@@ -189,10 +182,10 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
             return toFailResponseVoWithMessage(ResponseStatus.NOT_FOUND,"该企业不存在");
         }
 
-        final Boolean rateSure = enterpriseBasicInfo.getGameContributionRateSure();
+        boolean rateSure = enterpriseBasicInfo.isGameContributionRateSure();
 
         //贡献度只能够确认一次
-        if(rateSure != null && rateSure){
+        if(rateSure){
 
             return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"该企业贡献度已经被确认，不能再被修改");
         }

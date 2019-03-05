@@ -33,6 +33,7 @@ public class GameManageModelInit implements ModelInit {
     @Override
     public List<String> applicationModelInit(){
 
+        //判断当前模块是否已经被初始化过
         if(modelInitService.addInitializedModelIfNotExist(this)){
 
             //先决条件
@@ -46,7 +47,11 @@ public class GameManageModelInit implements ModelInit {
 
             try{
                 log.info("初始化比赛的基本初始化信息");
+
+                //初始化比赛初始化信息
                 initGameInitInfo();
+
+                log.info("初始化比赛的基本初始化信息完成");
 
                 return null;
             }catch(Exception e){
@@ -82,7 +87,7 @@ public class GameManageModelInit implements ModelInit {
                 .maxMemberNumber(6)
                 .period(4)
                 .totalYear(5)
-                .timeStamp(new Date())
+                .enable(true)
                 .build();
 
         gameInitInfo = gameInitInfoRepository.save(gameInitInfo);

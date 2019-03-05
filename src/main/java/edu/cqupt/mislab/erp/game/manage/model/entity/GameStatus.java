@@ -3,6 +3,12 @@ package edu.cqupt.mislab.erp.game.manage.model.entity;
 public enum  GameStatus {
 
     /*
+     * @Author: chuyunfei
+     * @Date: 2019/3/5 19:07
+     * @Description: 比赛状态信息
+     **/
+
+    /*
     标识创建状态，这个状态可以被删除，可以成员添加等
      */
     CREATE,

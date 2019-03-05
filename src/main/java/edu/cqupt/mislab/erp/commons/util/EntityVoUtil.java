@@ -49,10 +49,10 @@ public abstract class EntityVoUtil {
         enterpriseDetailInfoVo.setGameId(enterpriseBasicInfo.getGameInfo().getId());
         enterpriseDetailInfoVo.setEnterpriseStatus(enterpriseBasicInfo.getEnterpriseStatus());
 
-        if(enterpriseBasicInfo.getMemberInfos() == null){
+        if(enterpriseBasicInfo.getEnterpriseMemberInfos() == null){
             enterpriseDetailInfoVo.setEnterpriseMemberNumber(0);
         }else {
-            enterpriseDetailInfoVo.setEnterpriseMemberNumber(enterpriseBasicInfo.getMemberInfos().size());
+            enterpriseDetailInfoVo.setEnterpriseMemberNumber(enterpriseBasicInfo.getEnterpriseMemberInfos().size());
         }
     }
 

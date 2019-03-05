@@ -32,7 +32,7 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
     @Autowired private EnterpriseMemberInfoRepository enterpriseMemberInfoRepository;
     @Autowired private UserStudentRepository userStudentRepository;
     @Autowired private GameUserRoleService gameUserRoleService;
-    @Autowired @Qualifier("commonWebSocketService") private CommonWebSocketMessagePublisher webSocketMessagePublisher;
+    @Autowired private CommonWebSocketMessagePublisher webSocketMessagePublisher;
 
     @Override
     public WebResponseVo<EnterpriseDetailInfoVo> createNewEnterprise(EnterpriseCreateDto createDto){
@@ -55,13 +55,7 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
         }
 
         //获取里面的企业成员信息
-        Set<EnterpriseBasicInfo> enterpriseBasicInfos = gameBasicInfo.getEnterpriseBasicInfos();
-
-        //初始化企业信息
-        if(enterpriseBasicInfos == null){
-
-            enterpriseBasicInfos = new HashSet<>();
-        }
+        List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameInfo_Id(gameBasicInfo.getId());
 
         //每一个比赛设置有一个企业个数上限
         if(gameBasicInfo.getGameMaxEnterpriseNumber() <= enterpriseBasicInfos.size()){
@@ -105,7 +99,7 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
             return toFailResponseVoWithMessage(ResponseStatus.INTERNAL_SERVER_ERROR,"企业创建失败，未知错误！");
         }
 
-        //创建企业的同时需要将企业创建者
+        //创建企业的同时需要将企业创建者作为企业成员添加到数据信息里面去
         EnterpriseMemberInfo enterpriseMemberInfo = EnterpriseMemberInfo.builder()
                 .gameEnterpriseRole("创建者")
                 .studentInfo(userStudentInfo)
@@ -144,6 +138,12 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
         if(!userStudentInfo.getId().equals(userId) || !userStudentInfo.getStudentPassword().equals(password)){
 
             return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"认证信息错误，无法删除该企业");
+        }
+
+        //判断企业状态是否能够被删除
+        if(enterpriseBasicInfo.getEnterpriseStatus() != EnterpriseStatus.CREATE){
+
+            return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"只能删除处于创建状态的企业");
         }
 
         //获取比赛的ID
