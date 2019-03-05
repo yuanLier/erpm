@@ -1,5 +1,7 @@
 package edu.cqupt.mislab.erp.game.compete.operation.order.model.entity;
 
+import com.google.common.base.Objects;
+import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
@@ -21,52 +23,65 @@ import java.util.Date;
 @Table
 public class EnterpriseAdInfo implements Serializable {
 
+    /*
+     * @Author: chuyunfei
+     * @Date: 2019/3/5 13:02
+     * @Description: 企业广告信息数据表
+     **/
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;//代理主键
+    @Comment(comment = "代理主键")
+    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(updatable = false)
-    private EnterpriseBasicInfo enterpriseBasicInfo;//哪一个企业
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(updatable = false,nullable = false)
+    @Comment(comment = "哪一个企业")
+    private EnterpriseBasicInfo enterpriseBasicInfo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    private ProductBasicInfo productBasicInfo;//哪一个产品
+    @Comment(comment = "哪一个产品")
+    private ProductBasicInfo productBasicInfo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    private MarketBasicInfo marketBasicInfo;//哪一个市场
+    @Comment(comment = "哪一个市场")
+    private MarketBasicInfo marketBasicInfo;
 
-    @Basic(optional = false)
-    private Integer year;//那一年投的广告费
+    @Column(nullable = false,updatable = false)
+    @Comment(comment = "那一年投的广告费")
+    private int year;
 
-    @Basic(optional = false)
-    private Double money;//多少钱
+    @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
+    @Comment(comment = "多少钱")
+    private double money;
 
+    @Column(nullable = false,updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date timeStamp;//哪一个时间投的
+    @Comment(comment = "哪一个时间投的")
+    private Date timeStamp;
 
-    @Basic(optional = false)
-    private Integer frequency;//该订单已经选择已经多少轮
+    @Column(columnDefinition = "int default 0")
+    @Comment(comment = "该订单已经选择已经多少轮")
+    private int frequency;
 
-    @Basic(optional = false)
-    private Boolean finished;//该订单是否退出排序
+    @Column(columnDefinition = "tinyint(1) default 0")
+    @Comment(comment = "该订单是否退出排序")
+    private boolean finished;
 
     @Override
     public boolean equals(Object o){
         if(this == o)
             return true;
-
         if(o == null||getClass() != o.getClass())
             return false;
-
         EnterpriseAdInfo that = (EnterpriseAdInfo) o;
-
-        return new EqualsBuilder().append(id,that.id).isEquals();
+        return year == that.year&&Double.compare(that.money,money) == 0&&frequency == that.frequency&&finished == that.finished&&Objects.equal(id,that.id)&&Objects.equal(timeStamp,that.timeStamp);
     }
 
     @Override
     public int hashCode(){
-        return new HashCodeBuilder(17,37).append(id).toHashCode();
+        return Objects.hashCode(id,year,money,timeStamp,frequency,finished);
     }
 }

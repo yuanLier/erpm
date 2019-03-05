@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.order.model.entity;
 
+import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
@@ -21,47 +22,65 @@ import java.io.Serializable;
 @Table
 public class GameOrderInfo implements Serializable {
 
+    /*
+     * @Author: chuyunfei
+     * @Date: 2019/3/5 13:13
+     * @Description: 用于记录所有的订单信息
+     **/
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;//代理主键
+    @Comment(comment = "代理主键")
+    private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    private GameBasicInfo gameBasicInfo;//哪一场比赛
+    @Comment(comment = "哪一场比赛")
+    private GameBasicInfo gameBasicInfo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    private ProductBasicInfo productBasicInfo;//哪一个产品
+    @Comment(comment = "哪一个产品")
+    private ProductBasicInfo productBasicInfo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    private MarketBasicInfo marketBasicInfo;//哪一个市场
+    @Comment(comment = "哪一个市场")
+    private MarketBasicInfo marketBasicInfo;
 
     @Basic(optional = false)
-    private Integer productNumber;//产品数量
+    @Comment(comment = "产品数量")
+    private int productNumber;
 
-    @Basic(optional = false)
-    private Double price;//产品单价
+    @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
+    @Comment(comment = "产品单价")
+    private double price;
 
-    @Basic(optional = false)
-    private Integer deliveryPeriod;//需要的交货的日期，为总第几期
+    @Column(nullable = false,updatable = false)
+    @Comment(comment = "需要的交货的日期，为总第几期")
+    private int deliveryPeriod;
 
-    @Basic(optional = false)
-    private Integer moneyTime;//订单交货后，需要几个账期，货款可以到账
+    @Column(nullable = false,updatable = false)
+    @Comment(comment = "订单交货后，需要几个账期，货款可以到账")
+    private int moneyTime;
 
-    @Basic(optional = false)
-    private Double penalPercent;//违约金比率，超过1期交纳1期的违约金，超过多期，进行累计
+    @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
+    @Comment(comment = "违约金比率，超过1期交纳1期的违约金，超过多期，进行累计")
+    private double penalPercent;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-    private IsoBasicInfo isoBasicInfo;//所需要的质量认证信息
+    @Comment(comment = "所需要的质量认证信息")
+    private IsoBasicInfo isoBasicInfo;
 
-    @Basic(optional = false)
-    private Integer year;//那一年的订单
+    @Column(nullable = false,updatable = false)
+    @Comment(comment = "那一年的订单")
+    private int year;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(updatable = false)
-    private EnterpriseBasicInfo enterpriseBasicInfo;//该订单被那个企业选择
+    @JoinColumn
+    @Comment(comment = "该订单被那个企业选择")
+    private EnterpriseBasicInfo enterpriseBasicInfo;
 
     @Override
     public boolean equals(Object o){

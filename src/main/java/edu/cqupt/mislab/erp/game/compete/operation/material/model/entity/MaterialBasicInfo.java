@@ -33,7 +33,7 @@ public class MaterialBasicInfo {
     @Comment(comment = "原料的名称，所有相同原料名称数据中，enable=false标识历史数据，反之为最新数据，每一个name最多一个enable=true")
     private String materialName;
 
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "原料的价格,该值必须大于0")
     private double materialPrice;
 

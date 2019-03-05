@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface ProductBasicInfoRepository extends JpaRepository<ProductBasicInfo,Long> {
 
-    @Query(value = "select * from product_basic_info where id in (select max(id) from product_basic_info group by product_name)",nativeQuery = true)
-    List<ProductBasicInfo> findNewestProductBasicInfos();//选取所有材料的最新版本
+    @Query("from ProductBasicInfo p where p.enable = true group by p.productName")
+    List<ProductBasicInfo> findNewestProductBasicInfos();//选取所有产品的最新版本
 }

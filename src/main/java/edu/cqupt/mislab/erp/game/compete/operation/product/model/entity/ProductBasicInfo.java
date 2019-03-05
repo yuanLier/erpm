@@ -41,11 +41,11 @@ public class ProductBasicInfo implements Serializable {
     @Comment(comment = "产品研发的周期数，该值大于0")
     private int productResearchPeriod;
 
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "在产品研发过程中，每个周期需要支付的费用，该值大于0")
     private double productResearchCost;
 
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "产品价格,该值大于0")
     private double price;
 
@@ -61,11 +61,11 @@ public class ProductBasicInfo implements Serializable {
     @Comment(comment = "市场之间的需求量差异,该值大于0")
     private int mountDifference;
 
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 0.00")
     @Comment(comment = "价格波动比例,该值大于0")
     private double priceFloat;
 
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 0.00")
     @Comment(comment = "需求量波动比例,该值大于0")
     private double mountFloat;
 

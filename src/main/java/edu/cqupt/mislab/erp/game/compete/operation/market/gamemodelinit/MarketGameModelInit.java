@@ -37,12 +37,7 @@ public class MarketGameModelInit implements GameModelInit {
      * @Description: 比赛市场模块初始化
      **/
 
-    @Autowired private GameBasicInfoRepository gameBasicInfoRepository;
     @Autowired private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
-    @Autowired private IsoBasicInfoRepository isoBasicInfoRepository;
-    @Autowired private IsoDevelopInfoRepository isoDevelopInfoRepository;
-    @Autowired private ProductBasicInfoRepository productBasicInfoRepository;
-    @Autowired private ProductDevelopInfoRepository productDevelopInfoRepository;
     @Autowired private MarketBasicInfoRepository marketBasicInfoRepository;
     @Autowired private MarketDevelopInfoRepository marketDevelopInfoRepository;
 

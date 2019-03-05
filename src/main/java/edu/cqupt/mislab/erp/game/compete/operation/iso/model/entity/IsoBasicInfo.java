@@ -41,11 +41,11 @@ public class IsoBasicInfo implements Serializable {
     @Comment(comment = "ISO认证过程中每个周期需要支付的费用，该值必须大于0")
     private double isoResearchCost;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "ISO认证完成后维持该认证每个周期需要支付的费用，该值必须大于0")
     private double isoMaintainCost;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "该认证对订单的每一个产品单价的影响程度，该值必须大于0")
     private double extraValue;
 

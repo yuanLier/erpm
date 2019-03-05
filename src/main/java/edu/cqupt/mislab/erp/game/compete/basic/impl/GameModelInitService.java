@@ -7,6 +7,10 @@ import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketBasicInfoRep
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.material.dao.MaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductMaterialBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +28,8 @@ public class GameModelInitService implements ApplicationContextAware {
     @Autowired private IsoBasicInfoRepository isoBasicInfoRepository;
     @Autowired private MarketBasicInfoRepository marketBasicInfoRepository;
     @Autowired private MaterialBasicInfoRepository materialBasicInfoRepository;
+    @Autowired private ProductBasicInfoRepository productBasicInfo;
+    @Autowired private ProductMaterialBasicInfoRepository productMaterialBasicInfoRepository;
 
     private ApplicationContext applicationContext;
 
@@ -127,6 +133,26 @@ public class GameModelInitService implements ApplicationContextAware {
 
         if(materialBasicInfos == null || materialBasicInfos.size() == 0){
             return Collections.singletonList("材料信息必须存在，否则无法初始化比赛!");
+        }
+
+        //产品基本数据必须存在
+        final List<ProductBasicInfo> productBasicInfos = productBasicInfo.findNewestProductBasicInfos();
+
+        if(productBasicInfos == null || productBasicInfos.size() == 0){
+            return Collections.singletonList("产品信息必须存在，否则无法初始化比赛!");
+        }
+
+        //校验产品组成信息数据是否正确，必须每一个产品都有材料组成信息才行
+        for(ProductBasicInfo basicInfo : productBasicInfos){
+
+            final List<ProductMaterialBasicInfo> productMaterialBasicInfos = productMaterialBasicInfoRepository.findByEnableIsTrueAndProductBasicInfo_Id(basicInfo.getId());
+
+            if(productMaterialBasicInfos == null || productMaterialBasicInfos.size() == 0){
+
+                log.error("产品：" + basicInfo.getProductName() + "没有材料组成信息，将无法进行比赛初始化");
+
+                return Collections.singletonList("产品模块的材料组成信息缺失，无法初始化比赛数据");
+            }
         }
 
         //todo

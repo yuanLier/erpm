@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.order.model.entity;
 
+import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
@@ -17,23 +18,34 @@ import javax.persistence.*;
 @Table
 public class EnterpriseMaterialOrderInfo {
 
+    /*
+     * @Author: chuyunfei
+     * @Date: 2019/3/5 13:09
+     * @Description: 记录企业的材料订单信息
+     **/
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;//代理主键
+    @Comment(comment = "代理主键")
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    private EnterpriseBasicInfo enterpriseBasicInfo;//哪一个企业
+    @Comment(comment = "哪一个企业")
+    private EnterpriseBasicInfo enterpriseBasicInfo;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    private MaterialBasicInfo materialBasicInfo;//哪一种原料
+    @Comment(comment = "哪一种原料")
+    private MaterialBasicInfo materialBasicInfo;
 
     @Basic(optional = false)
-    private Integer materialNumber;//需要该种原料多少种
+    @Comment(comment = "需要该种原料多少种")
+    private int materialNumber;
 
     @Basic(optional = false)
-    private Integer orderBeginTime;//哪一个周期下的订单
+    @Comment(comment = "哪一个周期下的订单")
+    private int orderBeginTime;
 
     @Override
     public boolean equals(Object o){

@@ -63,24 +63,25 @@ public class OrderGameModelInit implements GameModelInit {
     @Override
     public List<String> initGameModel(Long gameId){
 
+        //判断当前模块是否已经被初始化过了
         if(gameModelInitService.addInitializedModelIfNotExist(gameId,this)){
+
+            //必须要保证ISO、Market、Product、Material全部已经被初始化了
+            List<String> preInitResult = orderPreInit(gameId);
+
+            if(preInitResult != null){
+
+                return preInitResult;
+            }
 
             try{
 
                 log.info("开始初始化订单模块的比赛数据");
 
-                //必须要保证ISO、Market、Product、Material全部已经被初始化了
-                List<String> preInitResult = orderPreInit(gameId);
-
-                if(preInitResult != null){
-
-                    return preInitResult;
-                }
-
                 //初始化所有订单的预测信息
                 initPrediction(gameId);
 
-                //初始化哈偶所有的订单
+                //初始化比赛所有的订单
                 initAllOrder(gameId);
 
                 //初始化所有的ISO附加信息
@@ -212,7 +213,7 @@ public class OrderGameModelInit implements GameModelInit {
             final OrderPredictionInfo orderPredictionInfo = orderPredictionInfos.get(i);
 
             //获取预测的基本信息
-            final Integer totalMount = orderPredictionInfo.getMount();
+            final Integer totalMount = orderPredictionInfo.getMount();//这个数值必须是大于0的，不然会出错
             final Double basicPrice = orderPredictionInfo.getPrice();
 
             //获取总共能够生成的最大订单数量
@@ -228,10 +229,10 @@ public class OrderGameModelInit implements GameModelInit {
                 int averageProductNumber = (int) Math.ceil(totalMount * 1.0D / maxOrderNumber);
 
                 //随机生成该订单的产品个数
-                int orderProductNumber = (int) Math.ceil(averageProductNumber + random.nextInt(3) -1);
+                int orderProductNumber = (int) Math.ceil(averageProductNumber + random.nextInt(3));
 
                 //随机生成每个订单的单价
-                double orderProductPerPrice = Math.ceil(basicPrice + (random.nextInt(3) - 1));
+                double orderProductPerPrice = Math.ceil(basicPrice + Math.random() * 3);
 
                 //随机生成交货日期
                 int deliveryPeriod = (int) Math.ceil(gameCurrentYear * period + random.nextInt(period) + 2);
@@ -323,28 +324,27 @@ public class OrderGameModelInit implements GameModelInit {
 
                     //开始根据信息随机生成数量和价格
 
-                    //数量随机数
-                    int r1 = r.nextInt(3) - 1;
-                    int r3 = r.nextInt(3) - 1;
-
-                    //价格随机数
-                    double r2 = Math.random() - Math.random();
-                    double r4 = Math.random() - Math.random();
-
                     //随机生成价格和数量，优化原版本的算法
-                    double price = productBasicInfo.getPrice() + productBasicInfo.getPriceDifference() * r1
-                            + productBasicInfo.getPrice() * r2 * productBasicInfo.getPriceFloat();
+                    double price = -1;
 
+                    /*
+                    当产品的价格为0时将会出现死循环，需要控制产品价格
+                     */
                     do{
-                        price = productBasicInfo.getPrice() + productBasicInfo.getPriceDifference() * r1
-                                + productBasicInfo.getPrice() * r2 * productBasicInfo.getPriceFloat();
+                        price = productBasicInfo.getPrice() //原价
+                                + productBasicInfo.getPrice() * productBasicInfo.getPriceDifference() * Math.pow(-1,Math.ceil(Math.random() * 2)) //价格差异
+                                + productBasicInfo.getPrice() * productBasicInfo.getPriceFloat() * Math.pow(-1,Math.ceil(Math.random() * 2)); //价格波动
                     }while(price <= 0);
 
                     double mount = -1;
 
+                    /*
+                    当产品的个数为0时将会出现死循环，需要控制产品价格
+                     */
                     do{
-                        mount = productBasicInfo.getMount() + productBasicInfo.getMountDifference() * r3
-                                + productBasicInfo.getMount() * r4 * productBasicInfo.getMountFloat();
+                        mount = productBasicInfo.getMount() //原个数
+                                + productBasicInfo.getMount() * productBasicInfo.getMountDifference() * Math.pow(-1,Math.ceil(Math.random() * 2))//数量差异
+                                + productBasicInfo.getMount() * productBasicInfo.getMount() * Math.pow(-1,Math.ceil(Math.random() * 2));//数量波动
                     }while(mount <= 0);
 
                     //对生成的数值进行向上取整处理

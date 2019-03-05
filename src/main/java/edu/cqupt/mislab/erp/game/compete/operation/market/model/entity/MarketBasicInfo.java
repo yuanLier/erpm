@@ -42,7 +42,7 @@ public class MarketBasicInfo implements Serializable {
     @Comment(comment = "在市场开发过程中，每个周期需要支付的费用，该值必须大于0")
     private double marketResearchCost;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "市场开发完成后，维持该市场每个周期需要支付的费用，该值必须大于0")
     private double marketMaintainCost;
 
