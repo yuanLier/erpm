@@ -48,11 +48,11 @@ public class GameBasicInfo implements Serializable {
 
     @Column(nullable = false,updatable = false)
     @Comment(comment = "这场比赛允许参加的最大企业数目，用于限制企业创建")
-    private int gameMaxEnterpriseNumber;
+    private Integer gameMaxEnterpriseNumber;
 
     @Column(nullable = false,updatable = false)
     @Comment(comment = "当前游戏处于哪一个年，用于比赛数据的推进")
-    private int gameCurrentYear;
+    private Integer gameCurrentYear;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false,updatable = false)
