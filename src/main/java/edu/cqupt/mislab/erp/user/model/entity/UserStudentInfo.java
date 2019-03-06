@@ -30,8 +30,8 @@ public class UserStudentInfo implements Serializable {
     @Enumerated(EnumType.STRING)
     private UserGender gender;//性别
 
-    @OneToOne
-    @JoinColumn
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
     private MajorInfo majorInfo;//专业信息
 
     @Basic(optional = false)
@@ -41,7 +41,7 @@ public class UserStudentInfo implements Serializable {
 
     private String phone;//电话
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private UserAvatarInfo userAvatarInfo;//头像位置信息
 

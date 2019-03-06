@@ -9,6 +9,9 @@ import java.util.List;
 
 public interface EnterpriseBasicInfoRepository extends JpaSpecificationExecutor, JpaRepository<EnterpriseBasicInfo, Long> {
 
+    //判断某个企业是否处于某个状态
+    EnterpriseBasicInfo findByIdAndEnterpriseStatus(long enterpriseId,EnterpriseStatus status);
+
     //判断一个用户是否已经创建了一个比赛
     boolean existsByEnterpriseCeo_IdAndGameInfo_Id(Long userStudentId,Long gameId);
 
