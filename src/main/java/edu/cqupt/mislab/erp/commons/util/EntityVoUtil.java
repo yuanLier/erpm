@@ -4,6 +4,8 @@ import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.*;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseMemberInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
@@ -111,6 +113,27 @@ public abstract class EntityVoUtil {
         marketDisplayVo.setMarketStatus(marketDevelopInfo.getMarketStatus());
 
         return marketDisplayVo;
+    }
+
+    public static ProductDisplayVo copyFieldsFromEntityToVo(ProductDevelopInfo productDevelopInfo) {
+
+        ProductDisplayVo productDisplayVo = new ProductDisplayVo();
+
+        productDisplayVo.setId(productDevelopInfo.getId());
+
+        // 产品名称
+        productDisplayVo.setProductName(productDevelopInfo.getProductBasicInfo().getProductName());
+        // 每期研发费用
+        productDisplayVo.setProductResearchCost(productDevelopInfo.getProductBasicInfo().getProductResearchCost());
+        // 研发总期数
+        productDisplayVo.setProductResearchPeriod(productDevelopInfo.getProductBasicInfo().getProductResearchPeriod());
+
+        // 当前研发状态
+        productDisplayVo.setProductDevelopStatus(productDevelopInfo.getProductDevelopStatus());
+        // 已研发的周期数
+        productDisplayVo.setDevelopedPeriod(productDevelopInfo.getDevelopedPeriod());
+
+        return productDisplayVo;
     }
 
 }
