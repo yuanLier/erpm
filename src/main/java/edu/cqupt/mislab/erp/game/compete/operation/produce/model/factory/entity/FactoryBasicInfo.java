@@ -25,6 +25,11 @@ public class FactoryBasicInfo implements Serializable {
     @Comment(comment = "代理主键")
     private Long id;
 
+    // todo 放到BasicInfo里面还是DevelopInfo里面？
+    @Column(nullable = false, updatable = false)
+    @Comment(comment = "厂房编号")
+    private String factoryNumber;
+
     @Column(nullable = false, updatable = false)
     @Comment(comment = "厂房类型")
     private String factoryType;

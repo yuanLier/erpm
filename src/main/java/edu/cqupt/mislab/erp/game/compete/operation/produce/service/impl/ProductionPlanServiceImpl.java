@@ -2,11 +2,14 @@ package edu.cqupt.mislab.erp.game.compete.operation.produce.service.impl;
 
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineDevelopInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineProduceInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryDevelopStatus;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineDevelopStatus;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineProduceInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineProduceStatus;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.service.ProductionPlanService;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
@@ -33,6 +36,8 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
     private ProdlineDevelopInfoRepository prodlineDevelopInfoRepository;
     @Autowired
     private ProductDevelopInfoRepository productDevelopInfoRepository;
+    @Autowired
+    private ProdlineProduceInfoRepository prodlineProduceInfoRepository;
 
     @Override
     public List<ProductTypeVo> getProductTypeOfEnterprise(Long enterpriseId) {
@@ -58,7 +63,7 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
     public List<FactoryTypeVo> getFactoryTypeOfEnterprise(Long enterpriseId) {
         // 获取该企业有空闲生产线的全部厂房
         List<FactoryDevelopInfo> factoryDevelopInfoList = factoryDevelopInfoRepository
-                .findByEnterpriseBasicInfo_IdAndFactoryDevelopStatus(enterpriseId, FactoryDevelopStatus.NOTFULL);
+                .findByFactoryHoldingInfo_EnterpriseBasicInfo_IdAndFactoryDevelopStatus(enterpriseId, FactoryDevelopStatus.DEVELOPED);
 
         // 将Entity集转化为Vo集
         List<FactoryTypeVo> factoryTypeVoList = new ArrayList<>();
@@ -66,7 +71,7 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
             FactoryTypeVo factoryTypeVo = new FactoryTypeVo();
 
             factoryTypeVo.setId(factoryDevelopInfo.getId());
-            factoryTypeVo.setFactoryType(factoryDevelopInfo.getFactoryBasicInfo().getFactoryType());
+            factoryTypeVo.setFactoryType(factoryDevelopInfo.getFactoryHoldingInfo().getFactoryBasicInfo().getFactoryType());
 
             factoryTypeVoList.add(factoryTypeVo);
         }
@@ -77,16 +82,16 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
     @Override
     public List<ProdlineTypeVo> getProdlineTypeOfEnterprise(Long factoryId) {
         // 获取某个厂房中处于空闲状态的全部生产线
-        List<ProdlineDevelopInfo> prodlineDevelopInfoList = prodlineDevelopInfoRepository
-                .findByFactoryDevelopInfo_IdAndProdlineDevelopStatus(factoryId, ProdlineDevelopStatus.NOTINUSE);
+        List<ProdlineProduceInfo> prodlineDevelopInfoList = prodlineProduceInfoRepository
+                .findByProdlineHoldingInfo_FactoryDevelopInfo_IdAndProdlineProduceStatus(factoryId, ProdlineProduceStatus.TOPRODUCE);
 
         // 将Entity集转化为Vo集
         List<ProdlineTypeVo> prodlineTypeVoList = new ArrayList<>();
-        for (ProdlineDevelopInfo prodlineDevelopInfo : prodlineDevelopInfoList) {
+        for (ProdlineProduceInfo prodlineProduceInfo : prodlineDevelopInfoList) {
             ProdlineTypeVo prodlineTypeVo = new ProdlineTypeVo();
 
-            prodlineTypeVo.setId(prodlineDevelopInfo.getId());
-            prodlineTypeVo.setProdlineType(prodlineDevelopInfo.getProdlineBasicInfo().getProdlineType());
+            prodlineTypeVo.setId(prodlineProduceInfo.getId());
+            prodlineTypeVo.setProdlineType(prodlineProduceInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineType());
 
             prodlineTypeVoList.add(prodlineTypeVo);
         }

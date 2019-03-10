@@ -2,7 +2,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entit
 
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryDevelopInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryDevelopStatus;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
 
@@ -10,8 +10,8 @@ import javax.persistence.*;
 
 /**
  * @author yuanyiwen
- * @create 2019-03-09 19:35
- * @description 企业生产线的修建情况表
+ * @create 2019-03-10 17:00
+ * @description 生产线的生产情况表
  */
 @Getter
 @Setter
@@ -20,7 +20,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table
-public class ProdlineDevelopInfo {
+public class ProdlineProduceInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Comment(comment = "代理主键")
@@ -31,20 +31,30 @@ public class ProdlineDevelopInfo {
     @Comment(comment = "哪一条生产线信息")
     private ProdlineHoldingInfo prodlineHoldingInfo;
 
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(nullable = false,updatable = false)
+    @Comment(comment = "哪一条生产线信息")
+    private ProductDevelopInfo productDevelopInfo;
+
     @Basic
-    @Comment(comment = "开始修建的周期数")
+    @Comment(comment = "产品的实际需要的生产时间（值为产品的生产时间*生产线的加速时间取整）")
+    private Integer produceDuration;
+
+    @Basic
+    @Comment(comment = "开始生产的周期数")
     private Integer beginPeriod;
 
     @Basic
-    @Comment(comment = "修建完毕的周期数")
+    @Comment(comment = "生产完毕的周期数")
     private Integer endPeriod;
 
     @Basic
-    @Comment(comment = "已经修建了多少个周期数，初始默认为0")
-    private Integer developedPeriod;
+    @Comment(comment = "已经生产了多少个周期数，初始默认为0")
+    private Integer producedPeriod;
 
     @Basic(optional = false)
     @Enumerated(EnumType.STRING)
-    @Comment(comment = "修建的状态，需要在进行比赛初始化时手动进行转换设置")
-    private ProdlineDevelopStatus prodlineDevelopStatus;
+    @Comment(comment = "生产的状态，需要在进行比赛初始化时手动进行转换设置")
+    private ProdlineProduceStatus prodlineProduceStatus;
+
 }

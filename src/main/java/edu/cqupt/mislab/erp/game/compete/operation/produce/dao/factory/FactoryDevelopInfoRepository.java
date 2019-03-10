@@ -13,18 +13,18 @@ import java.util.List;
  * @description
  */
 public interface FactoryDevelopInfoRepository extends JpaSpecificationExecutor, JpaRepository<FactoryDevelopInfo, Long> {
-    
+
     /**
      * @author yuanyiwen
      * @description 获取某企业的全部厂房
-     * @date 16:52 2019/3/9
+     * @date 0:23 2019/3/11
      **/
-    List<FactoryDevelopInfo> findByEnterpriseBasicInfo_Id(Long enterpriseId);
+    List<FactoryDevelopInfo> findByFactoryHoldingInfo_EnterpriseBasicInfo_Id(Long enterpriseId);
 
     /**
      * @author yuanyiwen
      * @description 获取某个企业处于某种状态的全部厂房
-     * @date 20:05 2019/3/9
+     * @date 0:23 2019/3/11
      **/
-    List<FactoryDevelopInfo> findByEnterpriseBasicInfo_IdAndFactoryDevelopStatus(Long enterpriseId, FactoryDevelopStatus factoryDevelopStatus);
+    List<FactoryDevelopInfo> findByFactoryHoldingInfo_EnterpriseBasicInfo_IdAndFactoryDevelopStatus(Long enterpriseId, FactoryDevelopStatus factoryDevelopStatus);
 }
