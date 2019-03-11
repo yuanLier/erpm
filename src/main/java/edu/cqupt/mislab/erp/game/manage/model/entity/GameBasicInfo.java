@@ -36,12 +36,12 @@ public class GameBasicInfo implements Serializable {
     @Comment(comment = "比赛的名称，比赛名称可以重复")
     private String gameName;
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(updatable = false,nullable = false)
     @Comment(comment = "比赛的创建者，拥有可以开始比赛的权利")
     private UserStudentInfo gameCreator;
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(updatable = false,nullable = false)
     @Comment(comment = "该比赛的比赛基本数据初始化信息")
     private GameInitInfo gameInitInfo;
@@ -64,7 +64,7 @@ public class GameBasicInfo implements Serializable {
     @Comment(comment = "创建这个比赛的时间，可以用来进行比赛管理信息排序")
     private Date gameCreateTime;
 
-    @OneToMany(mappedBy = "gameInfo",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "gameInfo",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<EnterpriseBasicInfo> enterpriseBasicInfos;//比赛企业
 
     @Override

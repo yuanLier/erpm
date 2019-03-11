@@ -30,12 +30,12 @@ public class GameOrderChooseInfo implements Serializable {
     @Comment(comment = "代理主键")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "那一个比赛")
     private GameBasicInfo gameBasicInfo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)
     @Comment(comment = "那一个广告的选择顺序")
     private EnterpriseAdInfo concurrentEnterprise;

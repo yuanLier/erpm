@@ -32,17 +32,17 @@ public class OrderPredictionInfo implements Serializable {
     @Comment(comment = "代理主键")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "哪一场比赛")
     private GameBasicInfo gameBasicInfo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "哪一个产品")
     private ProductBasicInfo productBasicInfo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "哪一个市场")
     private MarketBasicInfo marketBasicInfo;

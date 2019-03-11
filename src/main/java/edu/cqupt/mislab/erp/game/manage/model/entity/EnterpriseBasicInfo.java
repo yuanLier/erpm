@@ -33,7 +33,7 @@ public class EnterpriseBasicInfo implements Serializable {
     @Comment(comment = "代理主键")
     private Long id;
 
-    @ManyToOne(optional = false,fetch = FetchType.LAZY)
+    @ManyToOne(optional = false,fetch = FetchType.EAGER)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "这个企业在哪一场比赛里面")
     private GameBasicInfo gameInfo;
@@ -42,7 +42,7 @@ public class EnterpriseBasicInfo implements Serializable {
     @Comment(comment = "企业的名称")
     private String enterpriseName;
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "这个企业的创建者，创建者才具有删除成员的权利和删除企业的权利")
     private UserStudentInfo enterpriseCeo;
@@ -75,7 +75,7 @@ public class EnterpriseBasicInfo implements Serializable {
     @Comment(comment = "成员的贡献度是否已经被确定，确定了贡献度才可以进行实验报告的打印")
     private boolean gameContributionRateSure;
 
-    @OneToMany(mappedBy = "enterprise",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "enterprise",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<EnterpriseMemberInfo> enterpriseMemberInfos;//企业成员
 
     @Override

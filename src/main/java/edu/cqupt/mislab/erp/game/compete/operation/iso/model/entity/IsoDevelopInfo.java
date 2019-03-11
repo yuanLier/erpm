@@ -29,12 +29,12 @@ public class IsoDevelopInfo implements Serializable {
     @Comment(comment = "代理主键")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "ISO认证的基本信息，该数据对于基本数据表里面的一条最新或历史信息")
     private IsoBasicInfo isoBasicInfo;
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "哪一个企业的ISO认证信息，每一个企业有一或多条认证信息")
     private EnterpriseBasicInfo enterpriseBasicInfo;

@@ -31,12 +31,12 @@ public class EnterpriseMemberInfo implements Serializable {
     @Comment(comment = "代理主键")
     private Long id;
 
-    @ManyToOne(optional = false,fetch = FetchType.LAZY)
+    @ManyToOne(optional = false,fetch = FetchType.EAGER)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "哪一个企业")
     private EnterpriseBasicInfo enterprise;
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "哪一个学生")
     private UserStudentInfo studentInfo;
