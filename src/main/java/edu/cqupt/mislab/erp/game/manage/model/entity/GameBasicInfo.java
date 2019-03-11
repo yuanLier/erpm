@@ -55,7 +55,7 @@ public class GameBasicInfo implements Serializable {
     private Integer gameCurrentYear;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false)
     @Comment(comment = "比赛的状态")
     private GameStatus gameStatus;
 
