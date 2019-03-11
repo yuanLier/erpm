@@ -58,8 +58,8 @@ public class StudentServiceImpl implements StudentService {
 
         copyPropertiesSimple(registerDto,studentInfo);
 
-        //默认不启用该账户
-        studentInfo.setAccountEnable(false);
+        //默认不启用该账户 todo 这个地方需要更改
+        studentInfo.setAccountEnable(true);
         //默认性别为男
         studentInfo.setGender(UserGender.Man);
         //设置专业信息
