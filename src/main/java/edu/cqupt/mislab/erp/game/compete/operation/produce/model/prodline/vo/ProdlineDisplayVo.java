@@ -22,4 +22,6 @@ public class ProdlineDisplayVo {
 
     @ApiModelProperty("生产状态")
     private ProdlineDevelopStatus prodlineDevelopStatus;
+
+
 }

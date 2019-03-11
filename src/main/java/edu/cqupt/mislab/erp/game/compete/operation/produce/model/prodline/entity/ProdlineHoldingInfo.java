@@ -39,4 +39,9 @@ public class ProdlineHoldingInfo {
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "该生产线存在于哪个厂房当中")
     private FactoryDevelopInfo factoryDevelopInfo;
+
+    @Basic(optional = false)
+    @Enumerated(EnumType.STRING)
+    @Comment(comment = "生产线的拥有状态")
+    private ProdlineHoldingStatus prodlineHoldingStatus;
 }

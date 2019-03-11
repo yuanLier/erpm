@@ -6,10 +6,11 @@ package edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entit
  * @description 生产线的生产状态
  */
 public enum  ProdlineProduceStatus {
-    PRODUCED("生产完成"),
+
+    TOPRODUCE("未生产"),
     PRODUCING("生产中"),
     PRODUCEPAUSE("生产暂停"),
-    TOPRODUCE("未生产");
+    PRODUCED("生产完成");
 
     private String comment;
 

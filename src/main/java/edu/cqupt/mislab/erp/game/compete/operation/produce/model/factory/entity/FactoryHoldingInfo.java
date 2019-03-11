@@ -33,4 +33,9 @@ public class FactoryHoldingInfo {
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "厂房的基本信息")
     private FactoryBasicInfo factoryBasicInfo;
+
+    @Basic(optional = false)
+    @Enumerated(EnumType.STRING)
+    @Comment(comment = "厂房的拥有状态")
+    private FactoryHoldingStatus factoryHoldingStatus;
 }
