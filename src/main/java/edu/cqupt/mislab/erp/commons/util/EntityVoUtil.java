@@ -21,7 +21,13 @@ import edu.cqupt.mislab.erp.user.model.vo.UserStudentInfoBasicVo;
 public abstract class EntityVoUtil {
 
     public static void copyFieldsFromEntityToVo(UserStudentInfo userStudentInfo,UserStudentInfoBasicVo infoBasicVo){
+
         BeanCopyUtil.copyPropertiesSimple(userStudentInfo,infoBasicVo);
+
+        infoBasicVo.setMajorInfo(userStudentInfo.getMajorInfo());
+
+        infoBasicVo.setUserAvatarInfo(userStudentInfo.getUserAvatarInfo());
+
         if(userStudentInfo.getUserTeacherInfo() != null){
             infoBasicVo.setTeacherId(userStudentInfo.getUserTeacherInfo().getId());
         }
