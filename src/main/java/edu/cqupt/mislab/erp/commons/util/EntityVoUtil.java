@@ -72,7 +72,12 @@ public abstract class EntityVoUtil {
         displayVo.setCollege(enterpriseMemberInfo.getStudentInfo().getMajorInfo().getCollege().getCollege());
         displayVo.setMajor(enterpriseMemberInfo.getStudentInfo().getMajorInfo().getMajor());
         displayVo.setGameContributionRate(enterpriseMemberInfo.getGameContributionRate());
-        displayVo.setAvatarLocation(enterpriseMemberInfo.getStudentInfo().getUserAvatarInfo().getAvatarLocation());
+
+        //不一定存在
+        if(enterpriseMemberInfo.getStudentInfo().getUserAvatarInfo() != null){
+
+            displayVo.setAvatarLocation(enterpriseMemberInfo.getStudentInfo().getUserAvatarInfo().getAvatarLocation());
+        }
     }
 
     public static IsoDisplayVo copyFieldsFromEntityToVo(IsoDevelopInfo isoDevelopInfo) {
