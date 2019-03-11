@@ -179,6 +179,14 @@ public class GameManageServiceImpl implements GameManageService {
                     //存储这个比赛信息
                     gameBasicInfoRepository.save(gameBasicInfo);
 
+                    //更改企业状态信息为比赛中
+                    final List<EnterpriseBasicInfo> enterpriseBasicInfoList = enterpriseBasicInfoRepository.findByGameInfo_Id(gameId);
+
+                    enterpriseBasicInfoList.forEach(enterpriseBasicInfo -> enterpriseBasicInfo.setEnterpriseStatus(EnterpriseStatus.PLAYING));
+
+                    enterpriseBasicInfoRepository.save(enterpriseBasicInfoList);
+                    //更改比赛信息完成
+
                     //向前端广播这个比赛已经初始化完成的信息
                     webSocketMessagePublisher.publish(gameId,new TextMessage(ManageConstant.GAME_INIT_COMPLETE + gameId));
 

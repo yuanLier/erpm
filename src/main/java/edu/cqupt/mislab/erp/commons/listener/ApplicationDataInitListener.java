@@ -1,7 +1,6 @@
 package edu.cqupt.mislab.erp.commons.listener;
 
-import edu.cqupt.mislab.erp.commons.basic.ModelInit;
-import edu.cqupt.mislab.erp.commons.basic.ModelInitService;
+import edu.cqupt.mislab.erp.commons.basic.modelinit.ModelInitService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +11,6 @@ import org.springframework.stereotype.Component;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * 初始化应用的数据，注意JPA的DDL模式必须为create才可以配合使用，目前是开发阶段，运行阶段将使用另外的方式

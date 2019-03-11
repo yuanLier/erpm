@@ -36,7 +36,7 @@ public class MarketBasicInfo implements Serializable {
 
     @Column(nullable = false, updatable = false)
     @Comment(comment = "完成市场开发的周期数，该值必须大于1")
-    private int marketResearchPeriod;
+    private Integer marketResearchPeriod;
 
     @Column(nullable = false, updatable = false)
     @Comment(comment = "在市场开发过程中，每个周期需要支付的费用，该值必须大于0")

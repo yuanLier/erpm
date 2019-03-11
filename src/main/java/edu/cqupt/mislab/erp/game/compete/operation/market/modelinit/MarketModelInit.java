@@ -1,7 +1,7 @@
 package edu.cqupt.mislab.erp.game.compete.operation.market.modelinit;
 
-import edu.cqupt.mislab.erp.commons.basic.ModelInit;
-import edu.cqupt.mislab.erp.commons.basic.ModelInitService;
+import edu.cqupt.mislab.erp.commons.basic.modelinit.ModelInit;
+import edu.cqupt.mislab.erp.commons.basic.modelinit.ModelInitService;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketStatusEnum;

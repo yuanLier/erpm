@@ -64,7 +64,10 @@ public class EnterpriseBasicInfo implements Serializable {
     private boolean advertisingCost;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false,updatable = false)
+    /*
+    1、企业状态需要能够被修改
+     */
+    @Column(nullable = false)
     @Comment(comment = "企业所处于的一个状态")
     private EnterpriseStatus enterpriseStatus;
 

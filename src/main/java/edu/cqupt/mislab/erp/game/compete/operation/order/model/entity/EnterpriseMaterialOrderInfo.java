@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 
 @Getter
 @Setter
@@ -39,13 +40,15 @@ public class EnterpriseMaterialOrderInfo {
     @Comment(comment = "哪一种原料")
     private MaterialBasicInfo materialBasicInfo;
 
-    @Basic(optional = false)
+    @Min(1)
+    @Column(nullable = false,updatable = false)
     @Comment(comment = "需要该种原料多少种")
-    private int materialNumber;
+    private Integer materialNumber;
 
-    @Basic(optional = false)
+    @Min(1)
+    @Column(nullable = false,updatable = false)
     @Comment(comment = "哪一个周期下的订单")
-    private int orderBeginTime;
+    private Integer orderBeginTime;
 
     @Override
     public boolean equals(Object o){

@@ -1,6 +1,7 @@
 package edu.cqupt.mislab.erp.game.compete.operation.order.model.entity;
 
 import com.google.common.base.Objects;
+import edu.cqupt.mislab.erp.commons.validators.annotations.DoubleMin;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
@@ -8,6 +9,7 @@ import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 @Getter
@@ -45,17 +47,20 @@ public class OrderPredictionInfo implements Serializable {
     @Comment(comment = "哪一个市场")
     private MarketBasicInfo marketBasicInfo;
 
-    @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
+    @DoubleMin(0.01D)
+    @Column(nullable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "产品价格")
-    private double price;
+    private Double price;
 
+    @Min(1)
     @Basic(optional = false)
     @Comment(comment = "市场需求量")
-    private int mount;
+    private Integer mount;
 
+    @Min(1)
     @Basic(optional = false)
     @Comment(comment = "那一年的预测信息")
-    private int year;
+    private Integer year;
 
     @Override
     public boolean equals(Object o){

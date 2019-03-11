@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.order.model.entity;
 
+import edu.cqupt.mislab.erp.commons.validators.annotations.DoubleMin;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
@@ -11,6 +12,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 @Getter
@@ -48,34 +50,40 @@ public class GameOrderInfo implements Serializable {
     @Comment(comment = "哪一个市场")
     private MarketBasicInfo marketBasicInfo;
 
-    @Basic(optional = false)
+    @Min(1L)
+    @Column(nullable = false,updatable = false)
     @Comment(comment = "产品数量")
-    private int productNumber;
+    private Integer productNumber;
 
+    @DoubleMin(0.01)
     @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "产品单价")
-    private double price;
+    private Double price;
 
+    @Min(1)
     @Column(nullable = false,updatable = false)
     @Comment(comment = "需要的交货的日期，为总第几期")
-    private int deliveryPeriod;
+    private Integer deliveryPeriod;
 
+    @Min(1)
     @Column(nullable = false,updatable = false)
     @Comment(comment = "订单交货后，需要几个账期，货款可以到账")
-    private int moneyTime;
+    private Integer moneyTime;
 
+    @DoubleMin(0.01)
     @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "违约金比率，超过1期交纳1期的违约金，超过多期，进行累计")
-    private double penalPercent;
+    private Double penalPercent;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     @Comment(comment = "所需要的质量认证信息")
     private IsoBasicInfo isoBasicInfo;
 
+    @Min(1)
     @Column(nullable = false,updatable = false)
     @Comment(comment = "那一年的订单")
-    private int year;
+    private Integer year;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn

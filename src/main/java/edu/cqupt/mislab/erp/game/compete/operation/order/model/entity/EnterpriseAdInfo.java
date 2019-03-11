@@ -1,6 +1,7 @@
 package edu.cqupt.mislab.erp.game.compete.operation.order.model.entity;
 
 import com.google.common.base.Objects;
+import edu.cqupt.mislab.erp.commons.validators.annotations.DoubleMin;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
@@ -11,6 +12,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -49,26 +52,29 @@ public class EnterpriseAdInfo implements Serializable {
     @Comment(comment = "哪一个市场")
     private MarketBasicInfo marketBasicInfo;
 
+    @Min(1L)
     @Column(nullable = false,updatable = false)
     @Comment(comment = "那一年投的广告费")
-    private int year;
+    private Integer year;
 
-    @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
+    @DoubleMin(0.01D)
+    @Column(nullable = false,updatable = false)
     @Comment(comment = "多少钱")
-    private double money;
+    private Double money;
 
     @Column(nullable = false,updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @Comment(comment = "哪一个时间投的")
     private Date timeStamp;
 
+    @Min(0)
     @Column(columnDefinition = "int default 0")
     @Comment(comment = "该订单已经选择已经多少轮")
-    private int frequency;
+    private Integer frequency;
 
-    @Column(columnDefinition = "tinyint(1) default 0")
+    @Column(nullable = false)
     @Comment(comment = "该订单是否退出排序")
-    private boolean finished;
+    private Boolean finished;
 
     @Override
     public boolean equals(Object o){
@@ -77,7 +83,7 @@ public class EnterpriseAdInfo implements Serializable {
         if(o == null||getClass() != o.getClass())
             return false;
         EnterpriseAdInfo that = (EnterpriseAdInfo) o;
-        return year == that.year&&Double.compare(that.money,money) == 0&&frequency == that.frequency&&finished == that.finished&&Objects.equal(id,that.id)&&Objects.equal(timeStamp,that.timeStamp);
+        return frequency == that.frequency&&finished == that.finished&&Objects.equal(id,that.id)&&Objects.equal(year,that.year)&&Objects.equal(money,that.money)&&Objects.equal(timeStamp,that.timeStamp);
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 @Getter
@@ -30,22 +31,28 @@ public class GameOrderChooseInfo implements Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(updatable = false)
+    @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "那一个比赛")
     private GameBasicInfo gameBasicInfo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(updatable = false)
+    @JoinColumn(nullable = false)
     @Comment(comment = "那一个广告的选择顺序")
     private EnterpriseAdInfo concurrentEnterprise;
 
+    @Min(0)
     @Basic(optional = false)
     @Comment(comment = "该比赛已经选择已经多少轮")
-    private int frequency;
+    private Integer frequency;
 
     @Basic(optional = false)
     @Comment(comment = "当前的订单是否选取完毕")
-    private boolean finished;
+    private Boolean finished;
+
+    @Min(1)
+    @Column(nullable = false,updatable = false)
+    @Comment(comment = "那一年的订单选择信息")
+    private Integer year;
 
     @Override
     public boolean equals(Object o){

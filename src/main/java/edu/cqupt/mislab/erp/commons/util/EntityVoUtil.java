@@ -4,6 +4,8 @@ import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.*;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductEnterpriseBasicVo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseMemberInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
@@ -113,4 +115,12 @@ public abstract class EntityVoUtil {
         return marketDisplayVo;
     }
 
+    public static void copyFieldsFromEntityToVo(ProductDevelopInfo productDevelopInfo,ProductEnterpriseBasicVo basicVo){
+
+        //复制基本数据部分
+        BeanCopyUtil.copyPropertiesSimple(productDevelopInfo.getProductBasicInfo(),basicVo);
+
+        //复制研发信息部分
+        BeanCopyUtil.copyPropertiesSimple(productDevelopInfo,basicVo);
+    }
 }
