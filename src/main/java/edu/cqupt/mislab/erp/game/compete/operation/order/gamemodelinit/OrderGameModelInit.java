@@ -2,30 +2,25 @@ package edu.cqupt.mislab.erp.game.compete.operation.order.gamemodelinit;
 
 import edu.cqupt.mislab.erp.game.compete.basic.GameModelInit;
 import edu.cqupt.mislab.erp.game.compete.basic.impl.GameModelInitService;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.gamemodelinit.IsoGameModelInit;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoDevelopInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.market.gamemodelinit.MarketGameModelInit;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.material.gamemodelinit.MaterialGameModelInit;
 import edu.cqupt.mislab.erp.game.compete.operation.order.dao.GameOrderInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.order.dao.OrderPredictionInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.entity.GameOrderInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.entity.OrderPredictionInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.entity.OrderPredictionInfo.OrderPredictionInfoBuilder;
-import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.gamemodelinit.ProductGameModelInit;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,10 +103,10 @@ public class OrderGameModelInit implements GameModelInit {
         final GameBasicInfo gameBasicInfo = gameBasicInfoRepository.findOne(gameId);
 
         //获取比赛的基本数据
-        final Integer period = gameBasicInfo.getGameInitInfo().getPeriod();
+        final Integer period = gameBasicInfo.getGameInitBasicInfo().getPeriodOfOneYear();
 
         //获取所有的ISO认证信息信息
-        final Long enterpriseId = enterpriseBasicInfoRepository.findByGameInfo_Id(gameId).get(0).getId();
+        final Long enterpriseId = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId).get(0).getId();
 
         final List<IsoBasicInfo> isoBasicInfos = isoDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId)
                 .stream()
@@ -122,7 +117,7 @@ public class OrderGameModelInit implements GameModelInit {
         final List<GameOrderInfo> gameOrderInfos = gameOrderInfoRepository.findByGameBasicInfo_Id(gameId);
 
         //获取全部的年数，total
-        final Integer totalYear = gameBasicInfo.getGameInitInfo().getTotalYear();
+        final Integer totalYear = gameBasicInfo.getGameInitBasicInfo().getTotalYear();
 
         //为订单附加ISO认证信息的要求
         /*
@@ -205,7 +200,7 @@ public class OrderGameModelInit implements GameModelInit {
 
         //获取比赛的初始化信息
         final Integer gameCurrentYear = gameBasicInfo.getGameCurrentYear();
-        final Integer period = gameBasicInfo.getGameInitInfo().getPeriod();
+        final Integer period = gameBasicInfo.getGameInitBasicInfo().getPeriodOfOneYear();
 
         for(int i = 0; i < size; i++){
 
@@ -217,7 +212,7 @@ public class OrderGameModelInit implements GameModelInit {
             final Double basicPrice = orderPredictionInfo.getPrice();
 
             //获取总共能够生成的最大订单数量
-            int maxOrderNumber = (int) Math.ceil(enterpriseBasicInfoRepository.findByGameInfo_Id(gameId).size() * 1.5);
+            int maxOrderNumber = (int) Math.ceil(enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId).size() * 1.5);
 
             //该条预测信息已经生成了多少个产品
             int exitedOrderNumber = 0;
@@ -288,10 +283,10 @@ public class OrderGameModelInit implements GameModelInit {
         //获取这场比赛多少年
         final GameBasicInfo gameBasicInfo = gameBasicInfoRepository.findOne(gameId);
 
-        final Integer totalYear = gameBasicInfo.getGameInitInfo().getTotalYear();
+        final Integer totalYear = gameBasicInfo.getGameInitBasicInfo().getTotalYear();
 
         //获取所有的市场信息
-        final Long enterpriseId = enterpriseBasicInfoRepository.findByGameInfo_Id(gameId).get(0).getId();
+        final Long enterpriseId = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId).get(0).getId();
 
         List<MarketBasicInfo> marketBasicInfos = marketDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId)
                 .stream()

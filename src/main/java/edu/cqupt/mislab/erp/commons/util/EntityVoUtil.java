@@ -35,15 +35,19 @@ public abstract class EntityVoUtil {
 
     public static void copyFieldsFromEntityToVo(GameBasicInfo gameBasicInfo,GameDetailInfoVo detailInfoVo){
 
-        BeanCopyUtil.copyPropertiesSimple(gameBasicInfo,detailInfoVo);
-
-        detailInfoVo.setCreatorName(gameBasicInfo.getGameCreator().getStudentName());
-        detailInfoVo.setPeriod(gameBasicInfo.getGameInitInfo().getPeriod());
-        detailInfoVo.setTotalYear(gameBasicInfo.getGameInitInfo().getTotalYear());
+        detailInfoVo.setId(gameBasicInfo.getId());
+        detailInfoVo.setTotalYear(gameBasicInfo.getGameInitBasicInfo().getTotalYear());
+        detailInfoVo.setPeriod(gameBasicInfo.getGameInitBasicInfo().getPeriodOfOneYear());
+        detailInfoVo.setGameStatus(gameBasicInfo.getGameStatus());
+        detailInfoVo.setGameName(gameBasicInfo.getGameName());
+        detailInfoVo.setCreatorName(gameBasicInfo.getUserStudentInfo().getStudentName());
+        detailInfoVo.setGameCreateTime(gameBasicInfo.getGameCreateTime());
 
         if(gameBasicInfo.getEnterpriseBasicInfos() == null){
+
             detailInfoVo.setEnterpriseNumber(0);
         }else {
+
             detailInfoVo.setEnterpriseNumber(gameBasicInfo.getEnterpriseBasicInfos().size());
         }
     }
@@ -51,10 +55,10 @@ public abstract class EntityVoUtil {
     public static void copyFieldsFromEntityToVo(EnterpriseBasicInfo enterpriseBasicInfo,EnterpriseDetailInfoVo enterpriseDetailInfoVo){
 
         enterpriseDetailInfoVo.setId(enterpriseBasicInfo.getId());
-        enterpriseDetailInfoVo.setCeoId(enterpriseBasicInfo.getEnterpriseCeo().getId());
-        enterpriseDetailInfoVo.setCeoName(enterpriseBasicInfo.getEnterpriseCeo().getStudentName());
+        enterpriseDetailInfoVo.setCeoId(enterpriseBasicInfo.getUserStudentInfo().getId());
+        enterpriseDetailInfoVo.setCeoName(enterpriseBasicInfo.getUserStudentInfo().getStudentName());
         enterpriseDetailInfoVo.setEnterpriseName(enterpriseBasicInfo.getEnterpriseName());
-        enterpriseDetailInfoVo.setGameId(enterpriseBasicInfo.getGameInfo().getId());
+        enterpriseDetailInfoVo.setGameId(enterpriseBasicInfo.getGameBasicInfo().getId());
         enterpriseDetailInfoVo.setEnterpriseStatus(enterpriseBasicInfo.getEnterpriseStatus());
 
         if(enterpriseBasicInfo.getEnterpriseMemberInfos() == null){
@@ -67,16 +71,16 @@ public abstract class EntityVoUtil {
     public static void copyFieldsFromEntityToVo(EnterpriseMemberInfo enterpriseMemberInfo,EnterpriseMemberDisplayVo displayVo){
 
         displayVo.setId(enterpriseMemberInfo.getId());
-        displayVo.setStudentAccount(enterpriseMemberInfo.getStudentInfo().getStudentAccount());
-        displayVo.setStudentName(enterpriseMemberInfo.getStudentInfo().getStudentName());
-        displayVo.setCollege(enterpriseMemberInfo.getStudentInfo().getMajorInfo().getCollege().getCollege());
-        displayVo.setMajor(enterpriseMemberInfo.getStudentInfo().getMajorInfo().getMajor());
+        displayVo.setStudentAccount(enterpriseMemberInfo.getUserStudentInfo().getStudentAccount());
+        displayVo.setStudentName(enterpriseMemberInfo.getUserStudentInfo().getStudentName());
+        displayVo.setCollege(enterpriseMemberInfo.getUserStudentInfo().getMajorInfo().getCollege().getCollege());
+        displayVo.setMajor(enterpriseMemberInfo.getUserStudentInfo().getMajorInfo().getMajor());
         displayVo.setGameContributionRate(enterpriseMemberInfo.getGameContributionRate());
 
         //不一定存在
-        if(enterpriseMemberInfo.getStudentInfo().getUserAvatarInfo() != null){
+        if(enterpriseMemberInfo.getUserStudentInfo().getUserAvatarInfo() != null){
 
-            displayVo.setAvatarLocation(enterpriseMemberInfo.getStudentInfo().getUserAvatarInfo().getAvatarLocation());
+            displayVo.setAvatarLocation(enterpriseMemberInfo.getUserStudentInfo().getUserAvatarInfo().getAvatarLocation());
         }
     }
 

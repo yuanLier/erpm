@@ -6,15 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.*;
 
-public class GameInitInfoRepositoryTest extends ErpApplicationTests {
+public class GameInitBasicInfoRepositoryTest extends ErpApplicationTests {
 
     @Autowired
     private GameInitInfoRepository gameInitInfoRepository;
-
-    @Test
-    public void test(){
-
-        System.out.println(gameInitInfoRepository.findTop1ByIdIsNotNullOrderByIdDesc());
-    }
 
 }

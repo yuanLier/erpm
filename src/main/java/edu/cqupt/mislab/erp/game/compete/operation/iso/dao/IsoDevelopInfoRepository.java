@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.iso.dao;
 
+import edu.cqupt.mislab.erp.commons.basic.repository.BasicRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoStatusEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 
-public interface IsoDevelopInfoRepository extends JpaRepository<IsoDevelopInfo, Long> {
+public interface IsoDevelopInfoRepository extends BasicRepository<IsoDevelopInfo, Long> {
 
     /**
      * 获取某企业的全部iso认证信息

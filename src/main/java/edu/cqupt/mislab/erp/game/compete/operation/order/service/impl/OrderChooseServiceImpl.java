@@ -23,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -181,7 +180,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
                 this.concurrentMarketBasicInfo = gameOrderChooseInfo.getConcurrentEnterprise().getMarketBasicInfo();
 
                 //查询需要继续进行排序的订单
-                this.enterpriseAdInfos = enterpriseAdInfoRepository.findByEnterpriseBasicInfo_GameInfo_IdAndYearAndFinishedIsFalseOrderByMoneyDescTimeStampAsc(gameId,currentYear);
+                this.enterpriseAdInfos = enterpriseAdInfoRepository.findByEnterpriseBasicInfo_GameBasicInfo_IdAndYearAndFinishedIsFalseOrderByMoneyDescTimeStampAsc(gameId,currentYear);
                 //恢复订单选择进度
                 this.concurrentEnterpriseAdInfo = gameOrderChooseInfo.getConcurrentEnterprise();
 
@@ -212,7 +211,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
                 this.concurrentMarketBasicInfo = this.marketBasicInfos.get(0);
 
                 //查询需要继续进行排序的订单
-                this.enterpriseAdInfos = enterpriseAdInfoRepository.findByEnterpriseBasicInfo_GameInfo_IdAndYearAndFinishedIsFalseOrderByMoneyDescTimeStampAsc(gameId,currentYear);
+                this.enterpriseAdInfos = enterpriseAdInfoRepository.findByEnterpriseBasicInfo_GameBasicInfo_IdAndYearAndFinishedIsFalseOrderByMoneyDescTimeStampAsc(gameId,currentYear);
 
                 //没有可用的订单
                 if(this.enterpriseAdInfos == null || this.enterpriseAdInfos.size() == 0){
@@ -253,7 +252,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         private List<ProductBasicInfo> getGameProductOfOneYear(long gameId){
 
             //选取所有的企业
-            final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameInfo_Id(gameId);
+            final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId);
 
             //用于记录所有非重复的基本产品信息，需要重写hashCode和equal函数
             Set<ProductBasicInfo> productBasicInfos = new HashSet<>();
@@ -289,7 +288,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         private List<MarketBasicInfo> getGameMarketOfOneYear(long gameId){
 
             //选取所有的企业信息
-            final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameInfo_Id(gameId);
+            final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId);
 
             //用于存储所有的非重复的市场信息
             Set<MarketBasicInfo> marketBasicInfos = new HashSet<>();

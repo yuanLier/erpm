@@ -14,6 +14,7 @@ import lombok.*;
 @Setter
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
 public class GameInitBasicInfo implements Serializable {

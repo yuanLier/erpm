@@ -18,6 +18,7 @@ import org.hibernate.annotations.JoinColumnOrFormula;
 @Setter
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
 public class EnterpriseMemberInfo implements Serializable {

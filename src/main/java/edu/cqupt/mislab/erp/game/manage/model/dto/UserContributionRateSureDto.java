@@ -1,6 +1,7 @@
 package edu.cqupt.mislab.erp.game.manage.model.dto;
 
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
+import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import io.swagger.annotations.ApiModel;
@@ -19,7 +20,7 @@ public class UserContributionRateSureDto {
 
     @NotNull
     @Min(1L)
-    @Exist(repository = UserStudentRepository.class)
+    @UserStatusValid(isEnable = true)
     @ApiModelProperty(value = "企业创建者的ID",required = true)
     private Long creatorId;
 

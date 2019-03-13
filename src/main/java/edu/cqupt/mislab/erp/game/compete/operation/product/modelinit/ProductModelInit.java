@@ -111,7 +111,7 @@ public class ProductModelInit implements ModelInit {
         for(ProductBasicInfo productBasicInfo : productBasicInfos){
 
             //随机选择材料种类数据
-            int number = (int) Math.ceil(Math.random() * size);
+            int number = (int) Math.ceil(Math.random() * size) -1;
 
             for(int i = 0; i < number; i ++){
 

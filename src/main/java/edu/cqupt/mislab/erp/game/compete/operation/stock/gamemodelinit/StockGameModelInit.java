@@ -2,12 +2,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.stock.gamemodelinit;
 
 import edu.cqupt.mislab.erp.game.compete.basic.GameModelInit;
 import edu.cqupt.mislab.erp.game.compete.basic.impl.GameModelInitService;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoDevelopInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductMaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.gamemodelinit.ProductGameModelInit;
@@ -19,7 +14,6 @@ import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.EnterpriseProductSt
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.EnterpriseMaterialStockInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.EnterpriseProductStockInfo;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +85,7 @@ public class StockGameModelInit implements GameModelInit {
     private void initStockInfos(Long gameId){
 
         //选取所有的企业
-        final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameInfo_Id(gameId);
+        final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId);
 
         //选取企业已经研发的产品
         final Long enterpriseId = enterpriseBasicInfos.get(0).getId();

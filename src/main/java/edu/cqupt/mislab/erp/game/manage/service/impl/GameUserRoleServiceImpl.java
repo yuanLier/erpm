@@ -13,14 +13,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class GameUserRoleServiceImpl implements GameUserRoleService {
 
-    @Autowired
-    private GameBasicInfoRepository gameBasicInfoRepository;
-    @Autowired
-    private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
-    @Autowired
-    private EnterpriseMemberInfoRepository enterpriseMemberInfoRepository;
-    @Autowired
-    private UserStudentRepository userStudentRepository;
+    @Autowired private GameBasicInfoRepository gameBasicInfoRepository;
+    @Autowired private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
+    @Autowired private EnterpriseMemberInfoRepository enterpriseMemberInfoRepository;
+    @Autowired private UserStudentRepository userStudentRepository;
 
     @Override
     public GameEnterpriseUserRole getUserRoleInOneGame(Long gameId,Long userId){
@@ -42,13 +38,13 @@ public class GameUserRoleServiceImpl implements GameUserRoleService {
         }
 
         //判断该用户是否已经在该比赛中创建了一个企业
-        if(enterpriseBasicInfoRepository.existsByEnterpriseCeo_IdAndGameInfo_Id(userId,gameId)){
+        if(enterpriseBasicInfoRepository.existsByUserStudentInfo_IdAndGameBasicInfo_Id(userId,gameId)){
 
             return GameEnterpriseUserRole.ENTERPRISE_CREATOR;
         }
 
         //判断该用户是否已经加入了一个一个企业
-        if(enterpriseMemberInfoRepository.existsByStudentInfo_IdAndEnterprise_GameInfo_Id(userId,gameId)){
+        if(enterpriseMemberInfoRepository.existsByUserStudentInfo_IdAndEnterpriseBasicInfo_GameBasicInfo_Id(userId,gameId)){
 
             return GameEnterpriseUserRole.ENTERPRISE_MEMBER;
         }

@@ -1,6 +1,7 @@
 package edu.cqupt.mislab.erp.game.manage.model.dto;
 
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
+import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,7 +22,7 @@ public class GameCreateDto {
 
     @Min(1L)
     @NotNull(message = "创建者不能为null")
-    @Exist(repository = UserStudentRepository.class,message = "比赛创建者必须存在")
+    @UserStatusValid(isEnable = true)
     @ApiModelProperty(value = "创建者ID",required = true)
     private Long creatorId;
 

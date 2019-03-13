@@ -10,7 +10,7 @@ import java.util.List;
 public interface EnterpriseMemberManageService {
 
     //加入一个企业
-    WebResponseVo<String> joinOneEnterprise(EnterpriseJoinDto joinDto);
+    WebResponseVo<Long> joinOneEnterprise(EnterpriseJoinDto joinDto);
 
     //退出一个企业
     WebResponseVo<String> outOneEnterprise(Long userId,Long enterpriseId);
