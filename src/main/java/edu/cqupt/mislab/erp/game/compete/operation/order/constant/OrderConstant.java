@@ -11,4 +11,9 @@ public interface OrderConstant {
     订单选择的间隔时间，也就是最长的选择时间，单位是毫秒
      */
     Long CHOOSE_INTERVALS_TIME = 60L*1000L;
+
+    /*
+    用于通知前端后台订单顺序发生变化
+     */
+    String ORDER_CHOOSE_CHANGE_KEY_NAME = "ORDER_CHOOSE_CHANGE_KEY_NAME";
 }

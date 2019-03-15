@@ -71,6 +71,7 @@ public abstract class EntityVoUtil {
     public static void copyFieldsFromEntityToVo(EnterpriseMemberInfo enterpriseMemberInfo,EnterpriseMemberDisplayVo displayVo){
 
         displayVo.setId(enterpriseMemberInfo.getId());
+        displayVo.setUserStudentId(enterpriseMemberInfo.getUserStudentInfo().getId());
         displayVo.setStudentAccount(enterpriseMemberInfo.getUserStudentInfo().getStudentAccount());
         displayVo.setStudentName(enterpriseMemberInfo.getUserStudentInfo().getStudentName());
         displayVo.setCollege(enterpriseMemberInfo.getUserStudentInfo().getMajorInfo().getCollege().getCollege());

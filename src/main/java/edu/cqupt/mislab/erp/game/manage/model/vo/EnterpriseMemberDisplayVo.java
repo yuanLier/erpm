@@ -11,6 +11,9 @@ public class EnterpriseMemberDisplayVo {
     @ApiModelProperty("代理主键")
     private Long id;
 
+    @ApiModelProperty("学生ID")
+    private Long userStudentId;
+
     @ApiModelProperty("学号")
     private String studentAccount;
 

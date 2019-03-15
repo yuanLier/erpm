@@ -4,6 +4,7 @@ import edu.cqupt.mislab.erp.commons.websocket.CommonWebSocketMessagePublisher;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketStatusEnum;
+import edu.cqupt.mislab.erp.game.compete.operation.order.constant.OrderConstant;
 import edu.cqupt.mislab.erp.game.compete.operation.order.dao.EnterpriseAdInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.order.dao.GameOrderChooseInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.entity.EnterpriseAdInfo;
@@ -17,18 +18,112 @@ import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
+import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.TextMessage;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 public class OrderChooseServiceImpl implements OrderChooseService {
+
+    @Autowired private ThreadPoolExecutor threadPoolExecutor;
+
+    @PostConstruct
+    public void postConstruct(){
+
+        /*
+         * @Author: chuyunfei
+         * @Date: 2019/3/15 11:17
+         * @Description: 开启轮询线程任务
+         **/
+
+        Runnable runnableTask = () -> {
+
+            int DEFAULT_SLEEP_TIME = 60;
+
+            while(true){
+
+               synchronized(this){
+
+                   final Set<Long> keySet = orderChooseHelperMap.keySet();
+
+                   if(keySet.size() == 0){
+
+                       try{
+                           this.wait();//无限等待
+                       }catch(InterruptedException e){
+                           e.printStackTrace();
+                       }
+                   }else {
+
+                       //下一次订单睡眠的时间
+                       long nextWaiteTime = Long.MAX_VALUE;
+
+                       final Iterator<Long> iterator = keySet.iterator();
+
+                       while(iterator.hasNext()){
+
+                           final Long next = iterator.next();
+
+                           final OrderChooseHelper orderChooseHelper = orderChooseHelperMap.get(next);
+
+                           if(orderChooseHelper != null){
+
+                               if(orderChooseHelper.finish){
+
+                                   iterator.remove();
+                               }else {
+
+                                   final long distance = System.currentTimeMillis() - orderChooseHelper.lastChangeTime;
+
+                                   if(distance > OrderConstant.CHOOSE_INTERVALS_TIME){
+
+                                       //通知前端后端顺序改变
+                                       messagePublisher.publish(next,new TextMessage(OrderConstant.ORDER_CHOOSE_CHANGE_KEY_NAME + next));
+
+                                       //刷新订单顺序数据
+                                       orderChooseHelper.refresh(true);
+                                   }else {
+
+                                       //生成睡眠时间
+                                       if(distance < nextWaiteTime){
+
+                                           nextWaiteTime = distance;
+                                       }
+                                   }
+                               }
+                           }
+                       }
+
+                       try{
+                           //定时沉睡
+                           this.wait(nextWaiteTime);
+                       }catch(InterruptedException e){
+                           e.printStackTrace();
+                       }
+                   }
+               }
+
+            }
+        };
+
+        //提交运行任务
+        threadPoolExecutor.execute(runnableTask);
+    }
 
     /*
      * @Author: chuyunfei
@@ -36,20 +131,13 @@ public class OrderChooseServiceImpl implements OrderChooseService {
      * @Description: 1、用于选单计时功能；2、订单排序功能；
      **/
 
-    @Autowired
-    private CommonWebSocketMessagePublisher messagePublisher;
-    @Autowired
-    private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
-    @Autowired
-    private GameBasicInfoRepository gameBasicInfoRepository;
-    @Autowired
-    private EnterpriseAdInfoRepository enterpriseAdInfoRepository;
-    @Autowired
-    private GameOrderChooseInfoRepository gameOrderChooseInfoRepository;
-    @Autowired
-    private ProductDevelopInfoRepository productDevelopInfoRepository;
-    @Autowired
-    private MarketDevelopInfoRepository marketDevelopInfoRepository;
+    @Autowired private CommonWebSocketMessagePublisher messagePublisher;
+    @Autowired private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
+    @Autowired private GameBasicInfoRepository gameBasicInfoRepository;
+    @Autowired private EnterpriseAdInfoRepository enterpriseAdInfoRepository;
+    @Autowired private GameOrderChooseInfoRepository gameOrderChooseInfoRepository;
+    @Autowired private ProductDevelopInfoRepository productDevelopInfoRepository;
+    @Autowired private MarketDevelopInfoRepository marketDevelopInfoRepository;
 
     //用于记录每一个比赛的信息
     private Map<Long,OrderChooseHelper> orderChooseHelperMap = new ConcurrentHashMap<>();
@@ -71,18 +159,49 @@ public class OrderChooseServiceImpl implements OrderChooseService {
      * @Description: 初始化一个比赛的订单选择信息，即初始化比赛选择的基本辅助信息
      **/
     public boolean initGameOrderChooseData(long gameId){
-        
+
         try{
 
-            //初始化信息
-            orderChooseHelperMap.put(gameId,new OrderChooseHelper(gameId));
+            synchronized(this){
 
-            return true;
+                //初始化信息
+                orderChooseHelperMap.put(gameId,new OrderChooseHelper(gameId));
+
+                //唤醒监督线程
+                this.notifyAll();
+
+                return true;
+            }
+
         }catch(Exception e){
             e.printStackTrace();
         }
-        
+
         return false;
+    }
+
+    @Override
+    public void loadOrderChooseInfoFromDatabase(){
+
+        //选取所有的非完结的比赛
+        List<GameBasicInfo> gameBasicInfos = gameBasicInfoRepository.findByGameStatus(GameStatus.PLAYING);
+
+        if(gameBasicInfos != null && gameBasicInfos.size() > 0){
+
+            gameBasicInfos.stream()
+                     .map(gameBasicInfo -> {
+
+                         final Integer gameCurrentYear = gameBasicInfo.getGameCurrentYear();
+
+                         return gameOrderChooseInfoRepository.findByGameBasicInfo_IdAndYear(gameBasicInfo.getId(),gameCurrentYear);
+                     })
+                     .filter(GameOrderChooseInfo::getFinished)
+                     .map(GameOrderChooseInfo::getGameBasicInfo)
+                    .forEach(gameBasicInfo -> {
+
+                        orderChooseHelperMap.put(gameBasicInfo.getId(),new OrderChooseHelper(gameBasicInfo.getId()));
+                    });
+        }
     }
 
     /**
@@ -96,37 +215,68 @@ public class OrderChooseServiceImpl implements OrderChooseService {
 
         //用于持久化数据
         private GameOrderChooseInfo gameOrderChooseInfo;
+
         //用于记录所有的已研发的按照研发周期进行排序的所有产品信息
         private List<ProductBasicInfo> productBasicInfos;
+
         //当前正在进行订单选择的产品
         private ProductBasicInfo concurrentProductBasicInfo;
+
         //用于记录所有的已开拓的按照开拓周期进行排序的所有市场信息
         private List<MarketBasicInfo> marketBasicInfos;
+
         //当亲正在进行订单选择的市场信息
         private MarketBasicInfo concurrentMarketBasicInfo;
+
         //用于记录订单的顺序
         private List<EnterpriseAdInfo> enterpriseAdInfos;
+
         //当前是哪一个订单正在进行订单的选择
         private EnterpriseAdInfo concurrentEnterpriseAdInfo;
+
         //用于记录那一年
         private Integer concurrentYear;
+
+        //该比赛已经选择已经多少轮
+        private Integer frequency;
+
         //用于记录是否结束
         private boolean finish;
+
         //用于记录时间
         private Long lastChangeTime;
-        
-        /* 
+
+        /*
          * @Author: chuyunfei
          * @Date: 2019/3/10 21:11
          * @Description: 获取当前比赛的信息
          **/
-        public OrderChooseDisplayVo getConcurrentOrderInfo(){
+        public OrderChooseDisplayVo getConcurrentOrderInfoVo(){
 
-            //todo
+            OrderChooseDisplayVo displayVo = new OrderChooseDisplayVo();
 
+            //设置当前是哪一个订单在进行选择
+            displayVo.setConcurrentEnterpriseAdId(this.concurrentEnterpriseAdInfo.getId());
 
-            
-            return null;
+            //设置全部订单ID集合
+            displayVo.setEnterpriseAdIds(this.enterpriseAdInfos.stream().map(EnterpriseAdInfo::getId).collect(Collectors.toList()));
+
+            //设置当前选单市场
+            displayVo.setConcurrentMarketName(this.concurrentMarketBasicInfo.getMarketName());
+
+            //设置全部的市场集合
+            displayVo.setMarketNames(this.marketBasicInfos.stream().map(MarketBasicInfo::getMarketName).collect(Collectors.toList()));
+
+            //设置当前选单的产品
+            displayVo.setConcurrentProductName(this.concurrentProductBasicInfo.getProductName());
+
+            //设置全部的产品集合
+            displayVo.setProductNames(this.productBasicInfos.stream().map(ProductBasicInfo::getProductName).collect(Collectors.toList()));
+
+            //设置剩余时间，单位为秒
+            displayVo.setRemainTime((int) Math.floor((System.currentTimeMillis() - this.lastChangeTime) * 1.0/1000));
+
+            return displayVo;
         }
 
         /*
@@ -137,7 +287,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         OrderChooseHelper(long gameId){
 
             //初始化对象
-            init(gameId);
+            initOrderChooseHelper(gameId);
             //计时开始
             this.lastChangeTime = System.currentTimeMillis();
         }
@@ -145,185 +295,280 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         /*
          * @Author: chuyunfei
          * @Date: 2019/3/10 12:54
-         * @Description: 初始化一个OrderChooseHelper，如果原来存在就重新加载，如果不存在就创建
+         * @Description: 初始化一个OrderChooseHelper
          **/
-        private void init(long gameId){
+        private void initOrderChooseHelper(long gameId){
 
             final GameBasicInfo gameBasicInfo = gameBasicInfoRepository.findOne(gameId);
 
             final Integer currentYear = gameBasicInfo.getGameCurrentYear();
 
-            //检查是否曾经程序中断过
-            final GameOrderChooseInfo gameOrderChooseInfo = gameOrderChooseInfoRepository.findByGameBasicInfo_IdAndYear(gameId,currentYear);
+            this.gameOrderChooseInfo = new GameOrderChooseInfo();
 
-            if(gameOrderChooseInfo != null){
-                //程序中断过或者重复初始化
+            //设置比赛信息
+            this.gameOrderChooseInfo.setGameBasicInfo(gameBasicInfo);
+            //设置当前年数据
+            this.gameOrderChooseInfo.setYear(currentYear);
+            //设置当前轮为第一轮
+            this.gameOrderChooseInfo.setFrequency(1);
 
-                if(gameOrderChooseInfo.getFinished()){
-                    //如果这个比赛的订单选择流程已经结束了就直接跳过
-                    this.finish = true;
+            this.frequency = 1;
 
-                    return;
+            //从头开始初始化订单选择信息
+            //查取全部的产品信息
+            this.productBasicInfos = getGameProductOfOneYear(gameId);
+
+            if(this.productBasicInfos.size() == 0){
+
+                this.finish = true;
+
+                //设置是否结束
+                this.gameOrderChooseInfo.setFinished(true);
+
+                //持久化数据
+                this.gameOrderChooseInfo = gameOrderChooseInfoRepository.save(this.gameOrderChooseInfo);
+
+                return;
+            }
+
+            //设置产品进度
+            this.concurrentProductBasicInfo = this.productBasicInfos.get(0);
+
+            //查取全部市场信息
+            this.marketBasicInfos = getGameMarketOfOneYear(gameId);
+
+            if(this.marketBasicInfos.size() == 0){
+
+                this.finish = true;
+
+                //设置是否结束
+                this.gameOrderChooseInfo.setFinished(true);
+
+                //持久化数据
+                this.gameOrderChooseInfo = gameOrderChooseInfoRepository.save(this.gameOrderChooseInfo);
+
+                return;
+            }
+            //设置市场进度
+            this.concurrentMarketBasicInfo = this.marketBasicInfos.get(0);
+
+            //查询需要继续进行排序的订单
+            this.enterpriseAdInfos = enterpriseAdInfoRepository
+                    .findByEnterpriseBasicInfo_GameBasicInfo_IdAndYearAndProductBasicInfo_IdAndMarketBasicInfo_IdAndFinishedIsFalseOrderByMoneyDescTimeStampAsc(
+                            gameId,currentYear,this.concurrentProductBasicInfo.getId(),this.concurrentMarketBasicInfo.getId()
+                    );
+
+            //没有可用的订单
+            while(this.enterpriseAdInfos == null || this.enterpriseAdInfos.size() == 0){
+
+                //获取当前产品的下标地址
+                int concurrentProductIndex = this.productBasicInfos.indexOf(this.concurrentProductBasicInfo);
+
+                //产品循环
+                if(concurrentProductIndex == this.productBasicInfos.size() - 1){
+
+                    //获取当前产品的数组下标
+                    int concurrentMarketIndex = this.marketBasicInfos.indexOf(this.concurrentMarketBasicInfo);
+
+                    //没有指定的广告信息
+                    if(concurrentMarketIndex == this.marketBasicInfos.size() - 1){
+
+                        break;
+                    }
+
+                    //更新当前市场信息
+                    this.concurrentMarketBasicInfo = this.marketBasicInfos.get(concurrentMarketIndex + 1);
+
+                    //更新当前产品信息
+                    this.concurrentProductBasicInfo = this.productBasicInfos.get(0);
+                }else {
+
+                    this.concurrentProductBasicInfo = this.productBasicInfos.get(concurrentProductIndex + 1);
                 }
 
-                //从数据库里面恢复现场数据
-                this.gameOrderChooseInfo = gameOrderChooseInfo;
-
-                //查取全部的产品信息
-                this.productBasicInfos = getGameProductOfOneYear(gameId);
-                //恢复产品进度
-                this.concurrentProductBasicInfo = gameOrderChooseInfo.getConcurrentEnterprise().getProductBasicInfo();
-
-                //查取全部市场信息
-                this.marketBasicInfos = getGameMarketOfOneYear(gameId);
-                //恢复市场进度
-                this.concurrentMarketBasicInfo = gameOrderChooseInfo.getConcurrentEnterprise().getMarketBasicInfo();
-
                 //查询需要继续进行排序的订单
-                this.enterpriseAdInfos = enterpriseAdInfoRepository.findByEnterpriseBasicInfo_GameBasicInfo_IdAndYearAndFinishedIsFalseOrderByMoneyDescTimeStampAsc(gameId,currentYear);
-                //恢复订单选择进度
-                this.concurrentEnterpriseAdInfo = gameOrderChooseInfo.getConcurrentEnterprise();
+                this.enterpriseAdInfos = enterpriseAdInfoRepository
+                        .findByEnterpriseBasicInfo_GameBasicInfo_IdAndYearAndProductBasicInfo_IdAndMarketBasicInfo_IdAndFinishedIsFalseOrderByMoneyDescTimeStampAsc(
+                                gameId,currentYear,this.concurrentProductBasicInfo.getId(),this.concurrentMarketBasicInfo.getId()
+                        );
 
-                //设置当前比赛信息未结束
-                this.concurrentYear = currentYear;
+            }
+
+            //没有指定的信息
+            if(this.enterpriseAdInfos == null||this.enterpriseAdInfos.size() == 0){
+
+                this.finish = true;
+            }else{
+
+                //有可用订单
+                //恢复订单选择进度
+                this.concurrentEnterpriseAdInfo = this.enterpriseAdInfos.get(0);
+
+                //设置需要持久化的信息
+                this.gameOrderChooseInfo.setConcurrentEnterprise(this.concurrentEnterpriseAdInfo);
+
                 this.finish = false;
+            }
+
+            //设置当前比赛年周期
+            this.concurrentYear = currentYear;
+
+            //设置是否结束
+            this.gameOrderChooseInfo.setFinished(this.finish);
+
+            //持久化数据
+            this.gameOrderChooseInfo = gameOrderChooseInfoRepository.save(this.gameOrderChooseInfo);
+        }
+
+        /*
+         * @Author: chuyunfei
+         * @Date: 2019/3/13 18:48
+         * @Description: 刷新数据
+         **/
+        public void refresh(boolean force){
+
+            //非强制性刷新数据
+            if(!force){
+
+                //判断时间是否过期
+                long currentTimeMillis = System.currentTimeMillis();
+
+                //如果未到自动的更新时间就不进行强制刷新
+                if(currentTimeMillis < OrderConstant.CHOOSE_INTERVALS_TIME + this.lastChangeTime){
+                    return;
+                }
+            }
+
+            //更新订单信息
+            int concurrentAdInfoIndex = this.enterpriseAdInfos.indexOf(this.concurrentEnterpriseAdInfo);
+
+            if(concurrentAdInfoIndex == this.enterpriseAdInfos.size() - 1){
+
+                this.concurrentEnterpriseAdInfo = null;
+
+                do{
+                    //获取当前产品的下标地址
+                    int concurrentProductIndex = this.productBasicInfos.indexOf(this.concurrentProductBasicInfo);
+
+                    //产品循环
+                    if(concurrentProductIndex == this.productBasicInfos.size() - 1){
+
+                        //获取当前产品的数组下标
+                        int concurrentMarketIndex = this.marketBasicInfos.indexOf(this.concurrentMarketBasicInfo);
+
+                        //没有指定的广告信息
+                        if(concurrentMarketIndex == this.marketBasicInfos.size() - 1){
+
+                            this.finish = true;
+
+                            this.gameOrderChooseInfo.setFinished(true);
+
+                            gameOrderChooseInfoRepository.save(this.gameOrderChooseInfo);
+
+                            return;
+                        }else {
+
+                            //更新市场信息
+                            this.concurrentMarketBasicInfo = this.marketBasicInfos.get(concurrentMarketIndex + 1);
+
+                            //更新产品信息
+                            this.concurrentProductBasicInfo = this.productBasicInfos.get(0);
+                        }
+                    }else {
+
+                        this.concurrentProductBasicInfo = this.productBasicInfos.get(concurrentProductIndex + 1);
+                    }
+
+                    //查询需要继续进行排序的订单
+                    this.enterpriseAdInfos = enterpriseAdInfoRepository
+                            .findByEnterpriseBasicInfo_GameBasicInfo_IdAndYearAndProductBasicInfo_IdAndMarketBasicInfo_IdAndFinishedIsFalseOrderByMoneyDescTimeStampAsc(
+                                    this.gameOrderChooseInfo.getGameBasicInfo().getId()
+                                    ,this.getConcurrentYear(),this.concurrentProductBasicInfo.getId(),this.concurrentMarketBasicInfo.getId()
+                            );
+
+                    if(this.enterpriseAdInfos != null && this.enterpriseAdInfos.size() != 0){
+
+                        this.concurrentEnterpriseAdInfo = this.enterpriseAdInfos.get(0);
+                    }
+
+                }while(this.concurrentEnterpriseAdInfo == null);
 
             }else {
 
-                this.gameOrderChooseInfo = new GameOrderChooseInfo();
-
-                //设置比赛信息
-                this.gameOrderChooseInfo.setGameBasicInfo(gameBasicInfo);
-                //设置当前年数据
-                this.gameOrderChooseInfo.setYear(currentYear);
-                //设置当前轮为第一轮
-                this.gameOrderChooseInfo.setFrequency(1);
-
-                //从头开始初始化订单选择信息
-                //查取全部的产品信息
-                this.productBasicInfos = getGameProductOfOneYear(gameId);
-                //设置产品进度
-                this.concurrentProductBasicInfo = this.productBasicInfos.get(0);
-
-                //查取全部市场信息
-                this.marketBasicInfos = getGameMarketOfOneYear(gameId);
-                //设置市场进度
-                this.concurrentMarketBasicInfo = this.marketBasicInfos.get(0);
-
-                //查询需要继续进行排序的订单
-                this.enterpriseAdInfos = enterpriseAdInfoRepository.findByEnterpriseBasicInfo_GameBasicInfo_IdAndYearAndFinishedIsFalseOrderByMoneyDescTimeStampAsc(gameId,currentYear);
-
-                //没有可用的订单
-                if(this.enterpriseAdInfos == null || this.enterpriseAdInfos.size() == 0){
-
-                    this.finish = true;
-                }else {
-
-                    //有可用订单
-                    //恢复订单选择进度
-                    this.concurrentEnterpriseAdInfo = this.enterpriseAdInfos.get(0);
-
-                    //设置需要持久化的信息
-                    this.gameOrderChooseInfo.setConcurrentEnterprise(this.concurrentEnterpriseAdInfo);
-
-                    this.finish = false;
-                }
-
-                //设置当前比赛年周期
-                this.concurrentYear = currentYear;
-
-                try{
-
-                    //持久化数据
-                    this.gameOrderChooseInfo = gameOrderChooseInfoRepository.save(this.gameOrderChooseInfo);
-                }catch(Exception e){
-                    e.printStackTrace();
-
-                    this.finish = true;
-                }
+                this.concurrentEnterpriseAdInfo = this.enterpriseAdInfos.get(concurrentAdInfoIndex + 1);
             }
+
+            this.gameOrderChooseInfo.setConcurrentEnterprise(this.concurrentEnterpriseAdInfo);
+
+            gameOrderChooseInfoRepository.save(this.gameOrderChooseInfo);
         }
+    }
 
-        /*
-         * @Author: chuyunfei
-         * @Date: 2019/3/9 16:40
-         * @Description: 获取在某比赛当年的所有的企业的全部以开发产品集合信息
-         **/
-        private List<ProductBasicInfo> getGameProductOfOneYear(long gameId){
+    /*
+     * @Author: chuyunfei
+     * @Date: 2019/3/9 16:40
+     * @Description: 获取在某比赛当年的所有的企业的全部以开发产品集合信息
+     **/
+    private List<ProductBasicInfo> getGameProductOfOneYear(long gameId){
 
-            //选取所有的企业
-            final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId);
+        //选取所有的企业
+        final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId);
 
-            //用于记录所有非重复的基本产品信息，需要重写hashCode和equal函数
-            Set<ProductBasicInfo> productBasicInfos = new HashSet<>();
+        //用于记录所有非重复的基本产品信息，需要重写hashCode和equal函数
+        Set<ProductBasicInfo> productBasicInfos = new HashSet<>();
 
-            enterpriseBasicInfos.forEach(
+        enterpriseBasicInfos.forEach(
 
-                    enterpriseBasicInfo -> {
-                        //选取企业的指定状态的数据
-                        productDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseBasicInfo.getId())
-                                .forEach(productDevelopInfo -> {
+                enterpriseBasicInfo -> {
+                    //选取企业的指定状态的数据
+                    productDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseBasicInfo.getId()).forEach(productDevelopInfo -> {
 
-                                    //需要研发成功的数据信息
-                                    if(productDevelopInfo.getProductDevelopStatus() == ProductDevelopStatus.DEVELOPED){
-                                        productBasicInfos.add(productDevelopInfo.getProductBasicInfo());
-                                    }
-                                });
-                    }
-            );
+                        //需要研发成功的数据信息
+                        if(productDevelopInfo.getProductDevelopStatus() == ProductDevelopStatus.DEVELOPED){
+                            productBasicInfos.add(productDevelopInfo.getProductBasicInfo());
+                        }
+                    });
+                });
 
-            final ArrayList<ProductBasicInfo> result = new ArrayList<>(productBasicInfos);
+        final ArrayList<ProductBasicInfo> result = new ArrayList<>(productBasicInfos);
 
-            //按照研发周期数进行排序
-            result.sort(Comparator.comparing(ProductBasicInfo::getProductResearchPeriod));
+        //按照研发周期数进行排序
+        result.sort(Comparator.comparing(ProductBasicInfo::getProductResearchPeriod));
 
-            return result;
-        }
+        return result;
+    }
 
-        /*
-         * @Author: chuyunfei
-         * @Date: 2019/3/9 20:59
-         * @Description: 获取在某比赛当年的所有的企业的全部以开发市场集合信息
-         **/
-        private List<MarketBasicInfo> getGameMarketOfOneYear(long gameId){
+    /*
+     * @Author: chuyunfei
+     * @Date: 2019/3/9 20:59
+     * @Description: 获取在某比赛当年的所有的企业的全部以开发市场集合信息
+     **/
+    private List<MarketBasicInfo> getGameMarketOfOneYear(long gameId){
 
-            //选取所有的企业信息
-            final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId);
+        //选取所有的企业信息
+        final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId);
 
-            //用于存储所有的非重复的市场信息
-            Set<MarketBasicInfo> marketBasicInfos = new HashSet<>();
+        //用于存储所有的非重复的市场信息
+        Set<MarketBasicInfo> marketBasicInfos = new HashSet<>();
 
-            enterpriseBasicInfos.forEach(
+        enterpriseBasicInfos.forEach(
 
-                    enterpriseBasicInfo -> {
+                enterpriseBasicInfo -> {
 
-                        //获取指定状态的市场研发信息
-                        marketDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseBasicInfo.getId())
-                                .forEach(marketDevelopInfo -> {
-                                    //筛选全部已经开拓的市场信息
-                                    if(marketDevelopInfo.getMarketStatus() == MarketStatusEnum.DEVELOPED){
-                                        marketBasicInfos.add(marketDevelopInfo.getMarketBasicInfo());
-                                    }
-                                });
-                    }
-            );
+                    //获取指定状态的市场研发信息
+                    marketDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseBasicInfo.getId()).forEach(marketDevelopInfo -> {
+                        //筛选全部已经开拓的市场信息
+                        if(marketDevelopInfo.getMarketStatus() == MarketStatusEnum.DEVELOPED){
+                            marketBasicInfos.add(marketDevelopInfo.getMarketBasicInfo());
+                        }
+                    });
+                });
 
-            final ArrayList<MarketBasicInfo> result = new ArrayList<>(marketBasicInfos);
+        final ArrayList<MarketBasicInfo> result = new ArrayList<>(marketBasicInfos);
 
-            //按照市场的开拓周期进行排序
-            result.sort(Comparator.comparing(MarketBasicInfo::getMarketResearchCost));
+        //按照市场的开拓周期进行排序
+        result.sort(Comparator.comparing(MarketBasicInfo::getMarketResearchCost));
 
-            return result;
-        }
-
-        /* 
-         * @Author: chuyunfei
-         * @Date: 2019/3/10 13:33
-         * @Description: 从数据库里面重新加载数据
-         **/
-        public void refresh(){
-
-            //todo
-        }
+        return result;
     }
 }

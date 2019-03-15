@@ -21,10 +21,6 @@ public class OrderController {
      * @Description: 以下部分为投广告操作期间的接口
      **/
 
-    @GetMapping("/test")
-    public void get(){
 
-
-    }
 
 }
