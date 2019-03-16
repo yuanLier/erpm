@@ -1,17 +1,22 @@
 package edu.cqupt.mislab.erp.game.compete.operation.produce.controller.productionplan;
 
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryTypeVo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineTypeVo;
+import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryDevelopInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineProduceInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryProdlineTypeVo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineProduceStatus;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineDetailVo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProductProduceVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.service.ProductionPlanService;
+import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
+import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,40 +37,136 @@ public class ProductionPlanController {
     @Autowired
     private ProductionPlanService productionPlanService;
 
-//    @ApiOperation(value = "获取某个企业的全部可生产的产品类型")
-//    @GetMapping("/product/type/get")
-//    public WebResponseVo<List<ProductTypeVo>> getProductTypeVo(Long enterpriseId) {
-//        List<ProductTypeVo> productTypeVoList = productionPlanService.getProductTypeOfEnterprise(enterpriseId);
-//
-//        if(productTypeVoList == null) {
-//            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业没有可生产的产品");
-//        }
-//
-//        return toSuccessResponseVoWithData(productTypeVoList);
-//    }
-//
-//    @ApiOperation(value = "获取某个企业的全部可使用的厂房类型")
-//    @GetMapping("/factory/type/get")
-//    public WebResponseVo<List<FactoryTypeVo>> getFactoryTypeVo(Long enterpriseId) {
-//        List<FactoryTypeVo> factoryTypeVoList = productionPlanService.getFactoryTypeOfEnterprise(enterpriseId);
-//
-//        if(factoryTypeVoList == null) {
-//            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业没有空闲厂房");
-//        }
-//
-//        return toSuccessResponseVoWithData(factoryTypeVoList);
-//    }
-//
-//    @ApiOperation(value = "获取某个厂房中全部可使用的生产线类型")
-//    @GetMapping("/prodline/type/get")
-//    public WebResponseVo<List<ProdlineTypeVo>> getProdlineTypeVo(Long factoryId) {
-//        List<ProdlineTypeVo> prodlineTypeVoList = productionPlanService.getProdlineTypeOfEnterprise(factoryId);
-//
-//        if(prodlineTypeVoList == null) {
-//            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该厂房中没有空闲生产线");
-//        }
-//
-//        return toSuccessResponseVoWithData(prodlineTypeVoList);
-//    }
+
+    @ApiOperation(value = "获取某个企业的全部可生产的产品类型")
+    @GetMapping("/product/type/get")
+    public WebResponseVo<List<ProductTypeVo>> getProducableProduct(@Exist(repository = EnterpriseBasicInfoRepository.class)
+                                                                               @RequestParam Long enterpriseId) {
+
+        List<ProductTypeVo> productTypeVoList = productionPlanService.getProducableProduct(enterpriseId);
+
+        if(productTypeVoList == null) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业没有可生产的产品");
+        }
+
+        return toSuccessResponseVoWithData(productTypeVoList);
+    }
+
+
+    @ApiOperation(value = "获取企业中的可生产某种产品的全部生产线及所在厂房的类型")
+    @GetMapping("/prodline/type/get")
+    public WebResponseVo<List<FactoryProdlineTypeVo>> getProducableFactoryAndProdline(@Exist(repository = EnterpriseBasicInfoRepository.class)
+                                                                                            @RequestParam Long enterpriseId,
+                                                                                      @Exist(repository = ProductDevelopInfoRepository.class)
+                                                                                            @RequestParam Long productId) {
+
+        List<FactoryProdlineTypeVo> factoryProdlineTypeVoList = productionPlanService.getProducableFactoryAndProdline(enterpriseId, productId);
+
+        if(factoryProdlineTypeVoList == null) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业没有可生产该产品的生产线");
+        }
+
+        return toSuccessResponseVoWithData(factoryProdlineTypeVoList);
+    }
+
+
+    @ApiOperation(value = "获取企业中某一产品的全部生产情况")
+    @GetMapping("/prodline/produce/get")
+    public WebResponseVo<List<ProductProduceVo>> getProductProduceVosOfOneProduct(@Exist(repository = EnterpriseBasicInfoRepository.class)
+                                                                                          @RequestParam Long enterpriseId,
+                                                                                  @Exist(repository = ProductDevelopInfoRepository.class)
+                                                                                          @RequestParam Long productId) {
+
+        List<ProductProduceVo> productProduceVoList = productionPlanService.getProductProduceVosOfOneProduct(enterpriseId, productId);
+
+        if(productProduceVoList == null) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业未生产该产品");
+        }
+
+        return toSuccessResponseVoWithData(productProduceVoList);
+    }
+
+
+    @ApiOperation(value = "查看产品的某一生产情况")
+    @GetMapping("/factory/display/get")
+    public WebResponseVo<FactoryDisplayVo> getFactoryDisplayVo(@Exist(repository = FactoryDevelopInfoRepository.class)
+                                                                       @RequestParam Long factoryId) {
+
+        return toSuccessResponseVoWithData(productionPlanService.getFactoryDisplayVo(factoryId));
+    }
+
+
+    @ApiOperation(value = "获取企业全部的生产信息")
+    @GetMapping("/factory/display/all/get")
+    public WebResponseVo<List<FactoryDisplayVo>> getAllFactoryDisplayVos(@Exist(repository = EnterpriseBasicInfoRepository.class)
+                                                                                 @RequestParam Long enterpriseId) {
+
+        List<FactoryDisplayVo> factoryDisplayVoList = productionPlanService.getAllFactoryDisplayVos(enterpriseId);
+
+        if(factoryDisplayVoList == null) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "!!!∑(ﾟДﾟノ)ノ这个企业它没有厂房");
+        }
+
+        return toSuccessResponseVoWithData(factoryDisplayVoList);
+    }
+
+
+    @ApiOperation(value = "获取生产线详情")
+    @GetMapping("/prodline/detail/get")
+    public WebResponseVo<ProdlineDetailVo> getProdlineDetailVo(@Exist(repository = ProdlineProduceInfoRepository.class)
+                                                                       @RequestParam Long prodlineId) {
+
+        return toSuccessResponseVoWithData(productionPlanService.getProdlineDetailVo(prodlineId));
+    }
+
+
+
+    @ApiOperation(value = "开始生产")
+    @PutMapping("/prodline/produce")
+    public WebResponseVo<ProductProduceVo> productProduction(@Exist(repository = ProdlineProduceInfoRepository.class)
+                                                                     @RequestParam Long prodlineId) {
+
+        ProductProduceVo productProduceVo = productionPlanService.productProduction(prodlineId);
+
+        if (productProduceVo == null) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "生产失败！");
+        }
+
+        return toSuccessResponseVoWithData(productProduceVo);
+    }
+
+    @ApiOperation(value = "暂停生产")
+    @PutMapping("/prodline/produce/pause")
+    public WebResponseVo<ProductProduceVo> updateProduceStatusToPausing(@Exist(repository = ProdlineProduceInfoRepository.class)
+                                                                            @RequestParam Long prodlineId) {
+        ProductProduceVo productProduceVo = productionPlanService.updateProduceStatus(prodlineId, ProdlineProduceStatus.PRODUCEPAUSE);
+
+        if (productProduceVo == null) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "暂停生产 failed");
+        }
+
+        return toSuccessResponseVoWithData(productProduceVo);
+    }
+
+
+    @ApiOperation(value = "继续生产")
+    @PutMapping("/prodline/produce/producing")
+    public WebResponseVo<ProductProduceVo> updateProduceStatusToProducing(@Exist(repository = ProdlineProduceInfoRepository.class)
+                                                                            @RequestParam Long prodlineId) {
+        ProductProduceVo productProduceVo = productionPlanService.updateProduceStatus(prodlineId, ProdlineProduceStatus.PRODUCING);
+
+        if (productProduceVo == null) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "继续生产 failed");
+        }
+
+        return toSuccessResponseVoWithData(productProduceVo);
+    }
+
+
+
+
+
+
+
 
 }

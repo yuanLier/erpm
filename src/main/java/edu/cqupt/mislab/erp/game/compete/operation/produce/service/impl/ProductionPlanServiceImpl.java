@@ -76,8 +76,14 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
 
             // 获取该生产线所在的厂房
             FactoryDevelopInfo factoryDevelopInfo = prodlineProduceInfo.getProdlineHoldingInfo().getFactoryDevelopInfo();
+
             // 获取该厂房的生产线信息集
             List<ProdlineProduceInfo> prodlineProduceInfos = factoryDevelopInfoMap.get(factoryDevelopInfo);
+
+            // 若该信息集为空，手动初始化一下它
+            if(prodlineProduceInfos == null) {
+                prodlineProduceInfos = new ArrayList<>();
+            }
 
             // 将该生产线加入该厂房的生产线信息集
             prodlineProduceInfos.add(prodlineProduceInfo);
@@ -128,12 +134,12 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
         // 获取厂房信息
         FactoryDevelopInfo factoryDevelopInfo = factoryDevelopInfoRepository.findOne(factoryId);
 
-        // 获取厂房中的全部生产线信息
-        List<ProdlineProduceInfo> prodlineProduceInfoList = prodlineProduceInfoRepository.findByProdlineHoldingInfo_FactoryDevelopInfo_Id(factoryId);
-
-        if(factoryDevelopInfo == null || prodlineProduceInfoList == null) {
+        if(factoryDevelopInfo == null) {
             return null;
         }
+
+        // 获取厂房中的全部生产线信息（这里是允许为空的）
+        List<ProdlineProduceInfo> prodlineProduceInfoList = prodlineProduceInfoRepository.findByProdlineHoldingInfo_FactoryDevelopInfo_Id(factoryId);
 
         // 将生产线entity集转换为vo集
         List<ProdlineDisplayVo> prodlineDisplayVoList = castProdlineEntityToDisplayVos(prodlineProduceInfoList);
@@ -154,12 +160,8 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
 
         for (FactoryDevelopInfo factoryDevelopInfo : factoryDevelopInfoList) {
 
-            // 获取厂房中的全部生产线信息
+            // 获取厂房中的全部生产线信息（同样，允许为空）
             List<ProdlineProduceInfo> prodlineProduceInfoList = prodlineProduceInfoRepository.findByProdlineHoldingInfo_FactoryDevelopInfo_Id(factoryDevelopInfo.getId());
-
-            if(prodlineProduceInfoList == null) {
-                return null;
-            }
 
             // 将生产线entity集转换为vo集
             List<ProdlineDisplayVo> prodlineDisplayVoList = castProdlineEntityToDisplayVos(prodlineProduceInfoList);
@@ -227,120 +229,17 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
     }
 
 
-
-//    @Override
-//    public List<ProductTypeVo> getProductTypeOfEnterprise(Long enterpriseId) {
-//        // 获取该企业已经研发完成的产品
-//        List<ProductDevelopInfo> productDevelopInfoList = productDevelopInfoRepository
-//                .findByEnterpriseBasicInfo_IdAndProductDevelopStatus(enterpriseId, ProductDevelopStatus.DEVELOPED);
-//
-//        // 将Entity集转化为Vo集
-//        List<ProductTypeVo> productTypeVoList = new ArrayList<>();
-//        for (ProductDevelopInfo productDevelopInfo : productDevelopInfoList) {
-//            ProductTypeVo productTypeVo = new ProductTypeVo();
-//
-//            productTypeVo.setId(productDevelopInfo.getId());
-//            productTypeVo.setProductName(productDevelopInfo.getProductBasicInfo().getProductName());
-//
-//            productTypeVoList.add(productTypeVo);
-//        }
-//
-//        return productTypeVoList;
-//    }
-//
-//    @Override
-//    public List<FactoryTypeVo> getFactoryTypeOfEnterprise(Long enterpriseId) {
-//        // 获取该企业有空闲生产线的全部厂房 todo 如何表现空闲？
-//        List<FactoryDevelopInfo> factoryDevelopInfoList = factoryDevelopInfoRepository
-//                .findByFactoryHoldingInfo_EnterpriseBasicInfo_IdAndFactoryDevelopStatus(enterpriseId, FactoryDevelopStatus.DEVELOPED);
-//
-//        // 将Entity集转化为Vo集
-//        List<FactoryTypeVo> factoryTypeVoList = new ArrayList<>();
-//        for (FactoryDevelopInfo factoryDevelopInfo : factoryDevelopInfoList) {
-//            FactoryTypeVo factoryTypeVo = new FactoryTypeVo();
-//
-//            factoryTypeVo.setId(factoryDevelopInfo.getId());
-//            factoryTypeVo.setFactoryType(factoryDevelopInfo.getFactoryHoldingInfo().getFactoryBasicInfo().getFactoryType());
-//
-//            factoryTypeVoList.add(factoryTypeVo);
-//        }
-//
-//        return factoryTypeVoList;
-//    }
-//
-//    @Override
-//    public List<ProdlineTypeVo> getProdlineTypeOfEnterprise(Long factoryId) {
-//        // 获取某个厂房中处于空闲状态的全部生产线
-//        List<ProdlineProduceInfo> prodlineProduceInfoList = prodlineProduceInfoRepository
-//                .findByProdlineHoldingInfo_FactoryDevelopInfo_IdAndProdlineProduceStatus(factoryId, ProdlineProduceStatus.TOPRODUCE);
-//
-//        return castProdlineEntityToTypeVos(prodlineProduceInfoList);
-//    }
-//
-//    @Override
-//    public List<ProdlineTypeVo> getProdlineTypeOfProduction(Long factoryId, Long productionId) {
-//        // 获取某个厂房中处于空闲状态的、可生产指定产品的全部生产线
-//        List<ProdlineProduceInfo> prodlineProduceInfoList = prodlineProduceInfoRepository
-//                .findByProdlineHoldingInfo_FactoryDevelopInfo_IdAndProductDevelopInfo_IdAndProdlineProduceStatus
-//                        (factoryId, productionId, ProdlineProduceStatus.TOPRODUCE);
-//
-//        return castProdlineEntityToTypeVos(prodlineProduceInfoList);
-//    }
-//
-//    @Override
-//    public FactoryDisplayVo getFactoryDisplayInfo(Long factoryId) {
-//
-//        // 获取厂房建造信息
-//        FactoryDevelopInfo factoryDevelopInfo = factoryDevelopInfoRepository.findOne(factoryId);
-//
-//        // 获取厂房中的全部生产线信息
-//        List<ProdlineProduceInfo> prodlineProduceInfoList = prodlineProduceInfoRepository.findByProdlineHoldingInfo_FactoryDevelopInfo_Id(factoryId);
-//        // 将生产线entity集转换为vo集
-//        List<ProdlineDisplayVo> prodlineDisplayVoList = castProdlineEntityToDisplayVos(prodlineProduceInfoList);
-//
-//        return EntityVoUtil.copyFieldsFromEntityToVo(factoryDevelopInfo, prodlineDisplayVoList);
-//    }
-//
-//    @Override
-//    public List<FactoryDisplayVo> getAllFactoryDisplayVos(Long enterpriseId) {
-//
-//        List<FactoryDisplayVo> factoryDisplayVoList = new ArrayList<>();
-//
-//        // 获取企业中的全部厂房信息
-//        List<FactoryDevelopInfo> factoryDevelopInfoList = factoryDevelopInfoRepository.findByFactoryHoldingInfo_EnterpriseBasicInfo_Id(enterpriseId);
-//
-//        for (FactoryDevelopInfo factoryDevelopInfo : factoryDevelopInfoList) {
-//
-//            // 获取厂房中的全部生产线信息
-//            List<ProdlineProduceInfo> prodlineProduceInfoList = prodlineProduceInfoRepository.findByProdlineHoldingInfo_FactoryDevelopInfo_Id(factoryDevelopInfo.getId());
-//            // 将生产线entity集转换为vo集
-//            List<ProdlineDisplayVo> prodlineDisplayVoList = castProdlineEntityToDisplayVos(prodlineProduceInfoList);
-//
-//            factoryDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(factoryDevelopInfo, prodlineDisplayVoList));
-//        }
-//
-//        return factoryDisplayVoList;
-//    }
-//
-//    @Override
-//    public ProdlineDetailVo getProdlineDetailVo(Long prodlineId) {
-//        return null;
-//    }
-//
-//    @Override
-//    public List<ProductProduceVo> getProductProduceVo(Long enterpriseId, Long productId) {
-//        return null;
-//    }
-//
-//
-
-
     /**
      * @author yuanyiwen
      * @description 对生产线List<ProdlineProduceInfo>转List<ProdlineTypeVo>的简单封装
      * @date 0:24 2019/3/14
      **/
     private List<ProdlineTypeVo> castProdlineEntityToTypeVos(List<ProdlineProduceInfo> prodlineProduceInfoList) {
+
+        if(prodlineProduceInfoList == null) {
+            return new ArrayList<>();
+        }
+
         // 将Entity集转化为Vo集
         List<ProdlineTypeVo> prodlineTypeVoList = new ArrayList<>();
         for (ProdlineProduceInfo prodlineProduceInfo : prodlineProduceInfoList) {
@@ -362,6 +261,11 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
      * @date 9:48 2019/3/15
      **/
     private List<ProdlineDisplayVo> castProdlineEntityToDisplayVos(List<ProdlineProduceInfo> prodlineProduceInfoList) {
+
+        if(prodlineProduceInfoList == null) {
+            return new ArrayList<>();
+        }
+
         // 将生产线entity集转换为vo集
         List<ProdlineDisplayVo> prodlineDisplayVoList = new ArrayList<>();
         for (ProdlineProduceInfo prodlineProduceInfo : prodlineProduceInfoList) {

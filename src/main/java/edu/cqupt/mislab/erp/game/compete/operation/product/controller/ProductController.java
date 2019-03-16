@@ -63,7 +63,7 @@ public class ProductController {
 
 
     @ApiOperation(value = "修改某个产品的研发状态")
-    @PostMapping("/product/infos/update/status")
+    @PutMapping("/product/infos/update/status")
     public WebResponseVo<ProductDisplayVo> updateProductStatus(@Exist(repository = ProductDevelopInfoRepository.class)
                                                        @RequestParam Long productDevelopId,
                                                                @RequestParam ProductDevelopStatus productDevelopStatus) {
