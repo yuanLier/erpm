@@ -26,5 +26,6 @@ public interface FactoryDevelopInfoRepository extends JpaSpecificationExecutor, 
      * @description 获取某个企业处于某种状态的全部厂房
      * @date 0:23 2019/3/11
      **/
-    List<FactoryDevelopInfo> findByFactoryHoldingInfo_EnterpriseBasicInfo_IdAndFactoryDevelopStatus(Long enterpriseId, FactoryDevelopStatus factoryDevelopStatus);
+    List<FactoryDevelopInfo> findByFactoryHoldingInfo_EnterpriseBasicInfo_IdAndFactoryDevelopStatus
+                    (Long enterpriseId, FactoryDevelopStatus factoryDevelopStatus);
 }

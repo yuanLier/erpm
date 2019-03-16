@@ -32,8 +32,8 @@ public class ProdlineProduceInfo {
     private ProdlineHoldingInfo prodlineHoldingInfo;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
-    @JoinColumn(nullable = false,updatable = false)
-    @Comment(comment = "哪一条生产线信息")
+    @JoinColumn(nullable = false)
+    @Comment(comment = "生产的是哪一种产品")
     private ProductDevelopInfo productDevelopInfo;
 
     @Basic

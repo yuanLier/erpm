@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @create 2019-03-09 16:36
  * @description
  */
-public interface ProdlineBasicRepository extends JpaSpecificationExecutor, JpaRepository<ProdlineBasicInfo, Long> {
+public interface ProdlineBasicInfoRepository extends JpaSpecificationExecutor, JpaRepository<ProdlineBasicInfo, Long> {
 }

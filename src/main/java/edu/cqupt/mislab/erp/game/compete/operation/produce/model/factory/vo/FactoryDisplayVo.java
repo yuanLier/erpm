@@ -1,9 +1,13 @@
 package edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo;
 
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryDevelopStatus;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryHoldingStatus;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineDisplayVo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author yuanyiwen
@@ -17,16 +21,21 @@ public class FactoryDisplayVo {
     @ApiModelProperty("代理主键，值同FactoryDevelopInfo")
     private Long id;
 
-    @ApiModelProperty("厂房编号")
+    @ApiModelProperty("展示为厂房编号，实际为id后三位（位数不足时用0补齐）")
     private String factoryNumber;
 
-    @ApiModelProperty("厂房规模，即厂房类型")
+    @ApiModelProperty("展示为厂房规模，实际指厂房类型")
     private String factoryType;
+
+    @ApiModelProperty("展示为厂房类型，实际指厂房拥有状态；除租赁状态外均展示为非租赁")
+    private FactoryHoldingStatus factoryHoldingStatus;
 
     @ApiModelProperty("厂房中能容纳的最大生产线数量")
     private Integer factoryCapacity;
 
-    // todo 租赁状态和修建状态现在是合在一起的 也许不需要分开？原型图中对应的类型部分暂时用状态表示 如果表分开了就把这里也改了
-    @ApiModelProperty("厂房状态")
+    @ApiModelProperty("展示为厂房状态，实际为厂房修建状态")
     private FactoryDevelopStatus factoryDevelopStatus;
+
+    @ApiModelProperty("展示该厂房中的全部生产线信息")
+    private List<ProdlineDisplayVo> prodlineDisplayVoList;
 }
