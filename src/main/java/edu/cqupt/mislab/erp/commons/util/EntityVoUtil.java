@@ -157,6 +157,8 @@ public abstract class EntityVoUtil {
 
         // 厂房最大容量
         factoryDisplayVo.setFactoryCapacity(factoryBasicInfo.getFactoryCapacity());
+        // 厂房的当前容量
+        factoryDisplayVo.setCurrentCapacity(prodlineDevelopDisplayVoList.size()+prodlineProduceDisplayVoList.size());
         // 厂房拥有状态（自建的：拥有中 / 租来的：租赁中）
         factoryDisplayVo.setFactoryHoldingStatus(factoryHoldingInfo.getFactoryHoldingStatus());
         // 厂房编号，取的是厂房id后三位，不足位补0
