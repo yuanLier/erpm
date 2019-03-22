@@ -1,7 +1,7 @@
 package edu.cqupt.mislab.erp.user.modelinit;
 
-import edu.cqupt.mislab.erp.commons.basic.ModelInit;
-import edu.cqupt.mislab.erp.commons.basic.ModelInitService;
+import edu.cqupt.mislab.erp.commons.basic.modelinit.ModelInit;
+import edu.cqupt.mislab.erp.commons.basic.modelinit.ModelInitService;
 import edu.cqupt.mislab.erp.user.dao.*;
 import edu.cqupt.mislab.erp.user.model.entity.*;
 import lombok.extern.slf4j.Slf4j;

@@ -1,5 +1,6 @@
-package edu.cqupt.mislab.erp.commons.basic;
+package edu.cqupt.mislab.erp.commons.basic.modelinit;
 
+import edu.cqupt.mislab.erp.commons.basic.modelinit.ModelInit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

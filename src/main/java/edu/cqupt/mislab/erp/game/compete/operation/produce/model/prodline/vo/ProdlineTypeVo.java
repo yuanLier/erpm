@@ -13,7 +13,7 @@ import lombok.Data;
 @ApiModel("生产线类型选择视图")
 public class ProdlineTypeVo {
 
-    @ApiModelProperty("代理主键，值同ProdlineProduceInfo")
+    @ApiModelProperty("代理主键，在生产计划中值同ProdlineHoldingInfo，在厂房管理时值同ProdlineBasicInfo")
     private Long id;
 
     @ApiModelProperty("用户拥有的生产线类型")

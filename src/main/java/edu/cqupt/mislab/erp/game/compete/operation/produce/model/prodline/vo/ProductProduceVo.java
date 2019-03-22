@@ -13,7 +13,7 @@ import lombok.Data;
 @ApiModel("产品生产信息视图")
 public class ProductProduceVo {
 
-    @ApiModelProperty("代理主键，值同ProdlineProduceInfo")
+    @ApiModelProperty("代理主键，值同ProdlineHoldingInfo")
     private Long id;
 
     @ApiModelProperty("厂房编号")

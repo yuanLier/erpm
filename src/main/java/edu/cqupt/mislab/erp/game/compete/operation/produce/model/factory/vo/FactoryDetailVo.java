@@ -1,22 +1,18 @@
 package edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo;
 
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryHoldingStatus;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineDevelopDisplayVo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineProduceDisplayVo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.List;
-
 /**
  * @author yuanyiwen
- * @create 2019-03-10 15:27
+ * @create 2019-03-17 17:43
  * @description
  */
 @Data
-@ApiModel("厂房信息展示视图")
-public class FactoryDisplayVo {
+@ApiModel("查看厂房详情 展示视图")
+public class FactoryDetailVo {
 
     @ApiModelProperty("代理主键，值同FactoryHoldingInfo")
     private Long id;
@@ -33,15 +29,19 @@ public class FactoryDisplayVo {
     @ApiModelProperty("厂房中能容纳的最大生产线数量")
     private Integer factoryCapacity;
 
-    @ApiModelProperty("厂房中当前容纳的生产线数量")
-    private Integer currentCapacity;
-
-    @ApiModelProperty("展示为厂房状态，实际为厂房修建状态")
+    @ApiModelProperty("展示为厂房状态，实际为是否修建")
     private boolean developStatus;
 
-    @ApiModelProperty("展示该厂房中的全部生产状态生产线信息")
-    private List<ProdlineProduceDisplayVo> prodlineProduceDisplayVoList;
+    @ApiModelProperty("修建该厂房所需要的周期数")
+    private Integer factoryMakePeriod;
 
-    @ApiModelProperty("展示该厂房中的全部修建状态生产线信息")
-    private List<ProdlineDevelopDisplayVo> prodlineDevelopDisplayVoList;
+    @ApiModelProperty("修建该厂房每期所需要的费用")
+    private Double factoryMakeCost;
+
+    @ApiModelProperty("厂房建造完成后每期的折旧费用")
+    private Double factoryDepreciation;
+
+    @ApiModelProperty("厂房修建完成后每期的维护费用")
+    private Double factoryMaintainCost;
+
 }

@@ -13,7 +13,7 @@ import lombok.Data;
 @ApiModel("生产线详情展示视图")
 public class ProdlineDetailVo {
 
-    @ApiModelProperty("代理主键，值同ProdlineProduceInfo")
+    @ApiModelProperty("代理主键，值同ProdlineHoldingInfo")
     private Long id;
 
     @ApiModelProperty("展示为生产线名称，实际指生产线类型")

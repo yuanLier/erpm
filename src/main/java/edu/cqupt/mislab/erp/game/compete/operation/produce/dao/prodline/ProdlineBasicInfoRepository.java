@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline;
 
+import edu.cqupt.mislab.erp.commons.basic.repository.BasicRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineBasicInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -9,5 +10,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @create 2019-03-09 16:36
  * @description
  */
-public interface ProdlineBasicInfoRepository extends JpaSpecificationExecutor, JpaRepository<ProdlineBasicInfo, Long> {
+public interface ProdlineBasicInfoRepository extends JpaSpecificationExecutor, BasicRepository<ProdlineBasicInfo, Long> {
 }

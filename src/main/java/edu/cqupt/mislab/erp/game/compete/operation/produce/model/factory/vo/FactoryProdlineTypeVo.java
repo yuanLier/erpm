@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @ApiModel("厂房及厂房中满足条件的生产线类型选择视图")
 public class FactoryProdlineTypeVo {
-    @ApiModelProperty("代理主键，值同FactoryDevelopInfo")
+    @ApiModelProperty("代理主键，值同FactoryHoldingInfo")
     private Long id;
 
     @ApiModelProperty("用户拥有的工厂类型")

@@ -12,16 +12,15 @@ import lombok.Data;
  * @description
  */
 @Data
-@ApiModel("生产线信息展示视图")
-public class ProdlineDisplayVo {
+@ApiModel("生产线生产信息展示视图")
+public class ProdlineProduceDisplayVo {
 
-    @ApiModelProperty("代理主键，值同ProdlineProduceInfo")
+    @ApiModelProperty("代理主键，值同ProdlineHoldingInfo")
     private Long id;
 
     @ApiModelProperty("展示为生产线名称，实际指生产线类型")
     private String prodlineType;
 
-//    todo 如果该生产线未修建完成呢？那就应该是修建状态 并且根本不存在这条生产线的生产状态
     @ApiModelProperty("生产线生产状态")
     private ProdlineProduceStatus prodlineProduceStatus;
 

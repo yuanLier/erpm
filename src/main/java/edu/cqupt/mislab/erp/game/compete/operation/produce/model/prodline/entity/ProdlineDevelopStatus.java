@@ -7,7 +7,6 @@ package edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entit
  */
 public enum  ProdlineDevelopStatus {
 
-    TODEVELOP("未修建"),
     DEVELOPING("修建中"),
     DEVELOPPAUSE("修建暂停"),
     DEVELOPED("修建成功");

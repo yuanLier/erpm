@@ -5,12 +5,14 @@ import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryDevelopInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryHoldingInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineProduceInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineDetailVo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineDevelopDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineProduceDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
@@ -145,26 +147,28 @@ public abstract class EntityVoUtil {
         return productDisplayVo;
     }
 
-    public static FactoryDisplayVo copyFieldsFromEntityToVo(FactoryDevelopInfo factoryDevelopInfo, List<ProdlineDisplayVo> prodlineDisplayVoList) {
+    public static FactoryDisplayVo copyFieldsFromEntityToVo(FactoryHoldingInfo factoryHoldingInfo, List<ProdlineProduceDisplayVo> prodlineProduceDisplayVoList, List<ProdlineDevelopDisplayVo> prodlineDevelopDisplayVoList) {
 
         FactoryDisplayVo factoryDisplayVo = new FactoryDisplayVo();
 
-        FactoryBasicInfo factoryBasicInfo = factoryDevelopInfo.getFactoryHoldingInfo().getFactoryBasicInfo();
+        FactoryBasicInfo factoryBasicInfo = factoryHoldingInfo.getFactoryBasicInfo();
 
-        factoryDisplayVo.setId(factoryDevelopInfo.getId());
+        factoryDisplayVo.setId(factoryHoldingInfo.getId());
 
         // 厂房最大容量
         factoryDisplayVo.setFactoryCapacity(factoryBasicInfo.getFactoryCapacity());
-        // 厂房拥有状态（租赁or其他）
-        factoryDisplayVo.setFactoryHoldingStatus(factoryDevelopInfo.getFactoryHoldingInfo().getFactoryHoldingStatus());
+        // 厂房拥有状态（自建的：拥有中 / 租来的：租赁中）
+        factoryDisplayVo.setFactoryHoldingStatus(factoryHoldingInfo.getFactoryHoldingStatus());
         // 厂房编号，取的是厂房id后三位，不足位补0
-        factoryDisplayVo.setFactoryNumber(NumberFormatUtil.factoryNumberFormat(factoryDevelopInfo.getId()));
-        // 厂房修建状态 todo 若厂房是租来的  这个值要怎么处理？--新建Vo处理 生产计划中只允许使用FactoryDevelopInfo
-        factoryDisplayVo.setFactoryDevelopStatus(factoryDevelopInfo.getFactoryDevelopStatus());
+        factoryDisplayVo.setFactoryNumber(NumberFormatUtil.factoryNumberFormat(factoryHoldingInfo.getId()));
+        // 厂房拥有状态（已修建or已出售 / 租赁中or租赁）
+        factoryDisplayVo.setDevelopStatus(factoryHoldingInfo.isEnable());
         // 厂房类型
         factoryDisplayVo.setFactoryType(factoryBasicInfo.getFactoryType());
-        // 厂房中的生产线
-        factoryDisplayVo.setProdlineDisplayVoList(prodlineDisplayVoList);
+        // 生产中的生产线
+        factoryDisplayVo.setProdlineProduceDisplayVoList(prodlineProduceDisplayVoList);
+        // 修建中的生产线
+        factoryDisplayVo.setProdlineDevelopDisplayVoList(prodlineDevelopDisplayVoList);
 
         return factoryDisplayVo;
     }
@@ -174,21 +178,21 @@ public abstract class EntityVoUtil {
      * @description flag为返回类型，防止重载冲突
      * @date 10:41 2019/3/16
      **/
-    public static ProdlineDisplayVo copyFieldsFromEntityToVo(ProdlineProduceInfo prodlineProduceInfo, ProdlineDisplayVo flag) {
-        ProdlineDisplayVo prodlineDisplayVo = new ProdlineDisplayVo();
+    public static ProdlineProduceDisplayVo copyFieldsFromEntityToVo(ProdlineProduceInfo prodlineProduceInfo, ProdlineProduceDisplayVo flag) {
+        ProdlineProduceDisplayVo prodlineProduceDisplayVo = new ProdlineProduceDisplayVo();
 
-        prodlineDisplayVo.setId(prodlineProduceInfo.getId());
+        prodlineProduceDisplayVo.setId(prodlineProduceInfo.getId());
 
         // 生产状态
-        prodlineDisplayVo.setProdlineProduceStatus(prodlineProduceInfo.getProdlineProduceStatus());
+        prodlineProduceDisplayVo.setProdlineProduceStatus(prodlineProduceInfo.getProdlineProduceStatus());
         // 生产线类型
-        prodlineDisplayVo.setProdlineType(prodlineProduceInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineType());
+        prodlineProduceDisplayVo.setProdlineType(prodlineProduceInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineType());
         // 已经生生产的周期数
-        prodlineDisplayVo.setProducedPeriod(prodlineProduceInfo.getProducedPeriod());
+        prodlineProduceDisplayVo.setProducedPeriod(prodlineProduceInfo.getProducedPeriod());
         // 生产线当前可生产的产品名称
-        prodlineDisplayVo.setProductName(prodlineProduceInfo.getProductDevelopInfo().getProductBasicInfo().getProductName());
+        prodlineProduceDisplayVo.setProductName(prodlineProduceInfo.getProductDevelopInfo().getProductBasicInfo().getProductName());
 
-        return prodlineDisplayVo;
+        return prodlineProduceDisplayVo;
     }
 
     public static ProdlineDetailVo copyFieldsFromEntityToVo(ProdlineProduceInfo prodlineProduceInfo, ProdlineDetailVo flag) {
@@ -220,5 +224,26 @@ public abstract class EntityVoUtil {
 
         return prodlineDetailVo;
     }
+
+
+    public static ProdlineDevelopDisplayVo copyFieldsFromEntityToVo(ProdlineDevelopInfo prodlineDevelopInfo) {
+        ProdlineDevelopDisplayVo prodlineDevelopDisplayVo = new ProdlineDevelopDisplayVo();
+
+        prodlineDevelopDisplayVo.setId(prodlineDevelopInfo.getId());
+
+        // 已经安装的周期数
+        prodlineDevelopDisplayVo.setDevelopedPeriod(prodlineDevelopInfo.getDevelopedPeriod());
+        // 当前安装状态
+        prodlineDevelopDisplayVo.setProdlineDevelopStatus(prodlineDevelopInfo.getProdlineDevelopStatus());
+        // 安装所需的总周期数
+        prodlineDevelopDisplayVo.setProdlineSetupPeriod(prodlineDevelopInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineSetupPeriod());
+        // 生产线类型
+        prodlineDevelopDisplayVo.setProdlineType(prodlineDevelopInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineType());
+        // 该生产线上生产的产品名称
+        prodlineDevelopDisplayVo.setProductName(prodlineDevelopInfo.getProductDevelopInfo().getProductBasicInfo().getProductName());
+
+        return prodlineDevelopDisplayVo;
+    }
+
 
 }

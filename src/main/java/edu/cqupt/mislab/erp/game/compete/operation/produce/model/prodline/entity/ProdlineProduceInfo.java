@@ -7,6 +7,7 @@ import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author yuanyiwen
@@ -20,7 +21,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table
-public class ProdlineProduceInfo {
+public class ProdlineProduceInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Comment(comment = "代理主键")

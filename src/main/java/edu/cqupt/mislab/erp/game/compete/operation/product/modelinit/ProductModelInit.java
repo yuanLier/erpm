@@ -1,7 +1,7 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.modelinit;
 
-import edu.cqupt.mislab.erp.commons.basic.ModelInit;
-import edu.cqupt.mislab.erp.commons.basic.ModelInitService;
+import edu.cqupt.mislab.erp.commons.basic.modelinit.ModelInit;
+import edu.cqupt.mislab.erp.commons.basic.modelinit.ModelInitService;
 import edu.cqupt.mislab.erp.game.compete.operation.material.dao.MaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.material.modelinit.MaterialModelInit;
@@ -12,7 +12,6 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductB
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo.ProductBasicInfoBuilder;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatus;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo.ProductMaterialBasicInfoBuilder;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

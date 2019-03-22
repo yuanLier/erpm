@@ -1,4 +1,4 @@
-package edu.cqupt.mislab.erp.commons.basic;
+package edu.cqupt.mislab.erp.commons.basic.modelinit;
 
 import java.util.List;
 

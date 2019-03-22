@@ -1,11 +1,12 @@
 package edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity;
 
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryDevelopInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryHoldingInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author yuanyiwen
@@ -19,7 +20,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table
-public class ProdlineHoldingInfo {
+public class ProdlineHoldingInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Comment(comment = "代理主键")
@@ -38,7 +39,7 @@ public class ProdlineHoldingInfo {
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "该生产线存在于哪个厂房当中")
-    private FactoryDevelopInfo factoryDevelopInfo;
+    private FactoryHoldingInfo factoryHoldingInfo;
 
     @Basic(optional = false)
     @Enumerated(EnumType.STRING)
