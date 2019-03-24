@@ -14,11 +14,8 @@ import lombok.Data;
 @ApiModel("查看修建中的厂房详情 展示视图")
 public class FactoryDevelopDetailVo {
 
-    @ApiModelProperty("代理主键，值同FactoryHoldingInfo")
+    @ApiModelProperty("代理主键，值同FactoryDevelopingInfo")
     private Long id;
-
-    @ApiModelProperty("展示为厂房编号，实际为id后三位（位数不足时用0补齐）")
-    private String factoryNumber;
 
     @ApiModelProperty("展示为厂房规模，实际指厂房类型")
     private String factoryType;
@@ -26,10 +23,10 @@ public class FactoryDevelopDetailVo {
     @ApiModelProperty("展示为厂房类型，实际指厂房拥有状态；除租赁状态外均展示为非租赁")
     private FactoryHoldingStatus factoryHoldingStatus;
 
-    @ApiModelProperty("厂房中当前生产线数量")
-    private Integer currentCapacity;
+    @ApiModelProperty("厂房中能容纳的最大生产线数量")
+    private Integer factoryCapacity;
 
-    @ApiModelProperty("展示为厂房状态，实际为厂房修建状态")
+    @ApiModelProperty("展示为厂房状态，实际为厂房修建状态，true为建造中，false为暂停建造")
     private boolean developStatus;
 
     @ApiModelProperty("开始修建的周期数")

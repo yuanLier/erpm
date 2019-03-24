@@ -29,7 +29,7 @@ public class FactoryDetailVo {
     @ApiModelProperty("厂房中能容纳的最大生产线数量")
     private Integer factoryCapacity;
 
-    @ApiModelProperty("展示为厂房状态，实际为是否修建")
+    @ApiModelProperty("展示为厂房状态，实际为自建的厂房状态 / 租来的厂房状态（true为拥有中 / 租赁中，false为已出售 / 暂停租赁）")
     private boolean developStatus;
 
     @ApiModelProperty("修建该厂房所需要的周期数")

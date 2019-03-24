@@ -45,4 +45,17 @@ public class ProdlineHoldingInfo implements Serializable {
     @Enumerated(EnumType.STRING)
     @Comment(comment = "生产线的拥有状态")
     private ProdlineHoldingStatus prodlineHoldingStatus;
+
+
+
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "id", nullable = false)
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
 }

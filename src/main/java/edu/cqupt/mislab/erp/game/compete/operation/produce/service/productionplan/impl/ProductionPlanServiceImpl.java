@@ -1,7 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.produce.service.productionplan.impl;
 
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryHoldingInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineProduceInfoRepository;
@@ -108,7 +107,7 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
 
             factoryProdlineTypeVo.setId(factoryHoldingInfo.getId());
             factoryProdlineTypeVo.setFactoryType(factoryHoldingInfo.getFactoryBasicInfo().getFactoryType());
-            factoryProdlineTypeVo.setProdlineTypeVoList(castProdlineEntityToTypeVos(prodlineProduceInfos));
+            factoryProdlineTypeVo.setProdlineTypeVoList(EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfos, new ProdlineTypeVo()));
 
             factoryProdlineTypeVoList.add(factoryProdlineTypeVo);
         }
@@ -128,7 +127,7 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
 
         List<ProductProduceVo> productProduceVoList = new ArrayList<>();
         for (ProdlineProduceInfo prodlineProduceInfo : prodlineProduceInfoList) {
-            productProduceVoList.add(castProdlineEntityToProductProduceVo(prodlineProduceInfo));
+            productProduceVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfo));
         }
         return productProduceVoList;
     }
@@ -192,7 +191,7 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
             e.printStackTrace();
         }
 
-        return castProdlineEntityToProductProduceVo(prodlineProduceInfo);
+        return EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfo);
     }
 
     @Override
@@ -213,93 +212,13 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
             e.printStackTrace();
         }
 
-        return castProdlineEntityToProductProduceVo(prodlineProduceInfo);
+        return EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfo);
     }
 
 
     /**
      * @author yuanyiwen
-     * @description 对生产线List<ProdlineProduceInfo>转List<ProdlineTypeVo>的简单封装
-     * @date 0:24 2019/3/14
-     **/
-    private List<ProdlineTypeVo> castProdlineEntityToTypeVos(List<ProdlineProduceInfo> prodlineProduceInfoList) {
-
-        if(prodlineProduceInfoList == null) {
-            return new ArrayList<>();
-        }
-
-        // 将Entity集转化为Vo集
-        List<ProdlineTypeVo> prodlineTypeVoList = new ArrayList<>();
-        for (ProdlineProduceInfo prodlineProduceInfo : prodlineProduceInfoList) {
-            ProdlineTypeVo prodlineTypeVo = new ProdlineTypeVo();
-
-            prodlineTypeVo.setId(prodlineProduceInfo.getId());
-            prodlineTypeVo.setProdlineType(prodlineProduceInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineType());
-
-            prodlineTypeVoList.add(prodlineTypeVo);
-        }
-
-        return prodlineTypeVoList;
-    }
-
-
-    /**
-     * @author yuanyiwen
-     * @description 对生产线List<ProdlineProduceInfo>转List<ProdlineProduceDisplayVo>的简单封装
-     * @date 9:48 2019/3/15
-     **/
-    private List<ProdlineProduceDisplayVo> castProdlineProduceEntityToDisplayVos(List<ProdlineProduceInfo> prodlineProduceInfoList) {
-
-        if(prodlineProduceInfoList == null) {
-            return new ArrayList<>();
-        }
-
-        // 将生产线entity集转换为vo集
-        List<ProdlineProduceDisplayVo> prodlineProduceDisplayVoList = new ArrayList<>();
-        for (ProdlineProduceInfo prodlineProduceInfo : prodlineProduceInfoList) {
-            prodlineProduceDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfo, new ProdlineProduceDisplayVo()));
-        }
-        return prodlineProduceDisplayVoList;
-    }
-
-    /**
-     * @author yuanyiwen
-     * @description 对生产线List<ProdlineDevelopInfo>转List<ProdlineDevelopDisplayVo>的简单封装
-     * @date 15:58 2019/3/19
-     **/
-    private List<ProdlineDevelopDisplayVo> castProdlineDevelopEntityToDisplayVos(List<ProdlineDevelopInfo> prodlineDevelopInfoList) {
-        if(prodlineDevelopInfoList == null) {
-            return new ArrayList<>();
-        }
-
-        List<ProdlineDevelopDisplayVo> prodlineDevelopDisplayVoList = new ArrayList<>();
-        for(ProdlineDevelopInfo prodlineDevelopInfo : prodlineDevelopInfoList) {
-            prodlineDevelopDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(prodlineDevelopInfo));
-        }
-
-        return prodlineDevelopDisplayVoList;
-    }
-
-
-    /**
-     * @author yuanyiwen
-     * @description 对ProdlineProduceInfo转ProductProduceVo的简单封装
-     * @date 11:55 2019/3/16
-     **/
-    private ProductProduceVo castProdlineEntityToProductProduceVo(ProdlineProduceInfo prodlineProduceInfo) {
-
-        ProductProduceVo productProduceVo = new ProductProduceVo();
-
-        productProduceVo.setId(prodlineProduceInfo.getId());
-        productProduceVo.setProdlineType(prodlineProduceInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineType());
-        productProduceVo.setFactoryNumber(prodlineProduceInfo.getProdlineHoldingInfo().getFactoryHoldingInfo().getFactoryBasicInfo().getFactoryNumber());
-
-        return productProduceVo;
-    }
-
-    /**
-     * @author yuanyiwen
-     * @description
+     * @description 对FactoryHoldingInfo转FactoryDisplayVo的简单封装
      * @date 19:54 2019/3/22
      **/
     private FactoryDisplayVo castFactoryHoldingEntityToDisplayVo(FactoryHoldingInfo factoryHoldingInfo) {
@@ -309,9 +228,9 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
         List<ProdlineDevelopInfo> prodlineDevelopInfoList = prodlineDevelopInfoRepository.findByProdlineHoldingInfo_FactoryHoldingInfo_Id(factoryHoldingInfo.getId());
 
         // 将生产状态生产线转换为vo集
-        List<ProdlineProduceDisplayVo> prodlineProduceDisplayVoList = castProdlineProduceEntityToDisplayVos(prodlineProduceInfoList);
+        List<ProdlineProduceDisplayVo> prodlineProduceDisplayVoList = EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfoList, new ProdlineProduceDisplayVo());
         // 将安装状态生产线转换为vo集
-        List<ProdlineDevelopDisplayVo> prodlineDevelopDisplayVoList = castProdlineDevelopEntityToDisplayVos(prodlineDevelopInfoList);
+        List<ProdlineDevelopDisplayVo> prodlineDevelopDisplayVoList = EntityVoUtil.copyFieldsFromEntityToVo(prodlineDevelopInfoList, new ProdlineDevelopDisplayVo());
 
         return EntityVoUtil.copyFieldsFromEntityToVo(factoryHoldingInfo, prodlineProduceDisplayVoList, prodlineDevelopDisplayVoList);
     }

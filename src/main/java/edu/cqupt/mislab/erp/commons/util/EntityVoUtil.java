@@ -5,14 +5,17 @@ import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryHoldingInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryHoldingStatus;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryDetailVo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryDevelopDetailVo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryDevelopDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineProduceInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineDetailVo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineDevelopDisplayVo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineProduceDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
@@ -24,6 +27,7 @@ import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailInfoVo;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import edu.cqupt.mislab.erp.user.model.vo.UserStudentInfoBasicVo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -147,33 +151,6 @@ public abstract class EntityVoUtil {
         return productDisplayVo;
     }
 
-    public static FactoryDisplayVo copyFieldsFromEntityToVo(FactoryHoldingInfo factoryHoldingInfo, List<ProdlineProduceDisplayVo> prodlineProduceDisplayVoList, List<ProdlineDevelopDisplayVo> prodlineDevelopDisplayVoList) {
-
-        FactoryDisplayVo factoryDisplayVo = new FactoryDisplayVo();
-
-        FactoryBasicInfo factoryBasicInfo = factoryHoldingInfo.getFactoryBasicInfo();
-
-        factoryDisplayVo.setId(factoryHoldingInfo.getId());
-
-        // 厂房最大容量
-        factoryDisplayVo.setFactoryCapacity(factoryBasicInfo.getFactoryCapacity());
-        // 厂房的当前容量
-        factoryDisplayVo.setCurrentCapacity(prodlineDevelopDisplayVoList.size()+prodlineProduceDisplayVoList.size());
-        // 厂房拥有状态（自建的：拥有中 / 租来的：租赁中）
-        factoryDisplayVo.setFactoryHoldingStatus(factoryHoldingInfo.getFactoryHoldingStatus());
-        // 厂房编号，取的是厂房id后三位，不足位补0
-        factoryDisplayVo.setFactoryNumber(NumberFormatUtil.factoryNumberFormat(factoryHoldingInfo.getId()));
-        // 厂房拥有状态（已修建or已出售 / 租赁中or租赁）
-        factoryDisplayVo.setDevelopStatus(factoryHoldingInfo.isEnable());
-        // 厂房类型
-        factoryDisplayVo.setFactoryType(factoryBasicInfo.getFactoryType());
-        // 生产中的生产线
-        factoryDisplayVo.setProdlineProduceDisplayVoList(prodlineProduceDisplayVoList);
-        // 修建中的生产线
-        factoryDisplayVo.setProdlineDevelopDisplayVoList(prodlineDevelopDisplayVoList);
-
-        return factoryDisplayVo;
-    }
 
     /**
      * @author yuanyiwen
@@ -196,6 +173,7 @@ public abstract class EntityVoUtil {
 
         return prodlineProduceDisplayVo;
     }
+
 
     public static ProdlineDetailVo copyFieldsFromEntityToVo(ProdlineProduceInfo prodlineProduceInfo, ProdlineDetailVo flag) {
         ProdlineDetailVo prodlineDetailVo = new ProdlineDetailVo();
@@ -247,5 +225,174 @@ public abstract class EntityVoUtil {
         return prodlineDevelopDisplayVo;
     }
 
+
+    public static FactoryDisplayVo copyFieldsFromEntityToVo(FactoryHoldingInfo factoryHoldingInfo, List<ProdlineProduceDisplayVo> prodlineProduceDisplayVoList, List<ProdlineDevelopDisplayVo> prodlineDevelopDisplayVoList) {
+
+        FactoryDisplayVo factoryDisplayVo = new FactoryDisplayVo();
+
+        FactoryBasicInfo factoryBasicInfo = factoryHoldingInfo.getFactoryBasicInfo();
+
+        factoryDisplayVo.setId(factoryHoldingInfo.getId());
+
+        // 厂房最大容量
+        factoryDisplayVo.setFactoryCapacity(factoryBasicInfo.getFactoryCapacity());
+        // 厂房的当前容量
+        factoryDisplayVo.setCurrentCapacity(prodlineDevelopDisplayVoList.size()+prodlineProduceDisplayVoList.size());
+        // 厂房拥有状态（自建的：拥有中 / 租来的：租赁中）
+        factoryDisplayVo.setFactoryHoldingStatus(factoryHoldingInfo.getFactoryHoldingStatus());
+        // 厂房编号，取的是厂房id后三位，不足位补0
+        factoryDisplayVo.setFactoryNumber(NumberFormatUtil.factoryNumberFormat(factoryHoldingInfo.getId()));
+        // 厂房拥有状态（已修建or已出售 / 租赁中or租赁）
+        factoryDisplayVo.setDevelopStatus(factoryHoldingInfo.isEnable());
+        // 厂房类型
+        factoryDisplayVo.setFactoryType(factoryBasicInfo.getFactoryType());
+        // 生产中的生产线
+        factoryDisplayVo.setProdlineProduceDisplayVoList(prodlineProduceDisplayVoList);
+        // 修建中的生产线
+        factoryDisplayVo.setProdlineDevelopDisplayVoList(prodlineDevelopDisplayVoList);
+
+        return factoryDisplayVo;
+    }
+
+
+    public static FactoryDetailVo copyFieldsFromEntityToVo(FactoryHoldingInfo factoryHoldingInfo) {
+        FactoryDetailVo factoryDetailVo = new FactoryDetailVo();
+
+        FactoryBasicInfo factoryBasicInfo = factoryHoldingInfo.getFactoryBasicInfo();
+
+        factoryDetailVo.setId(factoryHoldingInfo.getId());
+
+        // 展示为厂房状态，实际为自建的厂房状态 / 租来的厂房状态（true为拥有中 / 租赁中，false为已出售 / 暂停租赁）
+        factoryDetailVo.setDevelopStatus(factoryHoldingInfo.isEnable());
+        // 厂房容量
+        factoryDetailVo.setFactoryCapacity(factoryBasicInfo.getFactoryCapacity());
+        // 厂房建造完成后每期的折旧费用
+        factoryDetailVo.setFactoryDepreciation(factoryBasicInfo.getFactoryDepreciation());
+        // 厂房的拥有状态
+        factoryDetailVo.setFactoryHoldingStatus(factoryHoldingInfo.getFactoryHoldingStatus());
+        // 厂房修建完成后每期的维护费用
+        factoryDetailVo.setFactoryMaintainCost(factoryBasicInfo.getFactoryMaintainCost());
+        // 修建该厂房每期所需要的费用
+        factoryDetailVo.setFactoryMakeCost(factoryBasicInfo.getFactoryMakeCost());
+        // 修建该厂房所需要的周期数
+        factoryDetailVo.setFactoryMakePeriod(factoryBasicInfo.getFactoryMakePeriod());
+        // 厂房编号
+        factoryDetailVo.setFactoryNumber(factoryBasicInfo.getFactoryNumber());
+        // 厂房类型
+        factoryDetailVo.setFactoryType(factoryBasicInfo.getFactoryType());
+
+        return factoryDetailVo;
+    }
+
+
+    /**
+     * @author yuanyiwen
+     * @description flag为返回类型，防止重载冲突
+     * @date 15:34 2019/3/24
+     **/
+    public static FactoryDevelopDisplayVo copyFieldsFromEntityToVo(FactoryDevelopInfo factoryDevelopInfo, FactoryDevelopDisplayVo flag) {
+        FactoryDevelopDisplayVo factoryDevelopDisplayVo = new FactoryDevelopDisplayVo();
+
+        factoryDevelopDisplayVo.setId(factoryDevelopInfo.getId());
+
+        // 厂房类型
+        factoryDevelopDisplayVo.setFactoryType(factoryDevelopInfo.getFactoryBasicInfo().getFactoryType());
+        // 厂房临时编号
+        factoryDevelopDisplayVo.setFactoryNumber(NumberFormatUtil.factoryNumberFormat(factoryDevelopInfo.getId()));
+        // 厂房容量
+        factoryDevelopDisplayVo.setFactoryCapacity(factoryDevelopInfo.getFactoryBasicInfo().getFactoryCapacity());
+        // 厂房的修建状态（true为修建中 false为暂停修建）
+        factoryDevelopDisplayVo.setDevelopStatus(factoryDevelopInfo.isEnable());
+
+        return factoryDevelopDisplayVo;
+    }
+
+
+    public static FactoryDevelopDetailVo copyFieldsFromEntityToVo(FactoryDevelopInfo factoryDevelopInfo, FactoryDevelopDetailVo flag) {
+        FactoryDevelopDetailVo factoryDevelopDetailVo = new FactoryDevelopDetailVo();
+
+        factoryDevelopDetailVo.setId(factoryDevelopInfo.getId());
+
+        // 开始建造的周期
+        factoryDevelopDetailVo.setBeginPeriod(factoryDevelopInfo.getBeginPeriod());
+        // 已经建造的周期
+        factoryDevelopDetailVo.setDevelopedPeriod(factoryDevelopInfo.getDevelopedPeriod());
+        // 厂房容量
+        factoryDevelopDetailVo.setFactoryCapacity(factoryDevelopDetailVo.getFactoryCapacity());
+        // 即非租赁
+        factoryDevelopDetailVo.setFactoryHoldingStatus(FactoryHoldingStatus.HOLDING);
+        // 厂房建造所需要的总周期
+        factoryDevelopDetailVo.setFactoryMakePeriod(factoryDevelopInfo.getFactoryBasicInfo().getFactoryMakePeriod());
+        // 厂房的修建情况（true修建中 false暂停修建）
+        factoryDevelopDetailVo.setDevelopStatus(factoryDevelopInfo.isEnable());
+        // 厂房类型
+        factoryDevelopDetailVo.setFactoryType(factoryDevelopInfo.getFactoryBasicInfo().getFactoryType());
+
+        return factoryDevelopDetailVo;
+    }
+
+
+    /******************* 下面本来是给ProductionPlanServiceImpl自用的，但是由于某种不可抗力被挪到这里来了 ************************/
+
+    public static List<ProdlineTypeVo> copyFieldsFromEntityToVo(List<ProdlineProduceInfo> prodlineProduceInfoList, ProdlineTypeVo flag) {
+
+        if(prodlineProduceInfoList == null) {
+            return new ArrayList<>();
+        }
+
+        List<ProdlineTypeVo> prodlineTypeVoList = new ArrayList<>();
+        for (ProdlineProduceInfo prodlineProduceInfo : prodlineProduceInfoList) {
+            ProdlineTypeVo prodlineTypeVo = new ProdlineTypeVo();
+
+            prodlineTypeVo.setId(prodlineProduceInfo.getId());
+            prodlineTypeVo.setProdlineType(prodlineProduceInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineType());
+
+            prodlineTypeVoList.add(prodlineTypeVo);
+        }
+
+        return prodlineTypeVoList;
+    }
+
+
+    public static List<ProdlineProduceDisplayVo> copyFieldsFromEntityToVo(List<ProdlineProduceInfo> prodlineProduceInfoList, ProdlineProduceDisplayVo flag) {
+
+        if(prodlineProduceInfoList == null) {
+            return new ArrayList<>();
+        }
+
+        List<ProdlineProduceDisplayVo> prodlineProduceDisplayVoList = new ArrayList<>();
+        for (ProdlineProduceInfo prodlineProduceInfo : prodlineProduceInfoList) {
+            prodlineProduceDisplayVoList.add(copyFieldsFromEntityToVo(prodlineProduceInfo, new ProdlineProduceDisplayVo()));
+        }
+        return prodlineProduceDisplayVoList;
+    }
+
+
+    public static List<ProdlineDevelopDisplayVo> copyFieldsFromEntityToVo(List<ProdlineDevelopInfo> prodlineDevelopInfoList, ProdlineDevelopDisplayVo flag) {
+        if(prodlineDevelopInfoList == null) {
+            return new ArrayList<>();
+        }
+
+        List<ProdlineDevelopDisplayVo> prodlineDevelopDisplayVoList = new ArrayList<>();
+        for(ProdlineDevelopInfo prodlineDevelopInfo : prodlineDevelopInfoList) {
+            prodlineDevelopDisplayVoList.add(copyFieldsFromEntityToVo(prodlineDevelopInfo));
+        }
+
+        return prodlineDevelopDisplayVoList;
+    }
+
+
+    public static ProductProduceVo copyFieldsFromEntityToVo(ProdlineProduceInfo prodlineProduceInfo) {
+
+        ProductProduceVo productProduceVo = new ProductProduceVo();
+
+        productProduceVo.setId(prodlineProduceInfo.getId());
+        productProduceVo.setProdlineType(prodlineProduceInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineType());
+        productProduceVo.setFactoryNumber(prodlineProduceInfo.getProdlineHoldingInfo().getFactoryHoldingInfo().getFactoryBasicInfo().getFactoryNumber());
+
+        return productProduceVo;
+    }
+
+    /******************************* 不可抗力影响结束；最后还是统一成了重载，虽然改的比较粗糙 ***********************************/
 
 }

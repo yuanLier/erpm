@@ -80,7 +80,8 @@ public class ProdlineBasicInfo implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProdlineBasicInfo that = (ProdlineBasicInfo) o;
-        return Objects.equals(id, that.id) &&
+        return enable == that.enable &&
+                Objects.equals(id, that.id) &&
                 Objects.equals(ProdlineType, that.ProdlineType) &&
                 Objects.equals(prodlineSetupPeriodPrice, that.prodlineSetupPeriodPrice) &&
                 Objects.equals(prodlineSetupPeriod, that.prodlineSetupPeriod) &&
@@ -91,8 +92,7 @@ public class ProdlineBasicInfo implements Serializable {
                 Objects.equals(prodlineDepreciation, that.prodlineDepreciation) &&
                 Objects.equals(prodlineSaleDelayTime, that.prodlineSaleDelayTime) &&
                 Objects.equals(extraValue, that.extraValue) &&
-                Objects.equals(extraPeriod, that.extraPeriod) &&
-                Objects.equals(enable, that.enable);
+                Objects.equals(extraPeriod, that.extraPeriod);
     }
 
     @Override

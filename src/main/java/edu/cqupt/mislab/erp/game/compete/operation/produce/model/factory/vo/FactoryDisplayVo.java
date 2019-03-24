@@ -27,7 +27,7 @@ public class FactoryDisplayVo {
     @ApiModelProperty("展示为厂房规模，实际指厂房类型")
     private String factoryType;
 
-    @ApiModelProperty("展示为厂房类型，实际指厂房拥有状态；除租赁状态外均展示为非租赁")
+    @ApiModelProperty("展示为厂房类型，实际指厂房拥有状态 ：holding自建的 / leasing租来的")
     private FactoryHoldingStatus factoryHoldingStatus;
 
     @ApiModelProperty("厂房中能容纳的最大生产线数量")
@@ -36,7 +36,7 @@ public class FactoryDisplayVo {
     @ApiModelProperty("厂房中当前容纳的生产线数量")
     private Integer currentCapacity;
 
-    @ApiModelProperty("展示为厂房状态，实际为厂房修建状态")
+    @ApiModelProperty("展示为厂房状态，实际为自建的厂房状态 / 租来的厂房状态（true为拥有中 / 租赁中，false为已出售 / 暂停租赁）")
     private boolean developStatus;
 
     @ApiModelProperty("展示该厂房中的全部生产状态生产线信息")

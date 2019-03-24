@@ -42,7 +42,7 @@ public interface ProductionPlanService {
 
     /**
      * @author yuanyiwen
-     * @description 查看产品的某一生产情况，即根据生产线生产id获取厂房及厂房中全部生产线信息
+     * @description 查看产品的某一生产情况，即根据生产线生产id获取厂房及厂房中全部生产线信息（生产线包括生产中的和修建中的）
      * @date 18:12 2019/3/12
      **/
     FactoryDisplayVo getFactoryDisplayVo(Long prodlineProduceId);

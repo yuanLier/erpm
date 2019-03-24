@@ -12,6 +12,7 @@ import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessRes
 
 @Api
 @CrossOrigin
+@Validated
 @RestController
 @RequestMapping("/game/compete/operation/market")
 public class MarketController {
