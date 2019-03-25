@@ -29,7 +29,7 @@ public class ProdlineBasicInfo implements Serializable {
 
     @Column(nullable = false, updatable = false)
     @Comment(comment = "生产线类型")
-    private String ProdlineType;
+    private String prodlineType;
 
     @Column(nullable = false, updatable = false)
     @Comment(comment = "生产线每个安装周期的金额")
@@ -82,7 +82,7 @@ public class ProdlineBasicInfo implements Serializable {
         ProdlineBasicInfo that = (ProdlineBasicInfo) o;
         return enable == that.enable &&
                 Objects.equals(id, that.id) &&
-                Objects.equals(ProdlineType, that.ProdlineType) &&
+                Objects.equals(prodlineType, that.prodlineType) &&
                 Objects.equals(prodlineSetupPeriodPrice, that.prodlineSetupPeriodPrice) &&
                 Objects.equals(prodlineSetupPeriod, that.prodlineSetupPeriod) &&
                 Objects.equals(prodlineChangePeriod, that.prodlineChangePeriod) &&
@@ -98,6 +98,6 @@ public class ProdlineBasicInfo implements Serializable {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, ProdlineType, prodlineSetupPeriodPrice, prodlineSetupPeriod, prodlineChangePeriod, prodlineChangeCost, prodlineMainCost, prodlineStumpcost, prodlineDepreciation, prodlineSaleDelayTime, extraValue, extraPeriod, enable);
+        return Objects.hash(id, prodlineType, prodlineSetupPeriodPrice, prodlineSetupPeriod, prodlineChangePeriod, prodlineChangeCost, prodlineMainCost, prodlineStumpcost, prodlineDepreciation, prodlineSaleDelayTime, extraValue, extraPeriod, enable);
     }
 }

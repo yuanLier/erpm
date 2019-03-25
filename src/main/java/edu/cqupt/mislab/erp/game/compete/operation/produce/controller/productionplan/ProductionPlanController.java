@@ -91,10 +91,10 @@ public class ProductionPlanController {
 
     @ApiOperation(value = "查看产品的某一生产情况")
     @GetMapping("/factory/display/get")
-    public WebResponseVo<FactoryDisplayVo> getFactoryDisplayVo(@Exist(repository = FactoryDevelopInfoRepository.class)
-                                                                       @RequestParam Long factoryId) {
+    public WebResponseVo<FactoryDisplayVo> getFactoryDisplayVo(@Exist(repository = ProdlineProduceInfoRepository.class)
+                                                                       @RequestParam Long prodlineProduceId) {
 
-        return toSuccessResponseVoWithData(productionPlanService.getFactoryDisplayVo(factoryId));
+        return toSuccessResponseVoWithData(productionPlanService.getFactoryDisplayVo(prodlineProduceId));
     }
 
 

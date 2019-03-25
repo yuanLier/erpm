@@ -236,22 +236,27 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         // 能出售的肯定是已经建好的厂房，所以首先获取这个厂房的信息
         FactoryHoldingInfo factoryHoldingInfo = factoryHoldingInfoRepository.findOne(factoryId);
 
-        List<ProdlineProduceInfo> prodlineProduceInfoList;
-
         // 判断该厂房中是否存在正在生产的生产线信息
-        prodlineProduceInfoList = prodlineProduceInfoRepository.findByProdlineHoldingInfo_FactoryHoldingInfo_IdAndProdlineProduceStatus(factoryId, ProdlineProduceStatus.PRODUCING);
+        List<ProdlineProduceInfo> prodlineProduceInfoList = prodlineProduceInfoRepository.findByProdlineHoldingInfo_FactoryHoldingInfo_IdAndProdlineProduceStatus(factoryId, ProdlineProduceStatus.PRODUCING);
         if(prodlineProduceInfoList.size() != 0) {
             return "生产线运作中，无法出售厂房，请先停止生产";
         }
 
         // 判断该厂房中是否存在可用生产线
-        prodlineProduceInfoList = prodlineProduceInfoRepository.findByProdlineHoldingInfo_FactoryHoldingInfo_Id(factoryId);
-        if(prodlineProduceInfoList.size() != 0) {
+        List<ProdlineHoldingInfo> prodlineHoldingInfoList = prodlineHoldingInfoRepository.findByFactoryHoldingInfo_IdAndProdlineHoldingStatus(factoryId, ProdlineHoldingStatus.PRODUCING);
+        if(prodlineHoldingInfoList.size() != 0) {
             return "厂房中存在可用生产线，无法出售厂房，请先出售全部建造完成的生产线";
         }
 
         // 将enable设为false，表示该厂房（且一定是自建的）已出售
         factoryHoldingInfo.setEnable(false);
+
+        // 保存修改
+        try {
+            factoryHoldingInfoRepository.save(factoryHoldingInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 //        其实我很不想让它返回这个微妙的null，但是就这样叭o(´^｀)o
         return null;
@@ -268,7 +273,16 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         }
 
         // 将生产线生产状态设置为已出售
-        prodlineProduceInfo.getProdlineHoldingInfo().setProdlineHoldingStatus(ProdlineHoldingStatus.SELLED);
+        ProdlineHoldingInfo prodlineHoldingInfo = prodlineProduceInfo.getProdlineHoldingInfo();
+        prodlineHoldingInfo.setProdlineHoldingStatus(ProdlineHoldingStatus.SELLED);
+
+        // 保存修改
+        try {
+            prodlineHoldingInfoRepository.save(prodlineHoldingInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
 //        同理返回这个null
         return null;
