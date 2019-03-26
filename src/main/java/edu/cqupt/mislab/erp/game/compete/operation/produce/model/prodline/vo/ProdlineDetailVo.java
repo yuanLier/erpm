@@ -35,7 +35,7 @@ public class ProdlineDetailVo {
     private Double prodlineChangeCost;
 
     @ApiModelProperty("该生产线对产品生产周期的影响情况")
-    private Integer extraPeriod;
+    private Double extraPeriod;
 
     @ApiModelProperty("生产线每期的维修费用")
     private Double prodlineMainCost;

@@ -45,8 +45,8 @@ public class FactoryHoldingInfo implements Serializable {
     private Integer beginPeriod;
 
     @Basic
-    @Comment(comment = "建造花费的总周期数 / 已经租赁的总周期数")
-    private Integer developedPeriod;
+    @Comment(comment = "完成建造的周期数 / 已经租赁的总周期数")
+    private Integer endPeriod;
 
     @Basic
     @Comment(comment = "该厂房是否可用（true可用false已出售） / 该厂房是否继续租赁（true是false否）")

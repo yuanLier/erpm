@@ -277,7 +277,7 @@ public abstract class EntityVoUtil {
         // 修建该厂房所需要的周期数
         factoryDetailVo.setFactoryMakePeriod(factoryBasicInfo.getFactoryMakePeriod());
         // 厂房编号
-        factoryDetailVo.setFactoryNumber(factoryBasicInfo.getFactoryNumber());
+        factoryDetailVo.setFactoryNumber(NumberFormatUtil.factoryNumberFormat(factoryHoldingInfo.getId()));
         // 厂房类型
         factoryDetailVo.setFactoryType(factoryBasicInfo.getFactoryType());
 
@@ -388,7 +388,7 @@ public abstract class EntityVoUtil {
 
         productProduceVo.setId(prodlineProduceInfo.getId());
         productProduceVo.setProdlineType(prodlineProduceInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineType());
-        productProduceVo.setFactoryNumber(prodlineProduceInfo.getProdlineHoldingInfo().getFactoryHoldingInfo().getFactoryBasicInfo().getFactoryNumber());
+        productProduceVo.setFactoryNumber(NumberFormatUtil.factoryNumberFormat(prodlineProduceInfo.getProdlineHoldingInfo().getFactoryHoldingInfo().getId()));
 
         return productProduceVo;
     }

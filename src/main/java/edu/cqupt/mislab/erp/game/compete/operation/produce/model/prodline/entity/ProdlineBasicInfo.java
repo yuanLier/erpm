@@ -69,7 +69,7 @@ public class ProdlineBasicInfo implements Serializable {
 
     @Column(nullable = false, updatable = false)
     @Comment(comment = "该生产线对产品生产周期的影响情况")
-    private Integer extraPeriod;
+    private Double extraPeriod;
 
     @Basic(optional = false)
     @Comment(comment = "该条设置是否启用")

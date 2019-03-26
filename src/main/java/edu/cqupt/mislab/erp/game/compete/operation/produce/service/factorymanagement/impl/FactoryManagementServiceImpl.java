@@ -322,7 +322,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         // 开始租赁的周期为厂房所处企业的当前周期
         factoryHoldingInfo.setBeginPeriod(enterpriseBasicInfo.getEnterpriseCurrentPeriod());
         // 已租赁的总周期数为0
-        factoryHoldingInfo.setDevelopedPeriod(0);
+        factoryHoldingInfo.setEndPeriod(0);
         // 设置当前租赁状态为租赁中
         factoryHoldingInfo.setEnable(true);
 

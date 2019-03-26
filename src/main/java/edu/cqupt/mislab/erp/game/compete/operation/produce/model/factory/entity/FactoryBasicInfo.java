@@ -26,10 +26,6 @@ public class FactoryBasicInfo implements Serializable {
     private Long id;
 
     @Column(nullable = false, updatable = false)
-    @Comment(comment = "厂房编号")
-    private String factoryNumber;
-
-    @Column(nullable = false, updatable = false)
     @Comment(comment = "厂房类型")
     private String factoryType;
 
