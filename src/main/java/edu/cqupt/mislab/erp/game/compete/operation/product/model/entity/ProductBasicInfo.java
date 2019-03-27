@@ -1,6 +1,7 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.model.entity;
 
 import com.google.common.base.Objects;
+import edu.cqupt.mislab.erp.commons.validators.annotations.DoubleMin;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
 import lombok.*;
@@ -8,6 +9,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,37 +39,44 @@ public class ProductBasicInfo implements Serializable {
     @Comment(comment = "产品的名称,所有相同产品名称数据中，enable=false标识历史数据，反之为最新数据，每一个name最多一个enable=true")
     private String productName;
 
+    @Min(1)
     @Column(nullable = false,updatable = false)
     @Comment(comment = "产品研发的周期数，该值大于0")
-    private int productResearchPeriod;
+    private Integer productResearchPeriod;
 
+    @DoubleMin(0.01)
     @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "在产品研发过程中，每个周期需要支付的费用，该值大于0")
-    private double productResearchCost;
+    private Double productResearchCost;
 
+    @DoubleMin(0.01)
     @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "产品价格,该值大于0")
-    private double price;
+    private Double price;
 
+    @Min(1)
     @Column(nullable = false,updatable = false)
     @Comment(comment = "市场需求量,该值大于0")
-    private int mount;
+    private Integer mount;
 
+    @DoubleMin(0.01)
     @Column(nullable = false,updatable = false)
     @Comment(comment = "市场之间的单价差异,该值大于0")
-    private double priceDifference;
+    private Double priceDifference;
 
+    @Min(1)
     @Column(nullable = false,updatable = false)
     @Comment(comment = "市场之间的需求量差异,该值大于0")
-    private int mountDifference;
+    private Integer mountDifference;
 
     @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 0.00")
     @Comment(comment = "价格波动比例,该值大于0")
     private double priceFloat;
 
+    @DoubleMin(0.01)
     @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 0.00")
     @Comment(comment = "需求量波动比例,该值大于0")
-    private double mountFloat;
+    private Double mountFloat;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false,updatable = false)
@@ -76,7 +85,7 @@ public class ProductBasicInfo implements Serializable {
 
     @Basic(optional = false)
     @Comment(comment = "该数据是否被启用，当前最新数据是启用，所有的历史数据均为未启用，必须保证同一个材料信息最多只有一个Enable = true")
-    private boolean enable;
+    private Boolean enable;
 
     @Override
     public boolean equals(Object o){
@@ -85,7 +94,7 @@ public class ProductBasicInfo implements Serializable {
         if(o == null||getClass() != o.getClass())
             return false;
         ProductBasicInfo that = (ProductBasicInfo) o;
-        return productResearchPeriod == that.productResearchPeriod&&Double.compare(that.productResearchCost,productResearchCost) == 0&&Double.compare(that.price,price) == 0&&mount == that.mount&&Double.compare(that.priceDifference,priceDifference) == 0&&mountDifference == that.mountDifference&&Double.compare(that.priceFloat,priceFloat) == 0&&Double.compare(that.mountFloat,mountFloat) == 0&&enable == that.enable&&Objects.equal(id,that.id)&&Objects.equal(productName,that.productName)&&productDevelopStatus == that.productDevelopStatus;
+        return Double.compare(that.priceFloat,priceFloat) == 0&&Objects.equal(id,that.id)&&Objects.equal(productName,that.productName)&&Objects.equal(productResearchPeriod,that.productResearchPeriod)&&Objects.equal(productResearchCost,that.productResearchCost)&&Objects.equal(price,that.price)&&Objects.equal(mount,that.mount)&&Objects.equal(priceDifference,that.priceDifference)&&Objects.equal(mountDifference,that.mountDifference)&&Objects.equal(mountFloat,that.mountFloat)&&productDevelopStatus == that.productDevelopStatus&&Objects.equal(enable,that.enable);
     }
 
     @Override

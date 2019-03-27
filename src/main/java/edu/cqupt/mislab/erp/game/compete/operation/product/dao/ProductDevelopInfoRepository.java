@@ -5,6 +5,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductD
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import javax.persistence.Basic;
 import java.util.List;
 
 public interface ProductDevelopInfoRepository extends BasicRepository<ProductDevelopInfo,Long> {

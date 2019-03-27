@@ -30,12 +30,12 @@ public class ProductDevelopInfo implements Serializable {
     @Comment(comment = "代理主键")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "哪一个企业的产品研发信息")
     private EnterpriseBasicInfo enterpriseBasicInfo;
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "产品研发的基本信息")
     private ProductBasicInfo productBasicInfo;

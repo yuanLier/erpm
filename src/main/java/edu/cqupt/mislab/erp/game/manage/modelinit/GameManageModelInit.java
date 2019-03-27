@@ -81,27 +81,28 @@ public class GameManageModelInit implements ModelInit {
     private void initGameInitInfo(){
 
         //默认初始化比赛信息
-        GameInitInfo gameInitInfo = GameInitInfo.builder()
+        GameInitBasicInfo gameInitBasicInfo = GameInitBasicInfo.builder()
                 .maxEnterpriseNumber(20)
-                .maxMemberNumber(6)
-                .period(4)
+                .maxEnterpriseMemberNumber(6)
+                .periodOfOneYear(4)
                 .totalYear(5)
-                .enable(true)
+                .settingEnable(true)
+                .settingCreateTimeStamp(new Date())
                 .build();
 
-        gameInitInfo = gameInitInfoRepository.save(gameInitInfo);
+        gameInitBasicInfo = gameInitInfoRepository.save(gameInitBasicInfo);
 
         //初始化一个比赛信息
         final UserStudentInfo userStudentInfo = userStudentRepository.findByStudentAccountAndAccountEnable("S2016211050",true);
 
         GameBasicInfo gameBasicInfo = GameBasicInfo.builder()
-                .gameInitInfo(gameInitInfo)
+                .gameInitBasicInfo(gameInitBasicInfo)
                 .gameName("究极比赛")
-                .gameMaxEnterpriseNumber(gameInitInfo.getMaxEnterpriseNumber())
+                .gameMaxEnterpriseNumber(gameInitBasicInfo.getMaxEnterpriseNumber())
                 .gameCurrentYear(1)
                 .gameStatus(GameStatus.CREATE)
                 .gameCreateTime(new Date())
-                .gameCreator(userStudentInfo)
+                .userStudentInfo(userStudentInfo)
                 .build();
 
         gameBasicInfo = gameBasicInfoRepository.save(gameBasicInfo);
@@ -111,20 +112,20 @@ public class GameManageModelInit implements ModelInit {
                 .advertising(true)
                 .advertisingCost(false)
                 .gameContributionRateSure(false)
-                .enterpriseStatus(EnterpriseStatus.SURE)
-                .enterpriseCeo(userStudentInfo)
+                .enterpriseStatus(EnterpriseStatus.CREATE)
+                .userStudentInfo(userStudentInfo)
                 .enterpriseName("究极企业")
                 .enterpriseCurrentPeriod(1)
-                .gameInfo(gameBasicInfo)
-                .enterpriseMaxMemberNumber(gameInitInfo.getMaxMemberNumber())
+                .gameBasicInfo(gameBasicInfo)
+                .enterpriseMaxMemberNumber(gameInitBasicInfo.getMaxEnterpriseMemberNumber())
                 .build();
 
         enterpriseBasicInfo = enterpriseBasicInfoRepository.save(enterpriseBasicInfo);
 
         //初始化一个成员信息
         EnterpriseMemberInfo enterpriseMemberInfo = EnterpriseMemberInfo.builder()
-                .studentInfo(userStudentInfo)
-                .enterprise(enterpriseBasicInfo)
+                .userStudentInfo(userStudentInfo)
+                .enterpriseBasicInfo(enterpriseBasicInfo)
                 .gameEnterpriseRole("创建者")
                 .gameContributionRate(null)
                 .gameExperience("请填写实验报告...")

@@ -24,7 +24,7 @@ public class EnterpriseDetailInfoVo {
     @ApiModelProperty("企业的创建者Id")
     private Long ceoId;
 
-    @ApiModelProperty("实时记录各个阶段里面企业成员的个数")
+    @ApiModelProperty("企业成员的个数")
     private Integer enterpriseMemberNumber;
 
     @ApiModelProperty("企业所处于的一个状态")

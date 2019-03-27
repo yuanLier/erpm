@@ -2,10 +2,13 @@ package edu.cqupt.mislab.erp.game.manage.controller;
 
 import edu.cqupt.mislab.erp.commons.response.WebResponseUtil;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
+import edu.cqupt.mislab.erp.commons.validators.annotations.EnterpriseStatusValid;
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
+import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.dto.EnterpriseJoinDto;
 import edu.cqupt.mislab.erp.game.manage.model.dto.UserContributionRateSureDto;
+import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatus;
 import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseMemberDisplayVo;
 import edu.cqupt.mislab.erp.game.manage.service.EnterpriseMemberManageService;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
@@ -27,19 +30,20 @@ import java.util.List;
 @RequestMapping("/game/manage/enterprise/member")
 public class EnterpriseMemberManageController {
 
-    @Autowired
-    private EnterpriseMemberManageService enterpriseMemberManageService;
+    @Autowired private EnterpriseMemberManageService enterpriseMemberManageService;
 
     @ApiOperation("用户加入一个企业")
     @PostMapping("/join")
-    public WebResponseVo<String> joinOneEnterprise(@Valid @RequestBody EnterpriseJoinDto joinDto){
+    public WebResponseVo<Long> joinOneEnterprise(@Valid @RequestBody EnterpriseJoinDto joinDto){
 
         return enterpriseMemberManageService.joinOneEnterprise(joinDto);
     }
 
     @ApiOperation("用户退出一个企业")
     @DeleteMapping("/out")
-    public WebResponseVo<String> outOneEnterprise(@Exist(repository = UserStudentRepository.class) @RequestParam Long userId,@Exist(repository = EnterpriseBasicInfoRepository.class) @RequestParam Long enterpriseId){
+    public WebResponseVo<String> outOneEnterprise(
+            @UserStatusValid(isEnable = true) @RequestParam Long userId
+            ,@EnterpriseStatusValid(enterpriseStatus = EnterpriseStatus.CREATE) @RequestParam Long enterpriseId){
 
         return enterpriseMemberManageService.outOneEnterprise(userId,enterpriseId);
     }

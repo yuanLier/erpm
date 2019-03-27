@@ -8,17 +8,23 @@ server:
 spring:
   profiles:
     active: dev
+  jpa:
+#    显示程序运行中的SQL语句
+    show-sql: true
+    properties:
+      hibernate:
+#        格式化SQL语句以便于更清晰的查看运行状况
+        format_sql: true
+#        配置数据库环境方言
+        dialect: org.hibernate.dialect.MySQL5Dialect
+#        默认值即true
+    open-in-view: true
 ---
 # 开发环境数据库可以自己单独配置
 spring:
   jpa:
-    show-sql: true
     hibernate:
       ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.MySQL5Dialect
   profiles: dev
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
@@ -35,13 +41,8 @@ logging:
 # 生产环境的数据库配置不能够进行修改
 spring:
   jpa:
-    show-sql: true
     hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.MySQL5Dialect
+      ddl-auto: update
   profiles: prod
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource

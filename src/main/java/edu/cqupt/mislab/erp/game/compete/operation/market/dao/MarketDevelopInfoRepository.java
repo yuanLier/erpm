@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 
-public interface MarketDevelopInfoRepository extends BasicRepository<MarketDevelopInfo, Long>, JpaSpecificationExecutor {
+public interface MarketDevelopInfoRepository extends BasicRepository<MarketDevelopInfo, Long> {
 
     /**
      * 获取某个企业的全部市场开拓信息

@@ -2,14 +2,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.product.gamemodelinit;
 
 import edu.cqupt.mislab.erp.game.compete.basic.GameModelInit;
 import edu.cqupt.mislab.erp.game.compete.basic.impl.GameModelInitService;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoDevelopInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketDevelopInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.material.dao.GameMaterialInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.material.gamemodelinit.MaterialGameModelInit;
-import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.GameMaterialInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
@@ -17,10 +10,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductD
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo.ProductDevelopInfoBuilder;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatus;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseMemberInfo;
-import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -68,7 +58,7 @@ public class ProductGameModelInit implements GameModelInit {
                 final List<ProductBasicInfo> productBasicInfos = productBasicInfoRepository.findNewestProductBasicInfos();
 
                 //选取全部的企业
-                final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameInfo_Id(gameId);
+                final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId);
 
                 //初始化所有企业的产品基本数据信息
                 for(EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfos){

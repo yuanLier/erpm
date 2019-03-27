@@ -7,13 +7,17 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 
-public interface EnterpriseMemberInfoRepository extends JpaSpecificationExecutor, BasicRepository<EnterpriseMemberInfo, Long> {
+public interface EnterpriseMemberInfoRepository extends BasicRepository<EnterpriseMemberInfo, Long> {
 
-    boolean existsByStudentInfo_IdAndEnterprise_GameInfo_Id(Long studentId,Long gameId);//判断当前用户是否已经加入了当前比赛的某个企业
+    //判断当前用户是否已经加入了当前比赛的某个企业
+    boolean existsByUserStudentInfo_IdAndEnterpriseBasicInfo_GameBasicInfo_Id(Long studentId,Long gameId);
 
-    EnterpriseMemberInfo findByEnterprise_IdAndStudentInfo_Id(Long enterpriseId,Long userId);//查询指定的企业里面的用户数据
+    //查询指定的企业里面的用户数据
+    EnterpriseMemberInfo findByEnterpriseBasicInfo_IdAndUserStudentInfo_Id(Long enterpriseId,Long userId);
 
-    List<EnterpriseMemberInfo> findByEnterprise_Id(Long enterpriseId);//查询一个企业里面的全部成员信息
+    //查询一个企业里面的全部成员信息
+    List<EnterpriseMemberInfo> findByEnterpriseBasicInfo_Id(Long enterpriseId);
 
-    void deleteByEnterprise_Id(long enterpriseId);//删除某个企业里面的全部数据
+    //删除某个企业里面的全部数据
+    void deleteByEnterpriseBasicInfo_Id(long enterpriseId);
 }

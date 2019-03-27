@@ -5,5 +5,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.Enterprise
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import javax.persistence.Basic;
+
 public interface EnterpriseMaterialStockInfoRepository extends BasicRepository<EnterpriseMaterialStockInfo, Long> {
 }

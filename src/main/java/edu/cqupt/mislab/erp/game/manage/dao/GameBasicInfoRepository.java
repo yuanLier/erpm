@@ -12,4 +12,7 @@ public interface GameBasicInfoRepository extends BasicRepository<GameBasicInfo, 
 
     //选取处于某种状态的比赛信息
     GameBasicInfo findByIdAndGameStatus(long gameId,GameStatus gameStatus);
+
+    //选取处于某个状态的全部比赛信息
+    List<GameBasicInfo> findByGameStatus(GameStatus gameStatus);
 }

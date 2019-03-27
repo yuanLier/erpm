@@ -24,12 +24,12 @@ public class EnterpriseProductStockInfo {
     @Comment(comment = "代理主键")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "哪一个企业")
     private EnterpriseBasicInfo enterpriseBasicInfo;
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "哪一种产品")
     private ProductBasicInfo productBasicInfo;

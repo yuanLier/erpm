@@ -1,12 +1,13 @@
 package edu.cqupt.mislab.erp.game.manage.model.entity;
 
+import com.google.common.base.Objects;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.*;
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -33,55 +34,55 @@ public class GameBasicInfo implements Serializable {
     private Long id;
 
     @Column(nullable = false,updatable = false)
-    @Comment(comment = "比赛的名称，比赛名称可以重复")
+    @Comment(comment = "比赛的名称")
     private String gameName;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(updatable = false,nullable = false)
-    @Comment(comment = "比赛的创建者，拥有可以开始比赛的权利")
-    private UserStudentInfo gameCreator;
+    @Comment(comment = "比赛的创建者，拥有可以开始比赛、删除的权利")
+    private UserStudentInfo userStudentInfo;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(updatable = false,nullable = false)
     @Comment(comment = "该比赛的比赛基本数据初始化信息")
-    private GameInitInfo gameInitInfo;
+    private GameInitBasicInfo gameInitBasicInfo;
 
+    @Min(1)
     @Column(nullable = false,updatable = false)
     @Comment(comment = "这场比赛允许参加的最大企业数目，用于限制企业创建")
     private Integer gameMaxEnterpriseNumber;
 
-    @Column(nullable = false,updatable = false)
+    @Min(1)
+    @Basic(optional = false)
     @Comment(comment = "当前游戏处于哪一个年，用于比赛数据的推进")
     private Integer gameCurrentYear;
 
+    @Basic(optional = false)
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false,updatable = false)
     @Comment(comment = "比赛的状态")
     private GameStatus gameStatus;
 
     @Column(nullable = false,updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    @Comment(comment = "创建这个比赛的时间，可以用来进行比赛管理信息排序")
+    @Comment(comment = "创建这个比赛的时间")
     private Date gameCreateTime;
 
-    @OneToMany(mappedBy = "gameInfo",cascade = CascadeType.ALL)
-    private List<EnterpriseBasicInfo> enterpriseBasicInfos;//比赛企业
+    @OneToMany(mappedBy = "gameBasicInfo",cascade = CascadeType.ALL)
+    @Comment(comment = "该场比赛的所有企业数据信息")
+    private List<EnterpriseBasicInfo> enterpriseBasicInfos = new ArrayList<>();
 
     @Override
     public boolean equals(Object o){
         if(this == o)
             return true;
-
         if(o == null||getClass() != o.getClass())
             return false;
-
         GameBasicInfo that = (GameBasicInfo) o;
-
-        return new EqualsBuilder().append(id,that.id).isEquals();
+        return Objects.equal(id,that.id)&&Objects.equal(gameName,that.gameName)&&Objects.equal(gameMaxEnterpriseNumber,that.gameMaxEnterpriseNumber)&&Objects.equal(gameCurrentYear,that.gameCurrentYear)&&gameStatus == that.gameStatus&&Objects.equal(gameCreateTime,that.gameCreateTime);
     }
 
     @Override
     public int hashCode(){
-        return new HashCodeBuilder(17,37).append(id).toHashCode();
+        return Objects.hashCode(id,gameName,gameMaxEnterpriseNumber,gameCurrentYear,gameStatus,gameCreateTime);
     }
 }

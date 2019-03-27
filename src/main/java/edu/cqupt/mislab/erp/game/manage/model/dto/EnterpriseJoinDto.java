@@ -1,6 +1,7 @@
 package edu.cqupt.mislab.erp.game.manage.model.dto;
 
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
+import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
@@ -29,7 +30,7 @@ public class EnterpriseJoinDto {
 
     @NotNull
     @Min(1L)
-    @Exist(repository = UserStudentRepository.class)
+    @UserStatusValid(isEnable = true)
     @ApiModelProperty(value = "哪一个用户",required = true)
     private Long userId;
 

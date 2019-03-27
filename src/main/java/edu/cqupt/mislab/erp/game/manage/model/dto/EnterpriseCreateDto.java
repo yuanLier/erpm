@@ -1,7 +1,10 @@
 package edu.cqupt.mislab.erp.game.manage.model.dto;
 
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
+import edu.cqupt.mislab.erp.commons.validators.annotations.GameStatusValid;
+import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatus;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,15 +26,15 @@ public class EnterpriseCreateDto {
     @ApiModelProperty(value = "该企业的最大人员数量",required = true)
     private Integer maxMemberNumber;
 
-    @NotNull
     @Min(1L)
-    @Exist(repository = UserStudentRepository.class,message = "创建者ID必须存在")
+    @NotNull
+    @UserStatusValid(isEnable = true)
     @ApiModelProperty(value = "创建者的ID",required = true)
     private Long creatorId;
 
-    @NotNull
     @Min(1L)
-    @Exist(repository = GameBasicInfoRepository.class)
+    @NotNull
+    @GameStatusValid(requireStatus = GameStatus.CREATE)
     @ApiModelProperty(value = "那一场比赛",required = true)
     private Long gameId;
 }
