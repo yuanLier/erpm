@@ -61,13 +61,30 @@ public class MarketController {
     }
 
 
-    @ApiOperation(value = "修改某个市场的开拓状态")
-    @PostMapping("/market/infos/update/status")
-    public WebResponseVo<MarketDisplayVo> updateMarketStatus(@Exist(repository = MarketDevelopInfoRepository.class)
-                                                       @RequestParam Long marketDevelopId,
-                                                       @RequestParam MarketStatusEnum marketStatus) {
+    @ApiOperation(value = "开始开拓")
+    @PutMapping("/market/infos/update/start")
+    public WebResponseVo<MarketDisplayVo> startDevelopMarket(@Exist(repository = MarketDevelopInfoRepository.class)
+                                                       @RequestParam Long marketDevelopId) {
 
-        return toSuccessResponseVoWithData(marketService.updateMarketStatus(marketDevelopId, marketStatus));
+        return toSuccessResponseVoWithData(marketService.updateMarketStatus(marketDevelopId, MarketStatusEnum.DEVELOPING));
+    }
+
+
+    @ApiOperation(value = "暂停开拓")
+    @PutMapping("/market/infos/update/pause")
+    public WebResponseVo<MarketDisplayVo> updateMarketStatusToPause(@Exist(repository = MarketDevelopInfoRepository.class)
+                                                             @RequestParam Long marketDevelopId) {
+
+        return toSuccessResponseVoWithData(marketService.updateMarketStatus(marketDevelopId, MarketStatusEnum.DEVELOPPAUSE));
+    }
+
+
+    @ApiOperation(value = "继续开拓")
+    @PutMapping("/market/infos/update/develop")
+    public WebResponseVo<MarketDisplayVo> updateMarketStatusToDeveloping(@Exist(repository = MarketDevelopInfoRepository.class)
+                                                             @RequestParam Long marketDevelopId) {
+
+        return toSuccessResponseVoWithData(marketService.updateMarketStatus(marketDevelopId, MarketStatusEnum.DEVELOPING));
     }
 
 

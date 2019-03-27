@@ -61,16 +61,31 @@ public class IsoController {
     }
 
 
-    @ApiOperation(value = "修改某个iso的认证状态")
-    @PostMapping("/iso/infos/update/status")
-    public WebResponseVo<IsoDisplayVo> updateIsoStatus(@Exist(repository = IsoDevelopInfoRepository.class)
-                                                           @RequestParam Long isoDevelopId,
-                                                       @RequestParam IsoStatusEnum isoStatus) {
+    @ApiOperation(value = "开始认证")
+    @PutMapping("/iso/infos/update/start")
+    public WebResponseVo<IsoDisplayVo> startDevelopIso(@Exist(repository = IsoDevelopInfoRepository.class)
+                                                           @RequestParam Long isoDevelopId) {
 
-        return toSuccessResponseVoWithData(isoService.updateIsoStatus(isoDevelopId, isoStatus));
-
+        return toSuccessResponseVoWithData(isoService.updateIsoStatus(isoDevelopId, IsoStatusEnum.DEVELOPING));
     }
 
+
+    @ApiOperation(value = "暂停认证")
+    @PutMapping("/iso/infos/update/pause")
+    public WebResponseVo<IsoDisplayVo> updateIsoStatusToPause(@Exist(repository = IsoDevelopInfoRepository.class)
+                                                       @RequestParam Long isoDevelopId) {
+
+        return toSuccessResponseVoWithData(isoService.updateIsoStatus(isoDevelopId, IsoStatusEnum.DEVELOPPAUSE));
+    }
+
+
+    @ApiOperation(value = "继续认证")
+    @PutMapping("/iso/infos/update/develop")
+    public WebResponseVo<IsoDisplayVo> updateIsoStatusToDeveloping(@Exist(repository = IsoDevelopInfoRepository.class)
+                                                       @RequestParam Long isoDevelopId) {
+
+        return toSuccessResponseVoWithData(isoService.updateIsoStatus(isoDevelopId, IsoStatusEnum.DEVELOPING));
+    }
 
 
     @ApiOperation(value = "（管理员）修改iso基本信息")

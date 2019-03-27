@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.market.dao;
 
+import edu.cqupt.mislab.erp.commons.basic.repository.BasicRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -7,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface MarketBasicInfoRepository extends JpaRepository<MarketBasicInfo, Long> {
+public interface MarketBasicInfoRepository extends BasicRepository<MarketBasicInfo, Long> {
 
     /**
      * @Author: chuyunfei

@@ -88,7 +88,6 @@ public class ProdlineGameModelInit implements GameModelInit {
                         return null;
                     }
 
-//                    todo 如果要严肃一点就都改成get(0)好了
                     // 否则，随机选一个厂房和产品进行研发（如果初始时默认研发完成的产品or默认修建完成的厂房有多个的话，就可能每个企业不一样 是不是很刺激
                     ProductDevelopInfo productDevelopInfo = productDevelopInfoList.get(new Random().nextInt(productDevelopInfoList.size()));
                     FactoryHoldingInfo factoryHoldingInfo = factoryHoldingInfoList.get(new Random().nextInt(factoryHoldingInfoList.size()));

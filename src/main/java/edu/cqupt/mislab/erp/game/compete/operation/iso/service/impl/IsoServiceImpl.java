@@ -90,7 +90,11 @@ public class IsoServiceImpl implements IsoService {
         isoDevelopInfo.setIsoStatus(isoStatus);
 
         // 保存修改
-        isoDevelopInfoRepository.save(isoDevelopInfo);
+        try {
+            isoDevelopInfoRepository.save(isoDevelopInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // 转换为vo实体并返回
         return EntityVoUtil.copyFieldsFromEntityToVo(isoDevelopInfo);
@@ -104,7 +108,11 @@ public class IsoServiceImpl implements IsoService {
         BeanCopyUtil.copyPropertiesSimple(isoBasicDto,isoBasicInfo);
 
         // 保存修改
-        isoBasicInfo = isoBasicInfoRepository.save(isoBasicInfo);
+        try {
+            isoBasicInfo = isoBasicInfoRepository.save(isoBasicInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // 将获取了新id的info数据复制给isoBasicVo
         IsoBasicVo isoBasicVo = new IsoBasicVo();

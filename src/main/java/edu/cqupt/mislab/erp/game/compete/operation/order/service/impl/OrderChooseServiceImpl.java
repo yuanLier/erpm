@@ -28,11 +28,11 @@ public class OrderChooseServiceImpl implements OrderChooseService {
     @Autowired
     private GameOrderChooseInfoRepository gameOrderChooseInfoRepository;
 
-    /**
-     * 初始化一个比赛的某一年的订单选择顺序信息，主要是需要进行各种条件的检测
-     * @param gameId：那一场比赛
-     * @return ：是否初始化成功
-     */
+//    /**
+//     * 初始化一个比赛的某一年的订单选择顺序信息，主要是需要进行各种条件的检测
+//     * @param gameId：那一场比赛
+//     * @return ：是否初始化成功
+//     */
 //    public boolean initGameChooseOrder(long gameId){
 //
 //        //1、检查是否所有的企业的都已经推进到指定的周期

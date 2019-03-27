@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.manage.dao;
 
+import edu.cqupt.mislab.erp.commons.basic.repository.BasicRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 
-public interface EnterpriseBasicInfoRepository extends JpaSpecificationExecutor, JpaRepository<EnterpriseBasicInfo, Long> {
+public interface EnterpriseBasicInfoRepository extends JpaSpecificationExecutor, BasicRepository<EnterpriseBasicInfo, Long> {
 
     //判断某个企业是否处于某个状态
     EnterpriseBasicInfo findByIdAndEnterpriseStatus(long enterpriseId,EnterpriseStatus status);

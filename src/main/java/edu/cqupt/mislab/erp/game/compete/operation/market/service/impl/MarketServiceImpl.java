@@ -85,7 +85,11 @@ public class MarketServiceImpl implements MarketService {
         marketDevelopInfo.setMarketStatus(marketStatus);
 
         // 保存修改
-        marketDevelopInfoRepository.save(marketDevelopInfo);
+        try {
+            marketDevelopInfoRepository.save(marketDevelopInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // 转换为vo实体并返回
         return EntityVoUtil.copyFieldsFromEntityToVo(marketDevelopInfo);
@@ -98,7 +102,11 @@ public class MarketServiceImpl implements MarketService {
         BeanCopyUtil.copyPropertiesSimple(marketBasicDto,marketBasicInfo);
 
         // 保存修改
-        marketBasicInfo = marketBasicInfoRepository.save(marketBasicInfo);
+        try {
+            marketBasicInfo = marketBasicInfoRepository.save(marketBasicInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // 将获取了新id的info数据复制给marketBasicVo
         MarketBasicVo marketBasicVo = new MarketBasicVo();

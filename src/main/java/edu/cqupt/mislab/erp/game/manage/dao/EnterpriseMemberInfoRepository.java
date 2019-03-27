@@ -1,12 +1,13 @@
 package edu.cqupt.mislab.erp.game.manage.dao;
 
+import edu.cqupt.mislab.erp.commons.basic.repository.BasicRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseMemberInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 
-public interface EnterpriseMemberInfoRepository extends JpaSpecificationExecutor, JpaRepository<EnterpriseMemberInfo, Long> {
+public interface EnterpriseMemberInfoRepository extends JpaSpecificationExecutor, BasicRepository<EnterpriseMemberInfo, Long> {
 
     boolean existsByStudentInfo_IdAndEnterprise_GameInfo_Id(Long studentId,Long gameId);//判断当前用户是否已经加入了当前比赛的某个企业
 

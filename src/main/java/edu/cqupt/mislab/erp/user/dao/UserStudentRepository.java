@@ -1,12 +1,13 @@
 package edu.cqupt.mislab.erp.user.dao;
 
+import edu.cqupt.mislab.erp.commons.basic.repository.BasicRepository;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 
-public interface UserStudentRepository extends JpaSpecificationExecutor, JpaRepository<UserStudentInfo,Long> {
+public interface UserStudentRepository extends JpaSpecificationExecutor, BasicRepository<UserStudentInfo,Long> {
 
     //选择一个启用状态的学生用户
     UserStudentInfo findByIdAndAccountEnable(Long studentId,boolean accountEnable);

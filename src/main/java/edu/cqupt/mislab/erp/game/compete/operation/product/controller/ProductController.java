@@ -64,13 +64,32 @@ public class ProductController {
     }
 
 
-    @ApiOperation(value = "修改某个产品的研发状态")
-    @PutMapping("/product/infos/update/status")
-    public WebResponseVo<ProductDisplayVo> updateProductStatus(@Exist(repository = ProductDevelopInfoRepository.class)
-                                                       @RequestParam Long productDevelopId,
-                                                               @RequestParam ProductDevelopStatus productDevelopStatus) {
+    @ApiOperation(value = "开始研发")
+    @PutMapping("/product/infos/update/start")
+    public WebResponseVo<ProductDisplayVo> startDevelopProduct(@Exist(repository = ProductDevelopInfoRepository.class)
+                                                       @RequestParam Long productDevelopId) {
 
-        return toSuccessResponseVoWithData(productService.updateProductStatus(productDevelopId, productDevelopStatus));
+        return toSuccessResponseVoWithData(productService.updateProductStatus(productDevelopId, ProductDevelopStatus.DEVELOPING));
+
+    }
+
+
+    @ApiOperation(value = "暂停研发")
+    @PutMapping("/product/infos/update/pause")
+    public WebResponseVo<ProductDisplayVo> updateProductStatusToPause(@Exist(repository = ProductDevelopInfoRepository.class)
+                                                               @RequestParam Long productDevelopId) {
+
+        return toSuccessResponseVoWithData(productService.updateProductStatus(productDevelopId, ProductDevelopStatus.DEVELOPPAUSE));
+
+    }
+
+
+    @ApiOperation(value = "继续研发")
+    @PutMapping("/product/infos/update/develop")
+    public WebResponseVo<ProductDisplayVo> updateProductStatusToDeveloping(@Exist(repository = ProductDevelopInfoRepository.class)
+                                                               @RequestParam Long productDevelopId) {
+
+        return toSuccessResponseVoWithData(productService.updateProductStatus(productDevelopId, ProductDevelopStatus.DEVELOPING));
 
     }
 
