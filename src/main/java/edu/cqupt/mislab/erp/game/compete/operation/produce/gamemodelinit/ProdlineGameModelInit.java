@@ -73,7 +73,7 @@ public class ProdlineGameModelInit implements GameModelInit {
                 final ProdlineBasicInfo prodlineBasicInfo = prodlineBasicInfos.get(new Random().nextInt(prodlineBasicInfos.size()));
 
                 // 选取全部的企业
-                final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameInfo_Id(gameId);
+                final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId);
 
                 // 为所有企业自带的那条厂房初始化一条生产线
                 for(EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfos){
