@@ -2,7 +2,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity;
 
 import com.google.common.base.Objects;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
-import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
 
@@ -15,13 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table
-public class EnterpriseMaterialStockInfo {
-
-    /*
-     * @Author: chuyunfei
-     * @Date: 2019/3/5 11:45
-     * @Description: 用于存储企业的历史原料信息
-     **/
+public class ProductStockInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,12 +29,12 @@ public class EnterpriseMaterialStockInfo {
 
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    @Comment(comment = "哪一种原料")
-    private MaterialBasicInfo materialBasicInfo;
+    @Comment(comment = "哪一种产品")
+    private ProductBasicInfo productBasicInfo;
 
     @Basic(optional = false)
-    @Comment(comment = "材料的数量，这个数值大于等于0")
-    private int materialNumber;
+    @Comment(comment = "产品的库存数")
+    private int productNumber;
 
     @Basic(optional = false)
     @Comment(comment = "哪一个周期的数据")
@@ -52,12 +46,12 @@ public class EnterpriseMaterialStockInfo {
             return true;
         if(o == null||getClass() != o.getClass())
             return false;
-        EnterpriseMaterialStockInfo that = (EnterpriseMaterialStockInfo) o;
-        return materialNumber == that.materialNumber&&period == that.period&&Objects.equal(id,that.id)&&Objects.equal(enterpriseBasicInfo,that.enterpriseBasicInfo)&&Objects.equal(materialBasicInfo,that.materialBasicInfo);
+        ProductStockInfo that = (ProductStockInfo) o;
+        return productNumber == that.productNumber&&period == that.period&&Objects.equal(id,that.id)&&Objects.equal(enterpriseBasicInfo,that.enterpriseBasicInfo)&&Objects.equal(productBasicInfo,that.productBasicInfo);
     }
 
     @Override
     public int hashCode(){
-        return Objects.hashCode(id,enterpriseBasicInfo,materialBasicInfo,materialNumber,period);
+        return Objects.hashCode(id,enterpriseBasicInfo,productBasicInfo,productNumber,period);
     }
 }

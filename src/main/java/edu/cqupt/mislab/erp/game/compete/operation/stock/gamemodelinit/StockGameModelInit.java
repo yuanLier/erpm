@@ -11,8 +11,8 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductD
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.EnterpriseMaterialStockInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.EnterpriseProductStockInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.EnterpriseMaterialStockInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.EnterpriseProductStockInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialStockInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.ProductStockInfo;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -106,7 +106,7 @@ public class StockGameModelInit implements GameModelInit {
 
                 //生成随机库存
                 enterpriseProductStockInfoRepository.save(
-                        EnterpriseProductStockInfo.builder()
+                        ProductStockInfo.builder()
                                 .enterpriseBasicInfo(enterpriseBasicInfo)
                                 .productBasicInfo(developInfo.getProductBasicInfo())
                                 .productNumber(productNumber)
@@ -137,7 +137,7 @@ public class StockGameModelInit implements GameModelInit {
             for(MaterialBasicInfo materialBasicInfo : materialBasicInfos){
 
                 enterpriseMaterialStockInfoRepository.save(
-                        EnterpriseMaterialStockInfo.builder()
+                        MaterialStockInfo.builder()
                         .enterpriseBasicInfo(enterpriseBasicInfo)
                         .materialBasicInfo(materialBasicInfo)
                         .materialNumber(materialNumber)

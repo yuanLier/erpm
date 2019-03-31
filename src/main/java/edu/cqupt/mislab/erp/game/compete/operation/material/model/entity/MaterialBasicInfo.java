@@ -35,11 +35,11 @@ public class MaterialBasicInfo {
 
     @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "原料的价格,该值必须大于0")
-    private double materialPrice;
+    private Double materialPrice;
 
     @Column(nullable = false,updatable = false)
     @Comment(comment = "指原料从采购开始到原料运到仓库，需要等待的周期数，该值必须大于0")
-    private int materialDelayTime;
+    private Integer materialDelayTime;
 
     @Basic(optional = false)
     @Comment(comment = "该数据是否被启用，当前最新数据是启用，所有的历史数据均为未启用，必须保证同一个材料信息最多只有一个Enable = true")

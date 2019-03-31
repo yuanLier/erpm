@@ -2,13 +2,12 @@ package edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity;
 
 import com.google.common.base.Objects;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -17,7 +16,13 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table
-public class EnterpriseProductStockInfo {
+public class MaterialStockInfo implements Serializable {
+
+    /*
+     * @Author: chuyunfei
+     * @Date: 2019/3/5 11:45
+     * @Description: 用于存储企业的历史原料信息
+     **/
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,16 +36,17 @@ public class EnterpriseProductStockInfo {
 
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    @Comment(comment = "哪一种产品")
-    private ProductBasicInfo productBasicInfo;
+    @Comment(comment = "哪一种原料")
+    private MaterialBasicInfo materialBasicInfo;
 
     @Basic(optional = false)
-    @Comment(comment = "产品的数量")
-    private int productNumber;
+    @Comment(comment = "原材料的库存数，这个数值大于等于0")
+    private Integer materialNumber;
 
+//    todo 需要保留历史库存情况不？
     @Basic(optional = false)
     @Comment(comment = "哪一个周期的数据")
-    private int period;
+    private Integer period;
 
     @Override
     public boolean equals(Object o){
@@ -48,12 +54,12 @@ public class EnterpriseProductStockInfo {
             return true;
         if(o == null||getClass() != o.getClass())
             return false;
-        EnterpriseProductStockInfo that = (EnterpriseProductStockInfo) o;
-        return productNumber == that.productNumber&&period == that.period&&Objects.equal(id,that.id)&&Objects.equal(enterpriseBasicInfo,that.enterpriseBasicInfo)&&Objects.equal(productBasicInfo,that.productBasicInfo);
+        MaterialStockInfo that = (MaterialStockInfo) o;
+        return materialNumber == that.materialNumber&&period == that.period&&Objects.equal(id,that.id)&&Objects.equal(enterpriseBasicInfo,that.enterpriseBasicInfo)&&Objects.equal(materialBasicInfo,that.materialBasicInfo);
     }
 
     @Override
     public int hashCode(){
-        return Objects.hashCode(id,enterpriseBasicInfo,productBasicInfo,productNumber,period);
+        return Objects.hashCode(id,enterpriseBasicInfo,materialBasicInfo,materialNumber,period);
     }
 }
