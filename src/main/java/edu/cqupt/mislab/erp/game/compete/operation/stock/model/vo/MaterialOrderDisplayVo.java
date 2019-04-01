@@ -19,7 +19,7 @@ public class MaterialOrderDisplayVo {
     private Long id;
 
     @ApiModelProperty("订单编号，值为id的后四位（有余则截位，不足则补0")
-    private Long orderNumber;
+    private String orderNumber;
 
     @ApiModelProperty("原材料名称")
     private String materialName;

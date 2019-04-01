@@ -9,8 +9,8 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.gamemodelinit.Product
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatus;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.EnterpriseMaterialStockInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.EnterpriseProductStockInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.MaterialStockInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.ProductStockInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialStockInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.ProductStockInfo;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
@@ -33,8 +33,8 @@ public class StockGameModelInit implements GameModelInit {
 
     @Autowired private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
     @Autowired private ProductDevelopInfoRepository productDevelopInfoRepository;
-    @Autowired private EnterpriseMaterialStockInfoRepository enterpriseMaterialStockInfoRepository;
-    @Autowired private EnterpriseProductStockInfoRepository enterpriseProductStockInfoRepository;
+    @Autowired private MaterialStockInfoRepository materialStockInfoRepository;
+    @Autowired private ProductStockInfoRepository productStockInfoRepository;
     @Autowired private GameModelInitService gameModelInitService;
     @Autowired private ProductMaterialBasicInfoRepository productMaterialBasicInfoRepository;
 
@@ -105,7 +105,7 @@ public class StockGameModelInit implements GameModelInit {
             for(ProductDevelopInfo developInfo : developInfos){
 
                 //生成随机库存
-                enterpriseProductStockInfoRepository.save(
+                productStockInfoRepository.save(
                         ProductStockInfo.builder()
                                 .enterpriseBasicInfo(enterpriseBasicInfo)
                                 .productBasicInfo(developInfo.getProductBasicInfo())
@@ -136,7 +136,7 @@ public class StockGameModelInit implements GameModelInit {
         for(EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfos){
             for(MaterialBasicInfo materialBasicInfo : materialBasicInfos){
 
-                enterpriseMaterialStockInfoRepository.save(
+                materialStockInfoRepository.save(
                         MaterialStockInfo.builder()
                         .enterpriseBasicInfo(enterpriseBasicInfo)
                         .materialBasicInfo(materialBasicInfo)

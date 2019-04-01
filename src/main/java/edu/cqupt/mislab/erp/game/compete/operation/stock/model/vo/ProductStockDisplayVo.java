@@ -20,9 +20,9 @@ public class ProductStockDisplayVo {
     private Long ProductBasicId;
 
     @ApiModelProperty("产品名称")
-    private String materialName;
+    private String productName;
 
     @ApiModelProperty("产品库存数量")
-    private Integer materialNumber;
+    private Integer productNumber;
 
 }

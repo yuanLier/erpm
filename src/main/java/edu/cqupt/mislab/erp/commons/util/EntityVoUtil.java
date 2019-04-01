@@ -18,7 +18,11 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductEnterpriseBasicVo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialOrderInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialStockInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.ProductStockInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.TransportBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.vo.*;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseMemberInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
@@ -258,7 +262,7 @@ public abstract class EntityVoUtil {
         // 厂房拥有状态（自建的：拥有中 / 租来的：租赁中）
         factoryDisplayVo.setFactoryHoldingStatus(factoryHoldingInfo.getFactoryHoldingStatus());
         // 厂房编号，取的是厂房id后三位，不足位补0
-        factoryDisplayVo.setFactoryNumber(NumberFormatUtil.factoryNumberFormat(factoryHoldingInfo.getId()));
+        factoryDisplayVo.setFactoryNumber(NumberFormatUtil.numberFormat(factoryHoldingInfo.getId(),3));
         // 厂房拥有状态（已修建or已出售 / 租赁中or租赁）
         factoryDisplayVo.setDevelopStatus(factoryHoldingInfo.isEnable());
         // 厂房类型
@@ -294,7 +298,7 @@ public abstract class EntityVoUtil {
         // 修建该厂房所需要的周期数
         factoryDetailVo.setFactoryMakePeriod(factoryBasicInfo.getFactoryMakePeriod());
         // 厂房编号
-        factoryDetailVo.setFactoryNumber(NumberFormatUtil.factoryNumberFormat(factoryHoldingInfo.getId()));
+        factoryDetailVo.setFactoryNumber(NumberFormatUtil.numberFormat(factoryHoldingInfo.getId(),3));
         // 厂房类型
         factoryDetailVo.setFactoryType(factoryBasicInfo.getFactoryType());
 
@@ -315,7 +319,7 @@ public abstract class EntityVoUtil {
         // 厂房类型
         factoryDevelopDisplayVo.setFactoryType(factoryDevelopInfo.getFactoryBasicInfo().getFactoryType());
         // 厂房临时编号
-        factoryDevelopDisplayVo.setFactoryNumber(NumberFormatUtil.factoryNumberFormat(factoryDevelopInfo.getId()));
+        factoryDevelopDisplayVo.setFactoryNumber(NumberFormatUtil.numberFormat(factoryDevelopInfo.getId(),3));
         // 厂房容量
         factoryDevelopDisplayVo.setFactoryCapacity(factoryDevelopInfo.getFactoryBasicInfo().getFactoryCapacity());
         // 厂房的修建状态（true为修建中 false为暂停修建）
@@ -361,8 +365,8 @@ public abstract class EntityVoUtil {
         for (ProdlineProduceInfo prodlineProduceInfo : prodlineProduceInfoList) {
             ProdlineTypeVo prodlineTypeVo = new ProdlineTypeVo();
 
-            prodlineTypeVo.setId(prodlineProduceInfo.getId());
             prodlineTypeVo.setProdlineType(prodlineProduceInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineType());
+            prodlineTypeVo.setId(prodlineProduceInfo.getId());
 
             prodlineTypeVoList.add(prodlineTypeVo);
         }
@@ -405,11 +409,83 @@ public abstract class EntityVoUtil {
 
         productProduceVo.setId(prodlineProduceInfo.getId());
         productProduceVo.setProdlineType(prodlineProduceInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineType());
-        productProduceVo.setFactoryNumber(NumberFormatUtil.factoryNumberFormat(prodlineProduceInfo.getProdlineHoldingInfo().getFactoryHoldingInfo().getId()));
+        productProduceVo.setFactoryNumber(NumberFormatUtil.numberFormat(prodlineProduceInfo.getProdlineHoldingInfo().getFactoryHoldingInfo().getId(),3));
 
         return productProduceVo;
     }
 
     /******************************* 不可抗力影响结束；最后还是统一成了重载，虽然改的比较粗糙 ***********************************/
 
+
+    public static MaterialOrderDisplayVo copyFieldsFromEntityToVo(MaterialOrderInfo materialOrderInfo) {
+        MaterialOrderDisplayVo materialOrderDisplayVo = new MaterialOrderDisplayVo();
+
+        materialOrderDisplayVo.setId(materialOrderInfo.getId());
+
+        // 订单编号
+        materialOrderDisplayVo.setOrderNumber(NumberFormatUtil.numberFormat(materialOrderInfo.getId(),5));
+        // 原材料名称
+        materialOrderDisplayVo.setMaterialName(materialOrderInfo.getMaterialBasicInfo().getMaterialName());
+        // 原材料单价
+        materialOrderDisplayVo.setMaterialPrice(materialOrderInfo.getMaterialBasicInfo().getMaterialPrice());
+        // 原材料购买数量
+        materialOrderDisplayVo.setPurchaseNumber(materialOrderInfo.getPurchaseNumber());
+        // 采购时间
+        materialOrderDisplayVo.setPurchaseTime(materialOrderInfo.getPurchaseTime());
+        // 运输方式
+        materialOrderDisplayVo.setTransportMethod(materialOrderInfo.getTransportMethod());
+        // 开始运货的时间
+        materialOrderDisplayVo.setTransportTime(materialOrderInfo.getTransportTime());
+        // 原材料运送状态
+        materialOrderDisplayVo.setTransportMethod(materialOrderInfo.getTransportMethod());
+
+        return materialOrderDisplayVo;
+    }
+
+    public static MaterialStockDisplayVo copyFieldsFromEntityToVo(MaterialStockInfo materialStockInfo) {
+        MaterialStockDisplayVo materialStockDisplayVo = new MaterialStockDisplayVo();
+
+        materialStockDisplayVo.setId(materialStockInfo.getId());
+
+        // 原材料基本信息id
+        materialStockDisplayVo.setMaterialBasicId(materialStockInfo.getMaterialBasicInfo().getId());
+        // 原材料名称
+        materialStockDisplayVo.setMaterialName(materialStockInfo.getMaterialBasicInfo().getMaterialName());
+        // 该材料库存数量
+        materialStockDisplayVo.setMaterialNumber(materialStockInfo.getMaterialNumber());
+        // 原材料单价
+        materialStockDisplayVo.setMaterialPrice(materialStockInfo.getMaterialBasicInfo().getMaterialPrice());
+
+        return materialStockDisplayVo;
+    }
+
+    public static ProductStockDisplayVo copyFieldsFromEntityToVo(ProductStockInfo productStockInfo) {
+        ProductStockDisplayVo productStockDisplayVo = new ProductStockDisplayVo();
+
+        productStockDisplayVo.setId(productStockInfo.getId());
+
+        // 原材料基本信息id
+        productStockDisplayVo.setProductBasicId(productStockInfo.getProductBasicInfo().getId());
+        // 原材料名称
+        productStockDisplayVo.setProductName(productStockInfo.getProductBasicInfo().getProductName());
+        // 该材料库存数量
+        productStockDisplayVo.setProductNumber(productStockInfo.getProductNumber());
+
+        return productStockDisplayVo;
+    }
+
+    public static TransportMethodDisplayVo copyFieldsFromEntityToVo(TransportBasicInfo transportBasicInfo) {
+        TransportMethodDisplayVo transportMethodDisplayVo = new TransportMethodDisplayVo();
+
+        transportMethodDisplayVo.setId(transportBasicInfo.getId());
+
+        // 运输方式
+        transportMethodDisplayVo.setTransportName(transportBasicInfo.getTransportName());
+        // 该运输方式所需要的周期数
+        transportMethodDisplayVo.setTransportPeriod(transportBasicInfo.getTransportPeriod());
+        // 每周期运费
+        transportMethodDisplayVo.setTransportPrice(transportBasicInfo.getTransportPrice());
+
+        return transportMethodDisplayVo;
+    }
 }

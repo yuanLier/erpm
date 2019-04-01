@@ -9,19 +9,20 @@ public class NumberFormatUtil {
     
     /**
      * @author yuanyiwen
-     * @description 解决厂房编号问题
+     * @description 解决各实体的编号问题
      * @date 14:56 2019/3/12
-     * @param factoryId 接收FactoryHoldingInfo中的厂房id
-     * @return 返回厂房id的后三位，不足三位的用0补齐
+     * @param id 接收一个id
+     * @param n 接收一个位数n
+     * @return 返回id的后n位作为编号，不足n位的用0补齐
      **/
-    public static String factoryNumberFormat (Long factoryId) {
-        String str = factoryId.toString();
-        String factoryNumber;
-        if (str.length() > 3) {
-            factoryNumber = str.substring(str.length()-3);
+    public static String numberFormat(Long id, int n) {
+        String str = id.toString();
+        String number;
+        if (str.length() > n) {
+            number = str.substring(str.length()-n);
         } else {
-            factoryNumber = String.format("%03d", factoryId);
+            number = String.format("%03d", id);
         }
-        return factoryNumber;
+        return number;
     }
 }
