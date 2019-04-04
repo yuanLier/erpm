@@ -2,10 +2,13 @@ package edu.cqupt.mislab.erp.game.compete.operation.stock.gamemodelinit;
 
 import edu.cqupt.mislab.erp.game.compete.basic.GameModelInit;
 import edu.cqupt.mislab.erp.game.compete.basic.impl.GameModelInitService;
+import edu.cqupt.mislab.erp.game.compete.operation.material.dao.MaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductMaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.gamemodelinit.ProductGameModelInit;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatus;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
@@ -32,11 +35,11 @@ import java.util.stream.Collectors;
 public class StockGameModelInit implements GameModelInit {
 
     @Autowired private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
-    @Autowired private ProductDevelopInfoRepository productDevelopInfoRepository;
     @Autowired private MaterialStockInfoRepository materialStockInfoRepository;
+    @Autowired private MaterialBasicInfoRepository materialBasicInfoRepository;
     @Autowired private ProductStockInfoRepository productStockInfoRepository;
+    @Autowired private ProductBasicInfoRepository productBasicInfoRepository;
     @Autowired private GameModelInitService gameModelInitService;
-    @Autowired private ProductMaterialBasicInfoRepository productMaterialBasicInfoRepository;
 
     /**
      * @Author: chuyunfei
@@ -77,70 +80,50 @@ public class StockGameModelInit implements GameModelInit {
         return null;
     }
 
-    /*
-     * @Author: chuyunfei
-     * @Date: 2019/3/5 11:59
-     * @Description: 为每一个企业初始化产品库存
+    /**
+     * @author yuanyiwen
+     * @description 为每个企业初始化产品及原材料的库存信息
+     * @date 12:45 2019/4/4
      **/
     private void initStockInfos(Long gameId){
 
-        //选取所有的企业
+        // 选取所有的企业
         final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId);
 
-        //选取企业已经研发的产品
-        final Long enterpriseId = enterpriseBasicInfos.get(0).getId();
+        // 选取当前设定下的全部产品信息
+        final List<ProductBasicInfo> productBasicInfoList = productBasicInfoRepository.findNewestProductBasicInfos();
 
-        //选取企业默认为研发成功的产品信息
-        final List<ProductDevelopInfo> developInfos = productDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndProductDevelopStatus(enterpriseId,ProductDevelopStatus.DEVELOPED);
+        // 选取当前设定下的全部原材料信息
+        final List<MaterialBasicInfo> materialBasicInfoList = materialBasicInfoRepository.findNewestMaterialBasicInfos();
 
-        if(developInfos == null || developInfos.size() == 0){
+        if(productBasicInfoList.size() == 0 || materialBasicInfoList.size() == 0){
             return;
         }
 
-        //随机生成个数
-        int productNumber = (int) Math.ceil(Math.random() * 2) + 1;
-
-        //为每一个企业附加产品库存、材料库存信息
+        // 产品库存初始化
         for(EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfos){
-            for(ProductDevelopInfo developInfo : developInfos){
+            for(ProductBasicInfo productBasicInfo : productBasicInfoList){
 
-                //生成随机库存
                 productStockInfoRepository.save(
                         ProductStockInfo.builder()
                                 .enterpriseBasicInfo(enterpriseBasicInfo)
-                                .productBasicInfo(developInfo.getProductBasicInfo())
-                                .productNumber(productNumber)
+                                .productBasicInfo(productBasicInfo)
+                                .productNumber(0)
                                 .period(1)
                                 .build()
                 );
-
             }
         }
 
-        //提取需要的材料信息并进行库存初始化
-        List<MaterialBasicInfo> materialBasicInfos = developInfos.stream()
-                .map(ProductDevelopInfo::getProductBasicInfo)
-                .map(productBasicInfo -> {
-                    //获取该产品的材料组成信息
-                    return productMaterialBasicInfoRepository.findByEnableIsTrueAndProductBasicInfo_Id(productBasicInfo.getId());
-                })
-                .flatMap(Collection::stream)
-                .map(ProductMaterialBasicInfo::getMaterialBasicInfo)
-                .distinct()
-                .collect(Collectors.toList());
-
-        //生成材料的数量
-        int materialNumber = (int) Math.ceil(Math.random() * 5) + 1;
-
-        //为企业生成原料库存原始数据
+        // 原材料库存初始化
         for(EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfos){
-            for(MaterialBasicInfo materialBasicInfo : materialBasicInfos){
+            for(MaterialBasicInfo materialBasicInfo : materialBasicInfoList){
 
                 materialStockInfoRepository.save(
                         MaterialStockInfo.builder()
                         .enterpriseBasicInfo(enterpriseBasicInfo)
                         .materialBasicInfo(materialBasicInfo)
-                        .materialNumber(materialNumber)
+                        .materialNumber(0)
                         .build()
                 );
             }
