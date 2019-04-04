@@ -50,7 +50,7 @@ public interface StockService {
      * @description 更新材料运送状态
      * @date 21:58 2019/4/1
      **/
-    MaterialOrderDisplayVo updateTransportStatus(TransportStatusEnum transportStatusEnum);
+    MaterialOrderDisplayVo updateTransportStatus(Long materialOrderId, TransportStatusEnum transportStatusEnum);
 
 
     /**
@@ -58,7 +58,7 @@ public interface StockService {
      * @description 根据材料采购订单id获取原料入库的具体信息（也就是在MaterialOrderDisplayVo的基础上多了个总额和库存数
      * @date 21:45 2019/4/1
      **/
-    List<MaterialOrderDetailVo> getMaterialOrderDetailVos(Long materialOrderId);
+    MaterialOrderDetailVo getMaterialOrderDetailVos(Long materialOrderId);
 
 
     /**
@@ -74,7 +74,7 @@ public interface StockService {
      * @description 原材料售卖（String同上
      * @date 22:05 2019/4/1
      **/
-    String sellMaterial(Long materialStockId);
+    String sellMaterial(Long materialStockId, Integer sellNumber);
 
 
     /**
@@ -82,5 +82,5 @@ public interface StockService {
      * @description 产品售卖（String用来存储可能出现的错误信息
      * @date 22:04 2019/4/1
      **/
-    String sellProduct(Long productStockId);
+    String sellProduct(Long productStockId, Integer sellNumber);
 }

@@ -14,4 +14,11 @@ public interface MaterialStockInfoRepository extends BasicRepository<MaterialSto
      * @date 21:52 2019/4/1
      **/
     List<MaterialStockInfo> findByEnterpriseBasicInfo_Id(Long enterpriseId);
+
+    /**
+     * @author yuanyiwen
+     * @description 根据原料id和企业id唯一确定一个原料存储信息
+     * @date 18:41 2019/4/3
+     **/
+    MaterialStockInfo findByEnterpriseBasicInfo_IdAndMaterialBasicInfo_Id(Long enterpriseId, Long materialId);
 }

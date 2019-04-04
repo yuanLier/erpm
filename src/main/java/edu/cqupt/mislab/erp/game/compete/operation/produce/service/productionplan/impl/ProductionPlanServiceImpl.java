@@ -70,7 +70,7 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
                 .findByProdlineHoldingInfo_EnterpriseBasicInfo_IdAndProductDevelopInfo_IdAndProdlineProduceStatus
                         (enterpriseId, productId, ProdlineProduceStatus.TOPRODUCE);
 
-        if(prodlineProduceInfoList == null) {
+        if(prodlineProduceInfoList.size() == 0) {
             return null;
         }
 
@@ -121,7 +121,7 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
                 .findByProdlineHoldingInfo_EnterpriseBasicInfo_IdAndProductDevelopInfo_IdAndProdlineProduceStatusIsNot
                         (enterpriseId, productId, ProdlineProduceStatus.TOPRODUCE);
 
-        if(prodlineProduceInfoList == null) {
+        if(prodlineProduceInfoList.size() == 0) {
             return null;
         }
 

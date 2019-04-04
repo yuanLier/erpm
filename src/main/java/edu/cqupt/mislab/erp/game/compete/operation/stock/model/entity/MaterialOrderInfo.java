@@ -39,6 +39,11 @@ public class MaterialOrderInfo implements Serializable {
     @Comment(comment = "哪一种原料")
     private MaterialBasicInfo materialBasicInfo;
 
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
+    @JoinColumn(nullable = false,updatable = false)
+    @Comment(comment = "哪一种运输方式")
+    private TransportBasicInfo transportMethod;
+
     @Basic(optional = false)
     @Comment(comment = "该种原料的采购数量")
     private Integer purchaseNumber;
@@ -47,12 +52,11 @@ public class MaterialOrderInfo implements Serializable {
     @Comment(comment = "采购时间")
     private Integer purchaseTime;
 
-    @ApiModelProperty("运输方式")
-    private TransportBasicInfo transportMethod;
-
-    @ApiModelProperty("开始运货的时间")
+    @Basic
+    @Comment(comment = "开始运货的时间")
     private Integer transportTime;
 
-    @ApiModelProperty("原材料运送状态")
+    @Basic(optional = false)
+    @Comment(comment = "原材料运送状态")
     private TransportStatusEnum transportStatus;
 }

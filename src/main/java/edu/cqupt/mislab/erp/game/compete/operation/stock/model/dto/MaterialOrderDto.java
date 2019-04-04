@@ -20,10 +20,14 @@ public class MaterialOrderDto {
     @ApiModelProperty(value = "原材料id",required = true)
     private Long materialBasicId;
 
+    @NotNull
+    @ApiModelProperty(value = "企业id",required = true)
+    private Long enterpriseId;
+
     @Min(1)
     @NotNull
     @ApiModelProperty(value = "该材料对应的采购数量",required = true)
-    private Integer purchaseQuantity;
+    private Integer purchaseNumber;
 
     @NotNull
     @ApiModelProperty(value = "运输方式的id",required = true)

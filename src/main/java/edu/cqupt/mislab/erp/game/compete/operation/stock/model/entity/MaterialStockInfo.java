@@ -43,11 +43,6 @@ public class MaterialStockInfo implements Serializable {
     @Comment(comment = "原材料的库存数，这个数值大于等于0")
     private Integer materialNumber;
 
-//    todo 需要保留历史库存情况不？
-    @Basic(optional = false)
-    @Comment(comment = "哪一个周期的数据")
-    private Integer period;
-
     @Override
     public boolean equals(Object o){
         if(this == o)
@@ -55,11 +50,11 @@ public class MaterialStockInfo implements Serializable {
         if(o == null||getClass() != o.getClass())
             return false;
         MaterialStockInfo that = (MaterialStockInfo) o;
-        return materialNumber == that.materialNumber&&period == that.period&&Objects.equal(id,that.id)&&Objects.equal(enterpriseBasicInfo,that.enterpriseBasicInfo)&&Objects.equal(materialBasicInfo,that.materialBasicInfo);
+        return materialNumber == that.materialNumber&&Objects.equal(id,that.id)&&Objects.equal(enterpriseBasicInfo,that.enterpriseBasicInfo)&&Objects.equal(materialBasicInfo,that.materialBasicInfo);
     }
 
     @Override
     public int hashCode(){
-        return Objects.hashCode(id,enterpriseBasicInfo,materialBasicInfo,materialNumber,period);
+        return Objects.hashCode(id,enterpriseBasicInfo,materialBasicInfo,materialNumber);
     }
 }
