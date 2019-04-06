@@ -23,7 +23,7 @@ public class WebResponseUtil {
      */
     public static <T> WebResponseVo<T> toSuccessResponseVoWithData(T data){
 
-        return toResponseVo(ResponseStatus.OK,null,data);
+        return toResponseVo(ResponseStatus.OK,"操作成功！",data);
     }
 
     /**
@@ -31,7 +31,7 @@ public class WebResponseUtil {
      */
     public static <T> WebResponseVo<T> toSuccessResponseVoWithNoData(){
 
-        return toResponseVo(ResponseStatus.NO_CONTENT,null,null);
+        return toResponseVo(ResponseStatus.NO_CONTENT,"操作成功！",null);
     }
 
     /**

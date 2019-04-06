@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.stock.service.impl;
 
+import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.material.dao.MaterialBasicInfoRepository;
@@ -18,6 +19,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
+import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithNoData;
 
 @Service
 public class StockServiceImpl implements StockService {
@@ -42,10 +46,6 @@ public class StockServiceImpl implements StockService {
 
         List<MaterialStockInfo> materialStockInfoList = materialStockInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId);
 
-        if(materialStockInfoList.size() == 0) {
-            return null;
-        }
-
         List<MaterialStockDisplayVo> materialStockDisplayVoList = new ArrayList<>();
         for (MaterialStockInfo materialStockInfo : materialStockInfoList) {
             materialStockDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(materialStockInfo));
@@ -58,10 +58,6 @@ public class StockServiceImpl implements StockService {
     public List<TransportMethodDisplayVo> getAllTransportVos() {
         List<TransportBasicInfo> transportBasicInfoList = transportBasicInfoRepository.findNewestTransportBasicInfos();
 
-        if(transportBasicInfoList.size() == 0) {
-            return null;
-        }
-
         List<TransportMethodDisplayVo> transportMethodDisplayVoList = new ArrayList<>();
         for (TransportBasicInfo transportBasicInfo : transportBasicInfoList) {
             transportMethodDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(transportBasicInfo));
@@ -72,11 +68,8 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public TransportMethodDisplayVo getTransportVoyId(Long transportBasicId) {
-        TransportBasicInfo transportBasicInfo = transportBasicInfoRepository.findOne(transportBasicId);
 
-        if(transportBasicInfo == null) {
-            return null;
-        }
+        TransportBasicInfo transportBasicInfo = transportBasicInfoRepository.findOne(transportBasicId);
 
         return EntityVoUtil.copyFieldsFromEntityToVo(transportBasicInfo);
     }
@@ -107,8 +100,21 @@ public class StockServiceImpl implements StockService {
                 materialOrderInfo = materialOrderInfoRepository.saveAndFlush(materialOrderInfo);
             } catch (Exception e) {
                 e.printStackTrace();
+                return null;
             }
 
+            materialOrderDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(materialOrderInfo));
+        }
+
+        return materialOrderDisplayVoList;
+    }
+
+    @Override
+    public List<MaterialOrderDisplayVo> getAllMaterialOrdersOfEnterprise(Long enterpriseId) {
+        List<MaterialOrderInfo> materialOrderInfoList = materialOrderInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId);
+
+        List<MaterialOrderDisplayVo> materialOrderDisplayVoList = new ArrayList<>();
+        for (MaterialOrderInfo materialOrderInfo : materialOrderInfoList) {
             materialOrderDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(materialOrderInfo));
         }
 
@@ -119,16 +125,13 @@ public class StockServiceImpl implements StockService {
     public MaterialOrderDisplayVo updateTransportStatus(Long materialOrderId, TransportStatusEnum transportStatusEnum) {
         MaterialOrderInfo materialOrderInfo = materialOrderInfoRepository.findOne(materialOrderId);
 
-        if(materialOrderInfo == null) {
-            return null;
-        }
-
         // 修改运输状态并进行持久化
         materialOrderInfo.setTransportStatus(transportStatusEnum);
         try {
             materialOrderInfoRepository.save(materialOrderInfo);
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
 
         return EntityVoUtil.copyFieldsFromEntityToVo(materialOrderInfo);
@@ -137,10 +140,6 @@ public class StockServiceImpl implements StockService {
     @Override
     public MaterialOrderDetailVo getMaterialOrderDetailVos(Long materialOrderId) {
         MaterialOrderInfo materialOrderInfo = materialOrderInfoRepository.findOne(materialOrderId);
-
-        if(materialOrderInfo == null) {
-            return null;
-        }
 
         MaterialOrderDisplayVo materialOrderDisplayVo = EntityVoUtil.copyFieldsFromEntityToVo(materialOrderInfo);
 
@@ -163,10 +162,6 @@ public class StockServiceImpl implements StockService {
     public List<ProductStockDisplayVo> getProductStockVosOfEnterprise(Long enterpriseId) {
         List<ProductStockInfo> productStockInfoList = productStockInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId);
 
-        if(productStockInfoList.size() == 0) {
-            return null;
-        }
-
         List<ProductStockDisplayVo> productStockDisplayVoList = new ArrayList<>();
         for (ProductStockInfo productStockInfo : productStockInfoList) {
             productStockDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(productStockInfo));
@@ -176,15 +171,11 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public String sellMaterial(Long materialStockId, Integer sellNumber) {
+    public WebResponseVo<String> sellMaterial(Long materialStockId, Integer sellNumber) {
         MaterialStockInfo materialStockInfo = materialStockInfoRepository.findOne(materialStockId);
 
-        if(materialStockInfo == null) {
-            return "原材料信息查询失败";
-        }
-
         if(materialStockInfo.getMaterialNumber() < sellNumber) {
-            return "原材料存储不足，请减少售出数量";
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "原材料存储不足，请减少售出数量");
         }
 
         // 更新库存量并进行持久化
@@ -193,22 +184,18 @@ public class StockServiceImpl implements StockService {
             materialStockInfoRepository.save(materialStockInfo);
         } catch (Exception e) {
             e.printStackTrace();
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "库存信息更新失败！请联系开发人员");
         }
 
-        // 返回null表示无错误信息
-        return null;
+        return toSuccessResponseVoWithNoData();
     }
 
     @Override
-    public String sellProduct(Long productStockId, Integer sellNumber) {
+    public WebResponseVo<String> sellProduct(Long productStockId, Integer sellNumber) {
         ProductStockInfo productStockInfo = productStockInfoRepository.findOne(productStockId);
 
-        if(productStockInfo == null) {
-            return "产品信息查询失败";
-        }
-
         if(productStockInfo.getProductNumber() < sellNumber) {
-            return "产品存储不足，请减少售出数量";
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "产品存储不足，请减少售出数量");
         }
 
         // 更新库存量并进行持久化
@@ -217,9 +204,9 @@ public class StockServiceImpl implements StockService {
             productStockInfoRepository.save(productStockInfo);
         } catch (Exception e) {
             e.printStackTrace();
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "库存信息更新失败！请联系开发人员");
         }
 
-        // 返回null表示无错误信息
-        return null;
+        return toSuccessResponseVoWithNoData();
     }
 }

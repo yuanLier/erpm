@@ -17,11 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
-import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithNoData;
 
 @Api
 @CrossOrigin
@@ -33,17 +33,12 @@ public class StockController {
     @Autowired
     private StockService stockService;
 
-
     @ApiOperation(value = "展示某一企业的原材料库存信息")
     @GetMapping("/material/info/get")
     public WebResponseVo<List<MaterialStockDisplayVo>> getMaterialStockVosOfEnterprise(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                                    @RequestParam Long enterpriseId) {
 
         List<MaterialStockDisplayVo> materialStockDisplayVoList = stockService.getMaterialStockVosOfEnterprise(enterpriseId);
-
-        if(materialStockDisplayVoList == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业无原材料库存");
-        }
 
         return toSuccessResponseVoWithData(materialStockDisplayVoList);
     }
@@ -55,7 +50,7 @@ public class StockController {
 
         List<TransportMethodDisplayVo> transportMethodDisplayVoList = stockService.getAllTransportVos();
 
-        if (transportMethodDisplayVoList == null) {
+        if (transportMethodDisplayVoList.size() == 0) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "无可用的运输方式，请联系管理员");
         }
 
@@ -69,23 +64,34 @@ public class StockController {
 
         TransportMethodDisplayVo transportMethodDisplayVo = stockService.getTransportVoyId(transportBasicId);
 
-        if(transportMethodDisplayVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "详情获取失败");
-        }
-
         return toSuccessResponseVoWithData(transportMethodDisplayVo);
     }
 
 
     @ApiOperation(value = "提交订单")
     @PostMapping("/material/order/submit")
-    public WebResponseVo<List<MaterialOrderDisplayVo>> submitMaterialOrder(@RequestBody List<MaterialOrderDto> materialOrderDtoList) {
+    public WebResponseVo<List<MaterialOrderDisplayVo>> submitMaterialOrder(@RequestBody @Valid List<MaterialOrderDto> materialOrderDtoList) {
+
+        if(materialOrderDtoList == null || materialOrderDtoList.size() == 0) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "订单未有效提交！");
+        }
 
         List<MaterialOrderDisplayVo> materialOrderDisplayVoList = stockService.submitMaterialOrder(materialOrderDtoList);
 
         if (materialOrderDisplayVoList == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "订单提交失败！");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "订单信息保存失败！请联系开发人员");
         }
+
+        return toSuccessResponseVoWithData(materialOrderDisplayVoList);
+    }
+
+
+    @ApiOperation(value = "获取一个企业的全部订单情况")
+    @PostMapping("/material/order/all/get")
+    public WebResponseVo<List<MaterialOrderDisplayVo>> getAllMaterialOrdersOfEnterprise(@Exist(repository = EnterpriseBasicInfoRepository.class)
+                                                                                            @RequestParam Long enterpriseId) {
+
+        List<MaterialOrderDisplayVo> materialOrderDisplayVoList = stockService.getAllMaterialOrdersOfEnterprise(enterpriseId);
 
         return toSuccessResponseVoWithData(materialOrderDisplayVoList);
     }
@@ -99,7 +105,7 @@ public class StockController {
         MaterialOrderDisplayVo materialOrderDisplayVo = stockService.updateTransportStatus(materialOrderId, TransportStatusEnum.CHECKED);
 
         if(materialOrderDisplayVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "审核失败！请稍后再试");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "审核失败！请联系开发人员");
         }
 
         return toSuccessResponseVoWithData(materialOrderDisplayVo);
@@ -113,10 +119,6 @@ public class StockController {
 
         MaterialOrderDetailVo materialOrderDetailVo = stockService.getMaterialOrderDetailVos(materialOrderId);
 
-        if(materialOrderDetailVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "详情获取失败");
-        }
-
         return toSuccessResponseVoWithData(materialOrderDetailVo);
     }
 
@@ -128,10 +130,6 @@ public class StockController {
 
         List<ProductStockDisplayVo> productStockDisplayVoList = stockService.getProductStockVosOfEnterprise(enterpriseId);
 
-        if(productStockDisplayVoList == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业产品库存为空");
-        }
-
         return toSuccessResponseVoWithData(productStockDisplayVoList);
     }
 
@@ -142,13 +140,11 @@ public class StockController {
                                                           @RequestParam Long materialStockId,
                                               @RequestParam Integer sellNumber) {
 
-        String errorMessage = stockService.sellMaterial(materialStockId, sellNumber);
-
-        if(errorMessage != null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, errorMessage);
+        if(sellNumber < 0) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "出售数量小于0！请重新选择");
         }
 
-        return toSuccessResponseVoWithNoData();
+        return stockService.sellMaterial(materialStockId, sellNumber);
     }
 
 
@@ -158,13 +154,10 @@ public class StockController {
                                                          @RequestParam Long productStockId,
                                              @RequestParam Integer sellNumber) {
 
-        String errorMessage = stockService.sellProduct(productStockId, sellNumber);
-
-        if(errorMessage != null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, errorMessage);
+        if(sellNumber < 0) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "出售数量小于0！请重新选择");
         }
 
-        return toSuccessResponseVoWithNoData();
+        return stockService.sellProduct(productStockId, sellNumber);
     }
-
 }

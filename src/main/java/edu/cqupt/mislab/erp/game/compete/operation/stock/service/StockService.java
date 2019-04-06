@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.stock.service;
 
+import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.dto.MaterialOrderDto;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.TransportStatusEnum;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.vo.*;
@@ -44,6 +45,14 @@ public interface StockService {
      **/
     List<MaterialOrderDisplayVo> submitMaterialOrder(List<MaterialOrderDto> materialOrderDtoList);
 
+    
+    /**
+     * @author yuanyiwen
+     * @description 获取一个企业的全部订单情况
+     * @date 21:21 2019/4/6
+     **/
+    List<MaterialOrderDisplayVo> getAllMaterialOrdersOfEnterprise(Long enterpriseId);
+
 
     /**
      * @author yuanyiwen
@@ -71,16 +80,16 @@ public interface StockService {
 
     /**
      * @author yuanyiwen
-     * @description 原材料售卖（String同上
+     * @description 原材料售卖（由于某种不可抗力必须直接返回状态码
      * @date 22:05 2019/4/1
      **/
-    String sellMaterial(Long materialStockId, Integer sellNumber);
+    WebResponseVo<String> sellMaterial(Long materialStockId, Integer sellNumber);
 
 
     /**
      * @author yuanyiwen
-     * @description 产品售卖（String用来存储可能出现的错误信息
+     * @description 产品售卖（同上
      * @date 22:04 2019/4/1
      **/
-    String sellProduct(Long productStockId, Integer sellNumber);
+    WebResponseVo<String> sellProduct(Long productStockId, Integer sellNumber);
 }

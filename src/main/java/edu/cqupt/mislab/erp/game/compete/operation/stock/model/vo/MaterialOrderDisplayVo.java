@@ -34,7 +34,7 @@ public class MaterialOrderDisplayVo {
     private Integer purchaseTime;
 
     @ApiModelProperty("运输方式")
-    private TransportBasicInfo transportMethod;
+    private TransportMethodDisplayVo transportMethod;
 
     @ApiModelProperty("开始运货的时间")
     private Integer transportTime;

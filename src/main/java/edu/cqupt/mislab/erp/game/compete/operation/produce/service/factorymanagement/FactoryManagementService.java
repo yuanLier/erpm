@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.produce.service.factorymanagement;
 
+import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineDevelopStatus;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineDevelopDisplayVo;
@@ -84,7 +85,7 @@ public interface FactoryManagementService {
      * @description 厂房出售 --> 返回String是因为感觉没啥好展示的但可能遇到的错误信息好像不少(Ｔ▽Ｔ)
      * @date 21:31 2019/3/18
      **/
-    String factorySell(Long factoryId);
+    WebResponseVo<String> factorySell(Long factoryId);
 
 
     /**
@@ -92,7 +93,7 @@ public interface FactoryManagementService {
      * @description 生产线出售（一次性收款，用prodlineProductId是因为只有修建完成的才能出售，而修建完成后即转入生产状态）
      * @date 21:37 2019/3/18
      **/
-    String prodlineSell(Long prodlineProductId);
+    WebResponseVo<String> prodlineSell(Long prodlineProductId);
 
 
     /**

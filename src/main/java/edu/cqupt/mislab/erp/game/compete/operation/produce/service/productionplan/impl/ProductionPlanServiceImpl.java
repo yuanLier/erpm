@@ -54,8 +54,8 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
         for (ProductDevelopInfo productDevelopInfo : productDevelopInfoList) {
             ProductTypeVo productTypeVo = new ProductTypeVo();
 
-            productTypeVo.setId(productDevelopInfo.getId());
             productTypeVo.setProductName(productDevelopInfo.getProductBasicInfo().getProductName());
+            productTypeVo.setId(productDevelopInfo.getId());
 
             productTypeVoList.add(productTypeVo);
         }
@@ -69,10 +69,6 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
         List<ProdlineProduceInfo> prodlineProduceInfoList = prodlineProduceInfoRepository
                 .findByProdlineHoldingInfo_EnterpriseBasicInfo_IdAndProductDevelopInfo_IdAndProdlineProduceStatus
                         (enterpriseId, productId, ProdlineProduceStatus.TOPRODUCE);
-
-        if(prodlineProduceInfoList.size() == 0) {
-            return null;
-        }
 
         // 查找生产线们所在的厂房，并将厂房-生产线们加入map
         Map<FactoryHoldingInfo, List<ProdlineProduceInfo>> factoryHoldingInfoListMap = new HashMap<>();
@@ -121,10 +117,6 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
                 .findByProdlineHoldingInfo_EnterpriseBasicInfo_IdAndProductDevelopInfo_IdAndProdlineProduceStatusIsNot
                         (enterpriseId, productId, ProdlineProduceStatus.TOPRODUCE);
 
-        if(prodlineProduceInfoList.size() == 0) {
-            return null;
-        }
-
         List<ProductProduceVo> productProduceVoList = new ArrayList<>();
         for (ProdlineProduceInfo prodlineProduceInfo : prodlineProduceInfoList) {
             productProduceVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfo));
@@ -136,10 +128,6 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
     public FactoryDisplayVo getFactoryDisplayVo(Long prodlineProduceId) {
         // 获取厂房信息
         FactoryHoldingInfo factoryHoldingInfo = prodlineProduceInfoRepository.findOne(prodlineProduceId).getProdlineHoldingInfo().getFactoryHoldingInfo();
-
-        if (factoryHoldingInfo == null) {
-            return null;
-        }
 
         // 将该厂房及厂房中全部生产线信息转换为FactoryDisplayVo并返回
         return castFactoryHoldingEntityToDisplayVo(factoryHoldingInfo);
@@ -165,20 +153,12 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
         // 根据id获取要查看的生产线信息
         ProdlineProduceInfo prodlineProduceInfo = prodlineProduceInfoRepository.findOne(prodlineId);
 
-        if(prodlineProduceInfo == null) {
-            return null;
-        }
-
         return EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfo, new ProdlineDetailVo());
     }
 
     @Override
     public ProductProduceVo productProduction(Long prodlineId) {
         ProdlineProduceInfo prodlineProduceInfo = prodlineProduceInfoRepository.findOne(prodlineId);
-
-        if(prodlineProduceInfo == null) {
-            return null;
-        }
 
         // 更新生产开始的周期
         prodlineProduceInfo.setBeginPeriod(prodlineProduceInfo.getProdlineHoldingInfo().getEnterpriseBasicInfo().getEnterpriseCurrentPeriod());
@@ -189,6 +169,7 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
             prodlineProduceInfoRepository.save(prodlineProduceInfo);
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
 
         return EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfo);
@@ -199,10 +180,6 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
 
         ProdlineProduceInfo prodlineProduceInfo = prodlineProduceInfoRepository.findOne(prodlineId);
 
-        if(prodlineProduceInfo == null) {
-            return null;
-        }
-
         // 更新生产状态
         prodlineProduceInfo.setProdlineProduceStatus(prodlineProduceStatus);
         // 保存修改
@@ -210,6 +187,7 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
             prodlineProduceInfoRepository.save(prodlineProduceInfo);
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
 
         return EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfo);

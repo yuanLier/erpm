@@ -5,7 +5,7 @@ package edu.cqupt.mislab.erp.commons.util;
  * @create 2019-03-12 14:46
  * @description 数值转换处理相关util
  */
-public class NumberFormatUtil {
+public abstract class NumberFormatUtil {
     
     /**
      * @author yuanyiwen

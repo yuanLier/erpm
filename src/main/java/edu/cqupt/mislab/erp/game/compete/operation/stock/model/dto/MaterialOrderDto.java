@@ -1,5 +1,8 @@
 package edu.cqupt.mislab.erp.game.compete.operation.stock.model.dto;
 
+import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
+import edu.cqupt.mislab.erp.game.compete.operation.material.dao.MaterialBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -16,11 +19,11 @@ import javax.validation.constraints.NotNull;
 @ApiModel("材料订单基本数据视图")
 public class MaterialOrderDto {
 
-    @NotNull
+    @Exist(repository = MaterialBasicInfoRepository.class)
     @ApiModelProperty(value = "原材料id",required = true)
     private Long materialBasicId;
 
-    @NotNull
+    @Exist(repository = EnterpriseBasicInfoRepository.class)
     @ApiModelProperty(value = "企业id",required = true)
     private Long enterpriseId;
 

@@ -48,8 +48,8 @@ public class FactoryManagementController {
     public WebResponseVo<List<ProdlineTypeVo>> getAllProdlineTypeVos() {
         List<ProdlineTypeVo> prodlineTypeVoList = factoryManagementService.getAllProdlineTypeVos();
 
-        if(prodlineTypeVoList == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "最新版本下的生产线类型获取失败");
+        if(prodlineTypeVoList.size() == 0) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "最新版本下的生产线类型获取失败，请联系管理员");
         }
 
         return toSuccessResponseVoWithData(prodlineTypeVoList);
@@ -88,7 +88,7 @@ public class FactoryManagementController {
         ProdlineDevelopDisplayVo prodlineDevelopDisplayVo = factoryManagementService.updateProdlineDevelopStatus(prodlineDevelopId, ProdlineDevelopStatus.DEVELOPPAUSE);
 
         if(prodlineDevelopDisplayVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "生产线暂停安装失败！");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "生产线暂停安装失败！请联系开发人员");
         }
 
         return toSuccessResponseVoWithData(prodlineDevelopDisplayVo);
@@ -106,12 +106,11 @@ public class FactoryManagementController {
         ProdlineDevelopDisplayVo prodlineDevelopDisplayVo = factoryManagementService.updateProdlineDevelopStatus(prodlineDevelopId, ProdlineDevelopStatus.DEVELOPING);
 
         if(prodlineDevelopDisplayVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "生产线继续安装失败！");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "生产线继续安装失败！请联系开发人员");
         }
 
         return toSuccessResponseVoWithData(prodlineDevelopDisplayVo);
     }
-
 
 
 
@@ -122,14 +121,8 @@ public class FactoryManagementController {
 
         FactoryDetailVo factoryDetailVo = factoryManagementService.getFactoryDetailVo(factoryId);
 
-        if(factoryDetailVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "厂房信息不存在！");
-        }
-
         return toSuccessResponseVoWithData(factoryDetailVo);
     }
-
-
 
 
 
@@ -139,14 +132,12 @@ public class FactoryManagementController {
 
         List<FactoryTypeVo> factoryTypeVoList = factoryManagementService.getAllFactoryTypeVos();
 
-        if(factoryTypeVoList == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "最新版本下的厂房类型获取失败");
+        if(factoryTypeVoList.size() == 0) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "最新版本下的厂房类型获取失败，请联系管理员");
         }
 
         return toSuccessResponseVoWithData(factoryTypeVoList);
     }
-
-
 
 
 
@@ -160,7 +151,7 @@ public class FactoryManagementController {
         FactoryDevelopDisplayVo factoryDevelopDisplayVo = factoryManagementService.buildFactoryOfEnterprise(enterpriseId, factoryBasicId);
 
         if(factoryDevelopDisplayVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "厂房新建失败！");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "厂房新建失败！请联系开发人员");
         }
 
         return toSuccessResponseVoWithData(factoryDevelopDisplayVo);
@@ -177,7 +168,7 @@ public class FactoryManagementController {
         FactoryDevelopDisplayVo factoryDevelopDisplayVo = factoryManagementService.updateFactoryDevelopStatus(factoryDevelopId, false);
 
         if(factoryDevelopDisplayVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "厂房暂停修建失败!");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "厂房暂停修建失败!请联系开发人员");
         }
 
         return toSuccessResponseVoWithData(factoryDevelopDisplayVo);
@@ -192,12 +183,11 @@ public class FactoryManagementController {
         FactoryDevelopDisplayVo factoryDevelopDisplayVo = factoryManagementService.updateFactoryDevelopStatus(factoryDevelopId, true);
 
         if(factoryDevelopDisplayVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "厂房继续修建失败!");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "厂房继续修建失败!请联系开发人员");
         }
 
         return toSuccessResponseVoWithData(factoryDevelopDisplayVo);
     }
-
 
 
 
@@ -208,13 +198,8 @@ public class FactoryManagementController {
 
         FactoryDevelopDetailVo factoryDevelopDetailVo = factoryManagementService.getFactoryDevelopDetailVo(factoryDevelopId);
 
-        if(factoryDevelopDetailVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "厂房信息不存在!");
-        }
-
         return toSuccessResponseVoWithData(factoryDevelopDetailVo);
     }
-
 
 
 
@@ -223,15 +208,8 @@ public class FactoryManagementController {
     public WebResponseVo<String> factorySell(@Exist(repository = FactoryHoldingInfoRepository.class)
                                                          @RequestParam Long factoryId) {
 
-        String errorMessage = factoryManagementService.factorySell(factoryId);
-
-        if(errorMessage != null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, errorMessage);
-        }
-
-        return toSuccessResponseVoWithNoData();
+        return factoryManagementService.factorySell(factoryId);
     }
-
 
 
 
@@ -240,15 +218,8 @@ public class FactoryManagementController {
     public WebResponseVo<String> prodlineSell(@Exist(repository = ProdlineProduceInfoRepository.class)
                                                           @RequestParam Long prodlineProductId) {
 
-        String errorMessage = factoryManagementService.prodlineSell(prodlineProductId);
-
-        if(errorMessage != null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, errorMessage);
-        }
-
-        return toSuccessResponseVoWithNoData();
+        return factoryManagementService.prodlineSell(prodlineProductId);
     }
-
 
 
 
@@ -258,13 +229,12 @@ public class FactoryManagementController {
 
         List<FactoryLeaseVo> factoryLeaseVoList = factoryManagementService.getAllFactoryLeaseVos();
 
-        if(factoryLeaseVoList == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "最新版本下的厂房类型获取失败");
+        if(factoryLeaseVoList.size() == 0) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "最新版本下的厂房类型获取失败，请联系管理员");
         }
 
         return toSuccessResponseVoWithData(factoryLeaseVoList);
     }
-
 
 
 
@@ -278,12 +248,11 @@ public class FactoryManagementController {
         FactoryDisplayVo factoryDisplayVo = factoryManagementService.factoryLease(factoryBasicId, enterpriseId);
 
         if(factoryDisplayVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "厂房租赁失败!");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "厂房租赁失败!请联系开发人员");
         }
 
         return toSuccessResponseVoWithData(factoryDisplayVo);
     }
-
 
 
 
@@ -295,12 +264,11 @@ public class FactoryManagementController {
         FactoryDisplayVo factoryDisplayVo = factoryManagementService.updateFactoryLeaseStatus(factoryId, false);
 
         if (factoryDisplayVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "暂停租赁失败!");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "暂停租赁失败!请联系开发人员");
         }
 
         return toSuccessResponseVoWithData(factoryDisplayVo);
     }
-
 
 
     @ApiOperation(value = "继续租赁")
@@ -311,7 +279,7 @@ public class FactoryManagementController {
         FactoryDisplayVo factoryDisplayVo = factoryManagementService.updateFactoryLeaseStatus(factoryId, true);
 
         if (factoryDisplayVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "继续租赁失败!");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "继续租赁失败!请联系开发人员");
         }
 
         return toSuccessResponseVoWithData(factoryDisplayVo);

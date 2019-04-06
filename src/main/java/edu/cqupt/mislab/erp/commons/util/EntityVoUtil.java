@@ -433,11 +433,11 @@ public abstract class EntityVoUtil {
         // 采购时间
         materialOrderDisplayVo.setPurchaseTime(materialOrderInfo.getPurchaseTime());
         // 运输方式
-        materialOrderDisplayVo.setTransportMethod(materialOrderInfo.getTransportMethod());
+        materialOrderDisplayVo.setTransportMethod(EntityVoUtil.copyFieldsFromEntityToVo(materialOrderInfo.getTransportMethod()));
         // 开始运货的时间
         materialOrderDisplayVo.setTransportTime(materialOrderInfo.getTransportTime());
         // 原材料运送状态
-        materialOrderDisplayVo.setTransportMethod(materialOrderInfo.getTransportMethod());
+        materialOrderDisplayVo.setTransportStatus(materialOrderInfo.getTransportStatus());
 
         return materialOrderDisplayVo;
     }

@@ -47,10 +47,6 @@ public class ProductionPlanController {
 
         List<ProductTypeVo> productTypeVoList = productionPlanService.getProducableProduct(enterpriseId);
 
-        if(productTypeVoList == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业没有可生产的产品");
-        }
-
         return toSuccessResponseVoWithData(productTypeVoList);
     }
 
@@ -62,11 +58,12 @@ public class ProductionPlanController {
                                                                                       @Exist(repository = ProductDevelopInfoRepository.class)
                                                                                             @RequestParam Long productId) {
 
-        List<FactoryProdlineTypeVo> factoryProdlineTypeVoList = productionPlanService.getProducableFactoryAndProdline(enterpriseId, productId);
 
-        if(factoryProdlineTypeVoList == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业没有可生产该产品的生产线");
-        }
+//        todo 想清楚到底要不要改productId!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+        List<FactoryProdlineTypeVo> factoryProdlineTypeVoList = productionPlanService.getProducableFactoryAndProdline(enterpriseId, productId);
 
         return toSuccessResponseVoWithData(factoryProdlineTypeVoList);
     }
@@ -80,10 +77,6 @@ public class ProductionPlanController {
                                                                                           @RequestParam Long productId) {
 
         List<ProductProduceVo> productProduceVoList = productionPlanService.getProductProduceVosOfOneProduct(enterpriseId, productId);
-
-        if(productProduceVoList == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业未生产该产品");
-        }
 
         return toSuccessResponseVoWithData(productProduceVoList);
     }
@@ -104,10 +97,6 @@ public class ProductionPlanController {
                                                                                  @RequestParam Long enterpriseId) {
 
         List<FactoryDisplayVo> factoryDisplayVoList = productionPlanService.getAllFactoryDisplayVos(enterpriseId);
-
-        if(factoryDisplayVoList == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "!!!∑(ﾟДﾟノ)ノ这个企业它没有厂房");
-        }
 
         return toSuccessResponseVoWithData(factoryDisplayVoList);
     }
@@ -131,7 +120,7 @@ public class ProductionPlanController {
         ProductProduceVo productProduceVo = productionPlanService.productProduction(prodlineId);
 
         if (productProduceVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "生产失败！");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "生产失败！请联系开发人员");
         }
 
         return toSuccessResponseVoWithData(productProduceVo);
@@ -144,7 +133,7 @@ public class ProductionPlanController {
         ProductProduceVo productProduceVo = productionPlanService.updateProduceStatus(prodlineId, ProdlineProduceStatus.PRODUCEPAUSE);
 
         if (productProduceVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "暂停生产 failed");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "暂停生产失败！请联系开发人员");
         }
 
         return toSuccessResponseVoWithData(productProduceVo);
@@ -158,7 +147,7 @@ public class ProductionPlanController {
         ProductProduceVo productProduceVo = productionPlanService.updateProduceStatus(prodlineId, ProdlineProduceStatus.PRODUCING);
 
         if (productProduceVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "继续生产 failed");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "继续生产失败！请联系开发人员");
         }
 
         return toSuccessResponseVoWithData(productProduceVo);
