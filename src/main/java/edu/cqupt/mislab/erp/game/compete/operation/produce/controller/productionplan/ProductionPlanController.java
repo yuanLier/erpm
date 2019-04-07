@@ -58,11 +58,6 @@ public class ProductionPlanController {
                                                                                       @Exist(repository = ProductDevelopInfoRepository.class)
                                                                                             @RequestParam Long productId) {
 
-
-//        todo 想清楚到底要不要改productId!!!!!!!!!!!!!!!!!!!!!!!
-
-
-
         List<FactoryProdlineTypeVo> factoryProdlineTypeVoList = productionPlanService.getProducableFactoryAndProdline(enterpriseId, productId);
 
         return toSuccessResponseVoWithData(factoryProdlineTypeVoList);

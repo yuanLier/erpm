@@ -216,6 +216,19 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
     }
 
     @Override
+    public List<FactoryDevelopDisplayVo> getAllFactoryDevelopVos(Long enterpriseId) {
+        // 获取企业中的全部修建中厂房
+        List<FactoryDevelopInfo> factoryDevelopInfoList = factoryDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId);
+
+        List<FactoryDevelopDisplayVo> factoryDevelopDisplayVoList = new ArrayList<>();
+        for (FactoryDevelopInfo factoryDevelopInfo : factoryDevelopInfoList) {
+            factoryDevelopDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(factoryDevelopInfo, new FactoryDevelopDisplayVo()));
+        }
+
+        return factoryDevelopDisplayVoList;
+    }
+
+    @Override
     public FactoryDevelopDetailVo getFactoryDevelopDetailVo(Long factoryDevelopId) {
         // 获取要查看的那条厂房修建信息
         FactoryDevelopInfo factoryDevelopInfo = factoryDevelopInfoRepository.findOne(factoryDevelopId);

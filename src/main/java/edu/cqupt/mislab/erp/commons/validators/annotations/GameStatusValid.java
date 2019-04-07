@@ -20,7 +20,7 @@ public @interface GameStatusValid {
      * @Description: 用于校验比赛是否处于某种状态
      **/
 
-    GameStatus requireStatus();//需要改比赛处于那种状态
+    GameStatus requireStatus();//需要该比赛处于那种状态
 
     String message() default "该比赛没有处于指定的状态";
 

@@ -71,7 +71,7 @@ public class FactoryManagementController {
         ProdlineDevelopDisplayVo prodlineDevelopDisplayVo = factoryManagementService.buildProdlineOfHoldingFactory(prodlineBasicId, productId, factoryId, enterpriseId);
 
         if(prodlineDevelopDisplayVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "生产线新建失败！");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "生产线新建失败！请联系开发人员");
         }
 
         return toSuccessResponseVoWithData(prodlineDevelopDisplayVo);
@@ -187,6 +187,18 @@ public class FactoryManagementController {
         }
 
         return toSuccessResponseVoWithData(factoryDevelopDisplayVo);
+    }
+
+
+
+    @ApiOperation(value = "获取一个企业全部修建中的厂房")
+    @GetMapping("/factory/develop/all/get")
+    public WebResponseVo<List<FactoryDevelopDisplayVo>> getAllFactoryDevelopVos(@Exist(repository = EnterpriseBasicInfoRepository.class)
+                                                                                @RequestParam Long enterpriseId) {
+
+        List<FactoryDevelopDisplayVo> factoryDevelopDisplayVoList = factoryManagementService.getAllFactoryDevelopVos(enterpriseId);
+
+        return toSuccessResponseVoWithData(factoryDevelopDisplayVoList);
     }
 
 

@@ -15,7 +15,6 @@ import java.util.List;
  */
 public interface FactoryManagementService {
 
-
     /**
      * @author yuanyiwen
      * @description 获取全部生产线类型（全部指的是当前设定下所有生产线类型），注意这里ProdlineTypeVo的id值同ProdlineBasicInfo
@@ -70,6 +69,14 @@ public interface FactoryManagementService {
      * @date 21:22 2019/3/17
      **/
     FactoryDevelopDisplayVo updateFactoryDevelopStatus(Long factoryDevelopId, boolean enable);
+
+
+    /**
+     * @author yuanyiwen
+     * @description 获取一个企业全部修建中的厂房情况
+     * @date 11:48 2019/4/7
+     **/
+    List<FactoryDevelopDisplayVo> getAllFactoryDevelopVos(Long enterpriseId);
 
 
     /**
