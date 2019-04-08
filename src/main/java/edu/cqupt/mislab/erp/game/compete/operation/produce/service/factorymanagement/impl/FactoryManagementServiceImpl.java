@@ -1,6 +1,7 @@
 package edu.cqupt.mislab.erp.game.compete.operation.produce.service.factorymanagement.impl;
 
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
+import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryDevelopInfoRepository;
@@ -16,8 +17,8 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.*;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineDevelopDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineDevelopVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineProduceDisplayVo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.service.factorymanagement.FactoryManagementService;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
@@ -63,22 +64,22 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
 
 
     @Override
-    public List<ProdlineTypeVo> getAllProdlineTypeVos() {
+    public List<ProdlineDevelopVo> getAllProdlineDevelopVos() {
         // 获取当前设定下的全部生产线信息
         List<ProdlineBasicInfo> prodlineBasicInfoList = prodlineBasicInfoRepository.findNewestProdlineBasicInfos();
 
         // 将生产线信息转化为List<ProdlineTypeVo>
-        List<ProdlineTypeVo> prodlineTypeVoList = new ArrayList<>();
+        List<ProdlineDevelopVo> prodlineDevelopVoList = new ArrayList<>();
         for (ProdlineBasicInfo prodlineBasicInfo : prodlineBasicInfoList) {
-            ProdlineTypeVo prodlineTypeVo = new ProdlineTypeVo();
 
-            prodlineTypeVo.setId(prodlineBasicInfo.getId());
-            prodlineTypeVo.setProdlineType(prodlineBasicInfo.getProdlineType());
+            ProdlineDevelopVo prodlineDevelopVo = new ProdlineDevelopVo();
 
-            prodlineTypeVoList.add(prodlineTypeVo);
+            BeanCopyUtil.copyPropertiesSimple(prodlineBasicInfo, prodlineDevelopVo);
+
+            prodlineDevelopVoList.add(prodlineDevelopVo);
         }
 
-        return prodlineTypeVoList;
+        return prodlineDevelopVoList;
     }
 
     @Override
@@ -153,22 +154,21 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
 
 
     @Override
-    public List<FactoryTypeVo> getAllFactoryTypeVos() {
+    public List<FactoryDevelopVo> getAllFactoryDevelopVos() {
         // 获取当前设定下的全部厂房信息
         List<FactoryBasicInfo> factoryBasicInfoList = factoryBasicInfoRepository.findNewestFactoryBasicInfos();
 
-        // 将生产线信息转化为List<FactoryTypeVo>
-        List<FactoryTypeVo> factoryTypeVoList = new ArrayList<>();
+        // 将生产线信息转化为List<FactoryDevelopVo>
+        List<FactoryDevelopVo> factoryDevelopVoList = new ArrayList<>();
         for (FactoryBasicInfo factoryBasicInfo : factoryBasicInfoList) {
-            FactoryTypeVo factoryTypeVo = new FactoryTypeVo();
 
-            factoryTypeVo.setId(factoryBasicInfo.getId());
-            factoryTypeVo.setFactoryType(factoryBasicInfo.getFactoryType());
+            FactoryDevelopVo factoryDevelopVo = new FactoryDevelopVo();
+            BeanCopyUtil.copyPropertiesSimple(factoryBasicInfo, factoryDevelopVo);
 
-            factoryTypeVoList.add(factoryTypeVo);
+            factoryDevelopVoList.add(factoryDevelopVo);
         }
 
-        return factoryTypeVoList;
+        return factoryDevelopVoList;
     }
 
     @Override

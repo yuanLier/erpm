@@ -4,6 +4,7 @@ import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineDevelopStatus;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineDevelopDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineDevelopVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineTypeVo;
 
 import java.util.List;
@@ -17,10 +18,10 @@ public interface FactoryManagementService {
 
     /**
      * @author yuanyiwen
-     * @description 获取全部生产线类型（全部指的是当前设定下所有生产线类型），注意这里ProdlineTypeVo的id值同ProdlineBasicInfo
+     * @description 获取全部可新建的生产线（全部指的是当前设定下所有类型生产线），注意这里ProdlineTypeVo的id值同ProdlineBasicInfo
      * @date 17:36 2019/3/17
      **/
-    List<ProdlineTypeVo> getAllProdlineTypeVos();
+    List<ProdlineDevelopVo> getAllProdlineDevelopVos();
 
 
     /**
@@ -49,10 +50,10 @@ public interface FactoryManagementService {
 
     /**
      * @author yuanyiwen
-     * @description 获取全部厂房类型（全部指的是当前设定下所有厂房类型），注意这里FactoryTypeVo的id值同FactoryBasicInfo
+     * @description 获取全部可新建的厂房（全部指的是当前设定下所有类型厂房），注意这里FactoryTypeVo的id值同FactoryBasicInfo
      * @date 21:05 2019/3/17
      **/
-    List<FactoryTypeVo> getAllFactoryTypeVos();
+    List<FactoryDevelopVo> getAllFactoryDevelopVos();
 
 
     /**

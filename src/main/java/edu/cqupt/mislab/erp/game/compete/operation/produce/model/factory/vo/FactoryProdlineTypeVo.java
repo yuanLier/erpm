@@ -18,9 +18,9 @@ public class FactoryProdlineTypeVo {
     @ApiModelProperty("代理主键，值同FactoryHoldingInfo")
     private Long id;
 
-    @ApiModelProperty("用户拥有的工厂类型")
+    @ApiModelProperty("用户拥有的厂房类型")
     private String factoryType;
 
-    @ApiModelProperty("该工厂中满足条件的生产线集合")
+    @ApiModelProperty("该厂房中满足条件的生产线集合")
     private List<ProdlineTypeVo> prodlineTypeVoList;
 }

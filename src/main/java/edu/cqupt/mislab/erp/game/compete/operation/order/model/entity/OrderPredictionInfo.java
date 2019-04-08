@@ -59,7 +59,7 @@ public class OrderPredictionInfo implements Serializable {
 
     @Min(1)
     @Basic(optional = false)
-    @Comment(comment = "那一年的预测信息")
+    @Comment(comment = "哪一年的预测信息")
     private Integer year;
 
     @Override

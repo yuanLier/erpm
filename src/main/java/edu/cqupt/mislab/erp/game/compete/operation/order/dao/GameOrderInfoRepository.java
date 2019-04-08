@@ -11,4 +11,21 @@ public interface GameOrderInfoRepository extends BasicRepository<GameOrderInfo, 
 
     //选取一个比赛的全部订单信息
     List<GameOrderInfo> findByGameBasicInfo_Id(long gameId);
+
+
+    /**
+     * @author yuanyiwen
+     * @description 获取一个企业的全部订单信息
+     * @date 22:35 2019/4/7
+     **/
+    List<GameOrderInfo> findByEnterpriseBasicInfo_Id(Long enterpriseId);
+
+
+    /**
+     * @author yuanyiwen
+     * @description 获取一个企业的全部处于某种状态的订单信息
+     * @date 22:36 2019/4/7
+     **/
+    List<GameOrderInfo> findByEnterpriseBasicInfo_IdAndOrderStatus(Long enterpriseId, boolean orderStatus);
+
 }

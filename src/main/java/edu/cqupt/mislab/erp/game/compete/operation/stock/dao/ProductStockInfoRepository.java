@@ -14,4 +14,12 @@ public interface ProductStockInfoRepository extends BasicRepository<ProductStock
      * @date 22:01 2019/4/1
      **/
     List<ProductStockInfo> findByEnterpriseBasicInfo_Id(Long enterpriseId);
+
+
+    /**
+     * @author yuanyiwen
+     * @description 获取某一企业的某一产品的库存信息
+     * @date 22:43 2019/4/7
+     **/
+    ProductStockInfo findByEnterpriseBasicInfo_IdAndProductBasicInfo_Id(Long enterpriseId, Long productId);
 }

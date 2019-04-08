@@ -1,9 +1,7 @@
 package edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity;
 
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
 
 import javax.persistence.*;

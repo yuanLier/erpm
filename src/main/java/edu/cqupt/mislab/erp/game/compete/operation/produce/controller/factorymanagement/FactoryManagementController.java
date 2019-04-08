@@ -11,7 +11,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.Prodline
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineDevelopStatus;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineDevelopDisplayVo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineTypeVo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineDevelopVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.service.factorymanagement.FactoryManagementService;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
@@ -25,7 +25,6 @@ import java.util.List;
 
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
-import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithNoData;
 
 /**
  * @author yuanyiwen
@@ -43,16 +42,16 @@ public class FactoryManagementController {
     private FactoryManagementService factoryManagementService;
 
 
-    @ApiOperation(value = "获取全部生产线类型")
+    @ApiOperation(value = "获取全部可新建的类型生产线")
     @GetMapping("/prodline/all/type/get")
-    public WebResponseVo<List<ProdlineTypeVo>> getAllProdlineTypeVos() {
-        List<ProdlineTypeVo> prodlineTypeVoList = factoryManagementService.getAllProdlineTypeVos();
+    public WebResponseVo<List<ProdlineDevelopVo>> getAllProdlineTypeVos() {
+        List<ProdlineDevelopVo> prodlineDevelopVoList = factoryManagementService.getAllProdlineDevelopVos();
 
-        if(prodlineTypeVoList.size() == 0) {
+        if(prodlineDevelopVoList.size() == 0) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "最新版本下的生产线类型获取失败，请联系管理员");
         }
 
-        return toSuccessResponseVoWithData(prodlineTypeVoList);
+        return toSuccessResponseVoWithData(prodlineDevelopVoList);
     }
 
 
@@ -126,17 +125,17 @@ public class FactoryManagementController {
 
 
 
-    @ApiOperation(value = "获取全部厂房类型")
+    @ApiOperation(value = "获取全部可新建类型厂房")
     @GetMapping("/factory/type/all/get")
-    public WebResponseVo<List<FactoryTypeVo>> getAllFactoryTypeVos() {
+    public WebResponseVo<List<FactoryDevelopVo>> getAllFactoryTypeVos() {
 
-        List<FactoryTypeVo> factoryTypeVoList = factoryManagementService.getAllFactoryTypeVos();
+        List<FactoryDevelopVo> factoryDevelopVoList = factoryManagementService.getAllFactoryDevelopVos();
 
-        if(factoryTypeVoList.size() == 0) {
+        if(factoryDevelopVoList.size() == 0) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "最新版本下的厂房类型获取失败，请联系管理员");
         }
 
-        return toSuccessResponseVoWithData(factoryTypeVoList);
+        return toSuccessResponseVoWithData(factoryDevelopVoList);
     }
 
 

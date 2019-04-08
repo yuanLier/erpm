@@ -82,13 +82,17 @@ public class GameOrderInfo implements Serializable {
 
     @Min(1)
     @Column(nullable = false,updatable = false)
-    @Comment(comment = "那一年的订单")
+    @Comment(comment = "哪一年的订单")
     private Integer year;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-    @Comment(comment = "该订单被那个企业选择")
+    @Comment(comment = "该订单被哪个企业选择")
     private EnterpriseBasicInfo enterpriseBasicInfo;
+
+    @Column(nullable = false,columnDefinition = "bit(1) default false")
+    @Comment(comment = "订单状态，即是否交货，默认为false")
+    private boolean orderStatus = false;
 
     @Override
     public boolean equals(Object o){

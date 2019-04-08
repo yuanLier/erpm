@@ -4,6 +4,9 @@ import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.*;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketTypeVo;
+import edu.cqupt.mislab.erp.game.compete.operation.order.model.entity.GameOrderInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.order.model.vo.OrderDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryHoldingInfo;
@@ -18,6 +21,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialOrderInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialStockInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.ProductStockInfo;
@@ -103,6 +107,32 @@ public abstract class EntityVoUtil {
 
             displayVo.setAvatarLocation(enterpriseMemberInfo.getUserStudentInfo().getUserAvatarInfo().getAvatarLocation());
         }
+    }
+
+
+    public static OrderDisplayVo copyFieldsFromEntityToVo(GameOrderInfo gameOrderInfo) {
+        OrderDisplayVo orderDisplayVo = new OrderDisplayVo();
+
+        orderDisplayVo.setId(gameOrderInfo.getId());
+
+        // 所在市场
+        MarketTypeVo marketTypeVo = new MarketTypeVo();
+        BeanCopyUtil.copyPropertiesSimple(gameOrderInfo.getMarketBasicInfo(), marketTypeVo);
+        orderDisplayVo.setMarketType(marketTypeVo);
+        // 所需产品
+        ProductTypeVo productTypeVo = new ProductTypeVo();
+        BeanCopyUtil.copyPropertiesSimple(gameOrderInfo.getProductBasicInfo(), productTypeVo);
+        orderDisplayVo.setProductType(productTypeVo);
+
+        orderDisplayVo.setDeliveryPeriod(gameOrderInfo.getDeliveryPeriod());
+        orderDisplayVo.setOrderNumber(NumberFormatUtil.numberFormat(gameOrderInfo.getId(), 5));
+        orderDisplayVo.setOrderStatus(gameOrderInfo.isOrderStatus());
+        orderDisplayVo.setProductNumber(gameOrderInfo.getProductNumber());
+        orderDisplayVo.setProductPrice(gameOrderInfo.getPrice());
+        orderDisplayVo.setTotalPrice(gameOrderInfo.getPrice()*gameOrderInfo.getProductNumber());
+        orderDisplayVo.setYear(gameOrderInfo.getYear());
+
+        return orderDisplayVo;
     }
 
     public static IsoDisplayVo copyFieldsFromEntityToVo(IsoDevelopInfo isoDevelopInfo) {
@@ -488,4 +518,5 @@ public abstract class EntityVoUtil {
 
         return transportMethodDisplayVo;
     }
+
 }
