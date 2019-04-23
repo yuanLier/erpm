@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.iso.model.dto;
 
+import edu.cqupt.mislab.erp.commons.validators.annotations.DoubleMin;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoStatusEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -34,7 +35,7 @@ public class IsoBasicDto {
     @ApiModelProperty(value = "ISO认证完成后，维持该认证每个周期需要支付的费用",required = true)
     private Double isoMaintainCost;
 
-    @Min(0)
+    @DoubleMin(0)
     @Max(1)
     @NotNull
     @ApiModelProperty(value = "该认证对订单价格的影响程度，每一个产品价格影响",required = true)

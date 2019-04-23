@@ -42,7 +42,7 @@ logging:
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
   profiles: prod
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource

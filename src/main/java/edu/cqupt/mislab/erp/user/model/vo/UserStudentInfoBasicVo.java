@@ -1,11 +1,17 @@
 package edu.cqupt.mislab.erp.user.model.vo;
 
-import edu.cqupt.mislab.erp.user.model.entity.MajorInfo;
+import edu.cqupt.mislab.erp.user.model.entity.MajorBasicInfo;
 import edu.cqupt.mislab.erp.user.model.entity.UserAvatarInfo;
-import edu.cqupt.mislab.erp.user.model.entity.UserGender;
+import edu.cqupt.mislab.erp.user.model.entity.UserGenderEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+
+/**
+ * @author chuyunfei
+ * @description 
+ * @date 21:07 2019/4/22
+ **/
 
 @Data
 @Builder
@@ -24,10 +30,10 @@ public class UserStudentInfoBasicVo {
     private String studentName;
 
     @ApiModelProperty("性别")
-    private UserGender gender;
+    private UserGenderEnum gender;
 
     @ApiModelProperty("专业信息，包含专业和学员")
-    private MajorInfo majorInfo;
+    private MajorBasicInfo majorBasicInfo;
 
     @ApiModelProperty("班级")
     private String studentClass;

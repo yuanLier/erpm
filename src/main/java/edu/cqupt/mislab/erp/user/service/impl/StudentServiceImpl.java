@@ -4,16 +4,18 @@ import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo.ResponseStatus;
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
-import edu.cqupt.mislab.erp.user.dao.MajorInfoRepository;
+import edu.cqupt.mislab.erp.user.dao.MajorBasicInfoRepository;
 import edu.cqupt.mislab.erp.user.dao.UserAvatarRepository;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import edu.cqupt.mislab.erp.user.model.dto.UserStudentInfoRegisterDto;
 import edu.cqupt.mislab.erp.user.model.dto.UserStudentInfoUpdateDto;
-import edu.cqupt.mislab.erp.user.model.entity.*;
+import edu.cqupt.mislab.erp.user.model.entity.MajorBasicInfo;
+import edu.cqupt.mislab.erp.user.model.entity.UserAvatarInfo;
+import edu.cqupt.mislab.erp.user.model.entity.UserGenderEnum;
+import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import edu.cqupt.mislab.erp.user.model.vo.UserStudentInfoBasicVo;
 import edu.cqupt.mislab.erp.user.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,7 +34,7 @@ public class StudentServiceImpl implements StudentService {
     private UserStudentRepository studentRepository;
 
     @Autowired
-    private MajorInfoRepository majorInfoRepository;
+    private MajorBasicInfoRepository majorBasicInfoRepository;
 
     @Override
     public WebResponseVo<String> userStudentRegister(UserStudentInfoRegisterDto registerDto){
@@ -58,15 +60,20 @@ public class StudentServiceImpl implements StudentService {
 
         copyPropertiesSimple(registerDto,studentInfo);
 
-        //默认不启用该账户 todo 这个地方需要更改
+        //默认不启用该账户 todo 为方便前端测试暂时改为了true 正式上线的时候应改回false
         studentInfo.setAccountEnable(true);
         //默认性别为男
-        studentInfo.setGender(UserGender.Man);
+        studentInfo.setGender(UserGenderEnum.Man);
         //设置专业信息
-        studentInfo.setMajorInfo(getAgencyInfo(registerDto.getMajorInfoId()));
+        studentInfo.setMajorBasicInfo(getAgencyInfo(registerDto.getMajorInfoId()));
 
         //存储并立即持久化到数据库
-        studentInfo = studentRepository.saveAndFlush(studentInfo);
+        try {
+            studentInfo = studentRepository.saveAndFlush(studentInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return toFailResponseVoWithMessage(ResponseStatus.INTERNAL_SERVER_ERROR, "注册失败！请联系开发人员");
+        }
 
         //存储成功
         if(studentInfo.getId() != null){
@@ -85,15 +92,15 @@ public class StudentServiceImpl implements StudentService {
 
         if(studentInfo != null){
 
-            UserStudentInfoBasicVo studentInfoBasicVo = new UserStudentInfoBasicVo();
-
-            //转换Entity和VO
-            EntityVoUtil.copyFieldsFromEntityToVo(studentInfo,studentInfoBasicVo);
-
-            return studentInfoBasicVo;
+            return null;
         }
 
-        return null;
+        UserStudentInfoBasicVo studentInfoBasicVo = new UserStudentInfoBasicVo();
+
+        //转换Entity和VO
+        EntityVoUtil.copyFieldsFromEntityToVo(studentInfo,studentInfoBasicVo);
+
+        return studentInfoBasicVo;
     }
 
     @Override
@@ -102,17 +109,17 @@ public class StudentServiceImpl implements StudentService {
         //能够获取详细信息的账户必须是要审核通过的账户
         final UserStudentInfo studentInfo = studentRepository.findByIdAndAccountEnable(userId,true);
 
-        if(studentInfo != null){
+        if(studentInfo == null){
 
-            UserStudentInfoBasicVo studentInfoBasicVo = new UserStudentInfoBasicVo();
-
-            //转换Entity和VO
-            EntityVoUtil.copyFieldsFromEntityToVo(studentInfo,studentInfoBasicVo);
-
-            return studentInfoBasicVo;
+            return null;
         }
 
-        return null;
+        UserStudentInfoBasicVo studentInfoBasicVo = new UserStudentInfoBasicVo();
+
+        //转换Entity和VO
+        EntityVoUtil.copyFieldsFromEntityToVo(studentInfo,studentInfoBasicVo);
+
+        return studentInfoBasicVo;
     }
 
     @Override
@@ -129,7 +136,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public boolean resetUserStudentPassword(Long userId,String oldPassword,String newPassword){
+    public Boolean resetUserStudentPassword(Long userId,String oldPassword,String newPassword){
 
         final UserStudentInfo studentInfo = studentRepository.findByIdAndAccountEnable(userId,true);
 
@@ -149,7 +156,12 @@ public class StudentServiceImpl implements StudentService {
         studentInfo.setStudentPassword(newPassword);
 
         //更改密码
-        studentRepository.save(studentInfo);
+        try {
+            studentRepository.save(studentInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
 
         return true;
     }
@@ -159,35 +171,40 @@ public class StudentServiceImpl implements StudentService {
 
         UserStudentInfo studentBasicInfo = studentRepository.findOne(updateDto.getId());
 
-        if(studentBasicInfo != null){
+        if(studentBasicInfo == null){
 
-            //将需要更改的数据复制过去
-            BeanCopyUtil.copyPropertiesWithNonNullSourceFields(updateDto,studentBasicInfo);
-
-            //专业信息特殊处理
-            if(updateDto.getMajorInfoId() != null){
-
-                studentBasicInfo.setMajorInfo(getAgencyInfo(updateDto.getMajorInfoId()));
-            }
-
-            //头像信息特殊处理
-            if(updateDto.getUserAvatarInfoId() != null){
-
-                studentBasicInfo.setUserAvatarInfo(getAvatarInfo(updateDto.getUserAvatarInfoId()));
-            }
-
-            //将数据同步到数据库
-            studentBasicInfo = studentRepository.save(studentBasicInfo);
-
-            UserStudentInfoBasicVo studentBasicInfoVo = new UserStudentInfoBasicVo();
-
-            //将更改后的数据转载入视图对象
-            EntityVoUtil.copyFieldsFromEntityToVo(studentBasicInfo,studentBasicInfoVo);
-
-            return studentBasicInfoVo;
+            return null;
         }
 
-        return null;
+        //将需要更改的数据复制过去
+        BeanCopyUtil.copyPropertiesWithNonNullSourceFields(updateDto,studentBasicInfo);
+
+        //专业信息特殊处理
+        if(updateDto.getMajorInfoId() != null){
+
+            studentBasicInfo.setMajorBasicInfo(getAgencyInfo(updateDto.getMajorInfoId()));
+        }
+
+        //头像信息特殊处理
+        if(updateDto.getUserAvatarInfoId() != null){
+
+            studentBasicInfo.setUserAvatarInfo(getAvatarInfo(updateDto.getUserAvatarInfoId()));
+        }
+
+        //将数据同步到数据库
+        try {
+            studentBasicInfo = studentRepository.save(studentBasicInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // todo 异常处理
+        }
+
+        UserStudentInfoBasicVo studentBasicInfoVo = new UserStudentInfoBasicVo();
+
+        //将更改后的数据转载入视图对象
+        EntityVoUtil.copyFieldsFromEntityToVo(studentBasicInfo,studentBasicInfoVo);
+
+        return studentBasicInfoVo;
     }
 
     @Override
@@ -198,20 +215,20 @@ public class StudentServiceImpl implements StudentService {
 
 
     @Override
-    public List<MajorInfo> getAgencyInfos(){
+    public List<MajorBasicInfo> getAgencyInfos(){
 
-        return majorInfoRepository.findAll();
+        return majorBasicInfoRepository.findAll();
     }
 
     @Override
-    public MajorInfo getAgencyInfo(Long majorInfo){
+    public MajorBasicInfo getAgencyInfo(Long majorInfoId){
 
-        return majorInfoRepository.findOne(majorInfo);
+        return majorBasicInfoRepository.findOne(majorInfoId);
     }
 
     @Override
-    public UserAvatarInfo getAvatarInfo(Long userAvatarInfo){
+    public UserAvatarInfo getAvatarInfo(Long userAvatarInfoId){
 
-        return avatarRepository.findOne(userAvatarInfo);
+        return avatarRepository.findOne(userAvatarInfoId);
     }
 }

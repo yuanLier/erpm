@@ -5,6 +5,12 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * @author chuyunfei
+ * @description 教师基本信息表
+ * @date 20:26 2019/4/22
+ **/
+
 @Data
 @Builder
 @NoArgsConstructor

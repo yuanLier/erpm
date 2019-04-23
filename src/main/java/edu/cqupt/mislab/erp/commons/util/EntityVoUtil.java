@@ -48,7 +48,7 @@ public abstract class EntityVoUtil {
 
         BeanCopyUtil.copyPropertiesSimple(userStudentInfo,infoBasicVo);
 
-        infoBasicVo.setMajorInfo(userStudentInfo.getMajorInfo());
+        infoBasicVo.setMajorBasicInfo(userStudentInfo.getMajorBasicInfo());
 
         infoBasicVo.setUserAvatarInfo(userStudentInfo.getUserAvatarInfo());
 
@@ -98,8 +98,8 @@ public abstract class EntityVoUtil {
         displayVo.setUserStudentId(enterpriseMemberInfo.getUserStudentInfo().getId());
         displayVo.setStudentAccount(enterpriseMemberInfo.getUserStudentInfo().getStudentAccount());
         displayVo.setStudentName(enterpriseMemberInfo.getUserStudentInfo().getStudentName());
-        displayVo.setCollege(enterpriseMemberInfo.getUserStudentInfo().getMajorInfo().getCollege().getCollege());
-        displayVo.setMajor(enterpriseMemberInfo.getUserStudentInfo().getMajorInfo().getMajor());
+        displayVo.setCollege(enterpriseMemberInfo.getUserStudentInfo().getMajorBasicInfo().getCollege().getCollege());
+        displayVo.setMajor(enterpriseMemberInfo.getUserStudentInfo().getMajorBasicInfo().getMajor());
         displayVo.setGameContributionRate(enterpriseMemberInfo.getGameContributionRate());
 
         //不一定存在

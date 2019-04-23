@@ -23,15 +23,20 @@ import java.io.IOException;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.*;
 
 /**
- * 用于抽取用户的公共模板方法
+ * @author chuyunfei
+ * @description 用于抽取用户的公共模板方法
  * @param <V>：该用户的基本VO
- */
+ * @date 22:43 2019/4/22
+ **/
+
 @Validated
-public abstract class UserController<V> {
+public abstract class BaseUserController<V> {
 
     @ApiOperation(value = "通过用户Id获取用户的基本信息",notes = "1、该账户必须审核通过才可以请求到数据；2、如果这个userId没有注册过，将返回400")
     @GetMapping("/basicInfo/get")
-    public WebResponseVo<V> getStudentBasicInfo(@Exist(repository = UserStudentRepository.class) @RequestParam Long userId,HttpSession httpSession){
+    public WebResponseVo<V> getStudentBasicInfo(@Exist(repository = UserStudentRepository.class)
+                                                    @RequestParam Long userId,
+                                                HttpSession httpSession){
 
         //试图从Session里面获取缓存数据，由于有缓存这一步，所以在对用户数据进行修改后需要把这个缓存给去除掉
         V userBasicInfoVo = (V) httpSession.getAttribute(UserConstant.USER_COMMON_INFO_SESSION_ATTR_NAME);
@@ -58,7 +63,7 @@ public abstract class UserController<V> {
         if(userBasicInfoVo != null){
 
             //将数据缓存在session里面
-            httpSession.setAttribute(UserConstant.USER_COMMON_INFO_SESSION_ATTR_NAME,userBasicInfoVo);
+            httpSession.setAttribute(UserConstant.USER_COMMON_INFO_SESSION_ATTR_NAME, userBasicInfoVo);
 
             //响应前端数据
             return toSuccessResponseVoWithData(userBasicInfoVo);
@@ -75,7 +80,7 @@ public abstract class UserController<V> {
      * @param userBasicInfoVo ：查出来的账户
      * @return
      */
-    public abstract boolean isTheIdIsRight(Long userId,V userBasicInfoVo);
+    public abstract boolean isTheIdIsRight(Long userId ,V userBasicInfoVo);
 
     /**
      * 从数据库里面查取该账户的基本视图数据
@@ -94,9 +99,12 @@ public abstract class UserController<V> {
 
     @ApiOperation(value = "用户登录接口",notes = "1、只有审核通过的账户可以登录成功；2、如果登录成功，返回的data值为该账户的userId，如果不成功这个值是登录出错的次数")
     @PostMapping("/login")
-    public WebResponseVo<Long> userLogin(@RequestParam String userAccount,@RequestParam String userPassword,@RequestParam(required = false) String verificationCode,HttpSession httpSession){
+    public WebResponseVo<Long> userLogin(@RequestParam String userAccount,
+                                         @RequestParam String userPassword,
+                                         @RequestParam(required = false) String verificationCode,
+                                         HttpSession httpSession){
 
-        //移除登录状态，也就是说如果在登录状态进行登录却失败了将被登出登录状态
+        //移除登录状态，也就是说如果在登录状态进行登录却失败了将被登出登录状态 todo 如何体现失败？
         httpSession.removeAttribute(UserConstant.USER_LOGIN_SUCCESS_SESSION_ATTR_TOKEN_NAME);
 
         //查看当前是第几次进行登录
@@ -162,6 +170,7 @@ public abstract class UserController<V> {
      */
     public abstract Long checkUserAccountAndPassword(String userAccount,String userPassword);
 
+
     @Autowired
     private Producer verificationCodeProducer;
 
@@ -172,7 +181,7 @@ public abstract class UserController<V> {
         //创建一个验证码
         final String verificationCodeText = verificationCodeProducer.createText();
 
-        //创建一个验证码图片
+        //创建一个验证码图片 todo 换个验证码？
         final BufferedImage verificationCodeImage = verificationCodeProducer.createImage(verificationCodeText);
 
         //设置响应头
@@ -206,7 +215,13 @@ public abstract class UserController<V> {
     @PostMapping("/password/update")
     public WebResponseVo<String> updateUserPassword(@RequestParam Long userId,@RequestParam String oldPassword,@RequestParam String newPassword){
 
-        if(resetUserPassword(userId,oldPassword,newPassword)){
+        Boolean isSuccess = resetUserPassword(userId,oldPassword,newPassword);
+
+        if(isSuccess == null) {
+            return toFailResponseVoWithMessage(ResponseStatus.INTERNAL_SERVER_ERROR, "密码更新失败！请联系开发人员");
+        }
+
+        if(isSuccess){
 
             return toSuccessResponseVoWithNoData();
 
@@ -223,7 +238,8 @@ public abstract class UserController<V> {
      * @param newPassword ：新密码
      * @return
      */
-    public abstract boolean resetUserPassword(Long userId,String oldPassword,String newPassword);
+    public abstract Boolean resetUserPassword(Long userId,String oldPassword,String newPassword);
+
 
     @ApiOperation(value = "判断一个账户是否存在",notes = "1、204标识存在，404标识不存在")
     @GetMapping("/basicInfo/exist")

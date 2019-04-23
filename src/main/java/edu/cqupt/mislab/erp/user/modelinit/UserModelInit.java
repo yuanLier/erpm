@@ -20,10 +20,10 @@ public class UserModelInit implements ModelInit {
      * @Description: 初始化用户模块的原始数据，包括一个用户、几个头像和几个专业信息
      **/
 
-    @Autowired private MajorInfoRepository majorInfoRepository;
+    @Autowired private MajorBasicInfoRepository majorBasicInfoRepository;
     @Autowired private UserAvatarRepository userAvatarRepository;
     @Autowired private UserStudentRepository userStudentRepository;
-    @Autowired private CollegeInfoRepository collegeInfoRepository;
+    @Autowired private CollegeBasicInfoRepository collegeBasicInfoRepository;
     @Autowired private UserTeacherRepository userTeacherRepository;
 
     @Autowired private ModelInitService modelInitService;
@@ -79,11 +79,11 @@ public class UserModelInit implements ModelInit {
                 .studentAccount("S2016211050")
                 .studentPassword("M123456")
                 .studentName("楚云飞")
-                .majorInfo(majorInfoRepository.findOne(1L))
+                .majorBasicInfo(majorBasicInfoRepository.findOne(1L))
                 .studentClass("03011603")
                 .email("755708445@qq.com")
                 .phone("15025724135")
-                .gender(UserGender.Man)
+                .gender(UserGenderEnum.Man)
                 .userAvatarInfo(userAvatarRepository.findOne(1L))
                 .build();
 
@@ -95,22 +95,22 @@ public class UserModelInit implements ModelInit {
      */
     private void initMajorInfo(){
 
-        List<MajorInfo> majorInfos = new ArrayList<>();
+        List<MajorBasicInfo> majorBasicInfos = new ArrayList<>();
 
-        CollegeInfo collegeInfo = CollegeInfo.builder().college("经济管理学院").build();
-        collegeInfo = collegeInfoRepository.save(collegeInfo);
+        CollegeBasicInfo collegeBasicInfo = CollegeBasicInfo.builder().college("经济管理学院").build();
+        collegeBasicInfo = collegeBasicInfoRepository.save(collegeBasicInfo);
 
-        majorInfos.add(MajorInfo.builder().college(collegeInfo).major("信息管理与信息系统").build());
-        majorInfos.add(MajorInfo.builder().college(collegeInfo).major("工商管理").build());
-        majorInfos.add(MajorInfo.builder().college(collegeInfo).major("经济学").build());
-        majorInfos.add(MajorInfo.builder().college(collegeInfo).major("工程管理").build());
+        majorBasicInfos.add(MajorBasicInfo.builder().college(collegeBasicInfo).major("信息管理与信息系统").build());
+        majorBasicInfos.add(MajorBasicInfo.builder().college(collegeBasicInfo).major("工商管理").build());
+        majorBasicInfos.add(MajorBasicInfo.builder().college(collegeBasicInfo).major("经济学").build());
+        majorBasicInfos.add(MajorBasicInfo.builder().college(collegeBasicInfo).major("工程管理").build());
 
-        CollegeInfo collegeInfo1 = CollegeInfo.builder().college("计算机学院").build();
-        collegeInfo1 = collegeInfoRepository.save(collegeInfo1);
+        CollegeBasicInfo collegeBasicInfo1 = CollegeBasicInfo.builder().college("计算机学院").build();
+        collegeBasicInfo1 = collegeBasicInfoRepository.save(collegeBasicInfo1);
 
-        majorInfos.add(MajorInfo.builder().college(collegeInfo1).major("计算机科学与技术").build());
-        majorInfos.add(MajorInfo.builder().college(collegeInfo1).major("计算机智能与科学").build());
+        majorBasicInfos.add(MajorBasicInfo.builder().college(collegeBasicInfo1).major("计算机科学与技术").build());
+        majorBasicInfos.add(MajorBasicInfo.builder().college(collegeBasicInfo1).major("计算机智能与科学").build());
 
-        majorInfoRepository.save(majorInfos);
+        majorBasicInfoRepository.save(majorBasicInfos);
     }
 }

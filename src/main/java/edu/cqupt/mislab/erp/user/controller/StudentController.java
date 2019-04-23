@@ -4,7 +4,7 @@ import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.user.constant.UserConstant;
 import edu.cqupt.mislab.erp.user.model.dto.UserStudentInfoRegisterDto;
 import edu.cqupt.mislab.erp.user.model.dto.UserStudentInfoUpdateDto;
-import edu.cqupt.mislab.erp.user.model.entity.MajorInfo;
+import edu.cqupt.mislab.erp.user.model.entity.MajorBasicInfo;
 import edu.cqupt.mislab.erp.user.model.vo.UserStudentInfoBasicVo;
 import edu.cqupt.mislab.erp.user.service.StudentService;
 import io.swagger.annotations.Api;
@@ -20,24 +20,30 @@ import java.util.List;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
 
+/**
+ * @author chuyunfei
+ * @description
+ * @date 14:39 2019/4/23
+ **/
+
 @Api
 @Validated
 @CrossOrigin
 @RestController
 @RequestMapping("/user/student")
-public class StudentController extends UserController<UserStudentInfoBasicVo>{
+public class StudentController extends BaseUserController<UserStudentInfoBasicVo> {
 
     @Autowired
     private StudentService studentService;
 
-    @ApiOperation(value = "学生账户注册",notes = "如果该账号既没有被审核通过使用也没有正在等待审核——》注册成功并等待审核")
+    @ApiOperation(value = "学生账户注册",notes = "如果该账号既没有被审核通过使用也没有正在等待审核——>注册成功并等待审核")
     @PostMapping("/register")
     public WebResponseVo<String> userStudentRegister(@Valid @RequestBody UserStudentInfoRegisterDto registerDto){
 
         //校验重复密码是否正确
         if(!registerDto.getStudentPassword().equals(registerDto.getRePassword())){
 
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST,"重复密码错误");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST,"两次输入不一致！");
         }
 
         //进行注册
@@ -48,6 +54,7 @@ public class StudentController extends UserController<UserStudentInfoBasicVo>{
     @PostMapping("/basicInfo/update")
     public WebResponseVo<UserStudentInfoBasicVo> updateStudentBasicInfo(@Valid @RequestBody UserStudentInfoUpdateDto updateDto,HttpSession httpSession){
 
+        // todo 异常处理
         UserStudentInfoBasicVo studentBasicInfoVo = studentService.updateStudentBasicInfo(updateDto);
 
         if(studentBasicInfoVo == null){
@@ -70,7 +77,7 @@ public class StudentController extends UserController<UserStudentInfoBasicVo>{
 
     @ApiOperation("获取学院专业信息")
     @GetMapping("/agency/get")
-    public WebResponseVo<List<MajorInfo>> getAgencyInfos(){
+    public WebResponseVo<List<MajorBasicInfo>> getAgencyInfos(){
 
         return toSuccessResponseVoWithData(studentService.getAgencyInfos());
     }
@@ -100,7 +107,7 @@ public class StudentController extends UserController<UserStudentInfoBasicVo>{
     }
 
     @Override
-    public boolean resetUserPassword(Long userId,String oldPassword,String newPassword){
+    public Boolean resetUserPassword(Long userId,String oldPassword,String newPassword){
         return studentService.resetUserStudentPassword(userId,oldPassword,newPassword);
     }
 }

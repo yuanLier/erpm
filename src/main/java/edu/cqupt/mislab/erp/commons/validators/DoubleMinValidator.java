@@ -1,12 +1,7 @@
 package edu.cqupt.mislab.erp.commons.validators;
 
 import edu.cqupt.mislab.erp.commons.validators.annotations.DoubleMin;
-import edu.cqupt.mislab.erp.commons.validators.annotations.EnterpriseStatusValid;
-import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatus;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -17,11 +12,8 @@ import javax.validation.ConstraintValidatorContext;
 @Slf4j
 public class DoubleMinValidator implements ConstraintValidator<DoubleMin,Double> {
 
-    //校验的误差
-    private double deviation = Math.pow(10,-2);
-
     //需要校验的值
-    private double value;
+    private double aimValue;
 
     @Override
     public void initialize(DoubleMin constraintAnnotation){
@@ -29,7 +21,7 @@ public class DoubleMinValidator implements ConstraintValidator<DoubleMin,Double>
         log.info("初始化：DoubleMinValidator");
 
         //获取配置的信息
-        this.value = constraintAnnotation.value();
+        this.aimValue = constraintAnnotation.value();
     }
 
     @Override
@@ -39,6 +31,6 @@ public class DoubleMinValidator implements ConstraintValidator<DoubleMin,Double>
 
         //判断当前数据是否符合要求
 
-        return Math.abs(value - deviation) > 0;
+        return value - aimValue > 0;
     }
 }

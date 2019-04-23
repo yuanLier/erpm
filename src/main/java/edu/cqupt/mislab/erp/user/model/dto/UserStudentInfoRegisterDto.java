@@ -1,8 +1,7 @@
 package edu.cqupt.mislab.erp.user.model.dto;
 
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
-import edu.cqupt.mislab.erp.commons.validators.annotations.NameFormat;
-import edu.cqupt.mislab.erp.user.dao.MajorInfoRepository;
+import edu.cqupt.mislab.erp.user.dao.MajorBasicInfoRepository;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -11,6 +10,12 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+
+/**
+ * @author chuyunfei
+ * @description 
+ * @date 21:07 2019/4/22
+ **/
 
 @Data
 @NoArgsConstructor
@@ -29,7 +34,7 @@ public class UserStudentInfoRegisterDto {
     private String studentName;
 
     @NotNull
-    @Exist(repository = MajorInfoRepository.class,message = "专业信息必须存在")
+    @Exist(repository = MajorBasicInfoRepository.class,message = "专业信息必须存在")
     @ApiModelProperty("学生的专业学院信息")
     private Long majorInfoId;
 
