@@ -32,6 +32,9 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.*;
 @Validated
 public abstract class BaseUserController<V> {
 
+//    @Autowired
+//    PlatformTransactionManager manager;
+
     @ApiOperation(value = "通过用户Id获取用户的基本信息",notes = "1、该账户必须审核通过才可以请求到数据；2、如果这个userId没有注册过，将返回400")
     @GetMapping("/basicInfo/get")
     public WebResponseVo<V> getStudentBasicInfo(@Exist(repository = UserStudentRepository.class)
@@ -104,7 +107,7 @@ public abstract class BaseUserController<V> {
                                          @RequestParam(required = false) String verificationCode,
                                          HttpSession httpSession){
 
-        //移除登录状态，也就是说如果在登录状态进行登录却失败了将被登出登录状态 todo 如何体现失败？
+        //移除登录状态，也就是说如果在登录状态进行登录却失败了将被登出登录状态
         httpSession.removeAttribute(UserConstant.USER_LOGIN_SUCCESS_SESSION_ATTR_TOKEN_NAME);
 
         //查看当前是第几次进行登录

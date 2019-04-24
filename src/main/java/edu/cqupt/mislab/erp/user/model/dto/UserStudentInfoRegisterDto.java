@@ -24,8 +24,8 @@ import javax.validation.constraints.Pattern;
 public class UserStudentInfoRegisterDto {
 
     @NotNull
-    @Pattern(regexp = "^S[a-zA-Z]{0,15}[0-9]{4,15}$",message = "学号，作为系统账号，以S开头的长度为5-16的账号")
-    @ApiModelProperty("学号，作为系统账号，以S开头的长度为5-16的账号")
+    @Pattern(regexp = "^[a-zA-Z]{0,15}[0-9]{3,14}$",message = "学号，作为系统账号，以S开头的长度为5-16的账号")
+    @ApiModelProperty("学号，作为系统账号，长度为4-15的账号")
     private String studentAccount;
 
     @NotNull

@@ -196,7 +196,7 @@ public class StudentServiceImpl implements StudentService {
             studentBasicInfo = studentRepository.save(studentBasicInfo);
         } catch (Exception e) {
             e.printStackTrace();
-            // todo 异常处理
+
         }
 
         UserStudentInfoBasicVo studentBasicInfoVo = new UserStudentInfoBasicVo();
