@@ -17,12 +17,19 @@ import edu.cqupt.mislab.erp.user.model.vo.UserStudentInfoBasicVo;
 import edu.cqupt.mislab.erp.user.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
 import static edu.cqupt.mislab.erp.commons.util.BeanCopyUtil.copyPropertiesSimple;
+
+/**
+ * @author chuyunfei
+ * @description 
+ * @date 21:07 2019/4/25
+ **/
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -37,6 +44,7 @@ public class StudentServiceImpl implements StudentService {
     private MajorBasicInfoRepository majorBasicInfoRepository;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public WebResponseVo<String> userStudentRegister(UserStudentInfoRegisterDto registerDto){
 
         //是否该账号已经被启用
@@ -68,12 +76,7 @@ public class StudentServiceImpl implements StudentService {
         studentInfo.setMajorBasicInfo(getAgencyInfo(registerDto.getMajorInfoId()));
 
         //存储并立即持久化到数据库
-        try {
-            studentInfo = studentRepository.saveAndFlush(studentInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return toFailResponseVoWithMessage(ResponseStatus.INTERNAL_SERVER_ERROR, "注册失败！请联系开发人员");
-        }
+        studentInfo = studentRepository.saveAndFlush(studentInfo);
 
         //存储成功
         if(studentInfo.getId() != null){
@@ -136,6 +139,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean resetUserStudentPassword(Long userId,String oldPassword,String newPassword){
 
         final UserStudentInfo studentInfo = studentRepository.findByIdAndAccountEnable(userId,true);
@@ -156,17 +160,13 @@ public class StudentServiceImpl implements StudentService {
         studentInfo.setStudentPassword(newPassword);
 
         //更改密码
-        try {
-            studentRepository.save(studentInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        studentRepository.save(studentInfo);
 
         return true;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public UserStudentInfoBasicVo updateStudentBasicInfo(UserStudentInfoUpdateDto updateDto){
 
         UserStudentInfo studentBasicInfo = studentRepository.findOne(updateDto.getId());
@@ -191,13 +191,8 @@ public class StudentServiceImpl implements StudentService {
             studentBasicInfo.setUserAvatarInfo(getAvatarInfo(updateDto.getUserAvatarInfoId()));
         }
 
-        //将数据同步到数据库
-        try {
-            studentBasicInfo = studentRepository.save(studentBasicInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
+        //将数据同步到数据库（这里不需要捕获异常，@Transactional默认在抛出异常后进行回滚
+        studentBasicInfo = studentRepository.save(studentBasicInfo);
 
         UserStudentInfoBasicVo studentBasicInfoVo = new UserStudentInfoBasicVo();
 

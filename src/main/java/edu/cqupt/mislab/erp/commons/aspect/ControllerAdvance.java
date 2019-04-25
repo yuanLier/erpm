@@ -1,25 +1,28 @@
 package edu.cqupt.mislab.erp.commons.aspect;
 
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.*;
+import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
 
 /**
- * ControllerAdvance：用于对Controller层的非业务异常进行处理
- * 1、未知异常使用统一拦截处理器
- * 2、具体异常使用具体异常的拦截器，写清楚这个异常会出现的位置和什么情况下回抛出这个异常
- */
+ * @author chuyunfei
+ * @description 统一异常处理
+ *      1、未知异常使用统一拦截处理器
+ *      2、具体异常使用具体异常的拦截器，写清楚这个异常会出现的位置和什么情况下回抛出这个异常
+ * @date 22:25 2019/4/25
+ **/
+
 @ControllerAdvice
 public class ControllerAdvance {
 
@@ -44,7 +47,7 @@ public class ControllerAdvance {
             stringBuilder.append("校验错误提示：").append(violation.getMessage()).append(';');
         }
 
-        return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST,stringBuilder.toString());
+        return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "参数校验异常 ：" + stringBuilder.toString());
     }
 
     /**
@@ -105,6 +108,6 @@ public class ControllerAdvance {
         exception.printStackTrace();
 
         //除了直接响应，我实在是没有办法啊
-        return toFailResponseVoWithNoMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR);
+        return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "未知异常[" + exception.getMessage() + "]！请联系管理员");
     }
 }
