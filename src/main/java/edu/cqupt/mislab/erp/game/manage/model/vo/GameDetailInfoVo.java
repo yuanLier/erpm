@@ -7,6 +7,12 @@ import lombok.Data;
 
 import java.util.Date;
 
+/**
+ * @author chuyunfei
+ * @description 
+ * @date 20:41 2019/4/26
+ **/
+
 @Data
 @ApiModel("比赛信息前端展示信息模型")
 public class GameDetailInfoVo {

@@ -3,16 +3,17 @@ package edu.cqupt.mislab.erp.game.manage.model.entity;
 import com.google.common.base.Objects;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.io.Serializable;
+import lombok.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import java.io.Serializable;
 
-import lombok.*;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.JoinColumnOrFormula;
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/5 19:19
+ * @Description: 企业成员数据信息表
+ */
 
 @Getter
 @Setter
@@ -22,12 +23,6 @@ import org.hibernate.annotations.JoinColumnOrFormula;
 @Entity
 @Table
 public class EnterpriseMemberInfo implements Serializable {
-
-    /*
-     * @Author: chuyunfei
-     * @Date: 2019/3/5 19:19
-     * @Description: 企业成员数据信息表
-     **/
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -59,10 +54,12 @@ public class EnterpriseMemberInfo implements Serializable {
 
     @Override
     public boolean equals(Object o){
-        if(this == o)
+        if(this == o) {
             return true;
-        if(o == null||getClass() != o.getClass())
+        }
+        if(o == null||getClass() != o.getClass()) {
             return false;
+        }
         EnterpriseMemberInfo that = (EnterpriseMemberInfo) o;
         return Objects.equal(id,that.id)&&Objects.equal(gameEnterpriseRole,that.gameEnterpriseRole);
     }

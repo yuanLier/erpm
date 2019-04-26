@@ -5,6 +5,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+/**
+ * @author chuyunfei
+ * @description 
+ * @date 20:41 2019/4/26
+ **/
+
 @Data
 @ApiModel("企业信息展示模型")
 public class EnterpriseDetailInfoVo {

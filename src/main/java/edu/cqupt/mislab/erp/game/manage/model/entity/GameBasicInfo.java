@@ -3,15 +3,20 @@ package edu.cqupt.mislab.erp.game.manage.model.entity;
 import com.google.common.base.Objects;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
+import lombok.*;
 
-import java.io.Serializable;
-import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import lombok.*;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/5 19:08
+ * @Description: 比赛的基本数据信息表
+ */
 
 @Getter
 @Setter
@@ -21,12 +26,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Entity
 @Table
 public class GameBasicInfo implements Serializable {
-
-    /*
-     * @Author: chuyunfei
-     * @Date: 2019/3/5 19:08
-     * @Description: 比赛的基本数据信息表
-     **/
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -73,10 +72,12 @@ public class GameBasicInfo implements Serializable {
 
     @Override
     public boolean equals(Object o){
-        if(this == o)
+        if(this == o) {
             return true;
-        if(o == null||getClass() != o.getClass())
+        }
+        if(o == null||getClass() != o.getClass()) {
             return false;
+        }
         GameBasicInfo that = (GameBasicInfo) o;
         return Objects.equal(id,that.id)&&Objects.equal(gameName,that.gameName)&&Objects.equal(gameMaxEnterpriseNumber,that.gameMaxEnterpriseNumber)&&Objects.equal(gameCurrentYear,that.gameCurrentYear)&&gameStatus == that.gameStatus&&Objects.equal(gameCreateTime,that.gameCreateTime);
     }

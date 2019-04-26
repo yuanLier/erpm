@@ -29,6 +29,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.*;
 
+/**
+ * @author chuyunfei
+ * @description
+ * @date 22:38 2019/4/26
+ **/
+
 @Service
 public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManageService {
 

@@ -1,8 +1,6 @@
 package edu.cqupt.mislab.erp.game.manage.model.dto;
 
-import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
-import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -10,6 +8,12 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
+/**
+ * @author chuyunfei
+ * @description
+ * @date 20:47 2019/4/26
+ **/
 
 @Data
 @ApiModel("比赛创建数据类")

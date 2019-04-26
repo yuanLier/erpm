@@ -30,6 +30,12 @@ import java.util.*;
 
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.*;
 
+/**
+ * @author chuyunfei
+ * @description
+ * @date 22:38 2019/4/26
+ **/
+
 @Service
 public class GameManageServiceImpl implements GameManageService {
 

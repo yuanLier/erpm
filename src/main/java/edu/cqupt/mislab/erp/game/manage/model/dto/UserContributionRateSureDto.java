@@ -3,7 +3,6 @@ package edu.cqupt.mislab.erp.game.manage.model.dto;
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
-import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -12,6 +11,12 @@ import lombok.Data;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Map;
+
+/**
+ * @author chuyunfei
+ * @description
+ * @date 20:47 2019/4/26
+ **/
 
 @Data
 @Builder

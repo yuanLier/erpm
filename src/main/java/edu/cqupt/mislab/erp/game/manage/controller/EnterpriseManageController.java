@@ -11,7 +11,6 @@ import edu.cqupt.mislab.erp.game.manage.model.dto.EnterpriseCreateDto;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatus;
 import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseDetailInfoVo;
 import edu.cqupt.mislab.erp.game.manage.service.EnterpriseManageService;
-import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+
+/**
+ * @author chuyunfei
+ * @description 
+ * @date 22:28 2019/4/26
+ **/
 
 @Api
 @CrossOrigin
@@ -40,8 +45,8 @@ public class EnterpriseManageController {
     @ApiOperation(value = "删除一个企业",notes = "敏感操作，需要提供密码")
     @DeleteMapping("/delete")
     public WebResponseVo<String> deleteOneEnterprise(
-            @EnterpriseStatusValid(enterpriseStatus = EnterpriseStatus.CREATE) @RequestParam Long enterpriseId
-            ,@UserStatusValid(isEnable = true) @RequestParam Long userId,@RequestParam String password){
+            @EnterpriseStatusValid(enterpriseStatus = EnterpriseStatus.CREATE) @RequestParam Long enterpriseId,
+            @UserStatusValid(isEnable = true) @RequestParam Long userId,@RequestParam String password){
 
         return enterpriseManageService.deleteOneEnterprise(enterpriseId,userId,password);
     }
@@ -49,15 +54,16 @@ public class EnterpriseManageController {
     @ApiOperation("当前企业确定准备完成")
     @PostMapping("/sure")
     public WebResponseVo<String> sureOneEnterprise(
-            @EnterpriseStatusValid(enterpriseStatus = EnterpriseStatus.CREATE) @RequestParam Long enterpriseId
-            ,@UserStatusValid(isEnable = true) @RequestParam Long userId){
+            @EnterpriseStatusValid(enterpriseStatus = EnterpriseStatus.CREATE) @RequestParam Long enterpriseId,
+            @UserStatusValid(isEnable = true) @RequestParam Long userId){
 
         return enterpriseManageService.sureOneEnterprise(enterpriseId,userId);
     }
 
     @ApiOperation("获取一个企业的详细信息")
     @GetMapping("/enterpriseInfo/get")
-    public WebResponseVo<EnterpriseDetailInfoVo> getOneEnterpriseInfo(@Exist(repository = EnterpriseBasicInfoRepository.class) @RequestParam Long enterpriseId){
+    public WebResponseVo<EnterpriseDetailInfoVo> getOneEnterpriseInfo(
+            @Exist(repository = EnterpriseBasicInfoRepository.class) @RequestParam Long enterpriseId){
 
         EnterpriseDetailInfoVo enterpriseDetailInfoVo = enterpriseManageService.getOneEnterpriseInfo(enterpriseId);
 
@@ -71,7 +77,8 @@ public class EnterpriseManageController {
 
     @ApiOperation("获取指定比赛的全部企业的详细信息")
     @GetMapping("/enterpriseInfos/get")
-    public WebResponseVo<List<EnterpriseDetailInfoVo>> getEnterpriseInfos(@Exist(repository = GameBasicInfoRepository.class) @RequestParam Long gameId){
+    public WebResponseVo<List<EnterpriseDetailInfoVo>> getEnterpriseInfos(
+            @Exist(repository = GameBasicInfoRepository.class) @RequestParam Long gameId){
 
         List<EnterpriseDetailInfoVo> detailInfoVos = enterpriseManageService.getEnterpriseInfos(gameId);
 

@@ -7,17 +7,39 @@ import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseMemberDisplayVo;
 
 import java.util.List;
 
+/**
+ * @author chuyunfei
+ * @description 企业中成员变动与查询
+ * @date 21:31 2019/4/26
+ **/
+
 public interface EnterpriseMemberManageService {
 
-    //加入一个企业
+    /**
+     * @author chuyunfei
+     * @description 加入一个企业
+     * @date 21:31 2019/4/26
+     **/
     WebResponseVo<Long> joinOneEnterprise(EnterpriseJoinDto joinDto);
 
-    //退出一个企业
+    /**
+     * @author chuyunfei
+     * @description 退出一个企业
+     * @date 21:31 2019/4/26
+     **/
     WebResponseVo<String> outOneEnterprise(Long userId,Long enterpriseId);
 
-    //获取一个企业的全部成员信息
+    /**
+     * @author chuyunfei
+     * @description 获取一个企业的全部成员信息
+     * @date 21:31 2019/4/26
+     **/
     List<EnterpriseMemberDisplayVo> getOneEnterpriseMemberInfos(Long enterpriseId);
 
-    //确认一个企业成员的贡献度
+    /**
+     * @author chuyunfei
+     * @description 确认一个企业成员的贡献度
+     * @date 21:31 2019/4/26
+     **/
     WebResponseVo<String> sureGameContributionRate(UserContributionRateSureDto rateSureDto);
 }

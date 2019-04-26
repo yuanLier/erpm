@@ -1,17 +1,20 @@
 package edu.cqupt.mislab.erp.game.manage.model.dto;
 
-import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.commons.validators.annotations.GameStatusValid;
 import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
-import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatus;
-import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
+/**
+ * @author chuyunfei
+ * @description 
+ * @date 20:50 2019/4/26
+ **/
 
 @ApiModel("创建企业的数据实体")
 @Data

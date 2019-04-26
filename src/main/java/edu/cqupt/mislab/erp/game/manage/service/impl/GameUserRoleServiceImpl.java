@@ -10,6 +10,12 @@ import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author chuyunfei
+ * @description
+ * @date 22:38 2019/4/26
+ **/
+
 @Service
 public class GameUserRoleServiceImpl implements GameUserRoleService {
 

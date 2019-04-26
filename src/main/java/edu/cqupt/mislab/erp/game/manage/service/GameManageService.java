@@ -7,19 +7,46 @@ import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailInfoVo;
 import org.springframework.data.domain.Example;
 
+/**
+ * @author chuyunfei
+ * @description 比赛管理
+ * @date 21:48 2019/4/26
+ **/
+
 public interface GameManageService {
 
-    //创建一个新的比赛
+    /**
+     * @author chuyunfei
+     * @description 创建一个新的比赛
+     * @date 21:46 2019/4/26
+     **/
     WebResponseVo<GameDetailInfoVo> createNewGame(GameCreateDto createDto);
 
-    //删除一个比赛
+    /**
+     * @author chuyunfei
+     * @description 删除一个比赛
+     * @date 21:46 2019/4/26
+     **/
     WebResponseVo<Object> deleteOneGame(Long gameId,Long userId,String password);
 
-    //查询指定的比赛数据
+    /**
+     * @author chuyunfei
+     * @description 查询指定的比赛数据
+     * @date 21:46 2019/4/26
+     **/
     GamesSearchDto getGameDetailVosBySearchDto(GamesSearchDto gamesSearchDto);
 
-    Example<GameBasicInfo> getGameBasicInfoExampleBySearchDto(GamesSearchDto searchDto);//用于比赛的搜索接口
+    /**
+     * @author chuyunfei
+     * @description 用于比赛的搜索接口
+     * @date 21:48 2019/4/26
+     **/
+    Example<GameBasicInfo> getGameBasicInfoExampleBySearchDto(GamesSearchDto searchDto);
 
-    //开启一个比赛
+    /**
+     * @author chuyunfei
+     * @description 开启一个比赛
+     * @date 21:46 2019/4/26
+     **/
     WebResponseVo<String> beginOneGame(Long userId,Long gameId);
 }

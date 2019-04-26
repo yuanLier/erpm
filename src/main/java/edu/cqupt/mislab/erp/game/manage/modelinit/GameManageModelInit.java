@@ -15,6 +15,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author chuyunfei
+ * @description 
+ * @date 22:39 2019/4/26
+ **/
+
 @Slf4j
 @Service
 public class GameManageModelInit implements ModelInit {
@@ -67,17 +73,17 @@ public class GameManageModelInit implements ModelInit {
      * @Author: chuyunfei
      * @Date: 2019/3/3 14:34
      * @Description: 比赛管理的初始化先决条件是用户模块初始化
-     **/
+     */
     private List<String> preGameManageModelInit(){
 
         return userModelInit.applicationModelInit();
     }
 
-    /* 
+    /**
      * @Author: chuyunfei
      * @Date: 2019/3/3 14:41
      * @Description: 初始化比赛信息，里面有一个等待初始化的比赛
-     **/
+     */
     private void initGameInitInfo(){
 
         //默认初始化比赛信息

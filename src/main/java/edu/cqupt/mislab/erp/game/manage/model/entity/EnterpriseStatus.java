@@ -1,12 +1,12 @@
 package edu.cqupt.mislab.erp.game.manage.model.entity;
 
-public enum EnterpriseStatus {
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/5 19:15
+ * @Description: 企业状态信息
+ */
 
-    /*
-     * @Author: chuyunfei
-     * @Date: 2019/3/5 19:15
-     * @Description: 企业状态信息
-     **/
+public enum EnterpriseStatus {
 
     /*
     企业创建并等待成员加入状态

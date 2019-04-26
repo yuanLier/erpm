@@ -2,16 +2,13 @@ package edu.cqupt.mislab.erp.game.manage.controller;
 
 import edu.cqupt.mislab.erp.commons.response.WebResponseUtil;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
-import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.commons.validators.annotations.GameStatusValid;
 import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
-import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.dto.GameCreateDto;
 import edu.cqupt.mislab.erp.game.manage.model.dto.GamesSearchDto;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatus;
 import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailInfoVo;
 import edu.cqupt.mislab.erp.game.manage.service.GameManageService;
-import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +16,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+/**
+ * @author chuyunfei
+ * @description
+ * @date 22:28 2019/4/26
+ **/
 
 @Api
 @Validated
@@ -39,8 +42,8 @@ public class GameManageController {
     @ApiOperation(value = "删除一个比赛",notes = "1、只有创建者可以删除比赛；2、只能删除处于创建状态的比赛；3、敏感操作，需要输入密码")
     @DeleteMapping("/delete")
     public WebResponseVo<Object> deleteOneGame(
-            @GameStatusValid(requireStatus = GameStatus.CREATE) @RequestParam Long gameId
-            ,@UserStatusValid(isEnable = true) @RequestParam Long userId,
+            @GameStatusValid(requireStatus = GameStatus.CREATE) @RequestParam Long gameId,
+            @UserStatusValid(isEnable = true) @RequestParam Long userId,
             @RequestParam String password){
 
         return gameManageService.deleteOneGame(gameId,userId,password);
@@ -49,8 +52,8 @@ public class GameManageController {
     @ApiOperation("开始一个比赛")
     @PostMapping("/begin")
     public WebResponseVo<String> beginOneGame(
-            @GameStatusValid(requireStatus = GameStatus.CREATE) @RequestParam Long gameId
-            ,@UserStatusValid(isEnable = true) @RequestParam Long userId){
+            @GameStatusValid(requireStatus = GameStatus.CREATE) @RequestParam Long gameId,
+            @UserStatusValid(isEnable = true) @RequestParam Long userId){
 
         return gameManageService.beginOneGame(userId,gameId);
     }

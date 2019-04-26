@@ -2,13 +2,24 @@ package edu.cqupt.mislab.erp.game.manage.model.entity;
 
 import com.google.common.base.Objects;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
+import lombok.*;
 
-import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import java.io.Serializable;
+import java.util.Date;
 
-import lombok.*;
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/5 19:02
+ * @Description: 比赛的基本初始化话信息
+ */
+
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/12 17:45
+ * @Description: 比赛的基本初始化数据，参考：doc/业务逻辑要求列表文件.md:1
+ */
 
 @Getter
 @Setter
@@ -18,18 +29,6 @@ import lombok.*;
 @Entity
 @Table
 public class GameInitBasicInfo implements Serializable {
-
-    /*
-     * @Author: chuyunfei
-     * @Date: 2019/3/5 19:02
-     * @Description: 比赛的基本初始化话信息
-     **/
-    
-    /* 
-     * @Author: chuyunfei
-     * @Date: 2019/3/12 17:45
-     * @Description: 比赛的基本初始化数据，参考：doc/业务逻辑要求列表文件.md:1
-     **/
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -67,10 +66,12 @@ public class GameInitBasicInfo implements Serializable {
 
     @Override
     public boolean equals(Object o){
-        if(this == o)
+        if(this == o) {
             return true;
-        if(o == null||getClass() != o.getClass())
+        }
+        if(o == null||getClass() != o.getClass()) {
             return false;
+        }
         GameInitBasicInfo that = (GameInitBasicInfo) o;
         return Objects.equal(id,that.id)&&Objects.equal(totalYear,that.totalYear)&&Objects.equal(periodOfOneYear,that.periodOfOneYear)&&Objects.equal(maxEnterpriseMemberNumber,that.maxEnterpriseMemberNumber)&&Objects.equal(maxEnterpriseNumber,that.maxEnterpriseNumber)&&Objects.equal(settingEnable,that.settingEnable)&&Objects.equal(settingCreateTimeStamp,that.settingCreateTimeStamp);
     }

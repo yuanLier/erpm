@@ -15,6 +15,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.List;
 
+/**
+ * @author chuyunfei
+ * @description
+ * @date 20:47 2019/4/26
+ **/
+
 @ApiModel("比赛信息搜索")
 @AllArgsConstructor
 @NoArgsConstructor
