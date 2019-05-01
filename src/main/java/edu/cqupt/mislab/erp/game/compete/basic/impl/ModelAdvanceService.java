@@ -3,14 +3,13 @@ package edu.cqupt.mislab.erp.game.compete.basic.impl;
 import edu.cqupt.mislab.erp.game.compete.basic.ModelAdvance;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
-import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatus;
+import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -32,7 +31,7 @@ public class ModelAdvanceService implements ApplicationContextAware {
         final GameBasicInfo gameBasicInfo = gameBasicInfoRepository.findOne(gameId);
 
         //只有被正确初始化的比赛才可以进行比赛推进操作
-        if(gameBasicInfo == null || gameBasicInfo.getGameStatus() != GameStatus.PLAYING){
+        if(gameBasicInfo == null || gameBasicInfo.getGameStatus() != GameStatusEnum.PLAYING){
             return false;
         }
 

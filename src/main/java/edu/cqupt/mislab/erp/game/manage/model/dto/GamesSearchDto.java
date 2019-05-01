@@ -2,7 +2,7 @@ package edu.cqupt.mislab.erp.game.manage.model.dto;
 
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatus;
+import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatusEnum;
 import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailInfoVo;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import edu.cqupt.mislab.erp.user.dao.UserTeacherRepository;
@@ -44,7 +44,7 @@ public class GamesSearchDto {
     private Long studentId;
 
     @ApiModelProperty("查询指定状态的比赛信息")
-    private GameStatus gameStatus;
+    private GameStatusEnum gameStatusEnum;
 
     @Null
     @ApiModelProperty("总共有多少条数据，该数据由后台返回")

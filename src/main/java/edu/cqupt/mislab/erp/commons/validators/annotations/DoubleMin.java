@@ -1,8 +1,6 @@
 package edu.cqupt.mislab.erp.commons.validators.annotations;
 
 import edu.cqupt.mislab.erp.commons.validators.DoubleMinValidator;
-import edu.cqupt.mislab.erp.commons.validators.EnterpriseStatusValidator;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatus;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

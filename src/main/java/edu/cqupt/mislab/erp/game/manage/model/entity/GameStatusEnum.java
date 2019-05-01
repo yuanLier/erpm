@@ -6,7 +6,7 @@ package edu.cqupt.mislab.erp.game.manage.model.entity;
  * @Description: 比赛状态信息
  */
 
-public enum  GameStatus {
+public enum GameStatusEnum {
 
     /*
     标识创建状态，这个状态可以被删除，可以成员添加等

@@ -4,6 +4,7 @@ import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseMemberInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
+import edu.cqupt.mislab.erp.game.manage.model.entity.GameEnterpriseUserRoleEnum;
 import edu.cqupt.mislab.erp.game.manage.service.GameUserRoleService;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
@@ -25,14 +26,14 @@ public class GameUserRoleServiceImpl implements GameUserRoleService {
     @Autowired private UserStudentRepository userStudentRepository;
 
     @Override
-    public GameEnterpriseUserRole getUserRoleInOneGame(Long gameId,Long userId){
+    public GameEnterpriseUserRoleEnum getUserRoleInOneGame(Long gameId, Long userId){
 
         //查看比赛信息是否合理，比赛是否存在
         final GameBasicInfo gameBasicInfo = gameBasicInfoRepository.findOne(gameId);
 
         if(gameBasicInfo == null){
 
-            return GameEnterpriseUserRole.NOT_FOUND;
+            return GameEnterpriseUserRoleEnum.NOT_FOUND;
         }
 
         //判断比赛创建者是否存在
@@ -40,21 +41,21 @@ public class GameUserRoleServiceImpl implements GameUserRoleService {
 
         if(userStudentInfo == null){
 
-            return GameEnterpriseUserRole.NOT_FOUND;
+            return GameEnterpriseUserRoleEnum.NOT_FOUND;
         }
 
         //判断该用户是否已经在该比赛中创建了一个企业
         if(enterpriseBasicInfoRepository.existsByUserStudentInfo_IdAndGameBasicInfo_Id(userId,gameId)){
 
-            return GameEnterpriseUserRole.ENTERPRISE_CREATOR;
+            return GameEnterpriseUserRoleEnum.ENTERPRISE_CREATOR;
         }
 
-        //判断该用户是否已经加入了一个一个企业
+        //判断该用户是否已经加入了一个企业
         if(enterpriseMemberInfoRepository.existsByUserStudentInfo_IdAndEnterpriseBasicInfo_GameBasicInfo_Id(userId,gameId)){
 
-            return GameEnterpriseUserRole.ENTERPRISE_MEMBER;
+            return GameEnterpriseUserRoleEnum.ENTERPRISE_MEMBER;
         }
 
-        return GameEnterpriseUserRole.PASSERBY;
+        return GameEnterpriseUserRoleEnum.PASSERBY;
     }
 }

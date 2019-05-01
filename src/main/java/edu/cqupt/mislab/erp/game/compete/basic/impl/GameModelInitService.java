@@ -7,6 +7,10 @@ import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketBasicInfoRep
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.material.dao.MaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductMaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
@@ -21,6 +25,12 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author chuyunfei
+ * @description 用于比赛初始化
+ * @date 18:14 2019/5/1
+ **/
+
 @Slf4j
 @Service
 public class GameModelInitService implements ApplicationContextAware {
@@ -28,8 +38,10 @@ public class GameModelInitService implements ApplicationContextAware {
     @Autowired private IsoBasicInfoRepository isoBasicInfoRepository;
     @Autowired private MarketBasicInfoRepository marketBasicInfoRepository;
     @Autowired private MaterialBasicInfoRepository materialBasicInfoRepository;
-    @Autowired private ProductBasicInfoRepository productBasicInfo;
+    @Autowired private ProductBasicInfoRepository productBasicInfoRepository;
     @Autowired private ProductMaterialBasicInfoRepository productMaterialBasicInfoRepository;
+    @Autowired private FactoryBasicInfoRepository factoryBasicInfoRepository;
+    @Autowired private ProdlineBasicInfoRepository prodlineBasicInfoRepository;
 
     private ApplicationContext applicationContext;
 
@@ -107,7 +119,7 @@ public class GameModelInitService implements ApplicationContextAware {
         return null;
     }
 
-    /*
+    /**
      * @Author: chuyunfei
      * @Date: 2019/3/3 15:53
      * @Description: 校验比赛模块的数据是否符合要求，若不符合将无法进行初始化
@@ -117,28 +129,28 @@ public class GameModelInitService implements ApplicationContextAware {
         //ISO认证必须要存在
         final List<IsoBasicInfo> isoBasicInfos = isoBasicInfoRepository.findAllNewestApplicationIsoBasicInfos();
 
-        if(isoBasicInfos == null || isoBasicInfos.size() == 0){
+        if(isoBasicInfos.size() == 0){
             return Collections.singletonList("ISO认证信息必须存在，否则无法初始化比赛!");
         }
 
         //市场基本数据信息必须存在
         final List<MarketBasicInfo> marketBasicInfos = marketBasicInfoRepository.findAllNewestApplicationMarketBasicInfos();
 
-        if(marketBasicInfos == null || marketBasicInfos.size() == 0){
+        if(marketBasicInfos.size() == 0){
             return Collections.singletonList("市场信息必须存在，否则无法初始化比赛!");
         }
 
         //材料基本数据必须存在
         final List<MaterialBasicInfo> materialBasicInfos = materialBasicInfoRepository.findNewestMaterialBasicInfos();
 
-        if(materialBasicInfos == null || materialBasicInfos.size() == 0){
+        if(materialBasicInfos.size() == 0){
             return Collections.singletonList("材料信息必须存在，否则无法初始化比赛!");
         }
 
         //产品基本数据必须存在
-        final List<ProductBasicInfo> productBasicInfos = productBasicInfo.findNewestProductBasicInfos();
+        final List<ProductBasicInfo> productBasicInfos = productBasicInfoRepository.findNewestProductBasicInfos();
 
-        if(productBasicInfos == null || productBasicInfos.size() == 0){
+        if(productBasicInfos.size() == 0){
             return Collections.singletonList("产品信息必须存在，否则无法初始化比赛!");
         }
 
@@ -147,7 +159,7 @@ public class GameModelInitService implements ApplicationContextAware {
 
             final List<ProductMaterialBasicInfo> productMaterialBasicInfos = productMaterialBasicInfoRepository.findByEnableIsTrueAndProductBasicInfo_Id(basicInfo.getId());
 
-            if(productMaterialBasicInfos == null || productMaterialBasicInfos.size() == 0){
+            if(productMaterialBasicInfos.size() == 0){
 
                 log.error("产品：" + basicInfo.getProductName() + "没有材料组成信息，将无法进行比赛初始化");
 
@@ -155,7 +167,23 @@ public class GameModelInitService implements ApplicationContextAware {
             }
         }
 
-        //todo
+        // 厂房基本信息
+        final List<FactoryBasicInfo> factoryBasicInfos = factoryBasicInfoRepository.findNewestFactoryBasicInfos();
+
+        if(factoryBasicInfos.size() == 0) {
+            return Collections.singletonList("厂房信息必须存在，否则无法初始化比赛!");
+        }
+
+
+        // 生产线基本信息
+        final List<ProdlineBasicInfo> prodlineBasicInfos = prodlineBasicInfoRepository.findNewestProdlineBasicInfos();
+
+        if(prodlineBasicInfos.size() == 0) {
+            return Collections.singletonList("生产线信息必须存在，否则无法初始化比赛!");
+        }
+
+
+//        todo 其他模块初始化
 
 
         return null;

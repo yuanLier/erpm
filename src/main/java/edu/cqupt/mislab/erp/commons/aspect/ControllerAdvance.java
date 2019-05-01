@@ -1,6 +1,7 @@
 package edu.cqupt.mislab.erp.commons.aspect;
 
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,8 +28,10 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailRespon
 public class ControllerAdvance {
 
     /**
-     * 这个异常出现在JSR自定义参数校验：validation
-     */
+     * @author chuyunfei
+     * @description 这个异常出现在JSR自定义参数校验：validation
+     * @date 19:05 2019/4/29
+     **/
     @ResponseBody
     @ExceptionHandler(ConstraintViolationException.class)
     public WebResponseVo<Object> constraintViolationExceptionHandler(ConstraintViolationException exception){
@@ -51,8 +54,10 @@ public class ControllerAdvance {
     }
 
     /**
-     * 这个异常出现在参数校验：@Valid @RequestBody ，如果这个对象里面的属性不是符合要求的时候就会包这个异常
-     */
+     * @author chuyunfei
+     * @description 这个异常出现在参数校验：@Valid @RequestBody ，如果这个对象里面的属性不是符合要求的时候就会包这个异常
+     * @date 19:04 2019/4/29
+     **/
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public WebResponseVo<Object> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException exception){
@@ -98,8 +103,24 @@ public class ControllerAdvance {
     }
 
     /**
-     * 无可奈何的不知名异常就是使用这个处理器来进行处理，最后一道防线
-     */
+     * @author yuanyiwen
+     * @description 捕获jpa自带的delete中可能出现的异常
+     * @date 19:05 2019/4/29
+     **/
+    @ResponseBody
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    public WebResponseVo<Object> emptyResultDataAccessExceptionHandler(EmptyResultDataAccessException exception) {
+
+        exception.printStackTrace();
+
+        return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "数据删除异常 ：" + exception.getMessage());
+    }
+
+    /**
+     * @author chuyunfei
+     * @description 无可奈何的不知名异常就是使用这个处理器来进行处理，最后一道防线
+     * @date 19:05 2019/4/29
+     **/
     @ResponseBody
     @ExceptionHandler(Exception.class)
     public WebResponseVo<Object> exceptionHandler(Exception exception){

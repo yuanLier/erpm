@@ -106,7 +106,7 @@ public class GameManageModelInit implements ModelInit {
                 .gameName("究极比赛")
                 .gameMaxEnterpriseNumber(gameInitBasicInfo.getMaxEnterpriseNumber())
                 .gameCurrentYear(1)
-                .gameStatus(GameStatus.CREATE)
+                .gameStatus(GameStatusEnum.CREATE)
                 .gameCreateTime(new Date())
                 .userStudentInfo(userStudentInfo)
                 .build();
@@ -118,7 +118,7 @@ public class GameManageModelInit implements ModelInit {
                 .advertising(true)
                 .advertisingCost(false)
                 .gameContributionRateSure(false)
-                .enterpriseStatus(EnterpriseStatus.CREATE)
+                .enterpriseStatus(EnterpriseStatusEnum.CREATE)
                 .userStudentInfo(userStudentInfo)
                 .enterpriseName("究极企业")
                 .enterpriseCurrentPeriod(1)

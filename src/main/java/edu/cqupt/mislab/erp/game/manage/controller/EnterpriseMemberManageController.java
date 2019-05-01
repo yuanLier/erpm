@@ -8,7 +8,7 @@ import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.dto.EnterpriseJoinDto;
 import edu.cqupt.mislab.erp.game.manage.model.dto.UserContributionRateSureDto;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatus;
+import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatusEnum;
 import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseMemberDisplayVo;
 import edu.cqupt.mislab.erp.game.manage.service.EnterpriseMemberManageService;
 import io.swagger.annotations.Api;
@@ -47,7 +47,7 @@ public class EnterpriseMemberManageController {
     @DeleteMapping("/out")
     public WebResponseVo<String> outOneEnterprise(
             @UserStatusValid(isEnable = true) @RequestParam Long userId,
-            @EnterpriseStatusValid(enterpriseStatus = EnterpriseStatus.CREATE) @RequestParam Long enterpriseId){
+            @EnterpriseStatusValid(enterpriseStatus = EnterpriseStatusEnum.CREATE) @RequestParam Long enterpriseId){
 
         return enterpriseMemberManageService.outOneEnterprise(userId,enterpriseId);
     }

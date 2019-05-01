@@ -8,7 +8,7 @@ import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.dto.EnterpriseCreateDto;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatus;
+import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatusEnum;
 import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseDetailInfoVo;
 import edu.cqupt.mislab.erp.game.manage.service.EnterpriseManageService;
 import io.swagger.annotations.Api;
@@ -45,8 +45,9 @@ public class EnterpriseManageController {
     @ApiOperation(value = "删除一个企业",notes = "敏感操作，需要提供密码")
     @DeleteMapping("/delete")
     public WebResponseVo<String> deleteOneEnterprise(
-            @EnterpriseStatusValid(enterpriseStatus = EnterpriseStatus.CREATE) @RequestParam Long enterpriseId,
-            @UserStatusValid(isEnable = true) @RequestParam Long userId,@RequestParam String password){
+            @EnterpriseStatusValid(enterpriseStatus = EnterpriseStatusEnum.CREATE) @RequestParam Long enterpriseId,
+            @UserStatusValid(isEnable = true) @RequestParam Long userId,
+            @RequestParam String password){
 
         return enterpriseManageService.deleteOneEnterprise(enterpriseId,userId,password);
     }
@@ -54,7 +55,7 @@ public class EnterpriseManageController {
     @ApiOperation("当前企业确定准备完成")
     @PostMapping("/sure")
     public WebResponseVo<String> sureOneEnterprise(
-            @EnterpriseStatusValid(enterpriseStatus = EnterpriseStatus.CREATE) @RequestParam Long enterpriseId,
+            @EnterpriseStatusValid(enterpriseStatus = EnterpriseStatusEnum.CREATE) @RequestParam Long enterpriseId,
             @UserStatusValid(isEnable = true) @RequestParam Long userId){
 
         return enterpriseManageService.sureOneEnterprise(enterpriseId,userId);

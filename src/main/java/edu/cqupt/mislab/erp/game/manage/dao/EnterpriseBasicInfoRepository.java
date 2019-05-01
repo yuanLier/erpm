@@ -2,7 +2,7 @@ package edu.cqupt.mislab.erp.game.manage.dao;
 
 import edu.cqupt.mislab.erp.commons.basic.repository.BasicRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatus;
+import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatusEnum;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public interface EnterpriseBasicInfoRepository extends BasicRepository<Enterpris
      * @description 判断某个企业是否处于某个状态
      * @date 20:54 2019/4/26
      **/
-    EnterpriseBasicInfo findByIdAndEnterpriseStatus(long enterpriseId,EnterpriseStatus status);
+    EnterpriseBasicInfo findByIdAndEnterpriseStatus(long enterpriseId,EnterpriseStatusEnum status);
 
     /**
      * @author chuyunfei
@@ -47,7 +47,7 @@ public interface EnterpriseBasicInfoRepository extends BasicRepository<Enterpris
      * @description 判断某个比赛的企业中是否有指定状态的企业
      * @date 20:56 2019/4/26
      **/
-    boolean existsByGameBasicInfo_IdAndEnterpriseStatus(Long gameId,EnterpriseStatus enterpriseStatus);
+    boolean existsByGameBasicInfo_IdAndEnterpriseStatus(Long gameId,EnterpriseStatusEnum enterpriseStatusEnum);
 
     /**
      * @author chuyunfei

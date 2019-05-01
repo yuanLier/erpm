@@ -18,7 +18,7 @@ import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
-import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatus;
+import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatusEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -30,10 +30,6 @@ import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -184,7 +180,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
     public void loadOrderChooseInfoFromDatabase(){
 
         //选取所有的非完结的比赛
-        List<GameBasicInfo> gameBasicInfos = gameBasicInfoRepository.findByGameStatus(GameStatus.PLAYING);
+        List<GameBasicInfo> gameBasicInfos = gameBasicInfoRepository.findByGameStatus(GameStatusEnum.PLAYING);
 
         if(gameBasicInfos != null && gameBasicInfos.size() > 0){
 

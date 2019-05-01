@@ -1,10 +1,8 @@
 package edu.cqupt.mislab.erp.commons.validators;
 
 import edu.cqupt.mislab.erp.commons.validators.annotations.EnterpriseStatusValid;
-import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatus;
-import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
+import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,7 +19,7 @@ public class EnterpriseStatusValidator implements ConstraintValidator<Enterprise
 
     @Autowired private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
 
-    private EnterpriseStatus enterpriseStatus;
+    private EnterpriseStatusEnum enterpriseStatusEnum;
 
     @Override
     public void initialize(EnterpriseStatusValid constraintAnnotation){
@@ -29,7 +27,7 @@ public class EnterpriseStatusValidator implements ConstraintValidator<Enterprise
         log.info("初始化：EnterpriseStatusValid");
 
         //获取配置的信息
-        enterpriseStatus = constraintAnnotation.enterpriseStatus();
+        enterpriseStatusEnum = constraintAnnotation.enterpriseStatus();
     }
 
     @Override
@@ -39,6 +37,6 @@ public class EnterpriseStatusValidator implements ConstraintValidator<Enterprise
 
         //判断当前数据是否符合要求
 
-        return enterpriseBasicInfoRepository.findByIdAndEnterpriseStatus(value,enterpriseStatus) != null;
+        return enterpriseBasicInfoRepository.findByIdAndEnterpriseStatus(value, enterpriseStatusEnum) != null;
     }
 }

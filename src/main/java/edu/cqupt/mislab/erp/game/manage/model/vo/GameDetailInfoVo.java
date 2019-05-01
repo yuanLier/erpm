@@ -1,6 +1,6 @@
 package edu.cqupt.mislab.erp.game.manage.model.vo;
 
-import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatus;
+import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatusEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -33,7 +33,7 @@ public class GameDetailInfoVo {
     private Integer period;
 
     @ApiModelProperty("比赛的状态")
-    private GameStatus gameStatus;
+    private GameStatusEnum gameStatusEnum;
 
     @ApiModelProperty("比赛的创建时间")
     private Date gameCreateTime;

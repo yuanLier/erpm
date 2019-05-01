@@ -59,7 +59,7 @@ public class GameBasicInfo implements Serializable {
     @Basic(optional = false)
     @Enumerated(EnumType.STRING)
     @Comment(comment = "比赛的状态")
-    private GameStatus gameStatus;
+    private GameStatusEnum gameStatus;
 
     @Column(nullable = false,updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -79,11 +79,11 @@ public class GameBasicInfo implements Serializable {
             return false;
         }
         GameBasicInfo that = (GameBasicInfo) o;
-        return Objects.equal(id,that.id)&&Objects.equal(gameName,that.gameName)&&Objects.equal(gameMaxEnterpriseNumber,that.gameMaxEnterpriseNumber)&&Objects.equal(gameCurrentYear,that.gameCurrentYear)&&gameStatus == that.gameStatus&&Objects.equal(gameCreateTime,that.gameCreateTime);
+        return Objects.equal(id,that.id)&&Objects.equal(gameName,that.gameName)&&Objects.equal(gameMaxEnterpriseNumber,that.gameMaxEnterpriseNumber)&&Objects.equal(gameCurrentYear,that.gameCurrentYear)&& gameStatus == that.gameStatus &&Objects.equal(gameCreateTime,that.gameCreateTime);
     }
 
     @Override
     public int hashCode(){
-        return Objects.hashCode(id,gameName,gameMaxEnterpriseNumber,gameCurrentYear,gameStatus,gameCreateTime);
+        return Objects.hashCode(id,gameName,gameMaxEnterpriseNumber,gameCurrentYear, gameStatus,gameCreateTime);
     }
 }

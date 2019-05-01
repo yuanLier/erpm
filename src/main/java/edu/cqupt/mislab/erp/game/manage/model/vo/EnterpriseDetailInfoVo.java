@@ -1,6 +1,6 @@
 package edu.cqupt.mislab.erp.game.manage.model.vo;
 
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatus;
+import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatusEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -34,5 +34,5 @@ public class EnterpriseDetailInfoVo {
     private Integer enterpriseMemberNumber;
 
     @ApiModelProperty("企业所处于的一个状态")
-    private EnterpriseStatus enterpriseStatus;
+    private EnterpriseStatusEnum enterpriseStatusEnum;
 }

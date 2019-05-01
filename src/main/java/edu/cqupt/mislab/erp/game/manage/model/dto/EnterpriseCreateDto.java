@@ -2,7 +2,7 @@ package edu.cqupt.mislab.erp.game.manage.model.dto;
 
 import edu.cqupt.mislab.erp.commons.validators.annotations.GameStatusValid;
 import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
-import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatus;
+import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatusEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -37,7 +37,7 @@ public class EnterpriseCreateDto {
 
     @Min(1L)
     @NotNull
-    @GameStatusValid(requireStatus = GameStatus.CREATE)
+    @GameStatusValid(requireStatus = GameStatusEnum.CREATE)
     @ApiModelProperty(value = "那一场比赛",required = true)
     private Long gameId;
 }

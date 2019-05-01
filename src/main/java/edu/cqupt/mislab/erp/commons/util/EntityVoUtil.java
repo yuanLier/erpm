@@ -62,7 +62,7 @@ public abstract class EntityVoUtil {
         detailInfoVo.setId(gameBasicInfo.getId());
         detailInfoVo.setTotalYear(gameBasicInfo.getGameInitBasicInfo().getTotalYear());
         detailInfoVo.setPeriod(gameBasicInfo.getGameInitBasicInfo().getPeriodOfOneYear());
-        detailInfoVo.setGameStatus(gameBasicInfo.getGameStatus());
+        detailInfoVo.setGameStatusEnum(gameBasicInfo.getGameStatus());
         detailInfoVo.setGameName(gameBasicInfo.getGameName());
         detailInfoVo.setCreatorName(gameBasicInfo.getUserStudentInfo().getStudentName());
         detailInfoVo.setGameCreateTime(gameBasicInfo.getGameCreateTime());
@@ -83,7 +83,7 @@ public abstract class EntityVoUtil {
         enterpriseDetailInfoVo.setCeoName(enterpriseBasicInfo.getUserStudentInfo().getStudentName());
         enterpriseDetailInfoVo.setEnterpriseName(enterpriseBasicInfo.getEnterpriseName());
         enterpriseDetailInfoVo.setGameId(enterpriseBasicInfo.getGameBasicInfo().getId());
-        enterpriseDetailInfoVo.setEnterpriseStatus(enterpriseBasicInfo.getEnterpriseStatus());
+        enterpriseDetailInfoVo.setEnterpriseStatusEnum(enterpriseBasicInfo.getEnterpriseStatus());
 
         if(enterpriseBasicInfo.getEnterpriseMemberInfos() == null){
             enterpriseDetailInfoVo.setEnterpriseMemberNumber(0);

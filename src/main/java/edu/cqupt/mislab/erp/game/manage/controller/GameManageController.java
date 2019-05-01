@@ -6,7 +6,7 @@ import edu.cqupt.mislab.erp.commons.validators.annotations.GameStatusValid;
 import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
 import edu.cqupt.mislab.erp.game.manage.model.dto.GameCreateDto;
 import edu.cqupt.mislab.erp.game.manage.model.dto.GamesSearchDto;
-import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatus;
+import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatusEnum;
 import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailInfoVo;
 import edu.cqupt.mislab.erp.game.manage.service.GameManageService;
 import io.swagger.annotations.Api;
@@ -42,7 +42,7 @@ public class GameManageController {
     @ApiOperation(value = "删除一个比赛",notes = "1、只有创建者可以删除比赛；2、只能删除处于创建状态的比赛；3、敏感操作，需要输入密码")
     @DeleteMapping("/delete")
     public WebResponseVo<Object> deleteOneGame(
-            @GameStatusValid(requireStatus = GameStatus.CREATE) @RequestParam Long gameId,
+            @GameStatusValid(requireStatus = GameStatusEnum.CREATE) @RequestParam Long gameId,
             @UserStatusValid(isEnable = true) @RequestParam Long userId,
             @RequestParam String password){
 
@@ -52,7 +52,7 @@ public class GameManageController {
     @ApiOperation("开始一个比赛")
     @PostMapping("/begin")
     public WebResponseVo<String> beginOneGame(
-            @GameStatusValid(requireStatus = GameStatus.CREATE) @RequestParam Long gameId,
+            @GameStatusValid(requireStatus = GameStatusEnum.CREATE) @RequestParam Long gameId,
             @UserStatusValid(isEnable = true) @RequestParam Long userId){
 
         return gameManageService.beginOneGame(userId,gameId);

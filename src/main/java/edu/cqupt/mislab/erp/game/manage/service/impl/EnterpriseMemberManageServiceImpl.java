@@ -11,11 +11,11 @@ import edu.cqupt.mislab.erp.game.manage.model.dto.EnterpriseJoinDto;
 import edu.cqupt.mislab.erp.game.manage.model.dto.UserContributionRateSureDto;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseMemberInfo;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatus;
+import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatusEnum;
+import edu.cqupt.mislab.erp.game.manage.model.entity.GameEnterpriseUserRoleEnum;
 import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseMemberDisplayVo;
 import edu.cqupt.mislab.erp.game.manage.service.EnterpriseMemberManageService;
 import edu.cqupt.mislab.erp.game.manage.service.GameUserRoleService;
-import edu.cqupt.mislab.erp.game.manage.service.GameUserRoleService.GameEnterpriseUserRole;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.TextMessage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.*;
@@ -45,13 +48,13 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
     @Autowired @Qualifier("commonWebSocketService") private CommonWebSocketMessagePublisher webSocketMessagePublisher;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public WebResponseVo<Long> joinOneEnterprise(EnterpriseJoinDto joinDto){
 
-        final GameEnterpriseUserRole role = gameUserRoleService.getUserRoleInOneGame(joinDto.getGameId(),joinDto.getUserId());
+        final GameEnterpriseUserRoleEnum role = gameUserRoleService.getUserRoleInOneGame(joinDto.getGameId(),joinDto.getUserId());
 
         //只有路人甲可以加入企业
-        if(role != GameEnterpriseUserRole.PASSERBY){
+        if(role != GameEnterpriseUserRoleEnum.PASSERBY){
 
             return toFailResponseVoWithMessage(ResponseStatus.BAD_REQUEST,role.getMessage());
         }
@@ -66,25 +69,24 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
 
         //获取已有的成员个数
         int memberNumber = enterpriseMemberInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseBasicInfo.getId()).size();
+        //必须要小于企业最大成员数
+        //这里的人数限制是比赛初始化信息的最大人数
+        if(memberNumber >= enterpriseBasicInfo.getGameBasicInfo().getGameInitBasicInfo().getMaxEnterpriseMemberNumber()){
+
+            return toFailResponseVoWithMessage(ResponseStatus.BAD_REQUEST,"企业成员个数达到最大，不能够再添加成员了");
+        }
 
         //正常加入企业
-        if(enterpriseBasicInfo.getEnterpriseStatus() == EnterpriseStatus.PLAYING ||
-                enterpriseBasicInfo.getEnterpriseStatus() == EnterpriseStatus.CREATE){
+        if(enterpriseBasicInfo.getEnterpriseStatus() == EnterpriseStatusEnum.PLAYING ||
+                enterpriseBasicInfo.getEnterpriseStatus() == EnterpriseStatusEnum.CREATE){
 
-            if(enterpriseBasicInfo.getEnterpriseStatus() == EnterpriseStatus.PLAYING){
+            //如果是在比赛开始后由企业创建者直接拉人，则需要密码通过才行
+            if(enterpriseBasicInfo.getEnterpriseStatus() == EnterpriseStatusEnum.PLAYING){
 
-                //需要密码通过才行
                 if(!enterpriseBasicInfo.getUserStudentInfo().getStudentPassword().equals(joinDto.getPassword())){
 
                     return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"密码错误，添加成员失败");
                 }
-            }
-
-            //这里的人数限制是比赛初始化信息的最大人数
-            //必须要小于企业最大成员数
-            if(memberNumber >= enterpriseBasicInfo.getGameBasicInfo().getGameInitBasicInfo().getMaxEnterpriseMemberNumber()){
-
-                return toFailResponseVoWithMessage(ResponseStatus.BAD_REQUEST,"企业成员个数达到最大，不能够再添加成员了");
             }
 
             //这个用户绝对会存在，非null
@@ -100,80 +102,76 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
             enterpriseMemberInfoRepository.save(enterpriseMemberInfo);
 
             return toSuccessResponseVoWithData(enterpriseBasicInfo.getId());
-
-        }else {
-
-            return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"只有运行中或者创建状态的企业才可以添加成员");
         }
+
+        return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"只有运行中或者创建状态的企业才可以添加成员");
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public WebResponseVo<String> outOneEnterprise(Long userId,Long enterpriseId){
 
         final EnterpriseMemberInfo memberInfo = enterpriseMemberInfoRepository.findByEnterpriseBasicInfo_IdAndUserStudentInfo_Id(enterpriseId,userId);
 
         if(memberInfo == null){
 
-            //没有该成员就是成功
-            return toSuccessResponseVoWithNoData();
+            return toFailResponseVoWithMessage(ResponseStatus.NOT_FOUND, "该用户不存在");
         }
 
         final EnterpriseBasicInfo basicInfo = enterpriseBasicInfoRepository.findOne(enterpriseId);
 
-        if(basicInfo != null){
+        if(basicInfo == null){
 
-            //如果是创始人退出企业将删除这个企业
-            if(basicInfo.getUserStudentInfo().getId().equals(userId)){
-
-                final Long gameInfoId = basicInfo.getGameBasicInfo().getId();
-
-                //通知前端这个企业已经被删除了
-                webSocketMessagePublisher.publish(gameInfoId,new TextMessage(ManageConstant.ENTERPRISE_DELETE_KEY_NAME + enterpriseId));
-
-                //当创始人退出企业时将删除这个企业
-                enterpriseBasicInfoRepository.delete(enterpriseId);
-
-                return toSuccessResponseVoWithData("创始人退出企业，删除企业");
-            }
-
-            //删除这个成员
-            enterpriseMemberInfoRepository.delete(memberInfo.getId());
-
-            //删除成功响应
-            return toSuccessResponseVoWithNoData();
+            return toFailResponseVoWithMessage(ResponseStatus.NOT_FOUND,"该企业不存在");
         }
 
-        return toFailResponseVoWithMessage(ResponseStatus.NOT_FOUND,"该企业不存在");
+        //如果是创始人退出企业将删除这个企业     todo 企业中其他成员？
+        if(basicInfo.getUserStudentInfo().getId().equals(userId)){
+
+            final Long gameInfoId = basicInfo.getGameBasicInfo().getId();
+
+            //通知前端这个企业已经被删除了
+            webSocketMessagePublisher.publish(gameInfoId,new TextMessage(ManageConstant.ENTERPRISE_DELETE_KEY_NAME + enterpriseId));
+
+            //当创始人退出企业时将删除这个企业
+            enterpriseBasicInfoRepository.delete(enterpriseId);
+
+            return toSuccessResponseVoWithData("创始人退出企业，删除企业");
+        }
+
+        //删除这个成员
+        enterpriseMemberInfoRepository.delete(memberInfo.getId());
+
+        //删除成功响应
+        return toSuccessResponseVoWithNoData();
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<EnterpriseMemberDisplayVo> getOneEnterpriseMemberInfos(Long enterpriseId){
 
         final List<EnterpriseMemberInfo> memberInfos = enterpriseMemberInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId);
 
-        if(memberInfos != null){
+        if(memberInfos.size() == 0) {
 
-            List<EnterpriseMemberDisplayVo> displayVos = new ArrayList<>();
-
-            memberInfos.forEach(enterpriseMemberInfo -> {
-
-                EnterpriseMemberDisplayVo displayVo = new EnterpriseMemberDisplayVo();
-
-                EntityVoUtil.copyFieldsFromEntityToVo(enterpriseMemberInfo,displayVo);
-
-                displayVos.add(displayVo);
-            });
-
-            return displayVos;
+            return null;
         }
 
-        return null;
+        List<EnterpriseMemberDisplayVo> displayVos = new ArrayList<>();
+
+        memberInfos.forEach(enterpriseMemberInfo -> {
+
+            EnterpriseMemberDisplayVo displayVo = new EnterpriseMemberDisplayVo();
+
+            EntityVoUtil.copyFieldsFromEntityToVo(enterpriseMemberInfo,displayVo);
+
+            displayVos.add(displayVo);
+        });
+
+        return displayVos;
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public WebResponseVo<String> sureGameContributionRate(UserContributionRateSureDto rateSureDto){
 
         final Long enterpriseId = rateSureDto.getEnterpriseId();
@@ -187,7 +185,7 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
         }
 
         //企业状态需要准确
-        if(!(enterpriseBasicInfo.getEnterpriseStatus() == EnterpriseStatus.BANKRUPT || enterpriseBasicInfo.getEnterpriseStatus() == EnterpriseStatus.OVER)){
+        if(!(enterpriseBasicInfo.getEnterpriseStatus() == EnterpriseStatusEnum.BANKRUPT || enterpriseBasicInfo.getEnterpriseStatus() == EnterpriseStatusEnum.OVER)){
 
             return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"只有完结的企业才可以确定贡献率");
         }
@@ -211,9 +209,9 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
         Set<Long> memberIds = new HashSet<>();
 
         enterpriseMemberInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId)
-                .forEach(enterpriseMemberInfo -> {
-                    memberIds.add(enterpriseMemberInfo.getId());
-                });
+                .forEach(enterpriseMemberInfo ->
+                    memberIds.add(enterpriseMemberInfo.getId())
+                );
 
         final Set<Long> keySet = rateSureDto.getRates().keySet();
 

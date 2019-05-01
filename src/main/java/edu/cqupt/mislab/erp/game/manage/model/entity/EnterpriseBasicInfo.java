@@ -66,7 +66,7 @@ public class EnterpriseBasicInfo implements Serializable {
     @Basic(optional = false)
     @Enumerated(EnumType.STRING)
     @Comment(comment = "企业所处于的一个状态")
-    private EnterpriseStatus enterpriseStatus;
+    private EnterpriseStatusEnum enterpriseStatus;
 
     @Basic(optional = false)
     @Comment(comment = "成员的贡献度是否已经被确定，确定了贡献度才可以进行实验报告的打印")
@@ -85,11 +85,11 @@ public class EnterpriseBasicInfo implements Serializable {
             return false;
         }
         EnterpriseBasicInfo that = (EnterpriseBasicInfo) o;
-        return Objects.equal(id,that.id)&&Objects.equal(enterpriseName,that.enterpriseName)&&Objects.equal(enterpriseMaxMemberNumber,that.enterpriseMaxMemberNumber)&&Objects.equal(enterpriseCurrentPeriod,that.enterpriseCurrentPeriod)&&Objects.equal(advertising,that.advertising)&&Objects.equal(advertisingCost,that.advertisingCost)&&enterpriseStatus == that.enterpriseStatus&&Objects.equal(gameContributionRateSure,that.gameContributionRateSure);
+        return Objects.equal(id,that.id)&&Objects.equal(enterpriseName,that.enterpriseName)&&Objects.equal(enterpriseMaxMemberNumber,that.enterpriseMaxMemberNumber)&&Objects.equal(enterpriseCurrentPeriod,that.enterpriseCurrentPeriod)&&Objects.equal(advertising,that.advertising)&&Objects.equal(advertisingCost,that.advertisingCost)&& enterpriseStatus == that.enterpriseStatus &&Objects.equal(gameContributionRateSure,that.gameContributionRateSure);
     }
 
     @Override
     public int hashCode(){
-        return Objects.hashCode(id,enterpriseName,enterpriseMaxMemberNumber,enterpriseCurrentPeriod,advertising,advertisingCost,enterpriseStatus,gameContributionRateSure);
+        return Objects.hashCode(id,enterpriseName,enterpriseMaxMemberNumber,enterpriseCurrentPeriod,advertising,advertisingCost, enterpriseStatus,gameContributionRateSure);
     }
 }

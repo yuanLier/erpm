@@ -11,7 +11,6 @@ import edu.cqupt.mislab.erp.game.manage.model.entity.*;
 import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseDetailInfoVo;
 import edu.cqupt.mislab.erp.game.manage.service.EnterpriseManageService;
 import edu.cqupt.mislab.erp.game.manage.service.GameUserRoleService;
-import edu.cqupt.mislab.erp.game.manage.service.GameUserRoleService.GameEnterpriseUserRole;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,8 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.*;
 
 /**
  * @author chuyunfei
- * @description 
- * @date 22:38 2019/4/26
+ * @description
+ * @date 22:45 2019/4/26
  **/
 
 @Service
@@ -40,14 +39,14 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
     @Autowired private CommonWebSocketMessagePublisher webSocketMessagePublisher;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public WebResponseVo<EnterpriseDetailInfoVo> createNewEnterprise(EnterpriseCreateDto createDto){
 
         //获取该用户在本场比赛里面的角色
-        final GameEnterpriseUserRole role = gameUserRoleService.getUserRoleInOneGame(createDto.getGameId(),createDto.getCreatorId());
+        final GameEnterpriseUserRoleEnum role = gameUserRoleService.getUserRoleInOneGame(createDto.getGameId(),createDto.getCreatorId());
 
         //只有路人甲才可以创建企业
-        if(role != GameEnterpriseUserRole.PASSERBY){
+        if(role != GameEnterpriseUserRoleEnum.PASSERBY){
 
             return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,role.getMessage());
         }
@@ -87,24 +86,23 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
         //构建这个企业
         EnterpriseBasicInfo enterpriseBasicInfo = EnterpriseBasicInfo.builder()
                 .userStudentInfo(userStudentInfo)
-                .advertising(true)//默认会投
-                .advertisingCost(false)//默认未投广告费
+                //默认会投广告费
+                .advertising(true)
+                //默认未投广告费
+                .advertisingCost(false)
                 .enterpriseName(createDto.getEnterpriseName())
                 .enterpriseMaxMemberNumber(maxMemberNumber)
-                .enterpriseCurrentPeriod(1)//当前周期为第一期
+                //当前周期为第一期
+                .enterpriseCurrentPeriod(1)
                 .gameBasicInfo(gameBasicInfo)
-                .enterpriseStatus(EnterpriseStatus.CREATE)//企业状态为创建状态
-                .gameContributionRateSure(false)//默认企业成员贡献度没有确认
+                //企业状态为创建状态
+                .enterpriseStatus(EnterpriseStatusEnum.CREATE)
+                //默认企业成员贡献度没有确认
+                .gameContributionRateSure(false)
                 .build();
 
         //存储并立即刷新到数据库
         enterpriseBasicInfo = enterpriseBasicInfoRepository.saveAndFlush(enterpriseBasicInfo);
-
-        //存储失败
-        if(enterpriseBasicInfo.getId() == null){
-
-            return toFailResponseVoWithMessage(ResponseStatus.INTERNAL_SERVER_ERROR,"企业创建失败，未知错误！");
-        }
 
         //创建企业的同时需要将企业创建者作为企业成员添加到数据信息里面去
         EnterpriseMemberInfo enterpriseMemberInfo = EnterpriseMemberInfo.builder()
@@ -128,7 +126,7 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public WebResponseVo<String> deleteOneEnterprise(Long enterpriseId,Long userId,String password){
 
         final EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findOne(enterpriseId);
@@ -136,7 +134,7 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
         //有必要判断
         if(enterpriseBasicInfo == null){
 
-            return toSuccessResponseVoWithNoData();
+            return toFailResponseVoWithMessage(ResponseStatus.NOT_FOUND, "该企业不存在");
         }
 
         //获取企业的创建者
@@ -151,22 +149,18 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
         //获取比赛的ID
         Long gameId = enterpriseBasicInfo.getGameBasicInfo().getId();
 
-        try{
-            //删除一个企业
-            enterpriseBasicInfoRepository.delete(enterpriseId);
-        }catch(Exception e){
-            e.printStackTrace();
-        }finally{
-            //通知前端该企业被删除了
-            webSocketMessagePublisher.publish(gameId,new TextMessage(ManageConstant.ENTERPRISE_DELETE_KEY_NAME + enterpriseId));
-        }
+        //删除一个企业
+        enterpriseBasicInfoRepository.delete(enterpriseId);
+
+        //通知前端该企业被删除了
+        webSocketMessagePublisher.publish(gameId,new TextMessage(ManageConstant.ENTERPRISE_DELETE_KEY_NAME + enterpriseId));
 
         //删除成功
         return toSuccessResponseVoWithNoData();
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public WebResponseVo<String> sureOneEnterprise(Long enterpriseId,Long userId){
 
         final EnterpriseBasicInfo basicInfo = enterpriseBasicInfoRepository.findOne(enterpriseId);
@@ -176,68 +170,66 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
             //对比是否是创建者，只有创建者才可以进行企业的准备完成操作
             final Long id = basicInfo.getUserStudentInfo().getId();
 
-            if(userId.equals(id)){
+            if(!userId.equals(id)){
 
-                basicInfo.setEnterpriseStatus(EnterpriseStatus.SURE);
-
-                //持久化
-                enterpriseBasicInfoRepository.save(basicInfo);
-
-                //获取该企业的比赛信息
-                final Long gameId = basicInfo.getGameBasicInfo().getId();
-
-                //通知前端该企业已经准备完毕
-                webSocketMessagePublisher.publish(gameId,new TextMessage(ManageConstant.ENTERPRISE_SURE_KEY_NAME + enterpriseId));
-
-                return toSuccessResponseVoWithNoData();
+                return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"该用户不是该企业的创建者！");
             }
 
-            return toFailResponseVoWithMessage(ResponseStatus.FORBIDDEN,"该用户不是该企业的创建者！");
+            basicInfo.setEnterpriseStatus(EnterpriseStatusEnum.SURE);
+
+            //持久化
+            enterpriseBasicInfoRepository.save(basicInfo);
+
+            //获取该企业的比赛信息
+            final Long gameId = basicInfo.getGameBasicInfo().getId();
+
+            //通知前端该企业已经准备完毕
+            webSocketMessagePublisher.publish(gameId,new TextMessage(ManageConstant.ENTERPRISE_SURE_KEY_NAME + enterpriseId));
+
+            return toSuccessResponseVoWithNoData();
         }
 
         return toFailResponseVoWithMessage(ResponseStatus.NOT_FOUND,"该企业不存在");
     }
 
     @Override
-    @Transactional(readOnly = true)
     public EnterpriseDetailInfoVo getOneEnterpriseInfo(Long enterpriseId){
 
         final EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findOne(enterpriseId);
 
-        if(enterpriseBasicInfo != null){
+        if(enterpriseBasicInfo == null){
 
-            EnterpriseDetailInfoVo enterpriseDetailInfoVo = new EnterpriseDetailInfoVo();
-
-            EntityVoUtil.copyFieldsFromEntityToVo(enterpriseBasicInfo,enterpriseDetailInfoVo);
-
-            return enterpriseDetailInfoVo;
+            return null;
         }
 
-        return null;
+        EnterpriseDetailInfoVo enterpriseDetailInfoVo = new EnterpriseDetailInfoVo();
+
+        EntityVoUtil.copyFieldsFromEntityToVo(enterpriseBasicInfo,enterpriseDetailInfoVo);
+
+        return enterpriseDetailInfoVo;
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<EnterpriseDetailInfoVo> getEnterpriseInfos(Long gameId){
 
         final List<EnterpriseBasicInfo> basicInfos = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId);
 
-        if(basicInfos != null){
+        if(basicInfos.size() == 0){
 
-            List<EnterpriseDetailInfoVo> detailInfoVos = new ArrayList<>();
-
-            basicInfos.forEach(basicInfo ->{
-
-                EnterpriseDetailInfoVo detailInfoVo = new EnterpriseDetailInfoVo();
-
-                EntityVoUtil.copyFieldsFromEntityToVo(basicInfo,detailInfoVo);
-
-                detailInfoVos.add(detailInfoVo);
-            });
-
-            return detailInfoVos;
+            return null;
         }
 
-        return null;
+        List<EnterpriseDetailInfoVo> detailInfoVos = new ArrayList<>();
+
+        basicInfos.forEach(basicInfo ->{
+
+            EnterpriseDetailInfoVo detailInfoVo = new EnterpriseDetailInfoVo();
+
+            EntityVoUtil.copyFieldsFromEntityToVo(basicInfo,detailInfoVo);
+
+            detailInfoVos.add(detailInfoVo);
+        });
+
+        return detailInfoVos;
     }
 }

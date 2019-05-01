@@ -6,7 +6,7 @@ package edu.cqupt.mislab.erp.game.manage.model.entity;
  * @Description: 企业状态信息
  */
 
-public enum EnterpriseStatus {
+public enum EnterpriseStatusEnum {
 
     /*
     企业创建并等待成员加入状态

@@ -50,7 +50,7 @@ public class GameOrderInfo implements Serializable {
     @Comment(comment = "哪一个市场")
     private MarketBasicInfo marketBasicInfo;
 
-    @Min(1L)
+    @Min(1)
     @Column(nullable = false,updatable = false)
     @Comment(comment = "产品数量")
     private Integer productNumber;
@@ -96,11 +96,13 @@ public class GameOrderInfo implements Serializable {
 
     @Override
     public boolean equals(Object o){
-        if(this == o)
+        if(this == o) {
             return true;
+        }
 
-        if(o == null||getClass() != o.getClass())
+        if(o == null||getClass() != o.getClass()) {
             return false;
+        }
 
         GameOrderInfo that = (GameOrderInfo) o;
 

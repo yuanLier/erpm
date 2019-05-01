@@ -240,7 +240,7 @@ public class OrderGameModelInit implements GameModelInit {
 
                 do{
                     penalPercent = Math.random();
-                }while(penalPercent <= 0D || penalPercent >= 1);
+                }while(penalPercent <= 0.01D || penalPercent >= 1D);
 
                 //构建订单信息
                 GameOrderInfo gameOrderInfo = GameOrderInfo.builder()
