@@ -1,11 +1,16 @@
 package edu.cqupt.mislab.erp.commons.validators.annotations;
 
 import edu.cqupt.mislab.erp.commons.validators.NameFormatValidator;
-import org.springframework.data.repository.CrudRepository;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
+
+/**
+ * @author chuyunfei
+ * @description 
+ * @date 20:44 2019/5/3
+ **/
 
 @Target({ElementType.FIELD,ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)

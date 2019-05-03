@@ -7,18 +7,23 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/6 18:52
+ * @Description: 用于校验企业的状态信息
+ **/
+
 @Target({ElementType.FIELD,ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = EnterpriseStatusValidator.class)
 public @interface EnterpriseStatusValid {
 
-    /*
-     * @Author: chuyunfei
-     * @Date: 2019/3/6 18:52
-     * @Description: 用于校验企业的状态信息
-     **/
-    EnterpriseStatusEnum enterpriseStatus();//判断企业是否处于某种状态
+    /**
+     * 判断企业是否处于某种状态
+     * @return
+     */
+    EnterpriseStatusEnum enterpriseStatus();
 
     String message() default "该企业没有处于指定的状态";
 

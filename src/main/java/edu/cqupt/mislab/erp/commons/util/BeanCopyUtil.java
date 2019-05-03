@@ -6,18 +6,20 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 反射的工具集，主要用于对对象的复制操作
- */
+ * @author chuyunfei
+ * @description 反射的工具集，主要用于对对象的复制操作
+ * @date 19:20 2019/5/3
+ **/
 public abstract class BeanCopyUtil {
 
-    /*
+    /**
      ******************************************************
      * 基础的用于支持反射解析的解析结果缓存，使用软引用实现
      ******************************************************
      */
     private static final Map<Class<?>,SoftReference<Map<String,Field>>> resolvedClassCache = new ConcurrentHashMap<>();
 
-    /*
+    /**
      ****************************************
      * 获取一个对象指定条件字段名称的工具方法
      ****************************************
@@ -77,7 +79,7 @@ public abstract class BeanCopyUtil {
         return allFieldNames.toArray(new String[]{});
     }
 
-    /*
+    /**
      ***************************************************************
      * 复制一个对象的相关工具方法，注意事项如下：
      * 1、只能复制字段名称相同且数据类型兼容的字段数据
@@ -181,7 +183,7 @@ public abstract class BeanCopyUtil {
         copyObjectProperties(source,sourceFieldMap,target,targetFieldMap);
     }
 
-    /*
+    /**
      ******************************
      * 内部工具方法或者内部兼容方法
      ******************************

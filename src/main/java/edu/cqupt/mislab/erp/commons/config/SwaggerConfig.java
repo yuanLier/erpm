@@ -10,11 +10,22 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+/**
+ * @author chuyunfei
+ * @description 
+ * @date 12:26 2019/5/3
+ **/
+
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
 
-    @Bean//用户管理API文档
+    /**
+     * @author chuyunfei
+     * @description 用户管理API文档
+     * @date 12:10 2019/5/3
+     **/
+    @Bean
     public Docket userApi() {
 
         String description = "用户管理的API文档，主要记录的是学生、教师、管理员的登录、注册、个人信息修改服务";
@@ -28,7 +39,12 @@ public class SwaggerConfig {
                 .build();
     }
 
-    @Bean//比赛管理API文档
+    /**
+     * @author chuyunfei
+     * @description 比赛管理API文档
+     * @date 12:10 2019/5/3
+     **/
+    @Bean
     public Docket gameManageApi(){
 
         String description = "比赛管理的API文档，主要记录的是比赛浏览、比赛创建、历史信息浏览等比赛管理服务";
@@ -42,7 +58,12 @@ public class SwaggerConfig {
                 .build();
     }
 
-    @Bean//比赛运行API文档
+    /**
+     * @author chuyunfei
+     * @description 比赛运行API文档
+     * @date 12:10 2019/5/3
+     **/
+    @Bean
     public Docket gameCompeteApi(){
 
         String description = "比赛操作的API文档，所有的比赛操作";

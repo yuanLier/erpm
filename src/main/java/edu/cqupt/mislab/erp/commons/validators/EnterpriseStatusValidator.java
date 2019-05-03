@@ -11,7 +11,8 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * author： chuyunfei date：2019/3/6
+ * @author： chuyunfei
+ * @date：2019/3/6
  */
 @Slf4j
 @Component

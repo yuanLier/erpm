@@ -15,13 +15,17 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * 这个服务用于集合各个模块的周期推进功能，将分散在各个模块的周期推进函数集合起来一起执行
- */
+ * @author chuyunfei
+ * @description 这个服务用于集合各个模块的周期推进功能，将分散在各个模块的周期推进函数集合起来一起执行
+ * @date 15:43 2019/5/2
+ **/
 @Slf4j
 @Service
 public class ModelAdvanceService implements ApplicationContextAware {
 
-    //用于发现Bean模块
+    /**
+     * 用于发现Bean模块
+     */
     private ApplicationContext applicationContext;
 
     @Autowired GameBasicInfoRepository gameBasicInfoRepository;

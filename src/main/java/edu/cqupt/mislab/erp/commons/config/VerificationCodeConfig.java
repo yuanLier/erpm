@@ -8,6 +8,12 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Properties;
 
+/**
+ * @author chuyunfei
+ * @description 
+ * @date 12:28 2019/5/3
+ **/
+
 @Configuration
 public class VerificationCodeConfig {
 

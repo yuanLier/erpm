@@ -6,6 +6,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * @author chuyunfei
+ * @description 
+ * @date 15:55 2019/5/2
+ **/
+
 @Slf4j
 @Service
 public class GameCompeteModelInit implements ModelInit {

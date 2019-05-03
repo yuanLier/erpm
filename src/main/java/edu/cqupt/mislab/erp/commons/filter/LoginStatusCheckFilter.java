@@ -13,19 +13,31 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 登录状态检查过滤器，用于拦截需要登录的接口
- */
+ * @author chuyunfei
+ * @description 登录状态检查过滤器，用于拦截需要登录的接口
+ * @date 12:17 2019/5/3
+ **/
+
 public class LoginStatusCheckFilter implements Filter {
 
-    //记录配置需要放行的初始化参数的参数名称
+    /**
+     * 记录配置需要放行的初始化参数的参数名称
+     */
     public static final String EXCLUSIONS_URLS_PARAMETER_NAME = "exclusions";
-    //多个URL时使用什么分隔符来进行分割
+
+    /**
+     * 多个URL时使用什么分隔符来进行分割
+     */
     public static final String URL_SEPARATOR = ",";
 
-    //未登录时需要响应给前端的信息
-    private final byte[] responseMessage = ("{ \"code\": " + ResponseStatus.UNAUTHORIZED.getCode() + ",\"data\": {},\"msg\": \"请先登录\" }").getBytes(StandardCharsets.UTF_8);
+    /**
+     * 未登录时需要响应给前端的信息
+     */
+    private final byte[] responseMessage = ("{ \"code\": " + ResponseStatus.UNAUTHORIZED.getCode() + ",\"data\": {},\"msg\": \"登录后，发现新天地(｀・ω・´)\" }").getBytes(StandardCharsets.UTF_8);
 
-    //用来记录需要放行的URL，也就是用户登录需要用到的接口URL
+    /**
+     * 用来记录需要放行的URL，也就是用户登录需要用到的接口URL
+     */
     private Set<String> exclusionsUrl ;
 
     @Override
@@ -64,8 +76,8 @@ public class LoginStatusCheckFilter implements Filter {
             final Boolean isLogin = (Boolean) session.getAttribute(UserConstant.USER_LOGIN_SUCCESS_SESSION_ATTR_TOKEN_NAME);
 
             //如果：这个接口不被拦截、已经登录，将放行
-            if(exclusionsUrl.contains(httpServletRequest.getRequestURI()) || isLogin != null && isLogin){
-
+            final boolean goAhead = exclusionsUrl.contains(httpServletRequest.getRequestURI()) || isLogin != null && isLogin;
+            if(goAhead){
                 //放行
                 chain.doFilter(request,response);
             }else {

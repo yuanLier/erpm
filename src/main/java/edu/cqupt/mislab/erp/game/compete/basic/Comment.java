@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface Comment {
 
-    /*
+    /**
      * @Author: chuyunfei
      * @Date: 2019/3/4 20:10
      * @Description: 用于注解Entity的字段解释

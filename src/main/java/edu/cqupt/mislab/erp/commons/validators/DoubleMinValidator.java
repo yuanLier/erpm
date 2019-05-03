@@ -7,12 +7,15 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * author： chuyunfei date：2019/3/6
+ * @author： chuyunfei
+ * @date：2019/3/6
  */
 @Slf4j
 public class DoubleMinValidator implements ConstraintValidator<DoubleMin,Double> {
 
-    //需要校验的值
+    /**
+     * 需要校验的值
+     */
     private double aimValue;
 
     @Override

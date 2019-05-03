@@ -3,6 +3,12 @@ package edu.cqupt.mislab.erp.commons.util;
 import edu.cqupt.mislab.erp.commons.constant.CommonConstant;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * @author chuyunfei
+ * @description 
+ * @date 19:39 2019/5/3
+ **/
+
 public abstract class CommonUtil {
 
     /**

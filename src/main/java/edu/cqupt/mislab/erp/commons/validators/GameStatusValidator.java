@@ -11,7 +11,8 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * author： chuyunfei date：2019/3/6
+ * @author： chuyunfei
+ * @date：2019/3/6
  */
 @Slf4j
 @Component
@@ -19,7 +20,9 @@ public class GameStatusValidator implements ConstraintValidator<GameStatusValid,
 
     @Autowired private GameBasicInfoRepository gameBasicInfoRepository;
 
-    //需要比赛处于该状态才可以校验通过
+    /**
+     * 需要比赛处于该状态才可以校验通过
+     */
     private GameStatusEnum requireGameStatusEnum;
 
     @Override

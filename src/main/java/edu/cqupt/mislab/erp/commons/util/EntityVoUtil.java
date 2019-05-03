@@ -40,8 +40,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 用于转换Entity和VO的工具类，方法全部使用重载，第一个参数是Entity对象，第二个参数是VO对象
- */
+ * @author chuyunfei
+ * @description 用于转换Entity和VO的工具类，方法全部使用重载，第一个参数是Entity对象，第二个参数是VO对象
+ * @date 19:36 2019/5/3
+ **/
 public abstract class EntityVoUtil {
 
     public static void copyFieldsFromEntityToVo(UserStudentInfo userStudentInfo,UserStudentInfoBasicVo infoBasicVo){
@@ -336,11 +338,6 @@ public abstract class EntityVoUtil {
     }
 
 
-    /**
-     * @author yuanyiwen
-     * @description flag为返回类型，防止重载冲突
-     * @date 15:34 2019/3/24
-     **/
     public static FactoryDevelopDisplayVo copyFieldsFromEntityToVo(FactoryDevelopInfo factoryDevelopInfo, FactoryDevelopDisplayVo flag) {
         FactoryDevelopDisplayVo factoryDevelopDisplayVo = new FactoryDevelopDisplayVo();
 
@@ -444,7 +441,7 @@ public abstract class EntityVoUtil {
         return productProduceVo;
     }
 
-    /******************************* 不可抗力影响结束；最后还是统一成了重载，虽然改的比较粗糙 ***********************************/
+    /******************************* 不可抗力影响结束；最后还是统一成了重载，虽然改的比较粗糙喵 ***********************************/
 
 
     public static MaterialOrderDisplayVo copyFieldsFromEntityToVo(MaterialOrderInfo materialOrderInfo) {

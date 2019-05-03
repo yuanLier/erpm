@@ -8,11 +8,18 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
+/**
+ * @author chuyunfei
+ * @description 
+ * @date 12:12 2019/5/3
+ **/
+
 @Configuration
 @EnableWebSocket
 public class WebsocketConfig implements WebSocketConfigurer {
 
-    @Autowired @Qualifier("commonWebSocketService")
+    @Autowired
+    @Qualifier("commonWebSocketService")
     private CommonWebSocketService commonWebSocketService;
 
     @Override

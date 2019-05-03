@@ -8,7 +8,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * author： chuyunfei date：2019/3/15
+ * @author： chuyunfei
+ * @date：2019/3/15
  */
 @Configuration
 public class AsynchronousConfig {
@@ -18,7 +19,11 @@ public class AsynchronousConfig {
 
         //线程池对象
         return new ThreadPoolExecutor(
-                0,Integer.MAX_VALUE,60,TimeUnit.MINUTES,new LinkedBlockingDeque<>()
+                0,
+                Integer.MAX_VALUE,
+                60,
+                TimeUnit.MINUTES,
+                new LinkedBlockingDeque<>()
         );
     }
 }

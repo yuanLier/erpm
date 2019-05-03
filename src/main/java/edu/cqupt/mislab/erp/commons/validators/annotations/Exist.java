@@ -8,8 +8,10 @@ import javax.validation.Payload;
 import java.lang.annotation.*;
 
 /**
- * 通过配置Repository来校验该主键所对应的数据是否存在，注意仅仅是主键校验
- */
+ * @author chuyunfei
+ * @description 通过配置Repository来校验该主键所对应的数据是否存在，注意仅仅是主键校验
+ * @date 20:26 2019/5/3
+ **/
 @Target({ElementType.FIELD,ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

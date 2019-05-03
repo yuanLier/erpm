@@ -7,7 +7,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * author： chuyunfei date：2019/3/13
+ * @author： chuyunfei
+ * @date：2019/3/13
  */
 @Data
 @Entity

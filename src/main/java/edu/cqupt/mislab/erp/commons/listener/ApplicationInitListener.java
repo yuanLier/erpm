@@ -17,9 +17,13 @@ import javax.servlet.annotation.WebListener;
 import java.util.UUID;
 
 /**
- * 初始化应用的数据，注意JPA的DDL模式必须为create才可以配合使用，目前是开发阶段，运行阶段将使用另外的方式
- * 1、依靠ModeInit接口实现对模块的基本元数据进行初始化
- */
+ * @author chuyunfei
+ * @description  初始化应用的数据，注意JPA的DDL模式必须为create才可以配合使用
+ *                      目前是开发阶段，运行阶段将使用另外的方式
+ *                      1、依靠ModeInit接口实现对模块的基本元数据进行初始化
+ * @date 15:18 2019/5/3
+ **/
+
 @Slf4j
 @Component
 @WebListener

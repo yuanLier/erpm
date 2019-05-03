@@ -18,7 +18,11 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = UserStatusValidator.class)
 public @interface UserStatusValid {
 
-    boolean isEnable();//判断用户是否启用
+    /**
+     * 判断用户是否启用
+     * @return
+     */
+    boolean isEnable();
 
     String message() default "该用户没有处于指定的状态";
 

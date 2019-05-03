@@ -11,6 +11,12 @@ import org.springframework.stereotype.Component;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+/**
+ * @author chuyunfei
+ * @description 
+ * @date 20:44 2019/5/3
+ **/
+
 @Slf4j
 @Component
 public class ExistValidator implements ConstraintValidator<Exist,Long> , ApplicationContextAware {

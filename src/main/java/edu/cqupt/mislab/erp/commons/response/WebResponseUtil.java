@@ -2,6 +2,12 @@ package edu.cqupt.mislab.erp.commons.response;
 
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo.ResponseStatus;
 
+/**
+ * @author chuyunfei
+ * @description
+ * @date 17:52 2019/5/3
+ **/
+
 public class WebResponseUtil {
 
     /**

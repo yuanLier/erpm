@@ -1,17 +1,21 @@
 package edu.cqupt.mislab.erp.commons.basic.modelinit;
 
-import edu.cqupt.mislab.erp.commons.basic.modelinit.ModelInit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * author： chuyunfei date：2019/3/2
+ * @author： chuyunfei
+ * @date：2019/3/2
  */
+
 @Slf4j
 @Component
 public class ModelInitService implements ApplicationContextAware {
@@ -24,16 +28,16 @@ public class ModelInitService implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
-    /*
-    用于记录已经被初始化过的模块信息，该服务只有在容器初始化时才会被调用，所以是多线程安全的，不用进行并发控制
+    /**
+     * 用于记录已经被初始化过的模块信息，该服务只有在容器初始化时才会被调用，所以是多线程安全的，不用进行并发控制
      */
     private Set<ModelInit> models = new HashSet<>();
 
-    /*
+    /**
      * @Author: chuyunfei
      * @Date: 2019/3/3 13:53
      * @Description: 初始化应用，该方法供外界调用
-     **/
+     */
     public boolean applicationModelInit(){
 
         //获取全部需要初始化的模块
@@ -61,6 +65,7 @@ public class ModelInitService implements ApplicationContextAware {
             }
         }
 
+        // 走到这里说明初始化正常完成
         //去除中间信息，GC掉
         models = null;
 
@@ -75,7 +80,7 @@ public class ModelInitService implements ApplicationContextAware {
     /**
      * @Author: chuyunfei
      * @Date: 2019/3/3 13:50
-     * @Description: 判断当前模块是否已经被初始化完全了，如果没有被初始化就添加进去
+     * @Description: 判断某个模块是否已经被初始化完全了，如果没有被初始化就添加进去
      **/
     public boolean addInitializedModelIfNotExist(ModelInit modelInit){
 

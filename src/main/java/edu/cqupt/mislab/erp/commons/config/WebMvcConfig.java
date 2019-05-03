@@ -9,6 +9,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author chuyunfei
+ * @description 
+ * @date 12:26 2019/5/3
+ **/
+
 @Configuration
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 

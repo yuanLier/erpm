@@ -2,19 +2,16 @@ package edu.cqupt.mislab.erp.commons.validators;
 
 import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
-import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * author： chuyunfei date：2019/3/6
+ * @author： chuyunfei
+ * @date：2019/3/6
  */
 @Slf4j
 @Component
@@ -22,7 +19,9 @@ public class UserStatusValidator implements ConstraintValidator<UserStatusValid,
 
     @Autowired private UserStudentRepository userStudentRepository;
 
-    //是否启用
+    /**
+     * 是否启用
+     */
     private boolean enable = false;
 
     @Override

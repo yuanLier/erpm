@@ -8,18 +8,32 @@ import edu.cqupt.mislab.erp.game.manage.constant.ManageConstant;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.server.*;
+import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.*;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.WebSocketMessage;
+import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * @author chuyunfei
+ * @description 
+ * @date 20:40 2019/5/3
+ **/
 
 @Slf4j
 @Component
@@ -28,19 +42,29 @@ public class CommonWebSocketService extends AbstractWebSocketHandler implements 
     @Autowired
     protected GameBasicInfoRepository gameBasicInfoRepository;
 
-    /*
-    用于存储每一个比赛里面的session数据，每一个比赛的所有的session数据被存在同一个集合里面
+    /**
+     * 用于存储每一个比赛里面的session数据，每一个比赛的所有的session数据被存在同一个集合里面
      */
     protected final Map<Long,List<WebSocketSession>> webSocketSessionsMap = new ConcurrentHashMap<>();
 
-    @Override//回显测试的作用
+    /**
+     * @author chuyunfei
+     * @description 回显测试的作用
+     * @date 20:42 2019/5/3
+     **/
+    @Override
     public void handleMessage(WebSocketSession session,WebSocketMessage<?> message) throws Exception{
         //这里仅仅是对收到的数据进行显示和回显，主要是用于对websocket的测试，实际应用中这个websocket主要是用于后端主动给前端推送数据，不接受前端数据
         System.out.println(message.getPayload());
         session.sendMessage(message);
     }
 
-    @Override//连接建立后通过比赛信息将该会话保存在对应的数据结构里面
+    /**
+     * @author chuyunfei
+     * @description 连接建立后通过比赛信息将该会话保存在对应的数据结构里面
+     * @date 20:42 2019/5/3
+     **/
+    @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception{
 
         //日志记录，便于调试
@@ -73,7 +97,12 @@ public class CommonWebSocketService extends AbstractWebSocketHandler implements 
         }
     }
 
-    @Override//传输异常处理
+    /**
+     * @author chuyunfei
+     * @description 传输异常处理
+     * @date 20:42 2019/5/3
+     **/
+    @Override
     public void handleTransportError(WebSocketSession session,Throwable exception) throws Exception{
 
         //不打印日志都是耍流氓
@@ -94,7 +123,12 @@ public class CommonWebSocketService extends AbstractWebSocketHandler implements 
         log.warn(status.toString());
     }
 
-    @Override//连接的拦截器，用于拦截需要的请求参数
+    /**
+     * @author chuyunfei
+     * @description 连接的拦截器，用于拦截需要的请求参数
+     * @date 20:41 2019/5/3
+     **/
+    @Override
     public boolean beforeHandshake(ServerHttpRequest request,ServerHttpResponse response,WebSocketHandler wsHandler,Map<String,Object> attributes) throws Exception{
 
         log.info("试图建立连接");
@@ -148,7 +182,12 @@ public class CommonWebSocketService extends AbstractWebSocketHandler implements 
     @Override
     public void afterHandshake(ServerHttpRequest request,ServerHttpResponse response,WebSocketHandler wsHandler,Exception exception){ }
 
-    @Override//用于外界想本数据集中发布数据
+    /**
+     * @author chuyunfei
+     * @description 用于外界想本数据集中发布数据
+     * @date 20:40 2019/5/3
+     **/
+    @Override
     public void publish(Long gameId,WebSocketMessage<?> message){
 
         //判断这个比赛是否存在
