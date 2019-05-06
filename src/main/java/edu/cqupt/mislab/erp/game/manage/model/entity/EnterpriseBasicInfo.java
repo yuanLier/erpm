@@ -49,10 +49,21 @@ public class EnterpriseBasicInfo implements Serializable {
     @Column(nullable = false,updatable = false)
     @Comment(comment = "企业允许的最大成员个数")
     private Integer enterpriseMaxMemberNumber;
+    
+    /**
+     * @author yuanyiwen
+     * @description todo 历史数据分析：企业存货情况分析
+     *
+     *      只用在比赛结束后读取一下各个企业的破产周期即可
+     *
+     *      破产周期即为 enterpriseCurrentPeriod
+     *
+     * @date 19:20 2019/5/6
+     **/
 
     @Min(1)
     @Basic(optional = false)
-    @Comment(comment = "这个企业所处于的周期")
+    @Comment(comment = "这个企业所处于的周期；企业破产后该字段值即为破产周期")
     private Integer enterpriseCurrentPeriod;
 
     @Basic(optional = false)

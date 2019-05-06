@@ -93,7 +93,7 @@ public class StudentServiceImpl implements StudentService {
         //能够获取详细信息的账户必须是要审核通过的账户
         final UserStudentInfo studentInfo = studentRepository.findByStudentAccountAndAccountEnable(userAccount,true);
 
-        if(studentInfo != null){
+        if(studentInfo == null){
 
             return null;
         }

@@ -54,7 +54,6 @@ public class StudentController extends BaseUserController<UserStudentInfoBasicVo
     @PostMapping("/basicInfo/update")
     public WebResponseVo<UserStudentInfoBasicVo> updateStudentBasicInfo(@Valid @RequestBody UserStudentInfoUpdateDto updateDto,HttpSession httpSession){
 
-        // todo 异常处理
         UserStudentInfoBasicVo studentBasicInfoVo = studentService.updateStudentBasicInfo(updateDto);
 
         if(studentBasicInfoVo == null){

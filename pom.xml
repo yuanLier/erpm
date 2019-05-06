@@ -114,6 +114,7 @@
             <artifactId>druid</artifactId>
             <version>${druid.version}</version>
         </dependency>
+
     </dependencies>
 
     <build>

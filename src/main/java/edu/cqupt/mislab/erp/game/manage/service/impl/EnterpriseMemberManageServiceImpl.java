@@ -125,7 +125,7 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
             return toFailResponseVoWithMessage(ResponseStatus.NOT_FOUND,"该企业不存在");
         }
 
-        //如果是创始人退出企业将删除这个企业     todo 企业中其他成员？
+        //如果是创始人退出企业将删除这个企业
         if(basicInfo.getUserStudentInfo().getId().equals(userId)){
 
             final Long gameInfoId = basicInfo.getGameBasicInfo().getId();

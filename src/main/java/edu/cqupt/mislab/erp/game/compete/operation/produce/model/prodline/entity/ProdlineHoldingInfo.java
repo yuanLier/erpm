@@ -41,21 +41,27 @@ public class ProdlineHoldingInfo implements Serializable {
     @Comment(comment = "该生产线存在于哪个厂房当中")
     private FactoryHoldingInfo factoryHoldingInfo;
 
+
+    /**
+     * @author yuanyiwen
+     * @description todo 生产线模块重构（划掉）重写
+     *
+     *      考虑将 HoldingInfo 和 ProduceInfo 整合的可能性及必要性
+     *
+     *      生产线变动情况 ：
+     *          新建、售卖、没了    所以要考虑一下必要性和整合所花费的代价是否值得
+     *
+     *
+     *      如果能处理成厂房那样，就基本和厂房相同
+     *      如果权衡之后决定不处理，就到时候再造作
+     *
+     * @date 18:41 2019/5/6
+     **/
+
+
     @Basic(optional = false)
     @Enumerated(EnumType.STRING)
     @Comment(comment = "生产线的拥有状态")
     private ProdlineHoldingStatus prodlineHoldingStatus;
 
-
-
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "id", nullable = false)
-//    public Long getId() {
-//        return id;
-//    }
-//
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
 }

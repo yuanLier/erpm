@@ -184,7 +184,7 @@ public abstract class BaseUserController<V> {
         //创建一个验证码
         final String verificationCodeText = verificationCodeProducer.createText();
 
-        //创建一个验证码图片 todo 换个验证码？
+        //创建一个验证码图片
         final BufferedImage verificationCodeImage = verificationCodeProducer.createImage(verificationCodeText);
 
         //设置响应头
