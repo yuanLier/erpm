@@ -6,6 +6,11 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
+/**
+ * @author chuyunfei
+ * @description
+ **/
+
 public interface IsoBasicInfoRepository extends BasicRepository<IsoBasicInfo, Long> {
 
     /**

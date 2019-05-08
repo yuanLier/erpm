@@ -3,10 +3,16 @@ package edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity;
 import com.google.common.base.Objects;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import lombok.*;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/4 20:33
+ * @Description: 用于记录应用的ISO基本认证信息，比赛初始化是获取最新的一条数据，而修改将使用到历史数据。
+ * 在这张表里面没有一条可用的认证信息的时候比赛将无法进行初始化操作。
+ **/
 
 @Getter
 @Setter
@@ -16,13 +22,6 @@ import java.io.Serializable;
 @Entity
 @Table
 public class IsoBasicInfo implements Serializable {
-    
-    /* 
-     * @Author: chuyunfei
-     * @Date: 2019/3/4 20:33
-     * @Description: 用于记录应用的ISO基本认证信息，比赛初始化是获取最新的一条数据，而修改将使用到历史数据。
-     * 在这张表里面没有一条可用的认证信息的时候比赛将无法进行初始化操作。
-     **/
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

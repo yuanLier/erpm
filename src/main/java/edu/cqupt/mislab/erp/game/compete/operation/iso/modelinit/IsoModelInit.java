@@ -12,6 +12,11 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author chuyunfei
+ * @description
+ **/
+
 @Slf4j
 @Service
 public class IsoModelInit implements ModelInit {
@@ -51,7 +56,7 @@ public class IsoModelInit implements ModelInit {
         return null;
     }
 
-    /*
+    /**
      * @Author: chuyunfei
      * @Date: 2019/3/4 21:02
      * @Description: 系统初始化三个ISO基本认证信息

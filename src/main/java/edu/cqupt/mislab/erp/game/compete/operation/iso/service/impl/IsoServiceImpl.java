@@ -17,6 +17,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author yuanyiwen
+ * @description
+ **/
+
 @Service
 public class IsoServiceImpl implements IsoService {
 
@@ -40,7 +45,7 @@ public class IsoServiceImpl implements IsoService {
         List<IsoDevelopInfo> isoDevelopInfoList = isoDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId);
 
         // 非空判断
-        if(isoDevelopInfoList == null || isoDevelopInfoList.size() == 0) {
+        if(isoDevelopInfoList.size() == 0) {
             return null;
         }
 
@@ -61,7 +66,7 @@ public class IsoServiceImpl implements IsoService {
         List<IsoDevelopInfo> isoDevelopInfoList = isoDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndIsoStatus(enterpriseId, isoStatus);
 
         // 非空判断
-        if(isoDevelopInfoList == null || isoDevelopInfoList.size() == 0) {
+        if(isoDevelopInfoList.size() == 0) {
             return null;
         }
 

@@ -11,6 +11,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+/**
+ * @author chuyunfei
+ * @description
+ **/
+
 @Data
 @ApiModel("ISO基本数据视图")
 public class IsoBasicDto {
@@ -43,5 +48,5 @@ public class IsoBasicDto {
 
     @NotNull
     @ApiModelProperty(value = "该认证的默认初始状态", required = true)
-    private IsoStatusEnum isoStatus;//该认证的默认初始状态
+    private IsoStatusEnum isoStatus;
 }

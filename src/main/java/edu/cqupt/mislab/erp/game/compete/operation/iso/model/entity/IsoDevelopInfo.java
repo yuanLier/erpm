@@ -9,6 +9,12 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/4 20:35
+ * @Description: 比赛运行过程中用于存储某一个企业的具体ISO认证信息的数据表，该数据表在比赛初始化时通过IsoBasicInfo生成
+ **/
+
 @Getter
 @Setter
 @Builder
@@ -17,12 +23,6 @@ import java.io.Serializable;
 @Entity
 @Table
 public class IsoDevelopInfo implements Serializable {
-
-    /*
-     * @Author: chuyunfei
-     * @Date: 2019/3/4 20:35
-     * @Description: 比赛运行过程中用于存储某一个企业的具体ISO认证信息的数据表，该数据表在比赛初始化时通过IsoBasicInfo生成
-     **/
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -59,9 +59,7 @@ public class IsoDevelopInfo implements Serializable {
      *
      * @date 18:59 2019/5/6
      **/
-    
-    
-    
+
 
     @Basic
     @Comment(comment = "认证完成的周期，这个值在未开发/开发中ISO认证信息状态时为null，默认为已研发的值为1")

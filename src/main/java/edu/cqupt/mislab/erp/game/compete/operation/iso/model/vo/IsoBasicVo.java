@@ -5,6 +5,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+/**
+ * @author chuyunfei
+ * @description
+ **/
+
 @Data
 @ApiModel("ISO基本数据视图")
 public class IsoBasicVo {
@@ -28,6 +33,6 @@ public class IsoBasicVo {
     private Double extraValue;
 
     @ApiModelProperty(value = "该认证的默认初始状态")
-    private IsoStatusEnum isoStatus;//该认证的默认初始状态
+    private IsoStatusEnum isoStatus;
 
 }
