@@ -30,23 +30,20 @@ public class IsoBasicDto {
     @ApiModelProperty(value = "完成ISO认证所需的周期数",required = true)
     private Integer isoResearchPeriod;
 
-    @Min(0)
-    @NotNull
+    @DoubleMin(0.01)
     @ApiModelProperty(value = "在开拓ISO认证过程中，每个周期需要支付的费用",required = true)
-    private Double isoResearchCost;
+    private double isoResearchCost;
 
-    @Min(0)
-    @NotNull
+    @DoubleMin(0.01)
     @ApiModelProperty(value = "ISO认证完成后，维持该认证每个周期需要支付的费用",required = true)
-    private Double isoMaintainCost;
+    private double isoMaintainCost;
 
-    @DoubleMin(0)
+    @DoubleMin(0.01)
     @Max(1)
-    @NotNull
     @ApiModelProperty(value = "该认证对订单价格的影响程度，每一个产品价格影响",required = true)
-    private Double extraValue;
+    private double extraValue;
 
     @NotNull
-    @ApiModelProperty(value = "该认证的默认初始状态", required = true)
+    @ApiModelProperty(value = "该认证的默认初始状态，只允许为未认证或已认证", required = true)
     private IsoStatusEnum isoStatus;
 }

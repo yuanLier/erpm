@@ -1,10 +1,14 @@
 package edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity;
 
 import com.google.common.base.Objects;
+import edu.cqupt.mislab.erp.commons.validators.annotations.DoubleMin;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -28,31 +32,39 @@ public class IsoBasicInfo implements Serializable {
     @Comment(comment = "代理主键")
     private Long id;
 
+    @Size(min = 1, max = 50)
+    @NotNull
     @Column(nullable = false, updatable = false)
     @Comment(comment = "ISO认证资格的名称，这个名称用于区分不同ISO认证信息，相同的isoName非最大值ID数据为历史信息")
     private String isoName;
 
+    @Min(1)
     @Column(nullable = false, updatable = false)
     @Comment(comment = "ISO认证信息需要认证的周期，该值必须大于等于1")
     private int isoResearchPeriod;
 
+    @DoubleMin(0.01)
     @Column(nullable = false, updatable = false)
     @Comment(comment = "ISO认证过程中每个周期需要支付的费用，该值必须大于0")
     private double isoResearchCost;
 
+    @DoubleMin(0.01)
     @Column(nullable = false, updatable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "ISO认证完成后维持该认证每个周期需要支付的费用，该值必须大于0")
     private double isoMaintainCost;
 
+    @DoubleMin(0.01)
     @Column(nullable = false, updatable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "该认证对订单的每一个产品单价的影响程度，该值必须大于0")
     private double extraValue;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
     @Comment(comment = "该认证的默认初始状态，标识该ISO在比赛初始化时将以什么状态出现在比赛默认信息里面，只能是研发成功或者未研发")
     private IsoStatusEnum isoStatus;
 
+    @NotNull
     @Basic(optional = false)
     @Comment(comment = "该数据是否被启用，当前最新数据是启用，所有的历史数据均为未启用，必须保证同一个ISO认证信息最多只有一个Enable = true")
     private boolean enable;

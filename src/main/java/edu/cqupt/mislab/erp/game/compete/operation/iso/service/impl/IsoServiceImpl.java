@@ -1,14 +1,9 @@
 package edu.cqupt.mislab.erp.game.compete.operation.iso.service.impl;
 
-import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoDevelopInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.model.dto.IsoBasicDto;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoStatusEnum;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.service.IsoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +21,7 @@ import java.util.List;
 public class IsoServiceImpl implements IsoService {
 
     @Autowired
-    private IsoBasicInfoRepository isoBasicInfoRepository;
-
-    @Autowired
     private IsoDevelopInfoRepository isoDevelopInfoRepository;
-
-
-    @Override
-    public List<IsoBasicInfo> findAllNewestApplicationIsoBasicInfos(){
-
-        return isoBasicInfoRepository.findAllNewestApplicationIsoBasicInfos();
-    }
 
     @Override
     public List<IsoDisplayVo> findByEnterpriseId(Long enterpriseId) {
@@ -95,35 +80,10 @@ public class IsoServiceImpl implements IsoService {
         isoDevelopInfo.setIsoStatus(isoStatus);
 
         // 保存修改
-        try {
-            isoDevelopInfoRepository.save(isoDevelopInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        isoDevelopInfoRepository.save(isoDevelopInfo);
 
         // 转换为vo实体并返回
         return EntityVoUtil.copyFieldsFromEntityToVo(isoDevelopInfo);
     }
 
-    @Override
-    public IsoBasicVo updateIsoBasicInfo(IsoBasicDto isoBasicDto) {
-
-        // 将接受到的dto中的数据复制给isoBasicInfo
-        IsoBasicInfo isoBasicInfo = new IsoBasicInfo();
-        BeanCopyUtil.copyPropertiesSimple(isoBasicDto,isoBasicInfo);
-
-        // 保存修改
-        try {
-            isoBasicInfo = isoBasicInfoRepository.save(isoBasicInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // 将获取了新id的info数据复制给isoBasicVo
-        IsoBasicVo isoBasicVo = new IsoBasicVo();
-        BeanCopyUtil.copyPropertiesSimple(isoBasicInfo, isoBasicVo);
-
-        // 返回vo
-        return isoBasicVo;
-    }
 }

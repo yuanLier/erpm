@@ -3,9 +3,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.iso.controller;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoDevelopInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.model.dto.IsoBasicDto;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoStatusEnum;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.service.IsoService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
@@ -36,7 +34,7 @@ public class IsoController {
     private IsoService isoService;
 
     @ApiOperation(value = "获取某个企业的全部ISO认证信息")
-    @GetMapping("/iso/infos/get")
+    @GetMapping
     public WebResponseVo<List<IsoDisplayVo>> findByEnterpriseId(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                     @RequestParam Long enterpriseId) {
 
@@ -50,8 +48,8 @@ public class IsoController {
     }
 
 
-    @ApiOperation(value = "获取某企业中处于某认证状态的iso")
-    @GetMapping("/iso/infos/get/status")
+    @ApiOperation(value = "获取某企业中处于某认证状态的ISO")
+    @GetMapping("status")
     public WebResponseVo<List<IsoDisplayVo>> findByEnterpriseIdAndIsoStatus(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                    @RequestParam Long enterpriseId,
                                                                                @RequestParam IsoStatusEnum isoStatus) {
@@ -67,7 +65,7 @@ public class IsoController {
 
 
     @ApiOperation(value = "开始认证")
-    @PutMapping("/iso/infos/update/start")
+    @PutMapping("start")
     public WebResponseVo<IsoDisplayVo> startDevelopIso(@Exist(repository = IsoDevelopInfoRepository.class)
                                                            @RequestParam Long isoDevelopId) {
 
@@ -76,7 +74,7 @@ public class IsoController {
 
 
     @ApiOperation(value = "暂停认证")
-    @PutMapping("/iso/infos/update/pause")
+    @PutMapping("pause")
     public WebResponseVo<IsoDisplayVo> updateIsoStatusToPause(@Exist(repository = IsoDevelopInfoRepository.class)
                                                        @RequestParam Long isoDevelopId) {
 
@@ -85,21 +83,10 @@ public class IsoController {
 
 
     @ApiOperation(value = "继续认证")
-    @PutMapping("/iso/infos/update/develop")
+    @PutMapping("develop")
     public WebResponseVo<IsoDisplayVo> updateIsoStatusToDeveloping(@Exist(repository = IsoDevelopInfoRepository.class)
                                                        @RequestParam Long isoDevelopId) {
 
         return toSuccessResponseVoWithData(isoService.updateIsoStatus(isoDevelopId, IsoStatusEnum.DEVELOPING));
-    }
-
-
-    @ApiOperation(value = "（管理员）修改iso基本信息")
-    @PostMapping("/iso/basic/update")
-    public WebResponseVo<IsoBasicVo> updateIsoBasicInfo(@RequestBody IsoBasicDto isoBasicDto) {
-        if(isoBasicDto != null) {
-            return toSuccessResponseVoWithData(isoService.updateIsoBasicInfo(isoBasicDto));
-        } else {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND,"所传信息为空");
-        }
     }
 }

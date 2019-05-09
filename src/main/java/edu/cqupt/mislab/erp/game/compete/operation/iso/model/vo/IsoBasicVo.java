@@ -35,4 +35,7 @@ public class IsoBasicVo {
     @ApiModelProperty(value = "该认证的默认初始状态")
     private IsoStatusEnum isoStatus;
 
+    @ApiModelProperty(value = "该条设置是否启用")
+    private boolean enable;
+
 }
