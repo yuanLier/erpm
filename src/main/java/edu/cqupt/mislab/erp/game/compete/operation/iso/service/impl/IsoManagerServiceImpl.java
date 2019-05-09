@@ -8,6 +8,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.service.IsoManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author yuanyiwen
@@ -21,6 +22,7 @@ public class IsoManagerServiceImpl implements IsoManagerService {
     private IsoBasicInfoRepository isoBasicInfoRepository;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public IsoBasicVo addIsoBasicInfo(IsoBasicDto isoBasicDto) {
 
         // 将接受到的dto中的数据复制给isoBasicInfo
@@ -42,6 +44,7 @@ public class IsoManagerServiceImpl implements IsoManagerService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public IsoBasicVo updateIsoBasicInfo(Long isoBasicId, IsoBasicDto isoBasicDto) {
 
         // 获取之前的iso信息并设置为不启用
@@ -52,7 +55,9 @@ public class IsoManagerServiceImpl implements IsoManagerService {
 
         // 重新生成一条数据
         IsoBasicInfo newIsoBasicInfo = new IsoBasicInfo();
-        BeanCopyUtil.copyPropertiesSimple(isoBasicDto,isoBasicInfo);
+        BeanCopyUtil.copyPropertiesSimple(isoBasicDto,newIsoBasicInfo);
+        // 设置可用
+        newIsoBasicInfo.setEnable(true);
 
         newIsoBasicInfo = isoBasicInfoRepository.saveAndFlush(newIsoBasicInfo);
 
@@ -63,6 +68,7 @@ public class IsoManagerServiceImpl implements IsoManagerService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public IsoBasicVo closeIsoBasicInfo(Long isoBasicId) {
 
         // 获取这个iso

@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
  **/
 
 @Data
-@ApiModel("ISO基本数据视图")
+@ApiModel("ISO基本数据传输对象")
 public class IsoBasicDto {
 
     @Size(min = 1, max = 50)

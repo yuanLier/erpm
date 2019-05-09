@@ -42,7 +42,7 @@ public class IsoManagerController {
         }
 
         IsoStatusEnum isoStatus = isoBasicDto.getIsoStatus();
-        if(!IsoStatusEnum.DEVELOPED.equals(isoStatus) || !IsoStatusEnum.TODEVELOP.equals(isoStatus)) {
+        if((isoStatus != IsoStatusEnum.DEVELOPED ) && (isoStatus != IsoStatusEnum.TODEVELOP)) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "认证状态只允许为未认证或已认证！");
         }
 
@@ -61,7 +61,7 @@ public class IsoManagerController {
         }
 
         IsoStatusEnum isoStatus = isoBasicDto.getIsoStatus();
-        if(!IsoStatusEnum.DEVELOPED.equals(isoStatus) || !IsoStatusEnum.TODEVELOP.equals(isoStatus)) {
+        if((isoStatus != IsoStatusEnum.DEVELOPED ) && (isoStatus != IsoStatusEnum.TODEVELOP)) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "认证状态只允许为未认证或已认证！");
         }
 
@@ -72,7 +72,7 @@ public class IsoManagerController {
     @ApiOperation(value = "关闭一个iso",
             notes = "一旦关闭将不能重新启用，如果要启用只能重新添加一个相同的；" +
                     "所以需要前端在调用前给用户一些必要的提示信息")
-    @PutMapping
+    @PutMapping("/close")
     public WebResponseVo<IsoBasicVo> closeIsoBasicInfo(@Exist(repository = IsoBasicInfoRepository.class)
                                                                    @RequestParam Long isoBasicId) {
 
