@@ -51,7 +51,7 @@ public class IsoBasicInfo implements Serializable {
     @DoubleMin(0.01)
     @Column(nullable = false, updatable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "ISO认证完成后维持该认证每个周期需要支付的费用，该值必须大于0")
-    private double isoMaintainCost;
+    private double  isoMaintainCost;
 
     @DoubleMin(0.01)
     @Column(nullable = false, updatable = false,columnDefinition = "double(10,2) default 1.00")

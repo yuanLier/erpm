@@ -35,6 +35,14 @@ public interface EnterpriseBasicInfoRepository extends BasicRepository<Enterpris
      **/
     List<EnterpriseBasicInfo> findByGameBasicInfo_Id(Long gameId);
 
+    
+    /**
+     * @author yuanyiwen
+     * @description 获取一个比赛中处于某一状态的全部企业
+     * @date 21:52 2019/5/10
+     **/
+    List<EnterpriseBasicInfo> findByGameBasicInfo_IdAndEnterpriseStatus(Long gameId, EnterpriseStatusEnum enterpriseStatus);
+
     /**
      * @author chuyunfei
      * @description 根据创建者和企业ID来判断是否存在
