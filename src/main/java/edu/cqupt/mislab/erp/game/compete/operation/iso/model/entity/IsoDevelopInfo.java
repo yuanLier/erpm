@@ -47,24 +47,6 @@ public class IsoDevelopInfo implements Serializable {
     @Basic
     @Comment(comment = "认证开始的周期，这个值在未开发ISO认证信息状态时为null，默认为已研发的值为1")
     private Integer developBeginPeriod ;
-    
-    
-    
-    /**
-     * @author yuanyiwen
-     * @description todo iso、市场、产品模块重构规划
-     *
-     *
-     *      应该不用太怎么动
-     *
-     *      每个周期推进的时候查一下企业拥有的ISO信息就好
-     *
-     *
-     *      市场开拓、产品研发同理（产品生产隶属于生产线 所以不在这里考虑）
-     *
-     * @date 18:59 2019/5/6
-     **/
-
 
     @Min(1)
     @Basic

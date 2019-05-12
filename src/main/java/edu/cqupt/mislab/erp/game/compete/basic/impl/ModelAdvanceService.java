@@ -1,7 +1,10 @@
 package edu.cqupt.mislab.erp.game.compete.basic.impl;
 
 import edu.cqupt.mislab.erp.game.compete.basic.ModelAdvance;
+import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
+import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatusEnum;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatusEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +15,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,6 +33,9 @@ public class ModelAdvanceService implements ApplicationContextAware {
     private ApplicationContext applicationContext;
 
     @Autowired GameBasicInfoRepository gameBasicInfoRepository;
+
+    @Autowired
+    EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
 
     public boolean advance(Long gameId){
 
@@ -62,11 +69,26 @@ public class ModelAdvanceService implements ApplicationContextAware {
             }
         }
 
+        /********************* yyw 2019/5/12 begin ************************/
+
+        log.info("比赛各模块推进成功，企业将进入下一周期...");
+
+        // 获取全部正在比赛中的企业
+        List<EnterpriseBasicInfo> enterpriseBasicInfoList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndEnterpriseStatus(gameId, EnterpriseStatusEnum.PLAYING);
+
+        // 企业周期+1
+        for (EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
+            enterpriseBasicInfo.setEnterpriseCurrentPeriod(enterpriseBasicInfo.getEnterpriseCurrentPeriod()+1);
+        }
+
+        /********************* yyw 2019/5/12 end **************************/
+
         log.info("推进比赛：" + gameId + " 进入下一个比赛周期成功");
 
         //默认如果还没有模块开启的话将是推进成功
         return true;
     }
+
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException{
