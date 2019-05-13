@@ -9,6 +9,11 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 
+/**
+ * @author yuanyiwen
+ * @description 
+ **/
+
 public interface MarketDevelopInfoRepository extends BasicRepository<MarketDevelopInfo, Long> {
 
     /**
@@ -27,11 +32,4 @@ public interface MarketDevelopInfoRepository extends BasicRepository<MarketDevel
      */
     List<MarketDevelopInfo> findByEnterpriseBasicInfo_IdAndMarketStatus(Long enterpriseId, MarketStatusEnum marketStatus);
 
-
-    /**
-     * 通过id获取市场开拓信息
-     * @param marketDevelopId
-     * @return
-     */
-    MarketDevelopInfo findOne(Long marketDevelopId);
 }

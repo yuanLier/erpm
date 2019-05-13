@@ -36,7 +36,7 @@ public class MarketController {
     private MarketService marketService;
 
     @ApiOperation(value = "获取某个企业的全部市场开拓信息")
-    @GetMapping("/market/infos/get")
+    @GetMapping
     public WebResponseVo<List<MarketDisplayVo>> findByEnterpriseId(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                 @RequestParam Long enterpriseId) {
 
@@ -51,7 +51,7 @@ public class MarketController {
 
 
     @ApiOperation(value = "获取某企业中处于某开拓状态的市场")
-    @GetMapping("/market/infos/get/status")
+    @GetMapping("status")
     public WebResponseVo<List<MarketDisplayVo>> findByEnterpriseIdAndAndMarketStatus(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                @RequestParam Long enterpriseId,
                                                                                @RequestParam MarketStatusEnum marketStatus) {
@@ -67,7 +67,7 @@ public class MarketController {
 
 
     @ApiOperation(value = "开始开拓")
-    @PutMapping("/market/infos/update/start")
+    @PutMapping("start")
     public WebResponseVo<MarketDisplayVo> startDevelopMarket(@Exist(repository = MarketDevelopInfoRepository.class)
                                                        @RequestParam Long marketDevelopId) {
 
@@ -76,7 +76,7 @@ public class MarketController {
 
 
     @ApiOperation(value = "暂停开拓")
-    @PutMapping("/market/infos/update/pause")
+    @PutMapping("pause")
     public WebResponseVo<MarketDisplayVo> updateMarketStatusToPause(@Exist(repository = MarketDevelopInfoRepository.class)
                                                              @RequestParam Long marketDevelopId) {
 
@@ -85,23 +85,11 @@ public class MarketController {
 
 
     @ApiOperation(value = "继续开拓")
-    @PutMapping("/market/infos/update/develop")
+    @PutMapping("develop")
     public WebResponseVo<MarketDisplayVo> updateMarketStatusToDeveloping(@Exist(repository = MarketDevelopInfoRepository.class)
                                                              @RequestParam Long marketDevelopId) {
 
         return toSuccessResponseVoWithData(marketService.updateMarketStatus(marketDevelopId, MarketStatusEnum.DEVELOPING));
     }
-
-
-    @ApiOperation(value = "（管理员）修改市场基本信息")
-    @PostMapping("/market/basic/update")
-        public WebResponseVo<MarketBasicVo> updateMarketBasicInfo(@RequestBody MarketBasicDto marketBasicDto) {
-        if(marketBasicDto != null) {
-            return toSuccessResponseVoWithData(marketService.updateMarketBasicInfo(marketBasicDto));
-        } else {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND,"所传信息为空");
-        }
-    }
-
 
 }

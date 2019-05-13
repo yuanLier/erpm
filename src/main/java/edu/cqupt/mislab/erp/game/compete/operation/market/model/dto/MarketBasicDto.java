@@ -9,6 +9,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+/**
+ * @author chuyunfei
+ * @description
+ **/
+
 @Data
 @ApiModel("市场基本数据视图")
 public class MarketBasicDto {
@@ -35,6 +40,6 @@ public class MarketBasicDto {
 
     @NotNull
     @ApiModelProperty(value = "该认证的默认初始状态", required = true)
-    private MarketStatusEnum marketStatus;//该认证的默认初始状态
+    private MarketStatusEnum marketStatus;
 
 }

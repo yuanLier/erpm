@@ -17,15 +17,15 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/2 20:56
+ * @Description: 比赛市场模块初始化
+ **/
+
 @Slf4j
 @Component
 public class MarketGameModelInit implements GameModelInit {
-
-    /**
-     * @Author: chuyunfei
-     * @Date: 2019/3/2 20:56
-     * @Description: 比赛市场模块初始化
-     **/
 
     @Autowired private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
     @Autowired private MarketBasicInfoRepository marketBasicInfoRepository;

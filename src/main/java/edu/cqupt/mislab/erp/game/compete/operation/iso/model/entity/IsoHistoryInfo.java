@@ -5,6 +5,8 @@ import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -26,14 +28,17 @@ public class IsoHistoryInfo implements Serializable {
     @Comment(comment = "代理主键")
     private Long id;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "哪个企业")
     private EnterpriseBasicInfo enterpriseBasicInfo;
 
+    @Min(1)
     @Comment(comment = "哪个周期")
-    private Integer period;
+    private int period;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "截止到该周期，企业拥有的某个iso")

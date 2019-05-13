@@ -5,6 +5,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+/**
+ * @author yuanyiwen
+ * @description
+ **/
+
 @Data
 @ApiModel("市场基本数据视图")
 public class MarketBasicVo {
@@ -25,5 +30,5 @@ public class MarketBasicVo {
     private Double marketMaintainCost;
 
     @ApiModelProperty(value = "该认证的默认初始状态")
-    private MarketStatusEnum marketStatus;//该认证的默认初始状态
+    private MarketStatusEnum marketStatus;
 }

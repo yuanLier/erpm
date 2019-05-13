@@ -17,11 +17,13 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author yuanyiwen
+ * @description
+ **/
+
 @Service
 public class MarketServiceImpl implements MarketService {
-
-    @Autowired
-    private MarketBasicInfoRepository marketBasicInfoRepository;
 
     @Autowired
     private MarketDevelopInfoRepository marketDevelopInfoRepository;
@@ -34,7 +36,7 @@ public class MarketServiceImpl implements MarketService {
                 marketDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId);
 
         // 非空判断
-        if(marketDevelopInfoList == null || marketDevelopInfoList.size() == 0) {
+        if(marketDevelopInfoList.size() == 0) {
             return null;
         }
 
@@ -56,7 +58,7 @@ public class MarketServiceImpl implements MarketService {
                 marketDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndMarketStatus(enterpriseId, marketStatus);
 
         // 非空判断
-        if(marketDevelopInfoList == null || marketDevelopInfoList.size() == 0) {
+        if(marketDevelopInfoList.size() == 0) {
             return null;
         }
 
@@ -85,34 +87,10 @@ public class MarketServiceImpl implements MarketService {
         marketDevelopInfo.setMarketStatus(marketStatus);
 
         // 保存修改
-        try {
-            marketDevelopInfoRepository.save(marketDevelopInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        marketDevelopInfoRepository.save(marketDevelopInfo);
 
         // 转换为vo实体并返回
         return EntityVoUtil.copyFieldsFromEntityToVo(marketDevelopInfo);
     }
 
-    @Override
-    public MarketBasicVo updateMarketBasicInfo(MarketBasicDto marketBasicDto) {
-        // 将接受到的dto中的数据复制给marketBasicInfo
-        MarketBasicInfo marketBasicInfo = new MarketBasicInfo();
-        BeanCopyUtil.copyPropertiesSimple(marketBasicDto,marketBasicInfo);
-
-        // 保存修改
-        try {
-            marketBasicInfo = marketBasicInfoRepository.save(marketBasicInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // 将获取了新id的info数据复制给marketBasicVo
-        MarketBasicVo marketBasicVo = new MarketBasicVo();
-        BeanCopyUtil.copyPropertiesSimple(marketBasicInfo, marketBasicVo);
-
-        // 返回vo
-        return marketBasicVo;
-    }
 }

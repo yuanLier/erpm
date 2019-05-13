@@ -12,18 +12,18 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/2 20:43
+ * @Description: 初始化市场模块的基本数据信息
+ **/
+
 @Slf4j
 @Component
 public class MarketModelInit implements ModelInit {
 
     @Autowired private MarketBasicInfoRepository marketBasicInfoRepository;
     @Autowired private ModelInitService modelInitService;
-
-    /**
-     * @Author: chuyunfei
-     * @Date: 2019/3/2 20:43
-     * @Description: 初始化市场模块的基本数据信息
-     **/
 
     @Override
     public List<String> applicationModelInit(){
