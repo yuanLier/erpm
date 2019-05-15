@@ -21,6 +21,7 @@ public interface IsoManagerService {
 
     /**
      * 修改iso基本信息
+     * @param isoBasicId
      * @param isoBasicDto
      * @return
      */

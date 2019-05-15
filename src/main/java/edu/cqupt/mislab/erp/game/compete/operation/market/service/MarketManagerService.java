@@ -10,11 +10,27 @@ import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketBasicVo
  */
 public interface MarketManagerService {
 
+
     /**
-     * 修改市场基本信息
+     * 添加一个市场基本信息
      * @param marketBasicDto
      * @return
      */
-    MarketBasicVo updateMarketBasicInfo(MarketBasicDto marketBasicDto);
+    MarketBasicVo addMarketBasicInfo(MarketBasicDto marketBasicDto);
+
+    /**
+     * 修改市场基本信息
+     * @param marketBasicId
+     * @param marketBasicDto
+     * @return
+     */
+    MarketBasicVo updateMarketBasicInfo(Long marketBasicId, MarketBasicDto marketBasicDto);
+
+    /**
+     * 关闭一个市场
+     * @param marketBasicId
+     * @return
+     */
+    MarketBasicVo closeMarketBasicInfo(Long marketBasicId);
 
 }

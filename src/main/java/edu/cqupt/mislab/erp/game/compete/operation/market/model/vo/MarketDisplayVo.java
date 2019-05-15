@@ -18,21 +18,21 @@ public class MarketDisplayVo {
     private Long id;
 
     @ApiModelProperty("市场开拓名称")
-    private String MarketName;
+    private String marketName;
 
     @ApiModelProperty("开拓总期数")
-    private Integer MarketResearchPeriod;
+    private Integer marketResearchPeriod;
 
     @ApiModelProperty("每期开拓费用")
-    private Double MarketResearchCost;
+    private Double marketResearchCost;
 
     @ApiModelProperty("每期维护费用")
-    private Double MarketMaintainCost;
+    private Double marketMaintainCost;
 
     @ApiModelProperty("已经开拓的周期数")
     private Integer researchedPeriod;
 
     @ApiModelProperty("当前开拓状态")
-    private MarketStatusEnum MarketStatus;
+    private MarketStatusEnum marketStatus;
 
 }

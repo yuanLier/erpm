@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
  **/
 
 @Data
-@ApiModel("市场基本数据视图")
+@ApiModel("市场基本数据传输对象")
 public class MarketBasicDto {
 
     @Size(min = 1, max = 50)
