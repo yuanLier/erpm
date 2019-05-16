@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.model.dto;
 
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,8 +9,13 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+/**
+ * @author chuyunfei
+ * @description 
+ **/
+
 @Data
-@ApiModel("产品基本数据视图")
+@ApiModel("产品基本数据传输对象")
 public class ProductBasicDto {
 
     @Size(min = 1, max = 50)
@@ -41,5 +47,10 @@ public class ProductBasicDto {
     @NotNull
     @ApiModelProperty(value = "产品的基本售价",required = true)
     private Double productSellingPrice;
+
+    @NotNull
+    @ApiModelProperty(value = "该产品的默认初始状态", required = true)
+    private ProductDevelopStatusEnum productStatus;
+
 
 }

@@ -10,7 +10,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInf
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductMaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo.ProductBasicInfoBuilder;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatus;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+
+/**
+ * @author chuyunfei
+ * @description 
+ **/
 
 @Slf4j
 @Component
@@ -93,10 +98,10 @@ public class ProductModelInit implements ModelInit {
 
             if(i % 2 == 0){
 
-                builder.productDevelopStatus(ProductDevelopStatus.TODEVELOP);
+                builder.productDevelopStatus(ProductDevelopStatusEnum.TODEVELOP);
             }else {
 
-                builder.productDevelopStatus(ProductDevelopStatus.DEVELOPED);
+                builder.productDevelopStatus(ProductDevelopStatusEnum.DEVELOPED);
             }
 
             productBasicInfoRepository.save(builder.build());

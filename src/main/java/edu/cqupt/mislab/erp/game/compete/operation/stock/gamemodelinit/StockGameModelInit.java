@@ -5,13 +5,8 @@ import edu.cqupt.mislab.erp.game.compete.basic.impl.GameModelInitService;
 import edu.cqupt.mislab.erp.game.compete.operation.material.dao.MaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductMaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.gamemodelinit.ProductGameModelInit;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatus;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.MaterialStockInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.ProductStockInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialStockInfo;
@@ -22,10 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * author： chuyunfei date：2019/3/1

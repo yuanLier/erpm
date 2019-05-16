@@ -13,7 +13,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.order.model.vo.OrderChooseDis
 import edu.cqupt.mislab.erp.game.compete.operation.order.service.OrderChooseService;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatus;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
@@ -520,7 +520,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
                     productDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseBasicInfo.getId()).forEach(productDevelopInfo -> {
 
                         //需要研发成功的数据信息
-                        if(productDevelopInfo.getProductDevelopStatus() == ProductDevelopStatus.DEVELOPED){
+                        if(productDevelopInfo.getProductDevelopStatus() == ProductDevelopStatusEnum.DEVELOPED){
                             productBasicInfos.add(productDevelopInfo.getProductBasicInfo());
                         }
                     });

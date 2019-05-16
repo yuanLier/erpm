@@ -11,6 +11,11 @@ import lombok.Data;
 
 import javax.validation.constraints.Min;
 
+/**
+ * @author chuyunfei
+ * @description 
+ **/
+
 @Data
 @ApiModel("产品原料构成视图")
 public class ProductMaterialBasicDto {

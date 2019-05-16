@@ -3,17 +3,18 @@ package edu.cqupt.mislab.erp.game.compete.operation.product.model.entity;
 import com.google.common.base.Objects;
 import edu.cqupt.mislab.erp.commons.validators.annotations.DoubleMin;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
-import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
 import lombok.*;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/4 21:52
+ * @Description: 产品的基本数据信息表，若该表不存在可用数据，将无法进行比赛的初始化操作
+ **/
 
 @Getter
 @Setter
@@ -23,12 +24,6 @@ import java.util.Map;
 @Entity
 @Table
 public class ProductBasicInfo implements Serializable {
-
-    /*
-     * @Author: chuyunfei
-     * @Date: 2019/3/4 21:52
-     * @Description: 产品的基本数据信息表，若该表不存在可用数据，将无法进行比赛的初始化操作
-     **/
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,50 +37,51 @@ public class ProductBasicInfo implements Serializable {
     @Min(1)
     @Column(nullable = false,updatable = false)
     @Comment(comment = "产品研发的周期数，该值大于0")
-    private Integer productResearchPeriod;
+    private int productResearchPeriod;
 
     @DoubleMin(0.01)
     @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "在产品研发过程中，每个周期需要支付的费用，该值大于0")
-    private Double productResearchCost;
+    private double productResearchCost;
 
     @DoubleMin(0.01)
     @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "产品价格,该值大于0")
-    private Double price;
+    private double price;
 
     @Min(1)
     @Column(nullable = false,updatable = false)
     @Comment(comment = "市场需求量,该值大于0")
-    private Integer mount;
+    private int mount;
 
     @DoubleMin(0.01)
     @Column(nullable = false,updatable = false)
-    @Comment(comment = "市场之间的单价差异,该值大于0")
+    @Comment(comment = "市场之间的单价差异,该值大于0，允许为null")
     private Double priceDifference;
 
     @Min(1)
     @Column(nullable = false,updatable = false)
-    @Comment(comment = "市场之间的需求量差异,该值大于0")
+    @Comment(comment = "市场之间的需求量差异,该值大于0，允许为null")
     private Integer mountDifference;
 
     @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 0.00")
-    @Comment(comment = "价格波动比例,该值大于0")
-    private double priceFloat;
+    @Comment(comment = "价格波动比例,该值大于0，允许为null")
+    private Double priceFloat;
 
     @DoubleMin(0.01)
     @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 0.00")
-    @Comment(comment = "需求量波动比例,该值大于0")
+    @Comment(comment = "需求量波动比例,该值大于0，允许为null")
     private Double mountFloat;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false,updatable = false)
     @Comment(comment = "默认的产品开发状态，该产品的默认研发状态，只能是未研发和已研发")
-    private ProductDevelopStatus productDevelopStatus;
+    private ProductDevelopStatusEnum productDevelopStatus;
 
     @Basic(optional = false)
     @Comment(comment = "该数据是否被启用，当前最新数据是启用，所有的历史数据均为未启用，必须保证同一个材料信息最多只有一个Enable = true")
-    private Boolean enable;
+    private boolean enable;
 
     @Override
     public boolean equals(Object o){

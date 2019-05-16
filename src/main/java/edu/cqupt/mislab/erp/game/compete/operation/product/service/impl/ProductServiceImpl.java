@@ -4,14 +4,10 @@ import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductMaterialBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.dto.ProductBasicDto;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.dto.ProductMaterialBasicDto;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatus;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +17,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+/**
+ * @author yuanyiwen
+ * @description
+ * @date 20:12 2019/3/7
+ **/
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -45,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDisplayVo> findByEnterpriseIdAndProductStatus(Long enterpriseId, ProductDevelopStatus productDevelopStatus) {
+    public List<ProductDisplayVo> findByEnterpriseIdAndProductStatus(Long enterpriseId, ProductDevelopStatusEnum productDevelopStatus) {
         // 获取entity集
         List<ProductDevelopInfo> productDevelopInfoList =
                 productDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndProductDevelopStatus(enterpriseId, productDevelopStatus);
@@ -54,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDisplayVo updateProductStatus(Long productDevelopId, ProductDevelopStatus productDevelopStatus) {
+    public ProductDisplayVo updateProductStatus(Long productDevelopId, ProductDevelopStatusEnum productDevelopStatus) {
         // 根据id查询产品信息
         ProductDevelopInfo productDevelopInfo = productDevelopInfoRepository.findOne(productDevelopId);
 
@@ -90,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductMaterialDisplayVo> findProductMaterialInfoByEnterpriseIdAndProductStatus(Long enterpriseId, ProductDevelopStatus productDevelopStatus) {
+    public List<ProductMaterialDisplayVo> findProductMaterialInfoByEnterpriseIdAndProductStatus(Long enterpriseId, ProductDevelopStatusEnum productDevelopStatus) {
 
         // 获取该企业处于该中状态下的的所有产品研发信息
         List<ProductDevelopInfo> productDevelopInfoList =
@@ -99,22 +101,6 @@ public class ProductServiceImpl implements ProductService {
         // 根据这个产品研发信息集合查询每个产品对应的原材料构成情况，调用一个封装的方法直接返回vo实体集
         return getProductMaterialVoByProductDevelopInfo(productDevelopInfoList);
     }
-
-    /********************************************* 管理员调参相关 ********************************************/
-
-
-
-    @Override
-    public ProductBasicVo updateProductBasicInfo(ProductBasicDto productBasicDto) {
-        return null;
-    }
-
-    @Override
-    public ProductMaterialBasicVo updateProductMaterialBasicInfo(ProductMaterialBasicDto productMaterialBasicDto) {
-        return null;
-    }
-
-
 
 
     /******************************************** 以下是封装的方法 ********************************************/

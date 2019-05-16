@@ -1,9 +1,14 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.model.vo;
 
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatus;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+/**
+ * @author chuyunfei
+ * @description
+ **/
 
 @Data
 @ApiModel("产品数据展示视图")
@@ -25,5 +30,5 @@ public class ProductDisplayVo {
     private Integer DevelopedPeriod;
 
     @ApiModelProperty("当前研发状态")
-    private ProductDevelopStatus productDevelopStatus;
+    private ProductDevelopStatusEnum productDevelopStatus;
 }

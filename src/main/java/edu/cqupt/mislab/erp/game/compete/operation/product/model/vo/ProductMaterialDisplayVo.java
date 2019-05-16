@@ -6,6 +6,11 @@ import lombok.Data;
 
 import java.util.Map;
 
+/**
+ * @author yuanyiwen
+ * @description 
+ **/
+
 @Data
 @ApiModel("产品构成展示视图")
 public class ProductMaterialDisplayVo {
@@ -16,7 +21,6 @@ public class ProductMaterialDisplayVo {
     @ApiModelProperty("构成该产品的原料（key-value:原料名-该原料所需个数）")
     private Map<String, Integer> materialMap;
 
-    // 该字段是否需要？是否必要？存疑 todo 等这一块下一版原型图出来再改
     @ApiModelProperty("产品的基本售价")
     private Double productSellingPrice;
 

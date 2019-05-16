@@ -8,7 +8,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInf
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo.ProductDevelopInfoBuilder;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatus;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * author： chuyunfei date：2019/3/1
+ * @author： chuyunfei
+ * @date：2019/3/1
  */
 @Slf4j
 @Component
@@ -72,7 +73,7 @@ public class ProductGameModelInit implements GameModelInit {
                                 .productDevelopStatus(productBasicInfo.getProductDevelopStatus());
 
                         //特殊状态处理
-                        if(productBasicInfo.getProductDevelopStatus() == ProductDevelopStatus.DEVELOPED){
+                        if(productBasicInfo.getProductDevelopStatus() == ProductDevelopStatusEnum.DEVELOPED){
                             builder.beginPeriod(1)
                                     .developedPeriod(0)
                                     .endPeriod(1);
@@ -94,7 +95,7 @@ public class ProductGameModelInit implements GameModelInit {
         return null;
     }
 
-    /* 
+    /**
      * @Author: chuyunfei
      * @Date: 2019/3/3 16:21
      * @Description: 产品初始化的先决条件是材料初始化

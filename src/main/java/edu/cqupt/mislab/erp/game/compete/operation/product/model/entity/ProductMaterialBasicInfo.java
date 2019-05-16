@@ -1,12 +1,17 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
 import lombok.*;
 
 import javax.persistence.*;
+
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/4 22:00
+ * @Description: 用于记录每个产品所需要的材料组成信息，若存在某个启用产品无原料组成表，将无法进行比赛的初始化
+ **/
 
 @Getter
 @Setter
@@ -16,12 +21,6 @@ import javax.persistence.*;
 @Entity
 @Table
 public class ProductMaterialBasicInfo {
-    
-    /* 
-     * @Author: chuyunfei
-     * @Date: 2019/3/4 22:00
-     * @Description: 用于记录每个产品所需要的材料组成信息，若存在某个启用产品无原料组成表，将无法进行比赛的初始化
-     **/
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

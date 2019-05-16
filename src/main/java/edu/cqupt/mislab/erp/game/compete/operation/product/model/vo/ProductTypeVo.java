@@ -4,6 +4,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+/**
+ * @author yuanyiwen
+ * @description 
+ **/
+
 @Data
 @ApiModel("产品类型选择视图")
 public class ProductTypeVo {

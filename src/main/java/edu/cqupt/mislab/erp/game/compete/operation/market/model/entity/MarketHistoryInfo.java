@@ -28,7 +28,6 @@ public class MarketHistoryInfo implements Serializable {
     @Comment(comment = "代理主键")
     private Long id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "哪个企业")

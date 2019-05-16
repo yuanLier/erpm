@@ -4,11 +4,16 @@ import com.google.common.base.Objects;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/4 22:06
+ * @Description: 用于记录每一个企业的产品研发信息
+ **/
 
 @Getter
 @Setter
@@ -18,12 +23,6 @@ import java.io.Serializable;
 @Entity
 @Table
 public class ProductDevelopInfo implements Serializable {
-
-    /*
-     * @Author: chuyunfei
-     * @Date: 2019/3/4 22:06
-     * @Description: 用于记录每一个企业的产品研发信息
-     **/
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,21 +40,22 @@ public class ProductDevelopInfo implements Serializable {
     private ProductBasicInfo productBasicInfo;
 
     @Basic
-    @Comment(comment = "开始研发的周期数，当默认为研发完毕的值为1")
+    @Comment(comment = "开始研发的周期数")
     private Integer beginPeriod;
 
     @Basic
-    @Comment(comment = "研发完毕的周期数，当默认为研发完毕的值为1")
+    @Comment(comment = "研发完毕的周期数")
     private Integer endPeriod;
 
     @Basic
-    @Comment(comment = "已经研发了多少个周期数，当默认为研发完毕的值为0")
+    @Comment(comment = "已经研发了多少个周期数")
     private Integer developedPeriod;
 
+    @NotNull
     @Basic(optional = false)
     @Enumerated(EnumType.STRING)
     @Comment(comment = "研发的状态，需要在进行比赛初始化时手动进行转换设置")
-    private ProductDevelopStatus productDevelopStatus;
+    private ProductDevelopStatusEnum productDevelopStatus;
 
     @Override
     public boolean equals(Object o){

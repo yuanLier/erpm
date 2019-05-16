@@ -31,13 +31,11 @@ public class IsoDevelopInfo implements Serializable {
     @Comment(comment = "代理主键")
     private Long id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "ISO认证的基本信息，该数据对于基本数据表里面的一条最新或历史信息")
     private IsoBasicInfo isoBasicInfo;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "哪一个企业的ISO认证信息，每一个企业有一或多条认证信息")
@@ -46,17 +44,17 @@ public class IsoDevelopInfo implements Serializable {
     @Min(1)
     @Basic
     @Comment(comment = "认证开始的周期，这个值在未开发ISO认证信息状态时为null，默认为已研发的值为1")
-    private Integer developBeginPeriod ;
+    private Integer developBeginPeriod;
 
     @Min(1)
     @Basic
     @Comment(comment = "认证完成的周期，这个值在未开发/开发中ISO认证信息状态时为null，默认为已研发的值为1")
-    private Integer developEndPeriod ;
+    private Integer developEndPeriod;
 
     @Min(1)
     @Basic
     @Comment(comment = "已经认证了多少个周期，这个值在未开发ISO认证信息状态时为null，默认为已研发的值为0")
-    private Integer researchedPeriod ;
+    private Integer researchedPeriod;
 
     @NotNull
     @Basic(optional = false)

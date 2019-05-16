@@ -1,23 +1,16 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.model.vo;
 
-import edu.cqupt.mislab.erp.game.compete.basic.Comment;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatus;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.persistence.Basic;
-
 /**
- * author： chuyunfei date：2019/3/7
- */
+ * @Author: chuyunfei
+ * @Date: 2019/3/7 12:12
+ * @Description: 企业产品信息视图
+ **/
 @Data
 public class ProductEnterpriseBasicVo {
-
-    /*
-     * @Author: chuyunfei
-     * @Date: 2019/3/7 12:12
-     * @Description: 企业产品信息视图
-     **/
 
     @ApiModelProperty("代理主键，是企业产品研发信息的ID")
     private Long id;
@@ -41,5 +34,5 @@ public class ProductEnterpriseBasicVo {
     private Integer developedPeriod;
 
     @ApiModelProperty("产品开发状态")
-    private ProductDevelopStatus productDevelopStatus;
+    private ProductDevelopStatusEnum productDevelopStatus;
 }

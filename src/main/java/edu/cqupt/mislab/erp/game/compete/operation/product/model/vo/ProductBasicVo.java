@@ -4,6 +4,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+/**
+ * @author chuyunfei
+ * @description 
+ **/
+
 @Data
 @ApiModel("产品基本数据视图")
 public class ProductBasicVo {

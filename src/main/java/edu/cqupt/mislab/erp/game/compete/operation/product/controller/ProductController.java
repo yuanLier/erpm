@@ -3,12 +3,8 @@ package edu.cqupt.mislab.erp.game.compete.operation.product.controller;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.dto.ProductBasicDto;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.dto.ProductMaterialBasicDto;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatus;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductBasicVo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.service.ProductService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
@@ -23,6 +19,11 @@ import java.util.List;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
 
+/**
+ * @author yuanyiwen
+ * @description
+ **/
+
 @Api
 @CrossOrigin
 @Validated
@@ -34,7 +35,7 @@ public class ProductController {
     private ProductService productService;
 
     @ApiOperation(value = "获取某个企业的全部产品研发信息")
-    @GetMapping("/product/infos/get")
+    @GetMapping
     public WebResponseVo<List<ProductDisplayVo>> findByEnterpriseId(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                 @RequestParam Long enterpriseId) {
 
@@ -49,10 +50,10 @@ public class ProductController {
 
 
     @ApiOperation(value = "获取某企业中处于某研发状态的产品")
-    @GetMapping("/product/infos/get/status")
+    @GetMapping("status")
     public WebResponseVo<List<ProductDisplayVo>> findByEnterpriseIdAndProductStatus(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                @RequestParam Long enterpriseId,
-                                                                                    @RequestParam ProductDevelopStatus productDevelopStatus) {
+                                                                                    @RequestParam ProductDevelopStatusEnum productDevelopStatus) {
 
         List<ProductDisplayVo> productDisplayVoList = productService.findByEnterpriseIdAndProductStatus(enterpriseId, productDevelopStatus);
 
@@ -65,36 +66,36 @@ public class ProductController {
 
 
     @ApiOperation(value = "开始研发")
-    @PutMapping("/product/infos/update/start")
+    @PutMapping("start")
     public WebResponseVo<ProductDisplayVo> startDevelopProduct(@Exist(repository = ProductDevelopInfoRepository.class)
                                                        @RequestParam Long productDevelopId) {
 
-        return toSuccessResponseVoWithData(productService.updateProductStatus(productDevelopId, ProductDevelopStatus.DEVELOPING));
+        return toSuccessResponseVoWithData(productService.updateProductStatus(productDevelopId, ProductDevelopStatusEnum.DEVELOPING));
 
     }
 
 
     @ApiOperation(value = "暂停研发")
-    @PutMapping("/product/infos/update/pause")
+    @PutMapping("pause")
     public WebResponseVo<ProductDisplayVo> updateProductStatusToPause(@Exist(repository = ProductDevelopInfoRepository.class)
                                                                @RequestParam Long productDevelopId) {
 
-        return toSuccessResponseVoWithData(productService.updateProductStatus(productDevelopId, ProductDevelopStatus.DEVELOPPAUSE));
+        return toSuccessResponseVoWithData(productService.updateProductStatus(productDevelopId, ProductDevelopStatusEnum.DEVELOPPAUSE));
 
     }
 
 
     @ApiOperation(value = "继续研发")
-    @PutMapping("/product/infos/update/develop")
+    @PutMapping("develop")
     public WebResponseVo<ProductDisplayVo> updateProductStatusToDeveloping(@Exist(repository = ProductDevelopInfoRepository.class)
                                                                @RequestParam Long productDevelopId) {
 
-        return toSuccessResponseVoWithData(productService.updateProductStatus(productDevelopId, ProductDevelopStatus.DEVELOPING));
+        return toSuccessResponseVoWithData(productService.updateProductStatus(productDevelopId, ProductDevelopStatusEnum.DEVELOPING));
 
     }
 
     @ApiOperation(value = "获取某个企业的全部产品原材料构成情况")
-    @GetMapping("/product/material/get")
+    @GetMapping("material")
     public WebResponseVo<List<ProductMaterialDisplayVo>> findMaterialByEnterpriseId(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                     @RequestParam Long enterpriseId) {
 
@@ -109,10 +110,10 @@ public class ProductController {
 
 
     @ApiOperation(value = "获取某企业中处于某状态下的产品的原材料构成情况")
-    @GetMapping("/product/material/get/status")
+    @GetMapping("material/status")
     public WebResponseVo<List<ProductMaterialDisplayVo>> findMaterialByEnterpriseIdAndProductStatus(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                     @RequestParam Long enterpriseId,
-                                                                                                    @RequestParam ProductDevelopStatus productDevelopStatus) {
+                                                                                                    @RequestParam ProductDevelopStatusEnum productDevelopStatus) {
 
         List<ProductMaterialDisplayVo> productMaterialDisplayVoList =
                 productService.findProductMaterialInfoByEnterpriseIdAndProductStatus(enterpriseId, productDevelopStatus);
@@ -123,30 +124,5 @@ public class ProductController {
 
         return toSuccessResponseVoWithData(productMaterialDisplayVoList);
     }
-
-
-    /******************************************* 管理员调参相关 *****************************************/
-
-//    @ApiOperation(value = "（管理员）修改产品基本信息")
-//    @PostMapping("/product/basic/update")
-//    public WebResponseVo<ProductBasicVo> updateProductBasicInfo(@RequestBody ProductBasicDto productBasicDto) {
-//        if(productBasicDto != null) {
-//            return toSuccessResponseVoWithData(productService.updateProductBasicInfo(productBasicDto));
-//        }
-//
-//        return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND,"所传信息为空");
-//    }
-//
-//    @ApiOperation(value = "（管理员）修改产品材料构成的基本信息")
-//    @PostMapping("/product/material/basic/update")
-//    public WebResponseVo<ProductMaterialBasicVo> updateProductMaterialBasicInfo(@RequestBody ProductMaterialBasicDto productMaterialBasicDto) {
-//        if(productMaterialBasicDto != null) {
-//            return toSuccessResponseVoWithData(productService.updateProductMaterialBasicInfo(productMaterialBasicDto));
-//        }
-//
-//        return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND,"所传信息为空");
-//
-//    }
-
 
 }

@@ -6,6 +6,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+/**
+ * @author yuanyiwen
+ * @description 
+ **/
 
 @Data
 @ApiModel("（管理员端修改）产品原料构成视图")

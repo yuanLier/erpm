@@ -29,29 +29,27 @@ public class MarketDevelopInfo implements Serializable {
     @Comment(comment = "代理主键")
     private Long id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "市场开发的基本信息，对应基本市场信息表里面的最新或历史数据")
     private MarketBasicInfo marketBasicInfo;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "哪一个企业的市场开发信息")
     private EnterpriseBasicInfo enterpriseBasicInfo;
 
     @Basic
-    @Comment(comment = "市场开始开发的周期，默认为null")
-    private Integer developBeginPeriod ;
+    @Comment(comment = "市场开始开发的周期")
+    private Integer developBeginPeriod;
 
     @Basic
-    @Comment(comment = "市场完成开发的周期，默认为null")
-    private Integer developEndPeriod ;
+    @Comment(comment = "市场完成开发的周期")
+    private Integer developEndPeriod;
 
     @Basic
-    @Comment(comment = "已经市场开发了多少个周期，默认为开发状态的值为0")
-    private Integer researchedPeriod ;
+    @Comment(comment = "已经市场开发了多少个周期")
+    private Integer researchedPeriod;
 
     @NotNull
     @Enumerated(EnumType.STRING)

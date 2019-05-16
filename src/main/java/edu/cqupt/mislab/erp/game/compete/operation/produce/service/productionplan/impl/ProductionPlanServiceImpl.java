@@ -14,7 +14,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.service.productionplan.ProductionPlanService;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatus;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,7 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
     public List<ProductTypeVo> getProducableProduct(Long enterpriseId) {
         // 已经研发完成的产品
         List<ProductDevelopInfo> productDevelopInfoList = productDevelopInfoRepository
-                .findByEnterpriseBasicInfo_IdAndProductDevelopStatus(enterpriseId, ProductDevelopStatus.DEVELOPED);
+                .findByEnterpriseBasicInfo_IdAndProductDevelopStatus(enterpriseId, ProductDevelopStatusEnum.DEVELOPED);
 
         // 将Entity集转化为Vo集
         List<ProductTypeVo> productTypeVoList = new ArrayList<>();
