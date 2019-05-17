@@ -20,7 +20,9 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineProduceInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialOrderInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialStockInfo;
@@ -182,6 +184,7 @@ public abstract class EntityVoUtil {
 
         return marketDisplayVo;
     }
+
 
     public static ProductDisplayVo copyFieldsFromEntityToVo(ProductDevelopInfo productDevelopInfo) {
 

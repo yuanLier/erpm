@@ -18,16 +18,16 @@ public class ProductDisplayVo {
     private Long id;
 
     @ApiModelProperty("产品研发名称")
-    private String ProductName;
+    private String productName;
 
     @ApiModelProperty("研发总期数")
-    private Integer ProductResearchPeriod;
+    private Integer productResearchPeriod;
 
     @ApiModelProperty("每期研发费用")
-    private Double ProductResearchCost;
+    private Double productResearchCost;
 
     @ApiModelProperty("已经研发的周期数")
-    private Integer DevelopedPeriod;
+    private Integer developedPeriod;
 
     @ApiModelProperty("当前研发状态")
     private ProductDevelopStatusEnum productDevelopStatus;

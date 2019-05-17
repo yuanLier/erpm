@@ -16,7 +16,7 @@ import lombok.Data;
 public class ProductMaterialBasicVo {
 
     @ApiModelProperty(value = "新生成的产品id")
-    private Integer id;
+    private Long id;
 
     @ApiModelProperty(value = "哪一个产品")
     private ProductBasicInfo productBasicInfo;
@@ -25,5 +25,8 @@ public class ProductMaterialBasicVo {
     private MaterialBasicInfo materialBasicInfo;
 
     @ApiModelProperty(value = "需要该种原料多少种")
-    private Integer materialNumber;
+    private Integer number;
+
+    @ApiModelProperty(value = "是否启用")
+    private boolean enable;
 }

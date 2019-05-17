@@ -28,6 +28,13 @@ import java.util.*;
 @Component
 public class ProductModelInit implements ModelInit {
 
+    /**
+     * @author yuanyiwen
+     * @description 防止随机初始化时无法通过校验
+     * @date 21:46 2019/5/17
+     **/
+    private final double MIN_DOUBLE = 0.01;
+
     @Autowired private MaterialBasicInfoRepository materialBasicInfoRepository;
     @Autowired private ProductBasicInfoRepository productBasicInfoRepository;
     @Autowired private ProductMaterialBasicInfoRepository productMaterialBasicInfoRepository;
@@ -87,13 +94,15 @@ public class ProductModelInit implements ModelInit {
             final ProductBasicInfoBuilder builder = ProductBasicInfo.builder()
                     .productName("P" + (i + 1))
                     .productResearchPeriod((int)Math.ceil(Math.random() * 5) + 1)
-                    .productResearchCost(Math.ceil(Math.random() * 4) + 1)
-                    .price(Math.ceil(Math.random() * 4) + 2)
+                    .productResearchCost(MIN_DOUBLE + Math.ceil(Math.random() * 4) + 1)
+                    .produceProductPeriod((int)Math.ceil(Math.random() * 5) + 1)
+                    .produceProductCost(MIN_DOUBLE + Math.ceil(Math.random() * 4) + 1)
+                    .productSellingPrice(MIN_DOUBLE + Math.ceil(Math.random() * 4) + 2)
                     .mount((int)Math.ceil(Math.random() * 50) + 40)
-                    .priceDifference(Math.ceil(Math.random() * 10) + 2)
+                    .priceDifference(MIN_DOUBLE + Math.ceil(Math.random() * 10) + 2)
                     .mountDifference((int)Math.ceil(Math.random() * 20) + 10)
-                    .priceFloat((Math.random() + Math.random()) / 2)
-                    .mountFloat((Math.random() + Math.random()) / 2)
+                    .priceFloat(MIN_DOUBLE + (Math.random() + Math.random()) / 2)
+                    .mountFloat((MIN_DOUBLE + Math.random() + Math.random()) / 2)
                     .enable(true);
 
             if(i % 2 == 0){

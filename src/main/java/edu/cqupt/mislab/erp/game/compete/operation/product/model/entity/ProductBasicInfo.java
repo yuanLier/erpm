@@ -1,9 +1,9 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.model.entity;
 
-import com.google.common.base.Objects;
 import edu.cqupt.mislab.erp.commons.validators.annotations.DoubleMin;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -44,32 +44,37 @@ public class ProductBasicInfo implements Serializable {
     @Comment(comment = "在产品研发过程中，每个周期需要支付的费用，该值大于0")
     private double productResearchCost;
 
-    @DoubleMin(0.01)
-    @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
-    @Comment(comment = "产品价格,该值大于0")
-    private double price;
-
     @Min(1)
-    @Column(nullable = false,updatable = false)
-    @Comment(comment = "市场需求量,该值大于0")
+    @NotNull
+    @Comment(comment = "生产该产品所需的基本周期数")
+    private Integer produceProductPeriod;
+
+    @DoubleMin(0.01)
+    @NotNull
+    @Comment(comment = "在产品生产过程中，每个周期需要支付的费用")
+    private Double produceProductCost;
+
+    @DoubleMin(0.01)
+    @NotNull
+    @Comment(comment = "产品的基本售价")
+    private Double productSellingPrice;
+
+    @Range(min = 0, max = 100)
+    @Column(updatable = false)
+    @Comment(comment = "市场需求量,该值大于0，百分制")
     private int mount;
 
-    @DoubleMin(0.01)
-    @Column(nullable = false,updatable = false)
     @Comment(comment = "市场之间的单价差异,该值大于0，允许为null")
     private Double priceDifference;
 
-    @Min(1)
-    @Column(nullable = false,updatable = false)
     @Comment(comment = "市场之间的需求量差异,该值大于0，允许为null")
     private Integer mountDifference;
 
-    @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 0.00")
+    @Column(columnDefinition = "double(10,2) default 0.00")
     @Comment(comment = "价格波动比例,该值大于0，允许为null")
     private Double priceFloat;
 
-    @DoubleMin(0.01)
-    @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 0.00")
+    @Column(columnDefinition = "double(10,2) default 0.00")
     @Comment(comment = "需求量波动比例,该值大于0，允许为null")
     private Double mountFloat;
 
@@ -84,17 +89,29 @@ public class ProductBasicInfo implements Serializable {
     private boolean enable;
 
     @Override
-    public boolean equals(Object o){
-        if(this == o)
-            return true;
-        if(o == null||getClass() != o.getClass())
-            return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         ProductBasicInfo that = (ProductBasicInfo) o;
-        return Double.compare(that.priceFloat,priceFloat) == 0&&Objects.equal(id,that.id)&&Objects.equal(productName,that.productName)&&Objects.equal(productResearchPeriod,that.productResearchPeriod)&&Objects.equal(productResearchCost,that.productResearchCost)&&Objects.equal(price,that.price)&&Objects.equal(mount,that.mount)&&Objects.equal(priceDifference,that.priceDifference)&&Objects.equal(mountDifference,that.mountDifference)&&Objects.equal(mountFloat,that.mountFloat)&&productDevelopStatus == that.productDevelopStatus&&Objects.equal(enable,that.enable);
+        return productResearchPeriod == that.productResearchPeriod &&
+                Double.compare(that.productResearchCost, productResearchCost) == 0 &&
+                mount == that.mount &&
+                enable == that.enable &&
+                java.util.Objects.equals(id, that.id) &&
+                java.util.Objects.equals(productName, that.productName) &&
+                java.util.Objects.equals(produceProductPeriod, that.produceProductPeriod) &&
+                java.util.Objects.equals(produceProductCost, that.produceProductCost) &&
+                java.util.Objects.equals(productSellingPrice, that.productSellingPrice) &&
+                java.util.Objects.equals(priceDifference, that.priceDifference) &&
+                java.util.Objects.equals(mountDifference, that.mountDifference) &&
+                java.util.Objects.equals(priceFloat, that.priceFloat) &&
+                java.util.Objects.equals(mountFloat, that.mountFloat) &&
+                productDevelopStatus == that.productDevelopStatus;
     }
 
     @Override
-    public int hashCode(){
-        return Objects.hashCode(id,productName,productResearchPeriod,productResearchCost,price,mount,priceDifference,mountDifference,priceFloat,mountFloat,productDevelopStatus,enable);
+    public int hashCode() {
+
+        return java.util.Objects.hash(id, productName, productResearchPeriod, productResearchCost, produceProductPeriod, produceProductCost, productSellingPrice, mount, priceDifference, mountDifference, priceFloat, mountFloat, productDevelopStatus, enable);
     }
 }

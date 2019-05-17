@@ -35,10 +35,24 @@ public interface ProductManagerService {
     ProductBasicVo closeProductBasicInfo(Long productBasicId);
 
     /**
-     * 修改产品组成原料的基本信息
+     * 添加一个产品原料信息
      * @param productMaterialBasicDto
      * @return
      */
-    ProductMaterialBasicVo updateProductMaterialBasicInfo(ProductMaterialBasicDto productMaterialBasicDto);
+    ProductMaterialBasicVo addProductMaterialBasicInfo(ProductMaterialBasicDto productMaterialBasicDto);
 
+    /**
+     * 修改产品组成原料的基本信息（只能修改原料数量）
+     * @param productMaterialId
+     * @param number
+     * @return
+     */
+    ProductMaterialBasicVo updateProductMaterialBasicInfo(Long productMaterialId, Integer number);
+
+    /**
+     * 关闭一个产品原料信息
+     * @param productMaterialId
+     * @return
+     */
+    ProductMaterialBasicVo closeProductMaterialBasicInfo(Long productMaterialId);
 }

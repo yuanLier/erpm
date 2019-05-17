@@ -1,10 +1,13 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.service.impl;
 
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
+import edu.cqupt.mislab.erp.game.compete.operation.material.dao.MaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductMaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.dto.ProductBasicDto;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.dto.ProductMaterialBasicDto;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.service.ProductManagerService;
@@ -23,6 +26,10 @@ public class ProductManagerServiceImpl implements ProductManagerService {
 
     @Autowired
     private ProductBasicInfoRepository productBasicInfoRepository;
+    @Autowired
+    private MaterialBasicInfoRepository materialBasicInfoRepository;
+    @Autowired
+    private ProductMaterialBasicInfoRepository productMaterialBasicInfoRepository;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -89,9 +96,72 @@ public class ProductManagerServiceImpl implements ProductManagerService {
         return productBasicVo;
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ProductMaterialBasicVo addProductMaterialBasicInfo(ProductMaterialBasicDto productMaterialBasicDto) {
+        // 构建该条产品原料信息
+        ProductMaterialBasicInfo productMaterialBasicInfo = new ProductMaterialBasicInfo();
+        productMaterialBasicInfo.setMaterialBasicInfo(materialBasicInfoRepository.findOne(productMaterialBasicDto.getMaterialBasicInfoId()));
+        productMaterialBasicInfo.setProductBasicInfo(productBasicInfoRepository.findOne(productMaterialBasicDto.getProductBasicInfoId()));
+        productMaterialBasicInfo.setNumber(productMaterialBasicDto.getNumber());
+
+        // 启用该条设置
+        productMaterialBasicInfo.setEnable(true);
+
+        // 保存修改并刷新
+        productMaterialBasicInfo = productMaterialBasicInfoRepository.saveAndFlush(productMaterialBasicInfo);
+
+        // 将获取了新id的info数据复制给productMaterialBasicVo
+        ProductMaterialBasicVo productMaterialBasicVo = new ProductMaterialBasicVo();
+        BeanCopyUtil.copyPropertiesSimple(productMaterialBasicInfo, productMaterialBasicVo);
+
+        // 返回vo
+        return productMaterialBasicVo;
+    }
 
     @Override
-    public ProductMaterialBasicVo updateProductMaterialBasicInfo(ProductMaterialBasicDto productMaterialBasicDto) {
-        return null;
+    @Transactional(rollbackFor = Exception.class)
+    public ProductMaterialBasicVo updateProductMaterialBasicInfo(Long productMaterialId, Integer number) {
+        // 获取之前的产品原材料信息并设置为不启用
+        ProductMaterialBasicInfo productMaterialBasicInfo = productMaterialBasicInfoRepository.findOne(productMaterialId);
+        productMaterialBasicInfo.setEnable(false);
+
+        productMaterialBasicInfoRepository.save(productMaterialBasicInfo);
+
+        // 重新生成一条数据
+        ProductMaterialBasicInfo newProductMaterialBasicInfo = new ProductMaterialBasicInfo();
+        // 复制产品和原料信息
+        newProductMaterialBasicInfo.setProductBasicInfo(productMaterialBasicInfo.getProductBasicInfo());
+        newProductMaterialBasicInfo.setMaterialBasicInfo(productMaterialBasicInfo.getMaterialBasicInfo());
+        // 修改原料数量
+        newProductMaterialBasicInfo.setNumber(number);
+        // 设置可用
+        newProductMaterialBasicInfo.setEnable(true);
+
+        newProductMaterialBasicInfo = productMaterialBasicInfoRepository.saveAndFlush(newProductMaterialBasicInfo);
+
+        ProductMaterialBasicVo productMaterialBasicVo = new ProductMaterialBasicVo();
+        BeanCopyUtil.copyPropertiesSimple(newProductMaterialBasicInfo, productMaterialBasicVo);
+
+        return productMaterialBasicVo;
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ProductMaterialBasicVo closeProductMaterialBasicInfo(Long productMaterialId) {
+        // 获取这个产品原材料信息
+        ProductMaterialBasicInfo productMaterialBasicInfo = productMaterialBasicInfoRepository.findOne(productMaterialId);
+
+        // 设置为不启用
+        productMaterialBasicInfo.setEnable(false);
+
+        // 保存修改
+        productMaterialBasicInfoRepository.save(productMaterialBasicInfo);
+
+        ProductMaterialBasicVo productMaterialBasicVo = new ProductMaterialBasicVo();
+        BeanCopyUtil.copyPropertiesSimple(productMaterialBasicInfo, productMaterialBasicVo);
+
+        return productMaterialBasicVo;
+    }
+
 }

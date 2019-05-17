@@ -171,7 +171,7 @@ public class ProductServiceImpl implements ProductService {
             // 产品构成-原材料map
             productMaterialDisplayVo.setMaterialMap(materialMap);
             // 产品构成-售价 todo 是否需要？
-            productMaterialDisplayVo.setProductSellingPrice(productDevelopInfo.getProductBasicInfo().getPrice());
+            productMaterialDisplayVo.setProductSellingPrice(productDevelopInfo.getProductBasicInfo().getProductSellingPrice());
 
             // 将该Vo加入集合
             productMaterialDisplayVoList.add(productMaterialDisplayVo);

@@ -326,9 +326,9 @@ public class OrderGameModelInit implements GameModelInit {
                     当产品的价格为0时将会出现死循环，需要控制产品价格
                      */
                     do{
-                        price = productBasicInfo.getPrice() //原价
-                                + productBasicInfo.getPrice() * productBasicInfo.getPriceDifference() * Math.pow(-1,Math.ceil(Math.random() * 2)) //价格差异
-                                + productBasicInfo.getPrice() * productBasicInfo.getPriceFloat() * Math.pow(-1,Math.ceil(Math.random() * 2)); //价格波动
+                        price = productBasicInfo.getProductSellingPrice() //原价
+                                + productBasicInfo.getProductSellingPrice() * productBasicInfo.getPriceDifference() * Math.pow(-1,Math.ceil(Math.random() * 2)) //价格差异
+                                + productBasicInfo.getProductSellingPrice() * productBasicInfo.getPriceFloat() * Math.pow(-1,Math.ceil(Math.random() * 2)); //价格波动
                     }while(price <= 0);
 
                     double mount = -1;

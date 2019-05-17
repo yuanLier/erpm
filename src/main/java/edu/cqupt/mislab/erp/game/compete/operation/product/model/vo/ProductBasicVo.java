@@ -34,4 +34,7 @@ public class ProductBasicVo {
     @ApiModelProperty(value = "产品的基本售价")
     private Double productSellingPrice;
 
+    @ApiModelProperty(value = "该条信息是否被启用")
+    private boolean enable;
+
 }
