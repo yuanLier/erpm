@@ -20,4 +20,13 @@ public interface IsoBasicInfoRepository extends BasicRepository<IsoBasicInfo, Lo
      **/
     @Query("from IsoBasicInfo isoBasicInfo where isoBasicInfo.enable = true group by isoBasicInfo.isoName")
     List<IsoBasicInfo> findAllNewestApplicationIsoBasicInfos();
+
+
+    /**
+     * @author yuanyiwen
+     * @description 获取处于某种状态（可用or不可用）下的iso基本信息
+     * @date 18:00 2019/5/18
+     **/
+    List<IsoBasicInfo> findByEnable(boolean enable);
+
 }

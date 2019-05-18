@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
@@ -78,5 +79,12 @@ public class MarketManagerController {
                                                        @RequestParam Long marketBasicId) {
 
         return toSuccessResponseVoWithData(marketManagerService.closeMarketBasicInfo(marketBasicId));
+    }
+
+    @ApiOperation(value = "获取处于某种状态（可用or不可用）下的市场基本信息")
+    @GetMapping("/status")
+    public WebResponseVo<List<MarketBasicVo>> getMarketBasicInfoOfStatus(@RequestParam boolean enable) {
+
+        return toSuccessResponseVoWithData(marketManagerService.getAllMarketBasicVoOfStatus(enable));
     }
 }

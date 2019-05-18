@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
@@ -118,5 +119,21 @@ public class ProductManagerController {
                                                                @RequestParam Long productMaterialBasicId) {
 
         return toSuccessResponseVoWithData(productManagerService.closeProductMaterialBasicInfo(productMaterialBasicId));
+    }
+
+
+    @ApiOperation(value = "获取处于某种状态（可用or不可用）下的产品基本信息")
+    @GetMapping("/status")
+    public WebResponseVo<List<ProductBasicVo>> getProductBasicInfoOfStatus(@RequestParam boolean enable) {
+
+        return toSuccessResponseVoWithData(productManagerService.getAllProductBasicVoOfStatus(enable));
+    }
+
+
+    @ApiOperation(value = "获取处于某种状态（可用or不可用）下的产品材料基本信息")
+    @GetMapping("/material/status")
+    public WebResponseVo<List<ProductMaterialBasicVo>> getProductMaterialBasicInfoOfStatus(@RequestParam boolean enable) {
+
+        return toSuccessResponseVoWithData(productManagerService.getAllProductMaterialBasicVoOfStatus(enable));
     }
 }

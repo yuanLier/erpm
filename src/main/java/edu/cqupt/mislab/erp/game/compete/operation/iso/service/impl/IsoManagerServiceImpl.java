@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author yuanyiwen
  * @create 2019-05-08 21:45
@@ -84,5 +87,21 @@ public class IsoManagerServiceImpl implements IsoManagerService {
         BeanCopyUtil.copyPropertiesSimple(isoBasicInfo, isoBasicVo);
 
         return isoBasicVo;
+    }
+
+    @Override
+    public List<IsoBasicVo> getAllIsoBasicVoOfStatus(boolean enable) {
+
+        List<IsoBasicInfo> isoBasicInfoList = isoBasicInfoRepository.findByEnable(enable);
+
+        List<IsoBasicVo> isoBasicVoList = new ArrayList<>();
+        for (IsoBasicInfo isoBasicInfo : isoBasicInfoList) {
+            IsoBasicVo isoBasicVo = new IsoBasicVo();
+            BeanCopyUtil.copyPropertiesSimple(isoBasicInfo, isoBasicVo);
+
+            isoBasicVoList.add(isoBasicVo);
+        }
+
+        return isoBasicVoList;
     }
 }

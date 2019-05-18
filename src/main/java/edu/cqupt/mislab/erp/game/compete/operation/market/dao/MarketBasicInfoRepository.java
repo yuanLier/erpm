@@ -20,4 +20,13 @@ public interface MarketBasicInfoRepository extends BasicRepository<MarketBasicIn
      **/
     @Query("from MarketBasicInfo m where m.enable = true group by m.marketName")
     List<MarketBasicInfo> findAllNewestApplicationMarketBasicInfos();
+
+
+    /**
+     * @author yuanyiwen
+     * @description 获取处于某种状态（可用or不可用）下的市场基本信息
+     * @date 18:00 2019/5/18
+     **/
+    List<MarketBasicInfo> findByEnable(boolean enable);
+
 }

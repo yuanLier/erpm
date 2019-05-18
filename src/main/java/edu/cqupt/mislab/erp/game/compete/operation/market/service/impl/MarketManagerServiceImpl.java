@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * @author yuanyiwen
@@ -87,5 +90,21 @@ public class MarketManagerServiceImpl implements MarketManagerService {
         BeanCopyUtil.copyPropertiesSimple(marketBasicInfo, marketBasicVo);
 
         return marketBasicVo;
+    }
+
+    @Override
+    public List<MarketBasicVo> getAllMarketBasicVoOfStatus(boolean enable) {
+
+        List<MarketBasicInfo> marketBasicInfoList = marketBasicInfoRepository.findByEnable(enable);
+
+        List<MarketBasicVo> marketBasicVoList = new ArrayList<>();
+        for (MarketBasicInfo marketBasicInfo : marketBasicInfoList) {
+            MarketBasicVo marketBasicVo = new MarketBasicVo();
+            BeanCopyUtil.copyPropertiesSimple(marketBasicInfo, marketBasicVo);
+
+            marketBasicVoList.add(marketBasicVo);
+        }
+
+        return marketBasicVoList;
     }
 }

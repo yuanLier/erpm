@@ -20,4 +20,12 @@ public interface ProductBasicInfoRepository extends BasicRepository<ProductBasic
      */
     @Query("from ProductBasicInfo p where p.enable = true group by p.productName")
     List<ProductBasicInfo> findNewestProductBasicInfos();
+
+    /**
+     * @author yuanyiwen
+     * @description 获取处于某种状态（可用or不可用）下的产品基本信息
+     * @date 18:00 2019/5/18
+     **/
+    List<ProductBasicInfo> findByEnable(boolean enable);
+
 }

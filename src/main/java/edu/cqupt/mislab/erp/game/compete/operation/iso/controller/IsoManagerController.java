@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
@@ -77,5 +78,13 @@ public class IsoManagerController {
                                                                    @RequestParam Long isoBasicId) {
 
         return toSuccessResponseVoWithData(isoManagerService.closeIsoBasicInfo(isoBasicId));
+    }
+
+
+    @ApiOperation(value = "获取处于某种状态（可用or不可用）下的iso基本信息")
+    @GetMapping("/status")
+    public WebResponseVo<List<IsoBasicVo>> getIsoBasicInfoOfStatus(@RequestParam boolean enable) {
+
+        return toSuccessResponseVoWithData(isoManagerService.getAllIsoBasicVoOfStatus(enable));
     }
 }

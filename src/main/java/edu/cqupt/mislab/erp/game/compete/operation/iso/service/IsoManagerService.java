@@ -3,6 +3,8 @@ package edu.cqupt.mislab.erp.game.compete.operation.iso.service;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.dto.IsoBasicDto;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoBasicVo;
 
+import java.util.List;
+
 /**
  * @author yuanyiwen
  * @create 2019-05-08 21:40
@@ -34,5 +36,13 @@ public interface IsoManagerService {
      * @return
      */
     IsoBasicVo closeIsoBasicInfo(Long isoBasicId);
+
+
+    /**
+     * 获取处于某一状态（可用or不可用）的Iso基本信息
+     * @param enable 是否可用
+     * @return
+     */
+    List<IsoBasicVo> getAllIsoBasicVoOfStatus(boolean enable);
 
 }

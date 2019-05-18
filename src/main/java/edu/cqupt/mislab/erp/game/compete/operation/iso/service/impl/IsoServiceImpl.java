@@ -8,6 +8,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.service.IsoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,7 @@ public class IsoServiceImpl implements IsoService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public IsoDisplayVo updateIsoStatus(Long isoDevelopId, IsoStatusEnum isoStatus) {
 
         // 根据id获取对应要修改的那条iso认证

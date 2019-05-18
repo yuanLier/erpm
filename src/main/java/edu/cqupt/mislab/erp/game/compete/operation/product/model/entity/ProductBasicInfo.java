@@ -64,19 +64,19 @@ public class ProductBasicInfo implements Serializable {
     @Comment(comment = "市场需求量,该值大于0，百分制")
     private int mount;
 
-    @Comment(comment = "市场之间的单价差异,该值大于0，允许为null")
-    private Double priceDifference;
+    @Comment(comment = "市场之间的单价差异,该值大于0")
+    private double priceDifference;
 
-    @Comment(comment = "市场之间的需求量差异,该值大于0，允许为null")
-    private Integer mountDifference;
-
-    @Column(columnDefinition = "double(10,2) default 0.00")
-    @Comment(comment = "价格波动比例,该值大于0，允许为null")
-    private Double priceFloat;
+    @Comment(comment = "市场之间的需求量差异,该值大于0")
+    private int mountDifference;
 
     @Column(columnDefinition = "double(10,2) default 0.00")
-    @Comment(comment = "需求量波动比例,该值大于0，允许为null")
-    private Double mountFloat;
+    @Comment(comment = "价格波动比例,该值大于0")
+    private double priceFloat;
+
+    @Column(columnDefinition = "double(10,2) default 0.00")
+    @Comment(comment = "需求量波动比例,该值大于0")
+    private double mountFloat;
 
     @NotNull
     @Enumerated(EnumType.STRING)

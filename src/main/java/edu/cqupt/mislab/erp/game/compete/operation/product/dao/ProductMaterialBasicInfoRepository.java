@@ -18,4 +18,14 @@ public interface ProductMaterialBasicInfoRepository extends BasicRepository<Prod
      * @return
      */
     List<ProductMaterialBasicInfo> findByEnableIsTrueAndProductBasicInfo_Id(long productId);
+
+
+    /**
+     * @author yuanyiwen
+     * @description 获取处于某种状态（可用or不可用）下的产品基本信息
+     * @date 18:00 2019/5/18
+     **/
+    List<ProductMaterialBasicInfo> findByEnable(boolean enable);
+
+
 }

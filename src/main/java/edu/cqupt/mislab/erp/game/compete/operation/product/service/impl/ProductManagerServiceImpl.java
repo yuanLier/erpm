@@ -15,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author yuanyiwen
  * @create 2019-05-16 18:22
@@ -164,4 +167,35 @@ public class ProductManagerServiceImpl implements ProductManagerService {
         return productMaterialBasicVo;
     }
 
+    @Override
+    public List<ProductBasicVo> getAllProductBasicVoOfStatus(boolean enable) {
+
+        List<ProductBasicInfo> productBasicInfoList = productBasicInfoRepository.findByEnable(enable);
+
+        List<ProductBasicVo> productBasicVoList = new ArrayList<>();
+        for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+            ProductBasicVo productBasicVo = new ProductBasicVo();
+            BeanCopyUtil.copyPropertiesSimple(productBasicInfo, productBasicVo);
+
+            productBasicVoList.add(productBasicVo);
+        }
+
+        return productBasicVoList;
+    }
+
+    @Override
+    public List<ProductMaterialBasicVo> getAllProductMaterialBasicVoOfStatus(boolean enable) {
+
+        List<ProductMaterialBasicInfo> productMaterialBasicInfoList = productMaterialBasicInfoRepository.findByEnable(enable);
+
+        List<ProductMaterialBasicVo> productMaterialBasicVoList = new ArrayList<>();
+        for (ProductMaterialBasicInfo productMaterialBasicInfo : productMaterialBasicInfoList) {
+            ProductMaterialBasicVo productMaterialBasicVo = new ProductMaterialBasicVo();
+            BeanCopyUtil.copyPropertiesSimple(productMaterialBasicInfo, productMaterialBasicVo);
+
+            productMaterialBasicVoList.add(productMaterialBasicVo);
+        }
+
+        return productMaterialBasicVoList;
+    }
 }

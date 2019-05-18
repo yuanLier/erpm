@@ -1,7 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.service.impl;
 
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
-import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductMaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
@@ -12,6 +11,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMater
 import edu.cqupt.mislab.erp.game.compete.operation.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,9 +26,6 @@ import java.util.Map;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-
-    @Autowired
-    private ProductBasicInfoRepository productBasicInfoRepository;
 
     @Autowired
     private ProductMaterialBasicInfoRepository productMaterialBasicInfoRepository;
@@ -56,6 +53,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ProductDisplayVo updateProductStatus(Long productDevelopId, ProductDevelopStatusEnum productDevelopStatus) {
         // 根据id查询产品信息
         ProductDevelopInfo productDevelopInfo = productDevelopInfoRepository.findOne(productDevelopId);
@@ -69,11 +67,7 @@ public class ProductServiceImpl implements ProductService {
         productDevelopInfo.setProductDevelopStatus(productDevelopStatus);
 
         // 保存修改
-        try {
-            productDevelopInfoRepository.save(productDevelopInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        productDevelopInfoRepository.save(productDevelopInfo);
 
         // 转换为vo实体并返回
         return EntityVoUtil.copyFieldsFromEntityToVo(productDevelopInfo);
@@ -103,8 +97,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-    /******************************************** 以下是封装的方法 ********************************************/
-
     /**
      * @author yuanyiwen
      * @description findByEnterpriseId 和 findByEnterpriseIdAndProductStatus 的简单封装
@@ -115,7 +107,7 @@ public class ProductServiceImpl implements ProductService {
     private List<ProductDisplayVo> castEntitiesToVos(List<ProductDevelopInfo> productDevelopInfoList) {
 
         // 非空判断
-        if(productDevelopInfoList == null || productDevelopInfoList.size() == 0) {
+        if( productDevelopInfoList.size() == 0) {
             return null;
         }
 
@@ -170,7 +162,7 @@ public class ProductServiceImpl implements ProductService {
             productMaterialDisplayVo.setId(productDevelopInfo.getId());
             // 产品构成-原材料map
             productMaterialDisplayVo.setMaterialMap(materialMap);
-            // 产品构成-售价 todo 是否需要？
+            // 产品构成-售价 todo 售价
             productMaterialDisplayVo.setProductSellingPrice(productDevelopInfo.getProductBasicInfo().getProductSellingPrice());
 
             // 将该Vo加入集合

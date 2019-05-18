@@ -1,18 +1,14 @@
 package edu.cqupt.mislab.erp.game.compete.operation.market.service.impl;
 
-import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
-import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketDevelopInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.market.model.dto.MarketBasicDto;
-import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketStatusEnum;
-import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.service.MarketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +69,7 @@ public class MarketServiceImpl implements MarketService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public MarketDisplayVo updateMarketStatus(Long marketDevelopId, MarketStatusEnum marketStatus) {
 
         // 根据id查询市场信息

@@ -5,6 +5,8 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.model.dto.ProductMate
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialBasicVo;
 
+import java.util.List;
+
 /**
  * @author yuanyiwen
  * @create 2019-05-16 18:06
@@ -55,4 +57,21 @@ public interface ProductManagerService {
      * @return
      */
     ProductMaterialBasicVo closeProductMaterialBasicInfo(Long productMaterialId);
+
+    
+    /**
+     * 获取处于某一状态（可用or不可用）的产品基本信息
+     * @param enable 是否可用
+     * @return
+     */
+    List<ProductBasicVo> getAllProductBasicVoOfStatus(boolean enable);
+
+
+    /**
+     * 获取处于某一状态（可用or不可用）的产品基本原材料信息
+     * @param enable 是否可用
+     * @return
+     */
+    List<ProductMaterialBasicVo> getAllProductMaterialBasicVoOfStatus(boolean enable);
+
 }
