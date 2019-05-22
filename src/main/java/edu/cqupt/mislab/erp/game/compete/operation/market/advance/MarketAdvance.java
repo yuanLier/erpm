@@ -1,6 +1,8 @@
 package edu.cqupt.mislab.erp.game.compete.operation.market.advance;
 
+import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
 import edu.cqupt.mislab.erp.game.compete.basic.ModelAdvance;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketHistoryRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
@@ -30,9 +32,11 @@ public class MarketAdvance implements ModelAdvance {
     private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
     @Autowired
     private MarketDevelopInfoRepository marketDevelopInfoRepository;
-
     @Autowired
     private MarketHistoryRepository marketHistoryRepository;
+
+    @Autowired
+    private FinanceService financeService;
 
 
     /**
@@ -88,7 +92,11 @@ public class MarketAdvance implements ModelAdvance {
 
             for (MarketDevelopInfo marketDevelopInfo : marketDevelopInfoList) {
 
-                // todo 扣除开拓完成后需要支付的维护费用（余额判断的部分可以抽出来）
+                // 扣除开拓完成后需要支付的维护费用
+                Long enterpriseId = enterpriseBasicInfo.getId();
+                String changeOperating = FinanceOperationConstant.MARKET_MAINTAIN;
+                Double changeAmount = marketDevelopInfo.getMarketBasicInfo().getMarketMaintainCost();
+                financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
 
             }
 
@@ -109,7 +117,11 @@ public class MarketAdvance implements ModelAdvance {
                 // 保存修改
                 marketDevelopInfoRepository.save(marketDevelopInfo);
 
-                // todo 扣除开拓过程中需要支付的费用
+                // 扣除开拓过程中需要支付的费用
+                Long enterpriseId = enterpriseBasicInfo.getId();
+                String changeOperating = FinanceOperationConstant.MARKET_DEVELOP;
+                Double changeAmount = marketDevelopInfo.getMarketBasicInfo().getMarketResearchCost();
+                financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
 
             }
         }

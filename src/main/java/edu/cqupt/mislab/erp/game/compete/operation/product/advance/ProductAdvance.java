@@ -1,6 +1,8 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.advance;
 
+import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
 import edu.cqupt.mislab.erp.game.compete.basic.ModelAdvance;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductHistoryRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
@@ -28,9 +30,11 @@ public class ProductAdvance implements ModelAdvance {
     private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
     @Autowired
     private ProductDevelopInfoRepository productDevelopInfoRepository;
-
     @Autowired
     private ProductHistoryRepository productHistoryRepository;
+
+    @Autowired
+    private FinanceService financeService;
 
 
     /**
@@ -81,17 +85,8 @@ public class ProductAdvance implements ModelAdvance {
 
         for (EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
 
-            // 获取该企业中全部研发完成的产品信息
-            List<ProductDevelopInfo> productDevelopInfoList = productDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndProductDevelopStatus(enterpriseBasicInfo.getId(), ProductDevelopStatusEnum.DEVELOPED);
-
-            for (ProductDevelopInfo productDevelopInfo : productDevelopInfoList) {
-
-                // todo 扣除研发完成后需要支付的维护费用（余额判断的部分可以抽出来）
-
-            }
-
             // 获取该企业中全部研发中的产品
-            productDevelopInfoList = productDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndProductDevelopStatus(enterpriseBasicInfo.getId(), ProductDevelopStatusEnum.DEVELOPING);
+            List<ProductDevelopInfo> productDevelopInfoList = productDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndProductDevelopStatus(enterpriseBasicInfo.getId(), ProductDevelopStatusEnum.DEVELOPING);
 
             for (ProductDevelopInfo productDevelopInfo : productDevelopInfoList) {
 
@@ -107,7 +102,11 @@ public class ProductAdvance implements ModelAdvance {
                 // 保存修改
                 productDevelopInfoRepository.save(productDevelopInfo);
 
-                // todo 扣除研发过程中需要支付的费用
+                // 扣除研发过程中需要支付的费用
+                Long enterpriseId = enterpriseBasicInfo.getId();
+                String changeOperating = FinanceOperationConstant.PRODUCT_DEVELOP;
+                Double changeAmount = productDevelopInfo.getProductBasicInfo().getProductResearchCost();
+                financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
 
             }
         }

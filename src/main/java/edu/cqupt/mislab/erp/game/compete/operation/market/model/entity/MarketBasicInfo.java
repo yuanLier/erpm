@@ -40,17 +40,17 @@ public class MarketBasicInfo implements Serializable {
 
     @Min(1)
     @Column(nullable = false, updatable = false)
-    @Comment(comment = "完成市场开发的周期数，该值必须大于1")
+    @Comment(comment = "完成市场开拓的周期数，该值必须大于1")
     private int marketResearchPeriod;
 
     @DoubleMin(0.01)
     @Column(nullable = false, updatable = false)
-    @Comment(comment = "在市场开发过程中，每个周期需要支付的费用，该值必须大于0")
+    @Comment(comment = "在市场开拓过程中，每个周期需要支付的费用，该值必须大于0")
     private double marketResearchCost;
 
     @DoubleMin(0.01)
     @Column(nullable = false, updatable = false,columnDefinition = "double(10,2) default 1.00")
-    @Comment(comment = "市场开发完成后，维持该市场每个周期需要支付的费用，该值必须大于0")
+    @Comment(comment = "市场开拓完成后，维持该市场每个周期需要支付的费用，该值必须大于0")
     private double marketMaintainCost;
 
     @NotNull

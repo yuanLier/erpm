@@ -36,10 +36,23 @@ public class FinanceEnterpriseInfo implements Serializable {
     private EnterpriseBasicInfo enterpriseBasicInfo;
 
     @DoubleMin(0.01)
+    @Column(updatable = false)
+    @Comment(comment = "当前账户余额")
+    private double currentAccount;
+
+    @NotNull
+    @Column(updatable = false)
+    @Comment(comment = "造成改变的操作")
+    private String changeOperating;
+
+    @DoubleMin(0.01)
+    @Column(updatable = false)
+    @Comment(comment = "造成改变的金额")
+    private double changeAmount;
+
+    @NotNull
     @Basic
-    @Comment(comment = "账户余额")
-    private Double account;
-
-
+    @Comment(comment = "是否为当前（最新）余额")
+    private boolean current;
 
 }

@@ -1,6 +1,8 @@
 package edu.cqupt.mislab.erp.game.compete.operation.iso.advance;
 
+import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
 import edu.cqupt.mislab.erp.game.compete.basic.ModelAdvance;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoHistoryRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoDevelopInfo;
@@ -28,9 +30,11 @@ public class IsoAdvance implements ModelAdvance {
     private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
     @Autowired
     private IsoDevelopInfoRepository isoDevelopInfoRepository;
-
     @Autowired
     private IsoHistoryRepository isoHistoryRepository;
+
+    @Autowired
+    private FinanceService financeService;
 
 
     /**
@@ -86,7 +90,11 @@ public class IsoAdvance implements ModelAdvance {
 
             for (IsoDevelopInfo isoDevelopInfo : isoDevelopInfoList) {
 
-                // todo 扣除认证完成后需要支付的维护费用（余额判断的部分可以抽出来）
+                // 扣除认证完成后需要支付的维护费用
+                Long enterpriseId = enterpriseBasicInfo.getId();
+                String changeOperating = FinanceOperationConstant.ISO_MAINTAIN;
+                Double changeAmount = isoDevelopInfo.getIsoBasicInfo().getIsoMaintainCost();
+                financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
 
             }
 
@@ -107,8 +115,11 @@ public class IsoAdvance implements ModelAdvance {
                 // 保存修改
                 isoDevelopInfoRepository.save(isoDevelopInfo);
 
-                // todo 扣除认证过程中需要支付的费用
-
+                // 扣除认证过程中需要支付的费用
+                Long enterpriseId = enterpriseBasicInfo.getId();
+                String changeOperating = FinanceOperationConstant.ISO_DEVELOP;
+                Double changeAmount = isoDevelopInfo.getIsoBasicInfo().getIsoResearchCost();
+                financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
             }
         }
 
