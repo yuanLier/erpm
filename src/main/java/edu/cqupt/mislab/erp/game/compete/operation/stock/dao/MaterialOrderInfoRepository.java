@@ -14,9 +14,9 @@ import java.util.List;
 public interface MaterialOrderInfoRepository extends BasicRepository<MaterialOrderInfo, Long>, JpaSpecificationExecutor {
 
     /**
-     * @author yuanyiwen
-     * @description 获取一个企业的全部原材料订单采购情况
-     * @date 21:23 2019/4/6
-     **/
+     * 获取一个企业的全部原材料订单采购情况
+     * @param enterpriseId
+     * @return
+     */
     List<MaterialOrderInfo> findByEnterpriseBasicInfo_Id(Long enterpriseId);
 }

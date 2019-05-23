@@ -15,10 +15,9 @@ import java.util.List;
 public interface TransportBasicInfoRepository extends BasicRepository<TransportBasicInfo, Long>, JpaSpecificationExecutor {
 
     /**
-     * @author yuanyiwen
-     * @description 选取当前版本下的全部运输方式
-     * @date 20:50 2019/3/23
-     **/
+     * 选取当前版本下的全部运输方式
+     * @return
+     */
     @Query("from TransportBasicInfo t where t.enable = true group by t.transportName")
     List<TransportBasicInfo> findNewestTransportBasicInfos();
 }

@@ -2,23 +2,11 @@ package edu.cqupt.mislab.erp.game.compete.operation.material.gamemodelinit;
 
 import edu.cqupt.mislab.erp.game.compete.basic.GameModelInit;
 import edu.cqupt.mislab.erp.game.compete.basic.impl.GameModelInitService;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoDevelopInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoDevelopInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoDevelopInfo.IsoDevelopInfoBuilder;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoStatusEnum;
-import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.material.dao.GameMaterialInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.material.dao.MaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.GameMaterialInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
-import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +16,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * author： chuyunfei date：2019/3/1
+ * @author： chuyunfei
+ * @date：2019/3/1
  */
 @Slf4j
 @Component

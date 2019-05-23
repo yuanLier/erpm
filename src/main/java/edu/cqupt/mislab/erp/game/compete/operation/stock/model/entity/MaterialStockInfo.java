@@ -7,7 +7,14 @@ import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
+
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/5 11:45
+ * @Description: 用于存储企业的历史原料信息
+ **/
 
 @Getter
 @Setter
@@ -17,12 +24,6 @@ import java.io.Serializable;
 @Entity
 @Table
 public class MaterialStockInfo implements Serializable {
-
-    /*
-     * @Author: chuyunfei
-     * @Date: 2019/3/5 11:45
-     * @Description: 用于存储企业的历史原料信息
-     **/
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,9 +40,10 @@ public class MaterialStockInfo implements Serializable {
     @Comment(comment = "哪一种原料")
     private MaterialBasicInfo materialBasicInfo;
 
+    @Min(0)
     @Basic(optional = false)
-    @Comment(comment = "原材料的库存数，这个数值大于等于0")
-    private Integer materialNumber;
+    @Comment(comment = "原材料的库存数")
+    private int materialNumber;
 
     @Override
     public boolean equals(Object o){

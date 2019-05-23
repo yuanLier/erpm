@@ -21,7 +21,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * author： chuyunfei date：2019/3/1
+ * @author： chuyunfei
+ * @date：2019/3/1
  */
 @Slf4j
 @Component
@@ -125,7 +126,7 @@ public class StockGameModelInit implements GameModelInit {
 
     @Autowired private ProductGameModelInit productGameModelInit;
 
-    /*
+    /**
      * @Author: chuyunfei
      * @Date: 2019/3/5 11:57
      * @Description: 库存初始化前需要产品模块被初始化

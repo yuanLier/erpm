@@ -16,12 +16,19 @@ import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithNoData;
+
+/**
+ * @author yuanyiwen
+ * @description 采购与仓库管理service
+ * @date 19:25 2019/4/1
+ **/
 
 @Service
 public class StockServiceImpl implements StockService {
@@ -75,6 +82,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<MaterialOrderDisplayVo> submitMaterialOrder(List<MaterialOrderDto> materialOrderDtoList) {
         List<MaterialOrderDisplayVo> materialOrderDisplayVoList = new ArrayList<>();
 
@@ -96,12 +104,7 @@ public class StockServiceImpl implements StockService {
             materialOrderInfo.setTransportStatus(TransportStatusEnum.TOCHECK);
 
             // 将该原料订单信息存入MaterialOrderInfo表
-            try {
-                materialOrderInfo = materialOrderInfoRepository.saveAndFlush(materialOrderInfo);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
+            materialOrderInfo = materialOrderInfoRepository.saveAndFlush(materialOrderInfo);
 
             materialOrderDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(materialOrderInfo));
         }
@@ -122,17 +125,13 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public MaterialOrderDisplayVo updateTransportStatus(Long materialOrderId, TransportStatusEnum transportStatusEnum) {
         MaterialOrderInfo materialOrderInfo = materialOrderInfoRepository.findOne(materialOrderId);
 
         // 修改运输状态并进行持久化
         materialOrderInfo.setTransportStatus(transportStatusEnum);
-        try {
-            materialOrderInfoRepository.save(materialOrderInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        materialOrderInfoRepository.save(materialOrderInfo);
 
         return EntityVoUtil.copyFieldsFromEntityToVo(materialOrderInfo);
     }
@@ -171,6 +170,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public WebResponseVo<String> sellMaterial(Long materialStockId, Integer sellNumber) {
         MaterialStockInfo materialStockInfo = materialStockInfoRepository.findOne(materialStockId);
 
@@ -180,17 +180,13 @@ public class StockServiceImpl implements StockService {
 
         // 更新库存量并进行持久化
         materialStockInfo.setMaterialNumber(materialStockInfo.getMaterialNumber()-sellNumber);
-        try {
-            materialStockInfoRepository.save(materialStockInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "库存信息更新失败！请联系开发人员");
-        }
+        materialStockInfoRepository.save(materialStockInfo);
 
         return toSuccessResponseVoWithNoData();
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public WebResponseVo<String> sellProduct(Long productStockId, Integer sellNumber) {
         ProductStockInfo productStockInfo = productStockInfoRepository.findOne(productStockId);
 
@@ -200,12 +196,7 @@ public class StockServiceImpl implements StockService {
 
         // 更新库存量并进行持久化
         productStockInfo.setProductNumber(productStockInfo.getProductNumber()-sellNumber);
-        try {
-            productStockInfoRepository.save(productStockInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "库存信息更新失败！请联系开发人员");
-        }
+        productStockInfoRepository.save(productStockInfo);
 
         return toSuccessResponseVoWithNoData();
     }

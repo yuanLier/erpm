@@ -7,6 +7,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity;
  */
 public enum TransportStatusEnum {
 
+    //
     TOCHECK("待审核"),
     CHECKED("已审核"),
 

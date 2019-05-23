@@ -23,6 +23,11 @@ import java.util.List;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
 
+/**
+ * @author yuanyiwen
+ * @description
+ **/
+
 @Api
 @CrossOrigin
 @Validated
@@ -34,7 +39,7 @@ public class StockController {
     private StockService stockService;
 
     @ApiOperation(value = "展示某一企业的原材料库存信息")
-    @GetMapping("/material/info/get")
+    @GetMapping("/material")
     public WebResponseVo<List<MaterialStockDisplayVo>> getMaterialStockVosOfEnterprise(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                                    @RequestParam Long enterpriseId) {
 
@@ -45,7 +50,7 @@ public class StockController {
 
 
     @ApiOperation(value = "展示当前设定下的全部可用的运输方式")
-    @GetMapping("/transport/info/get")
+    @GetMapping("/transport")
     public WebResponseVo<List<TransportMethodDisplayVo>> getAllTransportVos() {
 
         List<TransportMethodDisplayVo> transportMethodDisplayVoList = stockService.getAllTransportVos();
@@ -58,7 +63,7 @@ public class StockController {
     }
 
     @ApiOperation(value = "根据id获取某种运输方式详情")
-    @GetMapping("/transport/detail/get")
+    @GetMapping("/transport/detail")
     public WebResponseVo<TransportMethodDisplayVo> getTransportVoyId(@Exist(repository = TransportBasicInfoRepository.class)
                                                                                  @RequestParam Long transportBasicId) {
 
@@ -78,7 +83,7 @@ public class StockController {
 
         List<MaterialOrderDisplayVo> materialOrderDisplayVoList = stockService.submitMaterialOrder(materialOrderDtoList);
 
-        if (materialOrderDisplayVoList == null) {
+        if (materialOrderDisplayVoList.size() == 0) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "订单信息保存失败！请联系开发人员");
         }
 
@@ -87,7 +92,7 @@ public class StockController {
 
 
     @ApiOperation(value = "获取一个企业的全部订单情况")
-    @PostMapping("/material/order/all/get")
+    @PostMapping("/material/order/all")
     public WebResponseVo<List<MaterialOrderDisplayVo>> getAllMaterialOrdersOfEnterprise(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                             @RequestParam Long enterpriseId) {
 
@@ -113,7 +118,7 @@ public class StockController {
 
 
     @ApiOperation(value = "根据材料采购订单id获取原料入库的具体信息")
-    @GetMapping("/material/detail/get")
+    @GetMapping("/material/detail")
     public WebResponseVo<MaterialOrderDetailVo> getMaterialOrderDetailVos(@Exist(repository = MaterialOrderInfoRepository.class)
                                                                                       @RequestParam Long materialOrderId) {
 
@@ -124,7 +129,7 @@ public class StockController {
 
 
     @ApiOperation(value = "展示某一企业的产品库存信息")
-    @GetMapping("/product/info/get")
+    @GetMapping("/product")
     public WebResponseVo<List<ProductStockDisplayVo>> getProductStockVosOfEnterprise(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                                  @RequestParam Long enterpriseId) {
 

@@ -7,6 +7,12 @@ import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+
+/**
+ * @author chuyunfei
+ * @description
+ **/
 
 @Getter
 @Setter
@@ -32,10 +38,12 @@ public class ProductStockInfo {
     @Comment(comment = "哪一种产品")
     private ProductBasicInfo productBasicInfo;
 
+    @Min(0)
     @Basic(optional = false)
     @Comment(comment = "产品的库存数")
     private int productNumber;
 
+    @Min(1)
     @Basic(optional = false)
     @Comment(comment = "哪一个周期的数据")
     private int period;

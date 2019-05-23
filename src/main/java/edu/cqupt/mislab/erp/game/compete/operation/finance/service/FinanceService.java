@@ -16,7 +16,7 @@ public interface FinanceService {
      * 更新企业财务信息，只允许在后台程序间调用
      * @param enterpriseId 企业id
      * @param changeOperating 造成企业财务改变的操作
-     * @param changeAmount 造成企业财务改变的金额，区分正负
+     * @param changeAmount 造成企业财务改变的金额，传入时金额统一为正
      * @param minus 是否为扣除操作
      */
     WebResponseVo updateFinanceInfo(Long enterpriseId, String changeOperating, double changeAmount, boolean minus);

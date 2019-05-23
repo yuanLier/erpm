@@ -4,11 +4,14 @@ import com.google.common.base.Objects;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
 import lombok.*;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
-import java.util.Date;
+
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/4 21:37
+ * @Description: 比赛的材料信息表用于存储比赛中所用到的所有材料信息
+ **/
 
 @Getter
 @Setter
@@ -18,12 +21,6 @@ import java.util.Date;
 @Entity
 @Table
 public class GameMaterialInfo {
-
-    /**
-     * @Author: chuyunfei
-     * @Date: 2019/3/4 21:37
-     * @Description: 比赛的材料信息表用于存储比赛中所用到的所有材料信息
-     **/
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

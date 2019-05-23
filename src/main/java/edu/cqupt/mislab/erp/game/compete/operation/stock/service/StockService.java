@@ -15,74 +15,75 @@ import java.util.List;
 public interface StockService {
 
     /**
-     * @author yuanyiwen
-     * @description 展示某一企业的原材料库存信息
-     * @date 21:27 2019/4/1
-     **/
+     * 展示某一企业的原材料库存信息
+     * @param enterpriseId
+     * @return
+     */
     List<MaterialStockDisplayVo> getMaterialStockVosOfEnterprise(Long enterpriseId);
 
 
     /**
-     * @author yuanyiwen
-     * @description 展示当前设定下的全部可用的运输方式
-     * @date 21:31 2019/4/1
-     **/
+     * 展示当前设定下的全部可用的运输方式
+     * @return
+     */
     List<TransportMethodDisplayVo> getAllTransportVos();
 
 
     /**
-     * @author yuanyiwen
-     * @description 根据id获取某种运输方式详情（我想的是让订单详情里面那个运输方式变为可点击的
-     * @date 21:33 2019/4/1
-     **/
+     * 根据id获取某种运输方式详情（我想的是让订单详情里面那个运输方式变为可点击的
+     * @param transportBasicId
+     * @return
+     */
     TransportMethodDisplayVo getTransportVoyId(Long transportBasicId);
 
 
     /**
-     * @author yuanyiwen
-     * @description 提交订单（在用户选择完运输方式之后再调用
-     * @date 21:42 2019/4/1
-     **/
+     * 提交订单（在用户选择完运输方式之后再调用
+     * @param materialOrderDtoList
+     * @return
+     */
     List<MaterialOrderDisplayVo> submitMaterialOrder(List<MaterialOrderDto> materialOrderDtoList);
 
-    
+
     /**
-     * @author yuanyiwen
-     * @description 获取一个企业的全部订单情况
-     * @date 21:21 2019/4/6
-     **/
+     * 获取一个企业的全部订单情况
+     * @param enterpriseId
+     * @return
+     */
     List<MaterialOrderDisplayVo> getAllMaterialOrdersOfEnterprise(Long enterpriseId);
 
 
     /**
-     * @author yuanyiwen
-     * @description 更新材料运送状态
-     * @date 21:58 2019/4/1
-     **/
+     * 更新材料运送状态
+     * @param materialOrderId
+     * @param transportStatusEnum
+     * @return
+     */
     MaterialOrderDisplayVo updateTransportStatus(Long materialOrderId, TransportStatusEnum transportStatusEnum);
 
 
     /**
-     * @author yuanyiwen
-     * @description 根据材料采购订单id获取原料入库的具体信息（也就是在MaterialOrderDisplayVo的基础上多了个总额和库存数
-     * @date 21:45 2019/4/1
-     **/
+     * 根据材料采购订单id获取原料入库的具体信息（也就是在MaterialOrderDisplayVo的基础上多了个总额和库存数
+     * @param materialOrderId
+     * @return
+     */
     MaterialOrderDetailVo getMaterialOrderDetailVos(Long materialOrderId);
 
 
     /**
-     * @author yuanyiwen
-     * @description 展示某一企业的产品库存信息
-     * @date 22:02 2019/4/1
-     **/
+     * 展示某一企业的产品库存信息
+     * @param enterpriseId
+     * @return
+     */
     List<ProductStockDisplayVo> getProductStockVosOfEnterprise(Long enterpriseId);
 
 
     /**
-     * @author yuanyiwen
-     * @description 原材料售卖（由于某种不可抗力必须直接返回状态码
-     * @date 22:05 2019/4/1
-     **/
+     * 原材料售卖（由于某种不可抗力必须直接返回状态码
+     * @param materialStockId
+     * @param sellNumber
+     * @return
+     */
     WebResponseVo<String> sellMaterial(Long materialStockId, Integer sellNumber);
 
 

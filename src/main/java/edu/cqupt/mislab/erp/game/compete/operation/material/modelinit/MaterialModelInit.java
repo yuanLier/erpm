@@ -11,15 +11,15 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/2 21:18
+ * @Description: 初始化材料的基本信息，在应用第一次启动的时候调用
+ **/
+
 @Slf4j
 @Service
 public class MaterialModelInit implements ModelInit {
-
-    /**
-     * @Author: chuyunfei
-     * @Date: 2019/3/2 21:18
-     * @Description: 初始化材料的基本信息，在应用第一次启动的时候调用
-     **/
 
     @Autowired private MaterialBasicInfoRepository materialBasicRepository;
     @Autowired private ModelInitService modelInitService;
@@ -49,7 +49,7 @@ public class MaterialModelInit implements ModelInit {
         return null;
     }
 
-    /*
+    /**
      * @Author: chuyunfei
      * @Date: 2019/3/4 21:50
      * @Description: 系统初始化材料信息

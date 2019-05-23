@@ -6,20 +6,26 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 
+/**
+ * @author yuanyiwen
+ * @create 2019-04-01 22:01
+ * @description
+ */
 public interface ProductStockInfoRepository extends BasicRepository<ProductStockInfo, Long>, JpaSpecificationExecutor {
 
     /**
-     * @author yuanyiwen
-     * @description 获取某一企业的全部产品库存信息
-     * @date 22:01 2019/4/1
-     **/
+     * 获取某一企业的全部产品库存信息
+     * @param enterpriseId
+     * @return
+     */
     List<ProductStockInfo> findByEnterpriseBasicInfo_Id(Long enterpriseId);
 
 
     /**
-     * @author yuanyiwen
-     * @description 获取某一企业的某一产品的库存信息
-     * @date 22:43 2019/4/7
-     **/
+     * 获取某一企业的某一产品的库存信息
+     * @param enterpriseId
+     * @param productId
+     * @return
+     */
     ProductStockInfo findByEnterpriseBasicInfo_IdAndProductBasicInfo_Id(Long enterpriseId, Long productId);
 }

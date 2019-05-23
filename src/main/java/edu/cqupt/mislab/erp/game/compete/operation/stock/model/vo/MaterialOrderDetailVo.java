@@ -1,6 +1,5 @@
 package edu.cqupt.mislab.erp.game.compete.operation.stock.model.vo;
 
-import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.TransportBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.TransportStatusEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
