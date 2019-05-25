@@ -31,7 +31,7 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessRes
  * @create 2019-03-24 17:58
  * @description
  */
-@Api
+@Api(description = "学生端-厂房管理")
 @CrossOrigin
 @Validated
 @RestController

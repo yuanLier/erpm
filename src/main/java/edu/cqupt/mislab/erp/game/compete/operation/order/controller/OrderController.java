@@ -6,7 +6,6 @@ import edu.cqupt.mislab.erp.game.compete.operation.order.dao.GameOrderInfoReposi
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.vo.OrderDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.service.OrderDeliveryService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import java.util.List;
 
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
 
-@Api
+@Api(description = "学生端-订单管理")
 @CrossOrigin
 @Validated
 @RestController

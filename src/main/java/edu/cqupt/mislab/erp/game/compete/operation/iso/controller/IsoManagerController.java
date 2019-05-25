@@ -24,7 +24,7 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessRes
  * @create 2019-05-08 21:06
  * @description Iso管理端
  */
-@Api
+@Api(description = "管理端-iso基本信息")
 @CrossOrigin
 @Validated
 @RestController

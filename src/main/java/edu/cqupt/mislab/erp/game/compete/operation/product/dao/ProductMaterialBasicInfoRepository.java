@@ -28,4 +28,11 @@ public interface ProductMaterialBasicInfoRepository extends BasicRepository<Prod
     List<ProductMaterialBasicInfo> findByEnable(boolean enable);
 
 
+    /**
+     * 获取当前设定下由某种材料构成的所有产品
+     * @param materialId
+     * @return
+     */
+    List<ProductMaterialBasicInfo> findByMaterialBasicInfo_IdAndEnableIsTrue(Long materialId);
+
 }

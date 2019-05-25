@@ -33,8 +33,8 @@ public class ProductMaterialBasicInfo {
     private ProductBasicInfo productBasicInfo;
 
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
-    @JoinColumn(nullable = false,updatable = false)
-    @Comment(comment = "哪一个原料")
+    @JoinColumn(nullable = false)
+    @Comment(comment = "哪一个原料，要注意这个原料信息是可以被修改的")
     private MaterialBasicInfo materialBasicInfo;
 
     @Column(nullable = false,updatable = false)

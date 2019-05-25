@@ -23,7 +23,7 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessRes
  * @create 2019-05-15 20:21
  * @description
  */
-@Api
+@Api(description = "历史数据-综合市场占有率分析")
 @CrossOrigin
 @Validated
 @RestController

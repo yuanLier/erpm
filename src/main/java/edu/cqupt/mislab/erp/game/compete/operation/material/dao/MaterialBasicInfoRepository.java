@@ -19,4 +19,12 @@ public interface MaterialBasicInfoRepository extends BasicRepository<MaterialBas
      */
     @Query("from MaterialBasicInfo m where m.enable = true group by m.materialName")
     List<MaterialBasicInfo> findNewestMaterialBasicInfos();
+
+
+    /**
+     * 获取处于某种状态（可用or不可用）的材料基本信息
+     * @param enable
+     * @return
+     */
+    List<MaterialBasicInfo> findByEnable(boolean enable);
 }

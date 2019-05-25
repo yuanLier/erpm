@@ -28,7 +28,7 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessRes
  * @create 2019-03-09 20:21
  * @description
  */
-@Api
+@Api(description = "学生端-生产计划")
 @CrossOrigin
 @Validated
 @RestController

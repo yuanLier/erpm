@@ -23,7 +23,7 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessRes
  * @description
  **/
 
-@Api
+@Api(description = "学生端-iso认证")
 @CrossOrigin
 @Validated
 @RestController

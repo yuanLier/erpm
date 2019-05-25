@@ -28,7 +28,7 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessRes
  * @description
  */
 
-@Api
+@Api(description = "管理端-产品基本信息")
 @CrossOrigin
 @Validated
 @RestController
