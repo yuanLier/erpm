@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -27,6 +28,7 @@ public class TransportBasicInfo implements Serializable {
     @Comment(comment = "代理主键")
     private Long id;
 
+    @NotNull
     @Column(nullable = false,updatable = false)
     @Comment(comment = "运输方式的名称")
     private String transportName;

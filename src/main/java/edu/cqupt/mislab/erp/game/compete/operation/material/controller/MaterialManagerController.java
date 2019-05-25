@@ -61,6 +61,7 @@ public class MaterialManagerController {
 
     @ApiOperation(value = "关闭一个材料基本信息",
             notes = "一旦关闭将不能重新启用，如果要启用只能重新添加一个相同的；" +
+                    "且关闭原材料信息之前必确保所有使用该材料的产品基本信息均已关闭；" +
                     "所以需要前端在调用前给用户一些必要的提示信息")
     @PutMapping("/close")
     public WebResponseVo<MaterialBasicVo> closeMaterialBasicInfo(@Exist(repository = MaterialBasicInfoRepository.class)
