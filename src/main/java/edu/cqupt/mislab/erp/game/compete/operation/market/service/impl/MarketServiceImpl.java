@@ -31,11 +31,6 @@ public class MarketServiceImpl implements MarketService {
         List<MarketDevelopInfo> marketDevelopInfoList =
                 marketDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId);
 
-        // 非空判断
-        if(marketDevelopInfoList.size() == 0) {
-            return null;
-        }
-
         // 转换为vo集
         List<MarketDisplayVo> marketDisplayVoList = new ArrayList<>();
         for (MarketDevelopInfo marketDevelopInfo : marketDevelopInfoList) {
@@ -53,11 +48,6 @@ public class MarketServiceImpl implements MarketService {
         List<MarketDevelopInfo> marketDevelopInfoList =
                 marketDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndMarketStatus(enterpriseId, marketStatus);
 
-        // 非空判断
-        if(marketDevelopInfoList.size() == 0) {
-            return null;
-        }
-
         // 转换为vo集
         List<MarketDisplayVo> marketDisplayVoList = new ArrayList<>();
         for (MarketDevelopInfo marketDevelopInfo : marketDevelopInfoList) {
@@ -74,11 +64,6 @@ public class MarketServiceImpl implements MarketService {
 
         // 根据id查询市场信息
         MarketDevelopInfo marketDevelopInfo = marketDevelopInfoRepository.findOne(marketDevelopId);
-
-        // 非空判断
-        if(marketDevelopInfo == null) {
-            return null;
-        }
 
         // 修改市场状态
         marketDevelopInfo.setMarketStatus(marketStatus);

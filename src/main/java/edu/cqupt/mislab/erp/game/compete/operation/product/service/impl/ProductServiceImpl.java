@@ -58,11 +58,6 @@ public class ProductServiceImpl implements ProductService {
         // 根据id查询产品信息
         ProductDevelopInfo productDevelopInfo = productDevelopInfoRepository.findOne(productDevelopId);
 
-        // 非空判断
-        if(productDevelopInfo == null) {
-            return null;
-        }
-
         // 修改市场状态
         productDevelopInfo.setProductDevelopStatus(productDevelopStatus);
 
@@ -106,11 +101,6 @@ public class ProductServiceImpl implements ProductService {
      **/
     private List<ProductDisplayVo> castEntitiesToVos(List<ProductDevelopInfo> productDevelopInfoList) {
 
-        // 非空判断
-        if( productDevelopInfoList.size() == 0) {
-            return null;
-        }
-
         // 转换为vo集
         List<ProductDisplayVo> productDisplayVoList = new ArrayList<>();
         for (ProductDevelopInfo productDevelopInfo : productDevelopInfoList) {
@@ -129,11 +119,6 @@ public class ProductServiceImpl implements ProductService {
      * @return 返回productDevelopInfo集合中每个产品对应的原材料信息Vo
      **/
     private List<ProductMaterialDisplayVo> getProductMaterialVoByProductDevelopInfo(List<ProductDevelopInfo> productDevelopInfoList) {
-
-        // 非空判断
-        if(productDevelopInfoList == null) {
-            return null;
-        }
 
         List<ProductMaterialDisplayVo> productMaterialDisplayVoList = new ArrayList<>();
 
@@ -162,7 +147,7 @@ public class ProductServiceImpl implements ProductService {
             productMaterialDisplayVo.setId(productDevelopInfo.getId());
             // 产品构成-原材料map
             productMaterialDisplayVo.setMaterialMap(materialMap);
-            // 产品构成-售价 todo 售价
+            // 产品构成-售价
             productMaterialDisplayVo.setProductSellingPrice(productDevelopInfo.getProductBasicInfo().getProductSellingPrice());
 
             // 将该Vo加入集合

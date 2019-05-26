@@ -92,7 +92,6 @@ public class MaterialManagerServiceImpl implements MaterialManagerService {
         List<ProductMaterialBasicInfo> productMaterialBasicInfoList = productMaterialBasicInfoRepository.findByMaterialBasicInfo_IdAndEnableIsTrue(materialBasicId);
         // 确认该产品集是否为空
         if(productMaterialBasicInfoList.size() != 0) {
-
             return null;
         }
 

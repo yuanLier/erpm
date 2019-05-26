@@ -40,7 +40,7 @@ public class MarketController {
 
         List<MarketDisplayVo> marketDisplayVoList = marketService.findByEnterpriseId(enterpriseId);
 
-        if(marketDisplayVoList == null) {
+        if(marketDisplayVoList.size() == 0) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业对应的市场开拓不存在");
         }
 
@@ -56,7 +56,7 @@ public class MarketController {
 
         List<MarketDisplayVo> marketDisplayVoList = marketService.findByEnterpriseIdAndMarketStatus(enterpriseId, marketStatus);
 
-        if(marketDisplayVoList == null) {
+        if(marketDisplayVoList.size() == 0) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业对应的市场开拓不存在");
         }
 

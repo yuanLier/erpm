@@ -40,7 +40,7 @@ public class IsoController {
 
         List<IsoDisplayVo> isoDisplayVoList = isoService.findByEnterpriseId(enterpriseId);
 
-        if(isoDisplayVoList == null) {
+        if(isoDisplayVoList.size() == 0) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业对应的iso认证不存在");
         }
 
@@ -56,7 +56,7 @@ public class IsoController {
 
         List<IsoDisplayVo> isoDisplayVoList = isoService.findByEnterpriseIdAndIsoStatus(enterpriseId, isoStatus);
 
-        if(isoDisplayVoList == null) {
+        if(isoDisplayVoList.size() == 0) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业对应的iso认证不存在");
         }
 

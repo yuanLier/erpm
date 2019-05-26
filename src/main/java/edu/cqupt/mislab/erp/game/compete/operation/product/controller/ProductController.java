@@ -41,7 +41,7 @@ public class ProductController {
 
         List<ProductDisplayVo> productDisplayVoList = productService.findByEnterpriseId(enterpriseId);
 
-        if(productDisplayVoList == null) {
+        if(productDisplayVoList.size() == 0) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业对应的产品研发不存在");
         }
 
@@ -57,7 +57,7 @@ public class ProductController {
 
         List<ProductDisplayVo> productDisplayVoList = productService.findByEnterpriseIdAndProductStatus(enterpriseId, productDevelopStatus);
 
-        if(productDisplayVoList == null) {
+        if(productDisplayVoList.size() == 0) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业对应的产品研发信息不存在");
         }
 
@@ -101,7 +101,7 @@ public class ProductController {
 
         List<ProductMaterialDisplayVo> productMaterialDisplayVoList = productService.findProductMaterialInfoByEnterpriseId(enterpriseId);
 
-        if(productMaterialDisplayVoList == null) {
+        if(productMaterialDisplayVoList.size() == 0) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业对应的产品信息不存在");
         }
 
@@ -118,7 +118,7 @@ public class ProductController {
         List<ProductMaterialDisplayVo> productMaterialDisplayVoList =
                 productService.findProductMaterialInfoByEnterpriseIdAndProductStatus(enterpriseId, productDevelopStatus);
 
-        if(productMaterialDisplayVoList == null) {
+        if(productMaterialDisplayVoList.size() == 0) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业对应的产品信息不存在");
         }
 
