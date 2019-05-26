@@ -2,6 +2,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.stock.dao;
 
 import edu.cqupt.mislab.erp.commons.basic.repository.BasicRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialOrderInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.TransportStatusEnum;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
@@ -19,4 +20,13 @@ public interface MaterialOrderInfoRepository extends BasicRepository<MaterialOrd
      * @return
      */
     List<MaterialOrderInfo> findByEnterpriseBasicInfo_Id(Long enterpriseId);
+
+
+    /**
+     * 获取某一企业处于某种状态下的采购订单
+     * @param enterpriseId
+     * @param transportStatusEnum
+     * @return
+     */
+    List<MaterialOrderInfo> findByEnterpriseBasicInfo_IdAndTransportStatus(Long enterpriseId, TransportStatusEnum transportStatusEnum);
 }
