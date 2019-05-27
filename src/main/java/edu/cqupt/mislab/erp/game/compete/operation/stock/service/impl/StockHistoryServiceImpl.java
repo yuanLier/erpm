@@ -1,7 +1,8 @@
 package edu.cqupt.mislab.erp.game.compete.operation.stock.service.impl;
 
-import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
+import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
+import edu.cqupt.mislab.erp.game.compete.operation.material.model.vo.MaterialBasicVo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.MaterialStockHistoryRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.ProductStockHistoryRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialStockHistoryInfo;
@@ -44,29 +45,31 @@ public class StockHistoryServiceImpl implements StockHistoryService {
         for (EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
 
             MaterialStockHistoryVo materialStockHistoryVo = new MaterialStockHistoryVo();
-            materialStockHistoryVo.setEnterpriseBasicInfo(enterpriseBasicInfo);
+            materialStockHistoryVo.setEnterpriseId(enterpriseBasicInfo.getId());
             materialStockHistoryVo.setPeriod(period);
 
             // 若该周期该企业已破产，则返回破产前最后一周期的认证情况
             Integer bankruptPeriod = enterpriseBasicInfo.getEnterpriseCurrentPeriod();
-            period = (period < bankruptPeriod) ? period : bankruptPeriod-1;
+            period = (period < bankruptPeriod) ? period : bankruptPeriod;
 
             // 获取该企业在当前周期的全部的材料库存历史数据
             List<MaterialStockHistoryInfo> materialStockHistoryInfoList = materialStockHistoryRepository.findByEnterpriseBasicInfo_IdAndPeriod(enterpriseBasicInfo.getId(), period);
 
             Integer totalNumber = 0;
-            Map<MaterialBasicInfo, Integer> map = new HashMap<>();
+            Map<MaterialBasicVo, Integer> map = new HashMap<>();
             for (MaterialStockHistoryInfo materialStockHistoryInfo : materialStockHistoryInfoList) {
 
                 // 统计库存总数
                 totalNumber += materialStockHistoryInfo.getMaterialNumber();
 
                 // 添加各个材料库存量
-                map.put(materialStockHistoryInfo.getMaterialBasicInfo(), materialStockHistoryInfo.getMaterialNumber());
+                MaterialBasicVo materialBasicVo = new MaterialBasicVo();
+                BeanCopyUtil.copyPropertiesSimple(materialStockHistoryInfo.getMaterialBasicInfo(), materialBasicVo);
+                map.put(materialBasicVo, materialStockHistoryInfo.getMaterialNumber());
             }
 
             materialStockHistoryVo.setTotalNumber(totalNumber);
-            materialStockHistoryVo.setMaterialBasicInfoMap(map);
+            materialStockHistoryVo.setMaterialBasicVoMap(map);
 
             materialStockHistoryVoList.add(materialStockHistoryVo);
         }
@@ -85,29 +88,31 @@ public class StockHistoryServiceImpl implements StockHistoryService {
         for (EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
 
             ProductStockHistoryVo productStockHistoryVo = new ProductStockHistoryVo();
-            productStockHistoryVo.setEnterpriseBasicInfo(enterpriseBasicInfo);
+            productStockHistoryVo.setEnterpriseId(enterpriseBasicInfo.getId());
             productStockHistoryVo.setPeriod(period);
 
             // 若该周期该企业已破产，则返回破产前最后一周期的认证情况
             Integer bankruptPeriod = enterpriseBasicInfo.getEnterpriseCurrentPeriod();
-            period = (period < bankruptPeriod) ? period : bankruptPeriod-1;
+            period = (period < bankruptPeriod) ? period : bankruptPeriod;
 
             // 获取该企业在当前周期的全部的产品库存历史数据
             List<ProductStockHistoryInfo> productStockHistoryInfoList = productStockHistoryRepository.findByEnterpriseBasicInfo_IdAndPeriod(enterpriseBasicInfo.getId(), period);
 
             Integer totalNumber = 0;
-            Map<ProductBasicInfo, Integer> map = new HashMap<>();
+            Map<ProductBasicVo, Integer> map = new HashMap<>();
             for (ProductStockHistoryInfo productStockHistoryInfo : productStockHistoryInfoList) {
 
                 // 统计库存总数
                 totalNumber += productStockHistoryInfo.getProductNumber();
 
                 // 添加各个产品库存量
-                map.put(productStockHistoryInfo.getProductBasicInfo(), productStockHistoryInfo.getProductNumber());
+                ProductBasicVo productBasicVo = new ProductBasicVo();
+                BeanCopyUtil.copyPropertiesSimple(productStockHistoryInfo.getProductBasicInfo(), productBasicVo);
+                map.put(productBasicVo, productStockHistoryInfo.getProductNumber());
             }
 
             productStockHistoryVo.setTotalNumber(totalNumber);
-            productStockHistoryVo.setProductBasicInfoMap(map);
+            productStockHistoryVo.setProductBasicVoMap(map);
 
             productStockHistoryVoList.add(productStockHistoryVo);
         }

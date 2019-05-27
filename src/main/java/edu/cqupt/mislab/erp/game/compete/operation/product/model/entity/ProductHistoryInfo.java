@@ -42,6 +42,6 @@ public class ProductHistoryInfo implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "截止到该周期，企业拥有的某个产品")
-    private ProductDevelopInfo productDevelopInfo;
+    private ProductBasicInfo productBasicInfo;
 
 }

@@ -1,8 +1,9 @@
 package edu.cqupt.mislab.erp.game.compete.operation.iso.service.impl;
 
+import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoHistoryRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoHistoryInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoHistoryVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.service.IsoHistoryService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author yuanyiwen
@@ -38,21 +38,26 @@ public class IsoHistoryServiceImpl implements IsoHistoryService {
         for (EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
 
             IsoHistoryVo isoHistoryVo = new IsoHistoryVo();
-            isoHistoryVo.setEnterpriseBasicInfo(enterpriseBasicInfo);
+            isoHistoryVo.setEnterpriseId(enterpriseBasicInfo.getId());
             isoHistoryVo.setPeriod(period);
 
             // 若该周期该企业已破产，则返回破产前最后一周期的认证情况
             Integer bankruptPeriod = enterpriseBasicInfo.getEnterpriseCurrentPeriod();
-            period = (period < bankruptPeriod) ? period : bankruptPeriod-1;
+            period = (period < bankruptPeriod) ? period : bankruptPeriod;
 
             // 获取全部iso认证信息
             List<IsoHistoryInfo> isoHistoryInfoList = isoHistoryRepository.findByEnterpriseBasicInfo_IdAndPeriod(enterpriseBasicInfo.getId(), period);
-            // 获取该企业在当前周期的全部的iso历史数据
-            List<IsoDevelopInfo> isoDevelopInfoList = isoHistoryInfoList.stream()
-                                                .map(IsoHistoryInfo::getIsoDevelopInfo)
-                                                .collect(Collectors.toList());
+            // 获取该企业在当前周期的全部的iso历史数据并转化为vo实体集
+            List<IsoBasicVo> isoBasicVoList = new ArrayList<>();
+            for (IsoHistoryInfo isoHistoryInfo : isoHistoryInfoList) {
 
-            isoHistoryVo.setIsoDevelopInfoList(isoDevelopInfoList);
+                IsoBasicVo isoBasicVo = new IsoBasicVo();
+                BeanCopyUtil.copyPropertiesSimple(isoHistoryInfo.getIsoBasicInfo(), isoBasicVo);
+
+                isoBasicVoList.add(isoBasicVo);
+            }
+
+            isoHistoryVo.setIsoBasicVoList(isoBasicVoList);
 
             isoHistoryVoList.add(isoHistoryVo);
         }

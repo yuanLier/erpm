@@ -1,8 +1,9 @@
 package edu.cqupt.mislab.erp.game.compete.operation.market.service.impl;
 
+import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketHistoryRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketHistoryInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketHistoryVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.service.MarketHistoryService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author yuanyiwen
@@ -38,21 +38,26 @@ public class MarketHistoryServiceImpl implements MarketHistoryService {
         for (EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
 
             MarketHistoryVo marketHistoryVo = new MarketHistoryVo();
-            marketHistoryVo.setEnterpriseBasicInfo(enterpriseBasicInfo);
+            marketHistoryVo.setEnterpriseId(enterpriseBasicInfo.getId());
             marketHistoryVo.setPeriod(period);
 
             // 若该周期该企业已破产，则返回破产前最后一周期的开拓情况
             Integer bankruptPeriod = enterpriseBasicInfo.getEnterpriseCurrentPeriod();
-            period = (period < bankruptPeriod) ? period : bankruptPeriod-1;
+            period = (period < bankruptPeriod) ? period : bankruptPeriod;
 
             // 获取全部市场开拓信息
             List<MarketHistoryInfo> marketHistoryInfoList = marketHistoryRepository.findByEnterpriseBasicInfo_IdAndPeriod(enterpriseBasicInfo.getId(), period);
-            // 获取该企业在当前周期的全部的市场基本信息历史数据
-            List<MarketDevelopInfo> marketDevelopInfoList = marketHistoryInfoList.stream()
-                    .map(MarketHistoryInfo::getMarketDevelopInfo)
-                    .collect(Collectors.toList());
+            // 获取该企业在当前周期的全部的市场开拓历史数据并转化为vo实体集
+            List<MarketBasicVo> marketBasicVoList = new ArrayList<>();
+            for (MarketHistoryInfo marketHistoryInfo : marketHistoryInfoList) {
 
-            marketHistoryVo.setMarketDevelopInfoList(marketDevelopInfoList);
+                MarketBasicVo marketBasicVo = new MarketBasicVo();
+                BeanCopyUtil.copyPropertiesSimple(marketHistoryInfo.getMarketBasicInfo(), marketBasicVo);
+
+                marketBasicVoList.add(marketBasicVo);
+            }
+
+            marketHistoryVo.setMarketBasicVoList(marketBasicVoList);
 
             marketHistoryVoList.add(marketHistoryVo);
         }

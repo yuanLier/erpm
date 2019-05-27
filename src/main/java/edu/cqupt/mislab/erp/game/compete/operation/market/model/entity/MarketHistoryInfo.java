@@ -41,6 +41,6 @@ public class MarketHistoryInfo implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "截止到该周期，企业拥有的某个市场")
-    private MarketDevelopInfo marketDevelopInfo;
+    private MarketBasicInfo marketBasicInfo;
 
 }

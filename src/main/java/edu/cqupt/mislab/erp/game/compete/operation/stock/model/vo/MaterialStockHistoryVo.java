@@ -1,7 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.stock.model.vo;
 
-import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.material.model.vo.MaterialBasicVo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -18,7 +17,7 @@ import java.util.Map;
 public class MaterialStockHistoryVo {
 
     @ApiModelProperty("哪个企业")
-    private EnterpriseBasicInfo enterpriseBasicInfo;
+    private Long enterpriseId;
 
     @ApiModelProperty("哪个周期")
     private Integer period;
@@ -27,5 +26,5 @@ public class MaterialStockHistoryVo {
     private Integer totalNumber;
 
     @ApiModelProperty("截止到该周期，企业各个材料的库存量，用于各个周期节点的详情展示")
-    private Map<MaterialBasicInfo, Integer> materialBasicInfoMap;
+    private Map<MaterialBasicVo, Integer> materialBasicVoMap;
 }

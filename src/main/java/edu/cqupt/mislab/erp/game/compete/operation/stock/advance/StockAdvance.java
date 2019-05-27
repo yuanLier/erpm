@@ -11,6 +11,7 @@ import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class StockAdvance implements ModelAdvance {
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean modelHistory(Long gameId) {
 
         log.info("开始记录库存管理模块比赛期间历史数据");
@@ -91,6 +93,7 @@ public class StockAdvance implements ModelAdvance {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean modelAdvance(Long gameId) {
 
         log.info("开始进行库存管理模块比赛期间周期推进");

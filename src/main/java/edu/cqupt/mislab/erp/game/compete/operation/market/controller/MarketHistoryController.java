@@ -33,6 +33,7 @@ public class MarketHistoryController {
     @Autowired
     private MarketHistoryService marketHistoryService;
 
+
     @ApiOperation(value = "获取某一比赛中处于某一周期的各个企业的全部市场开拓情况")
     @GetMapping
     public WebResponseVo<List<MarketHistoryVo>> marketHistory(@Exist(repository = GameBasicInfoRepository.class)
@@ -56,4 +57,5 @@ public class MarketHistoryController {
 
         return toSuccessResponseVoWithData(marketHistoryService.getTotalPeriod(gameId));
     }
+
 }

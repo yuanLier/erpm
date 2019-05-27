@@ -33,6 +33,7 @@ public class IsoHistoryController {
     @Autowired
     private IsoHistoryService isoHistoryService;
 
+
     @ApiOperation(value = "获取某一比赛中处于某一周期的各个企业的全部iso认证情况")
     @GetMapping
     public WebResponseVo<List<IsoHistoryVo>> isoHistory(@Exist(repository = GameBasicInfoRepository.class)

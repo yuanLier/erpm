@@ -14,6 +14,7 @@ import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class ProductAdvance implements ModelAdvance {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean modelHistory(Long gameId) {
 
         log.info("开始记录产品模块比赛期间历史数据");
@@ -62,7 +64,7 @@ public class ProductAdvance implements ModelAdvance {
                 ProductHistoryInfo productHistoryInfo = new ProductHistoryInfo();
 
                 productHistoryInfo.setEnterpriseBasicInfo(enterpriseBasicInfo);
-                productHistoryInfo.setProductDevelopInfo(productDevelopInfo);
+                productHistoryInfo.setProductBasicInfo(productDevelopInfo.getProductBasicInfo());
                 productHistoryInfo.setPeriod(enterpriseBasicInfo.getEnterpriseCurrentPeriod());
 
                 // 记录截止到当前周期，各个企业研发完成的产品信息
@@ -76,6 +78,7 @@ public class ProductAdvance implements ModelAdvance {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean modelAdvance(Long gameId) {
 
         log.info("开始进行产品模块比赛期间周期推进");

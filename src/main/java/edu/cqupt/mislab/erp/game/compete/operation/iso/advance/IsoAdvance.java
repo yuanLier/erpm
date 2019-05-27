@@ -13,7 +13,8 @@ import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ import java.util.List;
  * @description ISO模块周期推进
  */
 @Slf4j
-@Service
+@Component
 public class IsoAdvance implements ModelAdvance {
 
     @Autowired
@@ -45,6 +46,7 @@ public class IsoAdvance implements ModelAdvance {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean modelHistory(Long gameId) {
 
         log.info("开始记录iso模块比赛期间历史数据");
@@ -62,7 +64,7 @@ public class IsoAdvance implements ModelAdvance {
                 IsoHistoryInfo isoHistoryInfo = new IsoHistoryInfo();
 
                 isoHistoryInfo.setEnterpriseBasicInfo(enterpriseBasicInfo);
-                isoHistoryInfo.setIsoDevelopInfo(isoDevelopInfo);
+                isoHistoryInfo.setIsoBasicInfo(isoDevelopInfo.getIsoBasicInfo());
                 isoHistoryInfo.setPeriod(enterpriseBasicInfo.getEnterpriseCurrentPeriod());
 
                 // 记录截止到当前周期，各个企业认证完成的iso
@@ -76,6 +78,7 @@ public class IsoAdvance implements ModelAdvance {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean modelAdvance(Long gameId) {
 
         log.info("开始进行iso模块比赛期间周期推进");

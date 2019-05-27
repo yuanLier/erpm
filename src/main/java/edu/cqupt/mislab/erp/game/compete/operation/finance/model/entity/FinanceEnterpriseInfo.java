@@ -45,7 +45,6 @@ public class FinanceEnterpriseInfo implements Serializable {
     @Comment(comment = "造成改变的操作")
     private String changeOperating;
 
-    @DoubleMin(0.01)
     @Column(updatable = false)
     @Comment(comment = "造成改变的金额")
     private double changeAmount;

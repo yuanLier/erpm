@@ -1,8 +1,9 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.service.impl;
 
+import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductHistoryRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductHistoryInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductHistoryVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.service.ProductHistoryService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author yuanyiwen
@@ -37,21 +37,27 @@ public class ProductHistoryServiceImpl implements ProductHistoryService {
         for (EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
 
             ProductHistoryVo productHistoryVo = new ProductHistoryVo();
-            productHistoryVo.setEnterpriseBasicInfo(enterpriseBasicInfo);
+            productHistoryVo.setEnterpriseId(enterpriseBasicInfo.getId());
             productHistoryVo.setPeriod(period);
+
 
             // 若该周期该企业已破产，则返回破产前最后一周期的研发情况
             Integer bankruptPeriod = enterpriseBasicInfo.getEnterpriseCurrentPeriod();
-            period = (period < bankruptPeriod) ? period : bankruptPeriod-1;
+            period = (period < bankruptPeriod) ? period : bankruptPeriod;
 
             // 获取全部产品研发信息
             List<ProductHistoryInfo> productHistoryInfoList = productHistoryRepository.findByEnterpriseBasicInfo_IdAndPeriod(enterpriseBasicInfo.getId(), period);
-            // 获取该企业在当前周期的全部的产品基本信息历史数据
-            List<ProductDevelopInfo> productDevelopInfoList = productHistoryInfoList.stream()
-                    .map(ProductHistoryInfo::getProductDevelopInfo)
-                    .collect(Collectors.toList());
+            // 获取该企业在当前周期的全部的产品研发历史数据并转化为vo实体集
+            List<ProductBasicVo> productBasicVoList = new ArrayList<>();
+            for (ProductHistoryInfo productHistoryInfo : productHistoryInfoList) {
 
-            productHistoryVo.setProductDevelopInfoList(productDevelopInfoList);
+                ProductBasicVo productBasicVo = new ProductBasicVo();
+                BeanCopyUtil.copyPropertiesSimple(productHistoryInfo.getProductBasicInfo(), productBasicVo);
+
+                productBasicVoList.add(productBasicVo);
+            }
+
+            productHistoryVo.setProductBasicVoList(productBasicVoList);
 
             productHistoryVoList.add(productHistoryVo);
         }

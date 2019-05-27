@@ -51,7 +51,7 @@ public class IsoDevelopInfo implements Serializable {
     @Comment(comment = "认证完成的周期，这个值在未开发/开发中ISO认证信息状态时为null，默认为已研发的值为1")
     private Integer developEndPeriod;
 
-    @Min(1)
+    @Min(0)
     @Basic
     @Comment(comment = "已经认证了多少个周期，这个值在未开发ISO认证信息状态时为null，默认为已研发的值为0")
     private Integer researchedPeriod;

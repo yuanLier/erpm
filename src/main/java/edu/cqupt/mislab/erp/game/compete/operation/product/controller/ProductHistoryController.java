@@ -33,6 +33,7 @@ public class ProductHistoryController {
     @Autowired
     private ProductHistoryService productHistoryService;
 
+
     @ApiOperation(value = "获取某一比赛中处于某一周期的各个企业的全部产品研发情况")
     @GetMapping
     public WebResponseVo<List<ProductHistoryVo>> productHistory(@Exist(repository = GameBasicInfoRepository.class)
