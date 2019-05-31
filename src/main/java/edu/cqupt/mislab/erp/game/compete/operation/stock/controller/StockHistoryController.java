@@ -33,7 +33,7 @@ public class StockHistoryController {
 
     @Autowired
     private StockHistoryService stockHistoryService;
-    
+
 
     @ApiOperation(value = "获取某一比赛中处于某一周期的各个企业的全部材料库存情况")
     @GetMapping("/material")

@@ -21,6 +21,7 @@ import java.io.Serializable;
 @Entity
 @Table
 public class FactoryDevelopInfo implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Comment(comment = "代理主键")
@@ -37,11 +38,11 @@ public class FactoryDevelopInfo implements Serializable {
     private FactoryBasicInfo factoryBasicInfo;
 
     @Basic
-    @Comment(comment = "开始建造的周期数")
+    @Comment(comment = "开始建造的周期数，可以为空")
     private Integer beginPeriod;
 
     @Basic
-    @Comment(comment = "建造完毕的周期数")
+    @Comment(comment = "建造完毕的周期数，可以为空")
     private Integer endPeriod;
 
     @Basic

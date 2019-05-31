@@ -25,6 +25,7 @@ import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +84,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ProdlineDevelopDisplayVo buildProdlineOfHoldingFactory(Long prodlineBasicId, Long productId, Long factoryId, Long enterpriseId) {
         EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findOne(enterpriseId);
 
@@ -91,17 +93,11 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         prodlineHoldingInfo.setProdlineBasicInfo(prodlineBasicInfoRepository.findOne(prodlineBasicId));
         prodlineHoldingInfo.setFactoryHoldingInfo(factoryHoldingInfoRepository.findOne(factoryId));
         prodlineHoldingInfo.setEnterpriseBasicInfo(enterpriseBasicInfo);
-        // 设置生产线拥有状态为生产中
+        // 设置生产线拥有状态为修建中
         prodlineHoldingInfo.setProdlineHoldingStatus(ProdlineHoldingStatus.DEVELOPING);
 
         // 持久化该条ProdlineHoldingInfo
-        Long prodlineHoldingId;
-        try {
-            prodlineHoldingId = prodlineHoldingInfoRepository.saveAndFlush(prodlineHoldingInfo).getId();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        Long prodlineHoldingId = prodlineHoldingInfoRepository.saveAndFlush(prodlineHoldingInfo).getId();
 
         // 再添加一条生产线安装信息，即ProdlineDevelopInfo
         ProdlineDevelopInfo prodlineDevelopInfo = new ProdlineDevelopInfo();
@@ -115,18 +111,13 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         prodlineDevelopInfo.setProdlineDevelopStatus(ProdlineDevelopStatus.DEVELOPING);
 
         // 持久化该条prodlineDevelopInfo
-        ProdlineDevelopInfo developInfo;
-        try {
-            developInfo = prodlineDevelopInfoRepository.saveAndFlush(prodlineDevelopInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        ProdlineDevelopInfo developInfo = prodlineDevelopInfoRepository.saveAndFlush(prodlineDevelopInfo);
 
         return EntityVoUtil.copyFieldsFromEntityToVo(developInfo);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ProdlineDevelopDisplayVo updateProdlineDevelopStatus(Long prodlineDevelopId, ProdlineDevelopStatus prodlineDevelopStatus) {
         // 获取要修改的那条生产线信息
         ProdlineDevelopInfo prodlineDevelopInfo = prodlineDevelopInfoRepository.findOne(prodlineDevelopId);
@@ -134,12 +125,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         // 更新生产线修建状态
         prodlineDevelopInfo.setProdlineDevelopStatus(prodlineDevelopStatus);
         // 保存修改
-        try {
-            prodlineDevelopInfoRepository.save(prodlineDevelopInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        prodlineDevelopInfoRepository.save(prodlineDevelopInfo);
 
         return EntityVoUtil.copyFieldsFromEntityToVo(prodlineDevelopInfo);
     }
@@ -172,6 +158,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public FactoryDevelopDisplayVo buildFactoryOfEnterprise(Long enterpriseId, Long factoryBasicId) {
         EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findOne(enterpriseId);
 
@@ -189,28 +176,19 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
 
         //持久化该建造信息
         FactoryDevelopInfo developInfo;
-        try {
-            developInfo = factoryDevelopInfoRepository.saveAndFlush(factoryDevelopInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        developInfo = factoryDevelopInfoRepository.saveAndFlush(factoryDevelopInfo);
 
         return EntityVoUtil.copyFieldsFromEntityToVo(developInfo, new FactoryDevelopDisplayVo());
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public FactoryDevelopDisplayVo updateFactoryDevelopStatus(Long factoryDevelopId, boolean enable) {
         FactoryDevelopInfo factoryDevelopInfo = factoryDevelopInfoRepository.findOne(factoryDevelopId);
 
         // 更新并保存修改
         factoryDevelopInfo.setEnable(enable);
-        try {
-            factoryDevelopInfoRepository.save(factoryDevelopInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        factoryDevelopInfoRepository.save(factoryDevelopInfo);
 
         return EntityVoUtil.copyFieldsFromEntityToVo(factoryDevelopInfo, new FactoryDevelopDisplayVo());
     }
@@ -237,6 +215,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public WebResponseVo<String> factorySell(Long factoryId) {
         // 能出售的肯定是已经建好的厂房，所以首先获取这个厂房的信息
         FactoryHoldingInfo factoryHoldingInfo = factoryHoldingInfoRepository.findOne(factoryId);
@@ -257,17 +236,13 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         factoryHoldingInfo.setEnable(false);
 
         // 保存修改
-        try {
-            factoryHoldingInfoRepository.save(factoryHoldingInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "厂房出售失败！请联系开发人员");
-        }
+        factoryHoldingInfoRepository.save(factoryHoldingInfo);
 
         return toSuccessResponseVoWithNoData();
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public WebResponseVo<String> prodlineSell(Long prodlineProductId) {
         // 首先获取要出售的生产线
         ProdlineProduceInfo prodlineProduceInfo = prodlineProduceInfoRepository.findOne(prodlineProductId);
@@ -282,12 +257,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         prodlineHoldingInfo.setProdlineHoldingStatus(ProdlineHoldingStatus.SELLED);
 
         // 保存修改
-        try {
-            prodlineHoldingInfoRepository.save(prodlineHoldingInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "生产线出售失败！请联系开发人员");
-        }
+        prodlineHoldingInfoRepository.save(prodlineHoldingInfo);
 
         return toSuccessResponseVoWithNoData();
     }
@@ -313,6 +283,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public FactoryDisplayVo factoryLease(Long factoryBasicId, Long enterpriseId) {
 
         EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findOne(enterpriseId);
@@ -325,24 +296,19 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         factoryHoldingInfo.setFactoryHoldingStatus(FactoryHoldingStatus.LEASING);
         // 开始租赁的周期为厂房所处企业的当前周期
         factoryHoldingInfo.setBeginPeriod(enterpriseBasicInfo.getEnterpriseCurrentPeriod());
-        // 已租赁的总周期数为0
-        factoryHoldingInfo.setEndPeriod(0);
+        // 停止租赁的周期数置为空
+        factoryHoldingInfo.setEndPeriod(null);
         // 设置当前租赁状态为租赁中
         factoryHoldingInfo.setEnable(true);
 
         // 持久化该条FactoryHoldingInfo
-        FactoryHoldingInfo holdingInfo;
-        try {
-            holdingInfo = factoryHoldingInfoRepository.saveAndFlush(factoryHoldingInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        FactoryHoldingInfo holdingInfo = factoryHoldingInfoRepository.saveAndFlush(factoryHoldingInfo);
 
         return EntityVoUtil.copyFieldsFromEntityToVo(holdingInfo, new ArrayList<>(), new ArrayList<>());
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public FactoryDisplayVo updateFactoryLeaseStatus(Long factoryId, boolean enable) {
         FactoryHoldingInfo factoryHoldingInfo = factoryHoldingInfoRepository.findOne(factoryId);
 
@@ -352,12 +318,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
 
         // 更新并保存修改
         factoryHoldingInfo.setEnable(enable);
-        try {
-            factoryHoldingInfoRepository.save(factoryHoldingInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        factoryHoldingInfoRepository.save(factoryHoldingInfo);
 
         // 然后就是对获取厂房中生产线的一顿操作
         List<ProdlineProduceInfo> prodlineProduceInfoList = prodlineProduceInfoRepository.findByProdlineHoldingInfo_FactoryHoldingInfo_Id(factoryId);

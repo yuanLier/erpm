@@ -20,6 +20,7 @@ import java.io.Serializable;
 @Entity
 @Table
 public class ProdlineDevelopInfo implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Comment(comment = "代理主键")

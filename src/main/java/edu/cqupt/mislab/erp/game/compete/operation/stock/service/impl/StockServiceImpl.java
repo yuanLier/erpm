@@ -63,6 +63,8 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public List<TransportMethodDisplayVo> getAllTransportVos() {
+
+//        todo 运输方式的最新版本问题 同生产线厂房
         List<TransportBasicInfo> transportBasicInfoList = transportBasicInfoRepository.findNewestTransportBasicInfos();
 
         List<TransportMethodDisplayVo> transportMethodDisplayVoList = new ArrayList<>();
