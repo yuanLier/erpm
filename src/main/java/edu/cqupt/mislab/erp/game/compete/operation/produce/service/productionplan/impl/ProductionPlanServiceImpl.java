@@ -18,6 +18,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductD
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -157,6 +158,7 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ProductProduceVo productProduction(Long prodlineId) {
         ProdlineProduceInfo prodlineProduceInfo = prodlineProduceInfoRepository.findOne(prodlineId);
 
@@ -165,17 +167,13 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
         // 更新生产状态至生产中
         prodlineProduceInfo.setProdlineProduceStatus(ProdlineProduceStatus.PRODUCING);
         // 保存修改
-        try {
-            prodlineProduceInfoRepository.save(prodlineProduceInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        prodlineProduceInfoRepository.save(prodlineProduceInfo);
 
         return EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfo);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ProductProduceVo updateProduceStatus(Long prodlineId, ProdlineProduceStatus prodlineProduceStatus) {
 
         ProdlineProduceInfo prodlineProduceInfo = prodlineProduceInfoRepository.findOne(prodlineId);
@@ -183,12 +181,7 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
         // 更新生产状态
         prodlineProduceInfo.setProdlineProduceStatus(prodlineProduceStatus);
         // 保存修改
-        try {
-            prodlineProduceInfoRepository.save(prodlineProduceInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        prodlineProduceInfoRepository.save(prodlineProduceInfo);
 
         return EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfo);
     }

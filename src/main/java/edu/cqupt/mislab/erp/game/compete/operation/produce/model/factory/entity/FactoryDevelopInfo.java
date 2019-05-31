@@ -52,4 +52,8 @@ public class FactoryDevelopInfo implements Serializable {
     @Basic
     @Comment(comment = "厂房的建造状态，true为建造中，false为暂停建造")
     private boolean enable;
+
+    @Basic
+    @Comment(comment = "是否修建完成")
+    private boolean developed;
 }

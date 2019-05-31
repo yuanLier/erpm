@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author yuanyiwen
@@ -69,4 +70,23 @@ public class FactoryHoldingInfo implements Serializable {
     @Comment(comment = "该厂房是否可用（true可用false已出售） / 该厂房是否继续租赁（true是false否）")
     private boolean enable;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FactoryHoldingInfo that = (FactoryHoldingInfo) o;
+        return enable == that.enable &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(enterpriseBasicInfo, that.enterpriseBasicInfo) &&
+                Objects.equals(factoryBasicInfo, that.factoryBasicInfo) &&
+                factoryHoldingStatus == that.factoryHoldingStatus &&
+                Objects.equals(beginPeriod, that.beginPeriod) &&
+                Objects.equals(endPeriod, that.endPeriod);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, enterpriseBasicInfo, factoryBasicInfo, factoryHoldingStatus, beginPeriod, endPeriod, enable);
+    }
 }

@@ -173,10 +173,11 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         factoryDevelopInfo.setDevelopedPeriod(0);
         // 修建状态为true，即修建中
         factoryDevelopInfo.setEnable(true);
+        // 设置为未修建完成
+        factoryDevelopInfo.setDeveloped(false);
 
         //持久化该建造信息
-        FactoryDevelopInfo developInfo;
-        developInfo = factoryDevelopInfoRepository.saveAndFlush(factoryDevelopInfo);
+        FactoryDevelopInfo developInfo = factoryDevelopInfoRepository.saveAndFlush(factoryDevelopInfo);
 
         return EntityVoUtil.copyFieldsFromEntityToVo(developInfo, new FactoryDevelopDisplayVo());
     }

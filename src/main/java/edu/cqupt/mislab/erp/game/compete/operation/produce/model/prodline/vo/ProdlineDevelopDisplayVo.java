@@ -27,7 +27,7 @@ public class ProdlineDevelopDisplayVo {
     private ProdlineDevelopStatus prodlineDevelopStatus;
 
     @ApiModelProperty("已安装周期数")
-    private Integer DevelopedPeriod;
+    private Integer developedPeriod;
 
     @ApiModelProperty("安装所需的总周期数")
     private Integer prodlineSetupPeriod;

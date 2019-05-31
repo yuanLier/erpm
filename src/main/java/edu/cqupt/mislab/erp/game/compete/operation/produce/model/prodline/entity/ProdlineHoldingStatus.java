@@ -14,7 +14,10 @@ public enum ProdlineHoldingStatus {
     PRODUCING("生产中"),
 
     // 生产线出售后更新为该状态（生产线出售均为一次性到账
-    SELLED("已出售");
+    SELLED("已出售"),
+
+    // 出售到账后更新为该状态
+    ARRIVAL("已到账");
 
     private String comment;
 

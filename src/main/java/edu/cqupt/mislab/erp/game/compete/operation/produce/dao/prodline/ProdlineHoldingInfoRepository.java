@@ -16,9 +16,10 @@ import java.util.List;
 public interface ProdlineHoldingInfoRepository extends JpaSpecificationExecutor, BasicRepository<ProdlineHoldingInfo, Long> {
 
     /**
-     * @author yuanyiwen
-     * @description 根据厂房id获取处于某种状态的生产线
-     * @date 18:49 2019/3/25
-     **/
+     * 根据厂房id获取处于某种状态的生产线
+     * @param factoryId
+     * @param prodlineHoldingStatus
+     * @return
+     */
     List<ProdlineHoldingInfo> findByFactoryHoldingInfo_IdAndProdlineHoldingStatus(Long factoryId, ProdlineHoldingStatus prodlineHoldingStatus);
 }

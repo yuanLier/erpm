@@ -15,10 +15,9 @@ import java.util.List;
 public interface ProdlineBasicInfoRepository extends BasicRepository<ProdlineBasicInfo, Long>, JpaSpecificationExecutor {
 
     /**
-     * @author yuanyiwen
-     * @description 选取当前版本下的全部生产线
-     * @date 20:50 2019/3/23
-     **/
+     * 选取当前版本下的全部生产线
+     * @return
+     */
     @Query("from ProdlineBasicInfo pb where pb.enable = true group by pb.prodlineType")
     List<ProdlineBasicInfo> findNewestProdlineBasicInfos();
 

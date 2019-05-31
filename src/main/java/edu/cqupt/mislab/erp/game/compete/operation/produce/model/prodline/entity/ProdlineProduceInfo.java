@@ -37,14 +37,14 @@ public class ProdlineProduceInfo implements Serializable {
 
     @Basic
     @Comment(comment = "产品的实际需要的生产时间（值为产品的生产时间*生产线的加速时间取整）")
-    private Integer produceDuration;
+    private int produceDuration;
 
     @Basic
-    @Comment(comment = "开始生产的周期数")
+    @Comment(comment = "开始生产的周期数，允许为空")
     private Integer beginPeriod;
 
     @Basic
-    @Comment(comment = "生产完毕的周期数")
+    @Comment(comment = "生产完毕的周期数，允许为空")
     private Integer endPeriod;
 
     @Basic

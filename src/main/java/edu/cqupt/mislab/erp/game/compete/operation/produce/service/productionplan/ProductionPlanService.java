@@ -17,66 +17,69 @@ import java.util.List;
 public interface ProductionPlanService {
 
     /**
-     * @author yuanyiwen
-     * @description 获取一个企业可生产的产品名称
-     * @date 23:56 2019/3/14
-     **/
+     * 获取一个企业可生产的产品名称
+     * @param enterpriseId
+     * @return
+     */
     List<ProductTypeVo> getProducableProduct(Long enterpriseId);
 
 
     /**
-     * @author yuanyiwen
-     * @description 获取能生产某种产品的生产线及生产线所在的厂房
-     * @date 9:09 2019/3/15
-     **/
+     * 获取能生产某种产品的生产线及生产线所在的厂房
+     * @param enterpriseId
+     * @param productId
+     * @return
+     */
     List<FactoryProdlineTypeVo> getProducableFactoryAndProdline(Long enterpriseId, Long productId);
 
 
     /**
-     * @author yuanyiwen
-     * @description 获取企业中某一产品的全部生产情况
-     * @date 0:11 2019/3/15
-     **/
+     * 获取企业中某一产品的全部生产情况
+     * @param enterpriseId
+     * @param productId
+     * @return
+     */
     List<ProductProduceVo> getProductProduceVosOfOneProduct(Long enterpriseId, Long productId);
 
 
     /**
-     * @author yuanyiwen
-     * @description 查看产品的某一生产情况，即根据生产线生产id获取厂房及厂房中全部生产线信息（生产线包括生产中的和修建中的）
-     * @date 18:12 2019/3/12
-     **/
+     * 查看产品的某一生产情况，即根据生产线生产id获取厂房及厂房中全部生产线信息（生产线包括生产中的和修建中的）
+     * @param prodlineProduceId
+     * @return
+     */
     FactoryDisplayVo getFactoryDisplayVo(Long prodlineProduceId);
 
 
     /**
-     * @author yuanyiwen
-     * @description 获取一个企业全部的生产信息（即所有厂房及厂房内生产线），厂房包括自建的和租来的
-     * @date 21:37 2019/3/12
-     **/
+     * 获取一个企业全部的生产信息（即所有厂房及厂房内生产线），厂房包括自建的和租来的
+     * @param enterpriseId
+     * @return
+     */
     List<FactoryDisplayVo> getAllFactoryDisplayVos(Long enterpriseId);
 
 
     /**
-     * @author yuanyiwen
-     * @description 查看生产线详情（只有处于生产状态下的可以查看）
-     * @date 9:13 2019/3/15
-     **/
+     * 查看生产线详情（只有处于生产状态下的可以查看）
+     * @param prodlineId
+     * @return
+     */
     ProdlineDetailVo getProdlineDetailVo(Long prodlineId);
 
 
     /**
-     * @author yuanyiwen
-     * @description 开始生产（初始化开始生产的周期数；修改生产状态至生产中
-     * @date 0:08 2019/3/15
-     **/
+     * 开始生产（初始化开始生产的周期数；修改生产状态至生产中
+     * @param prodlineId
+     * @return
+     */
     ProductProduceVo productProduction(Long prodlineId);
 
 
     /**
-     * @author yuanyiwen
-     * @description 修改生产线生产状态，主要用于暂停/恢复生产
-     * @date 9:00 2019/3/15
-     **/
+     * 修改生产线生产状态，主要用于暂停/恢复生产
+     * @param prodlineId
+     * @param prodlineProduceStatus
+     * @return
+     */
     ProductProduceVo updateProduceStatus(Long prodlineId, ProdlineProduceStatus prodlineProduceStatus);
 
 }

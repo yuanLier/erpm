@@ -14,9 +14,9 @@ import java.util.List;
 public interface FactoryDevelopInfoRepository extends BasicRepository<FactoryDevelopInfo, Long>, JpaSpecificationExecutor {
 
     /**
-     * @author yuanyiwen
-     * @description 获取一个企业的全部修建中厂房
-     * @date 11:43 2019/4/7
-     **/
+     * 获取一个企业的全部修建中厂房
+     * @param enterpriseId
+     * @return
+     */
     List<FactoryDevelopInfo> findByEnterpriseBasicInfo_Id(Long enterpriseId);
 }

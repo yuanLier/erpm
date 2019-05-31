@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
 
 /**
@@ -40,7 +39,7 @@ public class ProductionPlanController {
 
 
     @ApiOperation(value = "获取某个企业的全部可生产的产品类型")
-    @GetMapping("/product/type/get")
+    @GetMapping("/product/type")
     public WebResponseVo<List<ProductTypeVo>> getProducableProduct(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                @RequestParam Long enterpriseId) {
 
@@ -51,7 +50,7 @@ public class ProductionPlanController {
 
 
     @ApiOperation(value = "获取企业中的可生产某种产品的全部生产线及所在厂房的类型")
-    @GetMapping("/prodline/type/get")
+    @GetMapping("/prodline/type")
     public WebResponseVo<List<FactoryProdlineTypeVo>> getProducableFactoryAndProdline(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                             @RequestParam Long enterpriseId,
                                                                                       @Exist(repository = ProductDevelopInfoRepository.class)
@@ -64,7 +63,7 @@ public class ProductionPlanController {
 
 
     @ApiOperation(value = "获取企业中某一产品的全部生产情况")
-    @GetMapping("/prodline/produce/get")
+    @GetMapping("/prodline/produce")
     public WebResponseVo<List<ProductProduceVo>> getProductProduceVosOfOneProduct(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                           @RequestParam Long enterpriseId,
                                                                                   @Exist(repository = ProductDevelopInfoRepository.class)
@@ -77,7 +76,7 @@ public class ProductionPlanController {
 
 
     @ApiOperation(value = "查看产品的某一生产情况")
-    @GetMapping("/factory/display/get")
+    @GetMapping("/factory/display")
     public WebResponseVo<FactoryDisplayVo> getFactoryDisplayVo(@Exist(repository = ProdlineProduceInfoRepository.class)
                                                                        @RequestParam Long prodlineProduceId) {
 
@@ -86,7 +85,7 @@ public class ProductionPlanController {
 
 
     @ApiOperation(value = "获取企业全部的生产信息")
-    @GetMapping("/factory/display/all/get")
+    @GetMapping("/factory/display/all")
     public WebResponseVo<List<FactoryDisplayVo>> getAllFactoryDisplayVos(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                  @RequestParam Long enterpriseId) {
 
@@ -97,7 +96,7 @@ public class ProductionPlanController {
 
 
     @ApiOperation(value = "获取生产线详情")
-    @GetMapping("/prodline/detail/get")
+    @GetMapping("/prodline/detail")
     public WebResponseVo<ProdlineDetailVo> getProdlineDetailVo(@Exist(repository = ProdlineProduceInfoRepository.class)
                                                                        @RequestParam Long prodlineId) {
 
@@ -113,10 +112,6 @@ public class ProductionPlanController {
 
         ProductProduceVo productProduceVo = productionPlanService.productProduction(prodlineId);
 
-        if (productProduceVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "生产失败！请联系开发人员");
-        }
-
         return toSuccessResponseVoWithData(productProduceVo);
     }
 
@@ -124,11 +119,8 @@ public class ProductionPlanController {
     @PutMapping("/prodline/produce/pause")
     public WebResponseVo<ProductProduceVo> updateProduceStatusToPausing(@Exist(repository = ProdlineProduceInfoRepository.class)
                                                                             @RequestParam Long prodlineId) {
-        ProductProduceVo productProduceVo = productionPlanService.updateProduceStatus(prodlineId, ProdlineProduceStatus.PRODUCEPAUSE);
 
-        if (productProduceVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "暂停生产失败！请联系开发人员");
-        }
+        ProductProduceVo productProduceVo = productionPlanService.updateProduceStatus(prodlineId, ProdlineProduceStatus.PRODUCEPAUSE);
 
         return toSuccessResponseVoWithData(productProduceVo);
     }
@@ -138,11 +130,8 @@ public class ProductionPlanController {
     @PutMapping("/prodline/produce/producing")
     public WebResponseVo<ProductProduceVo> updateProduceStatusToProducing(@Exist(repository = ProdlineProduceInfoRepository.class)
                                                                             @RequestParam Long prodlineId) {
-        ProductProduceVo productProduceVo = productionPlanService.updateProduceStatus(prodlineId, ProdlineProduceStatus.PRODUCING);
 
-        if (productProduceVo == null) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "继续生产失败！请联系开发人员");
-        }
+        ProductProduceVo productProduceVo = productionPlanService.updateProduceStatus(prodlineId, ProdlineProduceStatus.PRODUCING);
 
         return toSuccessResponseVoWithData(productProduceVo);
     }

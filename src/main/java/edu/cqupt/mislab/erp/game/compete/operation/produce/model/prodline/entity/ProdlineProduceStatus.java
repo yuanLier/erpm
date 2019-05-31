@@ -7,6 +7,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entit
  */
 public enum  ProdlineProduceStatus {
 
+    //
     TOPRODUCE("待生产"),
     PRODUCING("生产中"),
     PRODUCEPAUSE("生产暂停"),

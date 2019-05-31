@@ -15,9 +15,9 @@ public interface FactoryHoldingInfoRepository extends BasicRepository<FactoryHol
 
 
     /**
-     * @author yuanyiwen
-     * @description 获取某个企业所拥有的全部厂房信息
-     * @date 21:17 2019/3/22
-     **/
+     * 获取某个企业所拥有的全部厂房信息
+     * @param enterpriseId
+     * @return
+     */
     List<FactoryHoldingInfo> findByEnterpriseBasicInfo_Id(Long enterpriseId);
 }
