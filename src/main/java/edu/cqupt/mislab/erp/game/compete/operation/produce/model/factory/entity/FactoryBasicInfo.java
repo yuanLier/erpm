@@ -50,6 +50,11 @@ public class FactoryBasicInfo implements Serializable {
 
     @DoubleMin(0.01)
     @Column(nullable = false, updatable = false)
+    @Comment(comment = "不考虑折旧时，厂房售卖价值")
+    private double factoryValue;
+
+    @DoubleMin(0.01)
+    @Column(nullable = false, updatable = false)
     @Comment(comment = "残值，即折旧到一定阶段后，无论怎么再折旧，都不再减少的价值")
     private double factoryStumpCost;
 
@@ -82,23 +87,24 @@ public class FactoryBasicInfo implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FactoryBasicInfo that = (FactoryBasicInfo) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(factoryType, that.factoryType) &&
-                Objects.equals(factoryMakePeriod, that.factoryMakePeriod) &&
-                Objects.equals(factoryMakeCost, that.factoryMakeCost) &&
-                Objects.equals(factoryDepreciation, that.factoryDepreciation) &&
-                Objects.equals(factoryStumpCost, that.factoryStumpCost) &&
-                Objects.equals(factoryCapacity, that.factoryCapacity) &&
-                Objects.equals(factoryRentCost, that.factoryRentCost) &&
-                Objects.equals(factoryDelayTime, that.factoryDelayTime) &&
-                Objects.equals(factoryMaintainCost, that.factoryMaintainCost) &&
-                Objects.equals(enable, that.enable);
+        return factoryMakePeriod == that.factoryMakePeriod &&
+                Double.compare(that.factoryMakeCost, factoryMakeCost) == 0 &&
+                Double.compare(that.factoryDepreciation, factoryDepreciation) == 0 &&
+                Double.compare(that.factoryValue, factoryValue) == 0 &&
+                Double.compare(that.factoryStumpCost, factoryStumpCost) == 0 &&
+                factoryCapacity == that.factoryCapacity &&
+                Double.compare(that.factoryRentCost, factoryRentCost) == 0 &&
+                factoryDelayTime == that.factoryDelayTime &&
+                Double.compare(that.factoryMaintainCost, factoryMaintainCost) == 0 &&
+                enable == that.enable &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(factoryType, that.factoryType);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, factoryType, factoryMakePeriod, factoryMakeCost, factoryDepreciation, factoryStumpCost, factoryCapacity, factoryRentCost, factoryDelayTime, factoryMaintainCost, enable);
+        return Objects.hash(id, factoryType, factoryMakePeriod, factoryMakeCost, factoryDepreciation, factoryValue, factoryStumpCost, factoryCapacity, factoryRentCost, factoryDelayTime, factoryMaintainCost, enable);
     }
 }
 

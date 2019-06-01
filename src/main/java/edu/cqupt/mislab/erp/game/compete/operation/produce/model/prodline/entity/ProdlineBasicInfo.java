@@ -60,18 +60,18 @@ public class ProdlineBasicInfo implements Serializable {
 
     @DoubleMin(0.01)
     @Column(nullable = false, updatable = false)
+    @Comment(comment = "生产线建造后，每期折旧的价值。完工当期不折旧")
+    private double prodlineDepreciation;
+
+    @DoubleMin(0.01)
+    @Column(nullable = false, updatable = false)
     @Comment(comment = "生产线的残值。即折旧到一定阶段后，无论怎么再折旧，都不再减少的价值")
     private double prodlineStumpcost;
 
     @DoubleMin(0.01)
     @Column(nullable = false, updatable = false)
-    @Comment(comment = "生产线投入使用后，每期折旧的价值。完工当期不折旧")
-    private double prodlineDepreciation;
-
-    @Min(0)
-    @Column(nullable = false, updatable = false)
-    @Comment(comment = "卖掉生产线后，卖生产线的钱需要延长几个账期到账")
-    private int prodlineSaleDelayTime;
+    @Comment(comment = "不考虑残值时，生产线售卖价值")
+    private double prodlineValue;
 
     @DoubleMin(0.01)
     @Column(nullable = false, updatable = false)
@@ -102,7 +102,6 @@ public class ProdlineBasicInfo implements Serializable {
                 Objects.equals(prodlineMainCost, that.prodlineMainCost) &&
                 Objects.equals(prodlineStumpcost, that.prodlineStumpcost) &&
                 Objects.equals(prodlineDepreciation, that.prodlineDepreciation) &&
-                Objects.equals(prodlineSaleDelayTime, that.prodlineSaleDelayTime) &&
                 Objects.equals(extraValue, that.extraValue) &&
                 Objects.equals(extraPeriod, that.extraPeriod);
     }
@@ -110,6 +109,6 @@ public class ProdlineBasicInfo implements Serializable {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, prodlineType, prodlineSetupPeriodPrice, prodlineSetupPeriod, prodlineChangePeriod, prodlineChangeCost, prodlineMainCost, prodlineStumpcost, prodlineDepreciation, prodlineSaleDelayTime, extraValue, extraPeriod, enable);
+        return Objects.hash(id, prodlineType, prodlineSetupPeriodPrice, prodlineSetupPeriod, prodlineChangePeriod, prodlineChangeCost, prodlineMainCost, prodlineStumpcost, prodlineDepreciation, extraValue, extraPeriod, enable);
     }
 }

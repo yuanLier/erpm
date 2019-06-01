@@ -1,8 +1,10 @@
 package edu.cqupt.mislab.erp.game.compete.operation.produce.service.factorymanagement.impl;
 
+import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryHoldingInfoRepository;
@@ -62,6 +64,9 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
 
     @Autowired
     private ProductDevelopInfoRepository productDevelopInfoRepository;
+
+    @Autowired
+    private FinanceService financeService;
 
 
     @Override
@@ -197,7 +202,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
     @Override
     public List<FactoryDevelopDisplayVo> getAllFactoryDevelopVos(Long enterpriseId) {
         // 获取企业中的全部修建中厂房
-        List<FactoryDevelopInfo> factoryDevelopInfoList = factoryDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId);
+        List<FactoryDevelopInfo> factoryDevelopInfoList = factoryDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndDeveloped(enterpriseId, false);
 
         List<FactoryDevelopDisplayVo> factoryDevelopDisplayVoList = new ArrayList<>();
         for (FactoryDevelopInfo factoryDevelopInfo : factoryDevelopInfoList) {
@@ -255,7 +260,19 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
 
         // 将生产线生产状态设置为已出售
         ProdlineHoldingInfo prodlineHoldingInfo = prodlineProduceInfo.getProdlineHoldingInfo();
-        prodlineHoldingInfo.setProdlineHoldingStatus(ProdlineHoldingStatus.SELLED);
+        prodlineHoldingInfo.setProdlineHoldingStatus(ProdlineHoldingStatus.SOLD);
+
+        // 由于生产线出售是当场到款，所以直接在这里更新余额
+
+        // 计算不考虑残值的情况下，确认出售时生产线的剩余价值（该值 = 最初生产线价值 - 每期折旧价值*(企业当前周期-安装完成周期)）
+        Integer developedPeriod = prodlineDevelopInfoRepository.findByProdlineHoldingInfo_Id(prodlineHoldingInfo.getId()).getEndPeriod();
+        Double actualValue = prodlineHoldingInfo.getProdlineBasicInfo().getProdlineValue() - prodlineHoldingInfo.getProdlineBasicInfo().getProdlineDepreciation() * (prodlineHoldingInfo.getEnterpriseBasicInfo().getEnterpriseCurrentPeriod() - developedPeriod);
+        // 则生产线实际售卖价值等于actualValue与生产线残值取其大
+        Double changeAmount = Math.max(actualValue, prodlineHoldingInfo.getProdlineBasicInfo().getProdlineStumpcost());
+        // 生产线出售所得金额到账
+        Long enterpriseId = prodlineHoldingInfo.getEnterpriseBasicInfo().getId();
+        String changeOperating = FinanceOperationConstant.PRODLINE_SELL;
+        financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, false);
 
         // 保存修改
         prodlineHoldingInfoRepository.save(prodlineHoldingInfo);

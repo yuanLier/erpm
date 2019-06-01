@@ -1,7 +1,7 @@
 package edu.cqupt.mislab.erp.commons.util;
 
-import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.*;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.*;
+import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoDevelopInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketTypeVo;
@@ -20,15 +20,16 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineProduceInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialOrderInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialStockInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.ProductStockInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.TransportBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.stock.model.vo.*;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.vo.MaterialOrderDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.vo.MaterialStockDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.vo.ProductStockDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.vo.TransportMethodDisplayVo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseMemberInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
@@ -253,6 +254,8 @@ public abstract class EntityVoUtil {
         prodlineDetailVo.setProdlineSetupPeriodPrice(prodlineBasicInfo.getProdlineSetupPeriodPrice());
         // 生产线的残值。即折旧到一定阶段后，无论怎么再折旧，都不再减少的价值
         prodlineDetailVo.setProdlineStumpcost(prodlineBasicInfo.getProdlineStumpcost());
+        // 不考虑残值时，生产线售卖价值
+        prodlineDetailVo.setProdlineValue(prodlineBasicInfo.getProdlineValue());
         // 生产线类型
         prodlineDetailVo.setProdlineType(prodlineBasicInfo.getProdlineType());
         // 该生产线所生产的产品名称
@@ -332,6 +335,10 @@ public abstract class EntityVoUtil {
         factoryDetailVo.setFactoryMakeCost(factoryBasicInfo.getFactoryMakeCost());
         // 修建该厂房所需要的周期数
         factoryDetailVo.setFactoryMakePeriod(factoryBasicInfo.getFactoryMakePeriod());
+        // 不考虑残值使厂房的售卖价格
+        factoryDetailVo.setFactoryValue(factoryBasicInfo.getFactoryValue());
+        // 残值
+        factoryDetailVo.setFactoryStumpCost(factoryBasicInfo.getFactoryStumpCost());
         // 厂房编号
         factoryDetailVo.setFactoryNumber(NumberFormatUtil.numberFormat(factoryHoldingInfo.getId(),3));
         // 厂房类型

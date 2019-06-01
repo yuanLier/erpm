@@ -44,4 +44,10 @@ public class FactoryDetailVo {
     @ApiModelProperty("厂房修建完成后每期的维护费用")
     private Double factoryMaintainCost;
 
+    @ApiModelProperty("不考虑折旧时，厂房售卖价值")
+    private Double factoryValue;
+
+    @ApiModelProperty("残值，即折旧到一定阶段后，无论怎么再折旧，都不再减少的价值")
+    private Double factoryStumpCost;
+
 }

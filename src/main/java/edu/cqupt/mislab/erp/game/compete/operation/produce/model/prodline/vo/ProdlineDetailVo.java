@@ -43,6 +43,9 @@ public class ProdlineDetailVo {
     @ApiModelProperty("生产线投入使用后，每期折旧的价值。完工当期不折旧")
     private Double prodlineDepreciation;
 
+    @ApiModelProperty("不考虑残值时，生产线售卖价值")
+    private Double prodlineValue;
+
     @ApiModelProperty("生产线的残值。即折旧到一定阶段后，无论怎么再折旧，都不再减少的价值")
     private Double prodlineStumpcost;
 }
