@@ -48,7 +48,7 @@ public class FactoryGameModelInit implements GameModelInit {
 
                 // 随机获取一条基本厂房信息
                 List<FactoryBasicInfo> factoryBasicInfos = factoryBasicInfoRepository.findNewestFactoryBasicInfos();
-                final FactoryBasicInfo factoryBasicInfo = factoryBasicInfos.get(new Random().nextInt(factoryBasicInfos.size()-1)+1);
+                final FactoryBasicInfo factoryBasicInfo = factoryBasicInfos.get(new Random().nextInt(factoryBasicInfos.size()));
 
                 // 选取所有的比赛企业，这些企业是绝对存在的
                 final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId);
@@ -62,7 +62,7 @@ public class FactoryGameModelInit implements GameModelInit {
                                     .factoryBasicInfo(factoryBasicInfo)
                                     .factoryHoldingStatus(FactoryHoldingStatus.HOLDING)
                                     .beginPeriod(1)
-                                    .endPeriod(1)
+                                    .endPeriod(null)
                                     .enable(true)
                                     .build()
                     );

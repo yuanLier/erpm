@@ -10,12 +10,14 @@ public interface ModelAdvance {
     /**
      * 这个方法用来记录比赛期间各模块的历史数据
      * @param gameId
+     * @return
      */
     boolean modelHistory(Long gameId);
 
     /**
      * 这个方法用来实现各模块自己的周期推进
      * @param gameId
+     * @return
      */
     boolean modelAdvance(Long gameId);
 

@@ -70,7 +70,7 @@ public class ProdlineGameModelInit implements GameModelInit {
 
                 // 随机选取一条生产线基本数据信息
                 List<ProdlineBasicInfo> prodlineBasicInfos = prodlineBasicInfoRepository.findNewestProdlineBasicInfos();
-                final ProdlineBasicInfo prodlineBasicInfo = prodlineBasicInfos.get(new Random().nextInt(prodlineBasicInfos.size()-1)+1);
+                final ProdlineBasicInfo prodlineBasicInfo = prodlineBasicInfos.get(new Random().nextInt(prodlineBasicInfos.size()));
 
                 // 选取全部的企业
                 final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId);
@@ -89,8 +89,8 @@ public class ProdlineGameModelInit implements GameModelInit {
                     }
 
                     // 否则，随机选一个厂房和产品进行研发（如果初始时默认研发完成的产品or默认修建完成的厂房有多个的话，就可能每个企业不一样 是不是很刺激
-                    ProductDevelopInfo productDevelopInfo = productDevelopInfoList.get(new Random().nextInt(productDevelopInfoList.size()-1)+1);
-                    FactoryHoldingInfo factoryHoldingInfo = factoryHoldingInfoList.get(new Random().nextInt(factoryHoldingInfoList.size()-1)+1);
+                    ProductDevelopInfo productDevelopInfo = productDevelopInfoList.get(new Random().nextInt(productDevelopInfoList.size()));
+                    FactoryHoldingInfo factoryHoldingInfo = factoryHoldingInfoList.get(new Random().nextInt(factoryHoldingInfoList.size()));
 
                     ProdlineHoldingInfo prodlineHoldingInfo =
                             prodlineHoldingInfoRepository.saveAndFlush(

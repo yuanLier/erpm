@@ -1,14 +1,17 @@
 package edu.cqupt.mislab.erp.game.compete.operation.produce.advance.factorymanagement;
 
 import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
+import edu.cqupt.mislab.erp.commons.constant.ProduceOperationConstant;
 import edu.cqupt.mislab.erp.game.compete.basic.ModelAdvance;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryDevelopInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryHistoryRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryHoldingInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineHoldingInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineProduceInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryDevelopInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryHistoryInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryHoldingInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryHoldingStatus;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.*;
@@ -46,12 +49,32 @@ public class FactoryManagementAdvance implements ModelAdvance {
     private ProdlineProduceInfoRepository prodlineProduceInfoRepository;
 
     @Autowired
+    private FactoryHistoryRepository factoryHistoryRepository;
+
+    @Autowired
     private FinanceService financeService;
 
 
     @Override
     public boolean modelHistory(Long gameId) {
-        return false;
+
+        log.info("开始记录厂房管理模块比赛期间历史数据");
+
+        // 获取该比赛中全部进行中企业
+        List<EnterpriseBasicInfo> enterpriseBasicInfoList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndEnterpriseStatus(gameId, EnterpriseStatusEnum.PLAYING);
+
+        for(EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
+
+            // 记录厂房的历史数据
+            factoryHistoryRecord(enterpriseBasicInfo);
+
+            // todo 记录生产线的历史数据
+            prodlineHistoryRecord(enterpriseBasicInfo);
+        }
+
+        log.info("厂房管理模块-比赛期间历史数据记录成功");
+
+        return true;
     }
 
     @Override
@@ -238,7 +261,7 @@ public class FactoryManagementAdvance implements ModelAdvance {
                 // 更新生产线的holding状态
                 ProdlineHoldingInfo prodlineHoldingInfo = prodlineDevelopInfo.getProdlineHoldingInfo();
                 prodlineHoldingInfo.setProdlineHoldingStatus(ProdlineHoldingStatus.PRODUCING);
-
+                
                 // 保存修改
                 prodlineHoldingInfoRepository.save(prodlineHoldingInfo);
 
@@ -266,6 +289,58 @@ public class FactoryManagementAdvance implements ModelAdvance {
             Double changeAmount = prodlineDevelopInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineSetupPeriodPrice();
             financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
         }
+    }
+
+
+    /**
+     * 记录厂房的历史数据
+     * @param enterpriseBasicInfo
+     */
+    private void factoryHistoryRecord(EnterpriseBasicInfo enterpriseBasicInfo) {
+        // 获取企业全部拥有的厂房 暴力比较一下算了
+        List<FactoryHoldingInfo> factoryHoldingInfoList = factoryHoldingInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseBasicInfo.getId());
+
+        for(FactoryHoldingInfo factoryHoldingInfo : factoryHoldingInfoList) {
+
+            final FactoryHistoryInfo.FactoryHistoryInfoBuilder factoryHistoryInfo = FactoryHistoryInfo.builder()
+                    .enterpriseBasicInfo(enterpriseBasicInfo)
+                    .factoryBasicInfo(factoryHoldingInfo.getFactoryBasicInfo())
+                    .period(enterpriseBasicInfo.getEnterpriseCurrentPeriod());
+
+            // 确定对该厂房进行的具体操作
+            Integer current = enterpriseBasicInfo.getEnterpriseCurrentPeriod();
+            if(current.equals(factoryHoldingInfo.getBeginPeriod())) {
+
+                // holding-begin 修建完成   leasing-begin 租赁
+                if(factoryHoldingInfo.getFactoryHoldingStatus() == FactoryHoldingStatus.HOLDING) {
+                    factoryHistoryInfo.operation(ProduceOperationConstant.FACTORY_DEVELOPED).mount(1);
+                } else {
+                    factoryHistoryInfo.operation(ProduceOperationConstant.FACTORY_LEASE).mount(1);
+                }
+
+                factoryHistoryRepository.save(factoryHistoryInfo.build());
+
+            } else if(current.equals(factoryHoldingInfo.getEndPeriod())) {
+
+                // holding-end 确认出售     leasing-end 停租
+                if(factoryHoldingInfo.getFactoryHoldingStatus() == FactoryHoldingStatus.HOLDING) {
+                    factoryHistoryInfo.operation(ProduceOperationConstant.FACTORY_SOLD).mount(-1);
+                } else {
+                    factoryHistoryInfo.operation(ProduceOperationConstant.FACTORY_LEASE_PAUSE).mount(-1);
+                }
+
+                factoryHistoryRepository.save(factoryHistoryInfo.build());
+            }
+        }
+    }
+
+
+    /**
+     * 记录生产线的历史数据
+     * @param enterpriseBasicInfo
+     */
+    private void prodlineHistoryRecord(EnterpriseBasicInfo enterpriseBasicInfo) {
+
     }
 
 }
