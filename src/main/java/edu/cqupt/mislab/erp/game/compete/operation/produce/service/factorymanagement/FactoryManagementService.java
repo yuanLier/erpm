@@ -123,6 +123,7 @@ public interface FactoryManagementService {
     FactoryDisplayVo factoryLease(Long factoryBasicId, Long enterpriseId);
 
 
+//    todo 租和停租要分开 租用要更新租赁日期，停租也是，并且停租要处理（清空）该厂房中生产线生产情况
     /**
      * 更新厂房的租赁情况，主要用于停止租赁和续租（enable为厂房的租赁状态，true为租赁中，false为停止租赁）
      * @param factoryId

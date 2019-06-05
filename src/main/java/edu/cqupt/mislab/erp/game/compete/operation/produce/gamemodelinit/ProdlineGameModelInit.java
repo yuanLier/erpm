@@ -99,6 +99,8 @@ public class ProdlineGameModelInit implements GameModelInit {
                                         .prodlineBasicInfo(prodlineBasicInfo)
                                         .factoryHoldingInfo(factoryHoldingInfo)
                                         .prodlineHoldingStatus(ProdlineHoldingStatus.PRODUCING)
+                                        .beginPeriod(1)
+                                        .endPeriod(null)
                                         .build()
                             );
 
@@ -107,8 +109,8 @@ public class ProdlineGameModelInit implements GameModelInit {
                                     .prodlineHoldingInfo(prodlineHoldingInfo)
                                     .productDevelopInfo(productDevelopInfo)
                                     .produceDuration(0)
-                                    .beginPeriod(1)
-                                    .endPeriod(1)
+                                    .beginPeriod(null)
+                                    .endPeriod(null)
                                     .producedPeriod(0)
                                     .prodlineProduceStatus(ProdlineProduceStatus.TOPRODUCE)
                                     .build()

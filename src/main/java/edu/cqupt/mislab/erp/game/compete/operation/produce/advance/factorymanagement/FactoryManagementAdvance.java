@@ -8,6 +8,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryDe
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryHistoryRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryHoldingInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineDevelopInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineHistoryRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineHoldingInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineProduceInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryDevelopInfo;
@@ -50,12 +51,14 @@ public class FactoryManagementAdvance implements ModelAdvance {
 
     @Autowired
     private FactoryHistoryRepository factoryHistoryRepository;
+    @Autowired
+    private ProdlineHistoryRepository prodlineHistoryRepository;
 
     @Autowired
     private FinanceService financeService;
 
-
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean modelHistory(Long gameId) {
 
         log.info("开始记录厂房管理模块比赛期间历史数据");
@@ -68,7 +71,7 @@ public class FactoryManagementAdvance implements ModelAdvance {
             // 记录厂房的历史数据
             factoryHistoryRecord(enterpriseBasicInfo);
 
-            // todo 记录生产线的历史数据
+            // 记录生产线的历史数据
             prodlineHistoryRecord(enterpriseBasicInfo);
         }
 
@@ -297,9 +300,11 @@ public class FactoryManagementAdvance implements ModelAdvance {
      * @param enterpriseBasicInfo
      */
     private void factoryHistoryRecord(EnterpriseBasicInfo enterpriseBasicInfo) {
+
         // 获取企业全部拥有的厂房 暴力比较一下算了
         List<FactoryHoldingInfo> factoryHoldingInfoList = factoryHoldingInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseBasicInfo.getId());
 
+        Integer current = enterpriseBasicInfo.getEnterpriseCurrentPeriod();
         for(FactoryHoldingInfo factoryHoldingInfo : factoryHoldingInfoList) {
 
             final FactoryHistoryInfo.FactoryHistoryInfoBuilder factoryHistoryInfo = FactoryHistoryInfo.builder()
@@ -308,28 +313,28 @@ public class FactoryManagementAdvance implements ModelAdvance {
                     .period(enterpriseBasicInfo.getEnterpriseCurrentPeriod());
 
             // 确定对该厂房进行的具体操作
-            Integer current = enterpriseBasicInfo.getEnterpriseCurrentPeriod();
+            // holding-begin 修建完成   leasing-begin 租赁
             if(current.equals(factoryHoldingInfo.getBeginPeriod())) {
 
-                // holding-begin 修建完成   leasing-begin 租赁
                 if(factoryHoldingInfo.getFactoryHoldingStatus() == FactoryHoldingStatus.HOLDING) {
                     factoryHistoryInfo.operation(ProduceOperationConstant.FACTORY_DEVELOPED).mount(1);
+                    factoryHistoryRepository.save(factoryHistoryInfo.build());
                 } else {
                     factoryHistoryInfo.operation(ProduceOperationConstant.FACTORY_LEASE).mount(1);
+                    factoryHistoryRepository.save(factoryHistoryInfo.build());
                 }
 
-                factoryHistoryRepository.save(factoryHistoryInfo.build());
+            }
+            // holding-end 确认出售     leasing-end 停租
+            if(current.equals(factoryHoldingInfo.getEndPeriod())) {
 
-            } else if(current.equals(factoryHoldingInfo.getEndPeriod())) {
-
-                // holding-end 确认出售     leasing-end 停租
                 if(factoryHoldingInfo.getFactoryHoldingStatus() == FactoryHoldingStatus.HOLDING) {
                     factoryHistoryInfo.operation(ProduceOperationConstant.FACTORY_SOLD).mount(-1);
+                    factoryHistoryRepository.save(factoryHistoryInfo.build());
                 } else {
                     factoryHistoryInfo.operation(ProduceOperationConstant.FACTORY_LEASE_PAUSE).mount(-1);
+                    factoryHistoryRepository.save(factoryHistoryInfo.build());
                 }
-
-                factoryHistoryRepository.save(factoryHistoryInfo.build());
             }
         }
     }
@@ -341,6 +346,46 @@ public class FactoryManagementAdvance implements ModelAdvance {
      */
     private void prodlineHistoryRecord(EnterpriseBasicInfo enterpriseBasicInfo) {
 
+        // 获取全部企业拥有的生产线 暴力果然是第一生产力
+        List<ProdlineHoldingInfo> prodlineHoldingInfoList = prodlineHoldingInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseBasicInfo.getId());
+
+        Integer current = enterpriseBasicInfo.getEnterpriseCurrentPeriod();
+        for(ProdlineHoldingInfo prodlineHoldingInfo : prodlineHoldingInfoList) {
+
+            final ProdlineHistoryInfo.ProdlineHistoryInfoBuilder prodlineHistoryInfo = ProdlineHistoryInfo.builder()
+                    .enterpriseBasicInfo(enterpriseBasicInfo)
+                    .prodlineBasicInfo(prodlineHoldingInfo.getProdlineBasicInfo())
+                    .period(enterpriseBasicInfo.getEnterpriseCurrentPeriod());
+
+            // 确定对该生产线进行的具体操作
+            // 有beginPeriod说明安装完成
+            if(current.equals(prodlineHoldingInfo.getBeginPeriod())) {
+
+                // 如果是当前周期建造完成，但当前周期厂房停租，则两个信息都需要被记录；所以要在这里先save一次
+                prodlineHistoryInfo.operation(ProduceOperationConstant.PRODLINE_DEVELOPED).mount(1);
+                prodlineHistoryRepository.save(prodlineHistoryInfo.build());
+            }
+            // 有endPeriod说明生产线已出售
+            if(current.equals(prodlineHoldingInfo.getEndPeriod())) {
+
+                // 如果安装完成就出售，也是两个信息都要记录的，所以要把if单独拿出来，不能用else
+                prodlineHistoryInfo.operation(ProduceOperationConstant.PRODLINE_SOLD).mount(-1);
+                prodlineHistoryRepository.save(prodlineHistoryInfo.build());
+            }
+            // 最后是处理由于厂房停租导致的生产线不可用
+            if(ProdlineHoldingStatus.NOT_USABLE.equals(prodlineHoldingInfo.getProdlineHoldingStatus())) {
+                if(current.equals(prodlineHoldingInfo.getFactoryHoldingInfo().getEndPeriod())) {
+
+                    prodlineHistoryInfo.operation(ProduceOperationConstant.PRODLINE_NOT_USABLE).mount(-1);
+                    // 如果当前周期在停租前出售了生产线，则只需要记录出售
+                    if(!current.equals(prodlineHoldingInfo.getEndPeriod())) {
+                        prodlineHistoryRepository.save(prodlineHistoryInfo.build());
+                    }
+                }
+            }
+        }
+
     }
+
 
 }

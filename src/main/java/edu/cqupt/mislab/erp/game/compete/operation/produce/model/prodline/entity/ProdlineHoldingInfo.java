@@ -50,7 +50,7 @@ public class ProdlineHoldingInfo implements Serializable {
      *
      *      生产线变动情况 ：
      *          新建、售卖、没了    所以要考虑一下必要性和整合所花费的代价是否值得
-     *
+     *          不！！！！！还有厂房停租！！！！！！
      *
      *      如果能处理成厂房那样，就基本和厂房相同
      *      如果权衡之后决定不处理，就到时候再造作
@@ -63,5 +63,13 @@ public class ProdlineHoldingInfo implements Serializable {
     @Enumerated(EnumType.STRING)
     @Comment(comment = "生产线的拥有状态")
     private ProdlineHoldingStatus prodlineHoldingStatus;
+
+    @Basic
+    @Comment(comment = "生产线投入使用的周期数（即安装完成的周期数）")
+    private Integer beginPeriod;
+
+    @Basic
+    @Comment(comment = "确认出售的周期数")
+    private Integer endPeriod;
 
 }

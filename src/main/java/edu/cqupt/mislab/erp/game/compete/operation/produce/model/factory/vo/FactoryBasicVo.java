@@ -45,4 +45,7 @@ public class FactoryBasicVo {
 
     @ApiModelProperty("厂房建好后每期的维护费用，完工当期不支付维护费用")
     private double factoryMaintainCost;
+
+    @ApiModelProperty(value = "该条设置是否启用")
+    private boolean enable;
 }

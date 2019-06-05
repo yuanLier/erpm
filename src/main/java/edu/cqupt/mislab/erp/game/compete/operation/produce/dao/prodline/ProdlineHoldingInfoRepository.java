@@ -24,12 +24,19 @@ public interface ProdlineHoldingInfoRepository extends JpaSpecificationExecutor,
 
 
     /**
-     * 获取某一企业全部处于某种拥有状态（修建中or生产中or已出售）的生产线
+     * 获取某一企业全部处于某种拥有状态（修建中or生产中or已出售or由于厂房停租而不可用）的生产线
      * @param enterpriseId
      * @param prodlineHoldingStatus
      * @return
      */
     List<ProdlineHoldingInfo> findByEnterpriseBasicInfo_IdAndProdlineHoldingStatus(Long enterpriseId, ProdlineHoldingStatus prodlineHoldingStatus);
 
+
+    /**
+     * 获取某一企业全部拥有的生产线
+     * @param enterpriseId
+     * @return
+     */
+    List<ProdlineHoldingInfo> findByEnterpriseBasicInfo_Id(Long enterpriseId);
 
 }

@@ -13,6 +13,9 @@ public enum ProdlineHoldingStatus {
     // 修建完成后转入该状态
     PRODUCING("生产中"),
 
+    // 由于厂房停租造成的生产线不可用
+    NOT_USABLE("不可用"),
+
     // 生产线出售后更新为该状态（生产线出售均为一次性到账
     SOLD("已出售");
 

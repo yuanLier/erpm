@@ -13,5 +13,10 @@ public interface ProduceOperationConstant {
     String FACTORY_LEASE_PAUSE = "停租";
 
 
+    String PRODLINE_DEVELOPED = "安装";
+    String PRODLINE_SOLD = "出售";
+    String PRODLINE_NOT_USABLE = "厂房停租造成的生产线不可用";
+
+
     String ENTERPRISE_BANKRUPT = "企业已破产";
 }
