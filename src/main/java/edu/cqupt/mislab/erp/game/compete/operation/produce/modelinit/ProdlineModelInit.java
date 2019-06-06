@@ -22,6 +22,7 @@ public class ProdlineModelInit implements ModelInit {
 
     @Autowired
     private ModelInitService modelInitService;
+
     @Autowired
     private ProdlineBasicInfoRepository prodlineBasicInfoRepository;
 

@@ -103,7 +103,7 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
             List<ProdlineProduceInfo> prodlineProduceInfos = factoryHoldingInfoListEntry.getValue();
 
             factoryProdlineTypeVo.setId(factoryHoldingInfo.getId());
-            factoryProdlineTypeVo.setFactoryType(factoryHoldingInfo.getFactoryBasicInfo().getFactoryType());
+            factoryProdlineTypeVo.setFactoryType(factoryHoldingInfo.getFactoryBasicInfo().getFactoryBasicInfo().getFactoryType());
             factoryProdlineTypeVo.setProdlineTypeVoList(EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfos, new ProdlineTypeVo()));
 
             factoryProdlineTypeVoList.add(factoryProdlineTypeVo);

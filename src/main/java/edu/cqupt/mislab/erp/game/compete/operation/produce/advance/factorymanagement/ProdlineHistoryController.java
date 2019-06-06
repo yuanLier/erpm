@@ -33,9 +33,6 @@ public class ProdlineHistoryController {
     @Autowired
     private ProdlineHistoryService prodlineHistoryService;
 
-    @Autowired
-    private FactoryManagementAdvance factoryManagementAdvance;
-
 
     @ApiOperation(value = "获取某一比赛中处于某一周期的各个企业的全部生产线拥有情况")
     @GetMapping
@@ -50,11 +47,4 @@ public class ProdlineHistoryController {
 
         return toSuccessResponseVoWithData(prodlineHistoryService.findProdlineHistoryVoOfGameAndPeriod(gameId, period));
     }
-
-
-    @GetMapping("/mmm")
-    public void hello(Long gameId) {
-        factoryManagementAdvance.advance(gameId);
-    }
-
 }

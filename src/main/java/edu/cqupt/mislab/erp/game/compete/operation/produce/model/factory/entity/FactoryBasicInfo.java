@@ -7,12 +7,11 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * @author yuanyiwen
- * @create 2019-03-08 17:12
- * @description 厂房基本信息表
+ * @create 2019-06-05 21:17
+ * @description 记录某场比赛所使用的厂房信息，在且仅在比赛开始时进行初始化
  */
 @Getter
 @Setter
@@ -22,7 +21,6 @@ import java.util.Objects;
 @Entity
 @Table
 public class FactoryBasicInfo implements Serializable {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -81,30 +79,4 @@ public class FactoryBasicInfo implements Serializable {
     @Basic(optional = false)
     @Comment(comment = "该条设置是否启用")
     private boolean enable;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FactoryBasicInfo that = (FactoryBasicInfo) o;
-        return factoryMakePeriod == that.factoryMakePeriod &&
-                Double.compare(that.factoryMakeCost, factoryMakeCost) == 0 &&
-                Double.compare(that.factoryDepreciation, factoryDepreciation) == 0 &&
-                Double.compare(that.factoryValue, factoryValue) == 0 &&
-                Double.compare(that.factoryStumpCost, factoryStumpCost) == 0 &&
-                factoryCapacity == that.factoryCapacity &&
-                Double.compare(that.factoryRentCost, factoryRentCost) == 0 &&
-                factoryDelayTime == that.factoryDelayTime &&
-                Double.compare(that.factoryMaintainCost, factoryMaintainCost) == 0 &&
-                enable == that.enable &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(factoryType, that.factoryType);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(id, factoryType, factoryMakePeriod, factoryMakeCost, factoryDepreciation, factoryValue, factoryStumpCost, factoryCapacity, factoryRentCost, factoryDelayTime, factoryMaintainCost, enable);
-    }
 }
-

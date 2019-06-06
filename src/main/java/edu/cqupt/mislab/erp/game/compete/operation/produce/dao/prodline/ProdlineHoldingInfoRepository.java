@@ -39,4 +39,12 @@ public interface ProdlineHoldingInfoRepository extends JpaSpecificationExecutor,
      */
     List<ProdlineHoldingInfo> findByEnterpriseBasicInfo_Id(Long enterpriseId);
 
+
+    /**
+     * 获取某一厂房中的全部生产线
+     * @param factoryId
+     * @return
+     */
+    List<ProdlineHoldingInfo> findByFactoryHoldingInfo_Id(Long factoryId);
+
 }

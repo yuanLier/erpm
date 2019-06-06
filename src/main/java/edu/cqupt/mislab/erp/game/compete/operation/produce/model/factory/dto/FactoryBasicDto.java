@@ -1,4 +1,4 @@
-package edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo;
+package edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -6,15 +6,12 @@ import lombok.Data;
 
 /**
  * @author yuanyiwen
- * @create 2019-06-02 20:09
+ * @create 2019-06-05 21:47
  * @description
  */
 @Data
-@ApiModel("厂房基本数据视图")
-public class FactoryBasicVo {
-
-    @ApiModelProperty("代理主键")
-    private Long id;
+@ApiModel("厂房基本信息传输对象")
+public class FactoryBasicDto {
 
     @ApiModelProperty("厂房类型")
     private String factoryType;

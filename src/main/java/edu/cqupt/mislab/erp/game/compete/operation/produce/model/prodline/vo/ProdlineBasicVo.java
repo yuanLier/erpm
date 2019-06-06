@@ -48,7 +48,4 @@ public class ProdlineBasicVo {
 
     @ApiModelProperty(value = "该生产线对产品生产周期的影响情况")
     private double extraPeriod;
-
-    @ApiModelProperty(value = "该条设置是否启用")
-    private boolean enable;
 }

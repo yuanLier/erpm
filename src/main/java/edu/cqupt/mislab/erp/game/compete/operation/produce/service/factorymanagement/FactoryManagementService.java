@@ -17,9 +17,10 @@ public interface FactoryManagementService {
 
     /**
      * 获取全部可新建的生产线（全部指的是当前设定下所有类型生产线），其中ProdlineTypeVo的id值同ProdlineBasicInfo
+     * @param gameId
      * @return
      */
-    List<ProdlineDevelopVo> getAllProdlineDevelopVos();
+    List<ProdlineDevelopVo> getAllProdlineDevelopVosByType(Long gameId);
 
 
     /**
@@ -52,9 +53,10 @@ public interface FactoryManagementService {
 
     /**
      * 获取全部可新建的厂房（全部指的是当前设定下所有类型厂房），其中FactoryTypeVo的id值同FactoryBasicInfo
+     * @param gameId
      * @return
      */
-    List<FactoryDevelopVo> getAllFactoryDevelopVos();
+    List<FactoryDevelopVo> getAllFactoryDevelopVosByType(Long gameId);
 
 
     /**
@@ -111,7 +113,7 @@ public interface FactoryManagementService {
      * 获取全部能租赁的厂房类型（全部指的是当前设定下所有厂房类型），其中FactoryLeaseVo的id值同FactoryBasicInfo
      * @return
      */
-    List<FactoryLeaseVo> getAllFactoryLeaseVos();
+    List<FactoryLeaseVo> getAllFactoryLeaseVosByType(Long gameId);
 
 
     /**
@@ -122,15 +124,21 @@ public interface FactoryManagementService {
      */
     FactoryDisplayVo factoryLease(Long factoryBasicId, Long enterpriseId);
 
-
-//    todo 租和停租要分开 租用要更新租赁日期，停租也是，并且停租要处理（清空）该厂房中生产线生产情况
     /**
-     * 更新厂房的租赁情况，主要用于停止租赁和续租（enable为厂房的租赁状态，true为租赁中，false为停止租赁）
+     * 厂房停租
      * @param factoryId
-     * @param enable
      * @return
      */
-    FactoryDisplayVo updateFactoryLeaseStatus(Long factoryId, boolean enable);
+    FactoryDisplayVo leasePause(Long factoryId);
+
+
+    /**
+     * 厂房续租
+     * @param factoryId
+     * @return
+     */
+    FactoryDisplayVo leaseContinue(Long factoryId);
+
 
 
 }

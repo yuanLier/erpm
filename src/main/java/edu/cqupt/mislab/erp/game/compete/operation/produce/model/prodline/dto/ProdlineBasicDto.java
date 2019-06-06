@@ -1,31 +1,21 @@
-package edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity;
+package edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.dto;
 
 import edu.cqupt.mislab.erp.commons.validators.annotations.DoubleMin;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
-import lombok.*;
+import io.swagger.annotations.ApiModel;
+import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Column;
 import javax.validation.constraints.Min;
-import java.io.Serializable;
 
 /**
  * @author yuanyiwen
- * @create 2019-06-05 21:20
+ * @create 2019-06-05 21:50
  * @description
  */
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-@Table
-public class ProdlineBasicInfo implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Comment(comment = "代理主键")
-    private Long id;
+@Data
+@ApiModel("生产线基本数据传输对象")
+public class ProdlineBasicDto {
 
     @Column(nullable = false, updatable = false)
     @Comment(comment = "生产线类型")
@@ -80,9 +70,4 @@ public class ProdlineBasicInfo implements Serializable {
     @Column(nullable = false, updatable = false)
     @Comment(comment = "该生产线对产品生产周期的影响情况")
     private double extraPeriod;
-
-    @Basic(optional = false)
-    @Comment(comment = "该条设置是否启用")
-    private boolean enable;
-
 }

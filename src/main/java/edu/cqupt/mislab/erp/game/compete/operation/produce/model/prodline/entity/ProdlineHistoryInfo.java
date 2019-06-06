@@ -41,7 +41,7 @@ public class ProdlineHistoryInfo implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "是对哪个生产线进行的操作")
-    private ProdlineBasicInfo prodlineBasicInfo;
+    private GameProdlineBasicInfo prodlineBasicInfo;
 
     @NotNull
     @Comment(comment = "具体操作")

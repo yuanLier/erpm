@@ -3,19 +3,18 @@ package edu.cqupt.mislab.erp.game.compete.operation.produce.service.factorymanag
 import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
-import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryHoldingInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.GameFactoryBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.GameProdlineBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineHoldingInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineProduceInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryHoldingInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryHoldingStatus;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.GameFactoryBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.*;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineDevelopDisplayVo;
@@ -34,6 +33,7 @@ import java.util.List;
 
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithNoData;
+import static edu.cqupt.mislab.erp.commons.util.EntityVoUtil.copyFieldsFromEntityToVo;
 
 /**
  * @author yuanyiwen
@@ -44,14 +44,14 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessRes
 public class FactoryManagementServiceImpl implements FactoryManagementService {
 
     @Autowired
-    private FactoryBasicInfoRepository factoryBasicInfoRepository;
+    private GameFactoryBasicInfoRepository gameFactoryBasicInfoRepository;
     @Autowired
     private FactoryDevelopInfoRepository factoryDevelopInfoRepository;
     @Autowired
     private FactoryHoldingInfoRepository factoryHoldingInfoRepository;
 
     @Autowired
-    private ProdlineBasicInfoRepository prodlineBasicInfoRepository;
+    private GameProdlineBasicInfoRepository gameProdlineBasicInfoRepository;
     @Autowired
     private ProdlineDevelopInfoRepository prodlineDevelopInfoRepository;
     @Autowired
@@ -70,13 +70,13 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
 
 
     @Override
-    public List<ProdlineDevelopVo> getAllProdlineDevelopVos() {
+    public List<ProdlineDevelopVo> getAllProdlineDevelopVosByType(Long gameId) {
         // 获取当前设定下的全部生产线信息
-        List<ProdlineBasicInfo> prodlineBasicInfoList = prodlineBasicInfoRepository.findNewestProdlineBasicInfos();
+        List<GameProdlineBasicInfo> prodlineBasicInfoList = gameProdlineBasicInfoRepository.findByGameBasicInfo_Id(gameId);
 
         // 将生产线信息转化为List<ProdlineTypeVo>
         List<ProdlineDevelopVo> prodlineDevelopVoList = new ArrayList<>();
-        for (ProdlineBasicInfo prodlineBasicInfo : prodlineBasicInfoList) {
+        for (GameProdlineBasicInfo prodlineBasicInfo : prodlineBasicInfoList) {
 
             ProdlineDevelopVo prodlineDevelopVo = new ProdlineDevelopVo();
 
@@ -95,7 +95,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
 
         // 添加一条ProdlineHoldingInfo
         ProdlineHoldingInfo prodlineHoldingInfo = new ProdlineHoldingInfo();
-        prodlineHoldingInfo.setProdlineBasicInfo(prodlineBasicInfoRepository.findOne(prodlineBasicId));
+        prodlineHoldingInfo.setProdlineBasicInfo(gameProdlineBasicInfoRepository.findOne(prodlineBasicId));
         prodlineHoldingInfo.setFactoryHoldingInfo(factoryHoldingInfoRepository.findOne(factoryId));
         prodlineHoldingInfo.setEnterpriseBasicInfo(enterpriseBasicInfo);
         // 设置生产线拥有状态为修建中
@@ -118,7 +118,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         // 持久化该条prodlineDevelopInfo
         ProdlineDevelopInfo developInfo = prodlineDevelopInfoRepository.saveAndFlush(prodlineDevelopInfo);
 
-        return EntityVoUtil.copyFieldsFromEntityToVo(developInfo);
+        return copyFieldsFromEntityToVo(developInfo);
     }
 
     @Override
@@ -132,7 +132,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         // 保存修改
         prodlineDevelopInfoRepository.save(prodlineDevelopInfo);
 
-        return EntityVoUtil.copyFieldsFromEntityToVo(prodlineDevelopInfo);
+        return copyFieldsFromEntityToVo(prodlineDevelopInfo);
     }
 
     @Override
@@ -140,18 +140,18 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         // 获取要查看的那条厂房信息
         FactoryHoldingInfo factoryHoldingInfo = factoryHoldingInfoRepository.findOne(factoryId);
 
-        return EntityVoUtil.copyFieldsFromEntityToVo(factoryHoldingInfo);
+        return copyFieldsFromEntityToVo(factoryHoldingInfo);
     }
 
 
     @Override
-    public List<FactoryDevelopVo> getAllFactoryDevelopVos() {
+    public List<FactoryDevelopVo> getAllFactoryDevelopVosByType(Long gameId) {
         // 获取当前设定下的全部厂房信息
-        List<FactoryBasicInfo> factoryBasicInfoList = factoryBasicInfoRepository.findNewestFactoryBasicInfos();
+        List<GameFactoryBasicInfo> factoryBasicInfoList = gameFactoryBasicInfoRepository.findByGameBasicInfo_Id(gameId);
 
         // 将生产线信息转化为List<FactoryDevelopVo>
         List<FactoryDevelopVo> factoryDevelopVoList = new ArrayList<>();
-        for (FactoryBasicInfo factoryBasicInfo : factoryBasicInfoList) {
+        for (GameFactoryBasicInfo factoryBasicInfo : factoryBasicInfoList) {
 
             FactoryDevelopVo factoryDevelopVo = new FactoryDevelopVo();
             BeanCopyUtil.copyPropertiesSimple(factoryBasicInfo, factoryDevelopVo);
@@ -171,7 +171,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         FactoryDevelopInfo factoryDevelopInfo = new FactoryDevelopInfo();
 
         factoryDevelopInfo.setEnterpriseBasicInfo(enterpriseBasicInfo);
-        factoryDevelopInfo.setFactoryBasicInfo(factoryBasicInfoRepository.findOne(factoryBasicId));
+        factoryDevelopInfo.setFactoryBasicInfo(gameFactoryBasicInfoRepository.findOne(factoryBasicId));
         // 开始建造的周期为所属企业的当前周期
         factoryDevelopInfo.setBeginPeriod(enterpriseBasicInfo.getEnterpriseCurrentPeriod());
         // 已结修建的周期数为0
@@ -184,7 +184,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         //持久化该建造信息
         FactoryDevelopInfo developInfo = factoryDevelopInfoRepository.saveAndFlush(factoryDevelopInfo);
 
-        return EntityVoUtil.copyFieldsFromEntityToVo(developInfo, new FactoryDevelopDisplayVo());
+        return copyFieldsFromEntityToVo(developInfo, new FactoryDevelopDisplayVo());
     }
 
     @Override
@@ -196,7 +196,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         factoryDevelopInfo.setEnable(enable);
         factoryDevelopInfoRepository.save(factoryDevelopInfo);
 
-        return EntityVoUtil.copyFieldsFromEntityToVo(factoryDevelopInfo, new FactoryDevelopDisplayVo());
+        return copyFieldsFromEntityToVo(factoryDevelopInfo, new FactoryDevelopDisplayVo());
     }
 
     @Override
@@ -206,7 +206,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
 
         List<FactoryDevelopDisplayVo> factoryDevelopDisplayVoList = new ArrayList<>();
         for (FactoryDevelopInfo factoryDevelopInfo : factoryDevelopInfoList) {
-            factoryDevelopDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(factoryDevelopInfo, new FactoryDevelopDisplayVo()));
+            factoryDevelopDisplayVoList.add(copyFieldsFromEntityToVo(factoryDevelopInfo, new FactoryDevelopDisplayVo()));
         }
 
         return factoryDevelopDisplayVoList;
@@ -217,7 +217,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         // 获取要查看的那条厂房修建信息
         FactoryDevelopInfo factoryDevelopInfo = factoryDevelopInfoRepository.findOne(factoryDevelopId);
 
-        return EntityVoUtil.copyFieldsFromEntityToVo(factoryDevelopInfo, new FactoryDevelopDetailVo());
+        return copyFieldsFromEntityToVo(factoryDevelopInfo, new FactoryDevelopDetailVo());
     }
 
     @Override
@@ -266,9 +266,9 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
 
         // 计算不考虑残值的情况下，确认出售时生产线的剩余价值（该值 = 最初生产线价值 - 每期折旧价值*(企业当前周期-安装完成周期)）
         Integer developedPeriod = prodlineDevelopInfoRepository.findByProdlineHoldingInfo_Id(prodlineHoldingInfo.getId()).getEndPeriod();
-        Double actualValue = prodlineHoldingInfo.getProdlineBasicInfo().getProdlineValue() - prodlineHoldingInfo.getProdlineBasicInfo().getProdlineDepreciation() * (prodlineHoldingInfo.getEnterpriseBasicInfo().getEnterpriseCurrentPeriod() - developedPeriod);
+        Double actualValue = prodlineHoldingInfo.getProdlineBasicInfo().getProdlineBasicInfo().getProdlineValue() - prodlineHoldingInfo.getProdlineBasicInfo().getProdlineBasicInfo().getProdlineDepreciation() * (prodlineHoldingInfo.getEnterpriseBasicInfo().getEnterpriseCurrentPeriod() - developedPeriod);
         // 则生产线实际售卖价值等于actualValue与生产线残值取其大
-        Double changeAmount = Math.max(actualValue, prodlineHoldingInfo.getProdlineBasicInfo().getProdlineStumpcost());
+        Double changeAmount = Math.max(actualValue, prodlineHoldingInfo.getProdlineBasicInfo().getProdlineBasicInfo().getProdlineStumpcost());
         // 生产线出售所得金额到账
         Long enterpriseId = prodlineHoldingInfo.getEnterpriseBasicInfo().getId();
         String changeOperating = FinanceOperationConstant.PRODLINE_SELL;
@@ -281,18 +281,18 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
     }
 
     @Override
-    public List<FactoryLeaseVo> getAllFactoryLeaseVos() {
+    public List<FactoryLeaseVo> getAllFactoryLeaseVosByType(Long gameId) {
         // 获取当前设定下的全部厂房信息
-        List<FactoryBasicInfo> factoryBasicInfoList = factoryBasicInfoRepository.findNewestFactoryBasicInfos();
+        List<GameFactoryBasicInfo> factoryBasicInfoList = gameFactoryBasicInfoRepository.findByGameBasicInfo_Id(gameId);
 
         // 将生产线信息转化为List<FactoryLeaseVo>
         List<FactoryLeaseVo> factoryLeaseVoList = new ArrayList<>();
-        for (FactoryBasicInfo factoryBasicInfo : factoryBasicInfoList) {
+        for (GameFactoryBasicInfo factoryBasicInfo : factoryBasicInfoList) {
             FactoryLeaseVo factoryLeaseVo = new FactoryLeaseVo();
 
             factoryLeaseVo.setId(factoryBasicInfo.getId());
-            factoryLeaseVo.setFactoryType(factoryBasicInfo.getFactoryType());
-            factoryLeaseVo.setFactoryRentCost(factoryBasicInfo.getFactoryRentCost());
+            factoryLeaseVo.setFactoryType(factoryBasicInfo.getFactoryBasicInfo().getFactoryType());
+            factoryLeaseVo.setFactoryRentCost(factoryBasicInfo.getFactoryBasicInfo().getFactoryRentCost());
 
             factoryLeaseVoList.add(factoryLeaseVo);
         }
@@ -309,7 +309,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         FactoryHoldingInfo factoryHoldingInfo = new FactoryHoldingInfo();
 
         factoryHoldingInfo.setEnterpriseBasicInfo(enterpriseBasicInfo);
-        factoryHoldingInfo.setFactoryBasicInfo(factoryBasicInfoRepository.findOne(factoryBasicId));
+        factoryHoldingInfo.setFactoryBasicInfo(gameFactoryBasicInfoRepository.findOne(factoryBasicId));
         // 厂房的拥有状态为租来的
         factoryHoldingInfo.setFactoryHoldingStatus(FactoryHoldingStatus.LEASING);
         // 开始租赁的周期为厂房所处企业的当前周期
@@ -322,30 +322,79 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         // 持久化该条FactoryHoldingInfo
         FactoryHoldingInfo holdingInfo = factoryHoldingInfoRepository.saveAndFlush(factoryHoldingInfo);
 
-        return EntityVoUtil.copyFieldsFromEntityToVo(holdingInfo, new ArrayList<>(), new ArrayList<>());
+        return copyFieldsFromEntityToVo(holdingInfo, new ArrayList<>(), new ArrayList<>());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public FactoryDisplayVo updateFactoryLeaseStatus(Long factoryId, boolean enable) {
+    public FactoryDisplayVo leasePause(Long factoryId) {
         FactoryHoldingInfo factoryHoldingInfo = factoryHoldingInfoRepository.findOne(factoryId);
 
-        if(factoryHoldingInfo == null) {
-            return null;
-        }
-
-        // 更新并保存修改
-        factoryHoldingInfo.setEnable(enable);
+        // 更新停租日期与租赁状态
+        factoryHoldingInfo.setEndPeriod(factoryHoldingInfo.getEnterpriseBasicInfo().getEnterpriseCurrentPeriod());
+        factoryHoldingInfo.setEnable(false);
         factoryHoldingInfoRepository.save(factoryHoldingInfo);
 
-        // 然后就是对获取厂房中生产线的一顿操作
-        List<ProdlineProduceInfo> prodlineProduceInfoList = prodlineProduceInfoRepository.findByProdlineHoldingInfo_FactoryHoldingInfo_Id(factoryId);
-        List<ProdlineProduceDisplayVo> produceDisplayVoList = EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfoList, new ProdlineProduceDisplayVo());
-        List<ProdlineDevelopInfo> prodlineDevelopInfoList = prodlineDevelopInfoRepository.findByProdlineHoldingInfo_FactoryHoldingInfo_Id(factoryId);
-        List<ProdlineDevelopDisplayVo> developDisplayVoList = EntityVoUtil.copyFieldsFromEntityToVo(prodlineDevelopInfoList, new ProdlineDevelopDisplayVo());
+        // 清空厂房中全部生产线的生产状态
+        // 首先将holdingInfo更新为不可用
+        List<ProdlineHoldingInfo> prodlineHoldingInfoList = prodlineHoldingInfoRepository.findByFactoryHoldingInfo_Id(factoryId);
+        for(ProdlineHoldingInfo prodlineHoldingInfo : prodlineHoldingInfoList) {
+            prodlineHoldingInfo.setProdlineHoldingStatus(ProdlineHoldingStatus.NOT_USABLE);
+            prodlineHoldingInfoRepository.save(prodlineHoldingInfo);
+        }
 
-        // 最后返回这个租来的厂房（所以说少停租 多耗事的
-        return EntityVoUtil.copyFieldsFromEntityToVo(factoryHoldingInfo, produceDisplayVoList, developDisplayVoList);
+        // 然后修建中的直接删除，生产中的清空生产状态
+        List<ProdlineProduceInfo> prodlineProduceInfoList = prodlineProduceInfoRepository.findByProdlineHoldingInfo_FactoryHoldingInfo_Id(factoryId);
+        List<ProdlineProduceDisplayVo> produceDisplayVoList = new ArrayList<>();
+        for (ProdlineProduceInfo prodlineProduceInfo : prodlineProduceInfoList) {
+            // 开始生产的时间置为空，已经生产的周期置为0，生产状态置为不可用
+            prodlineProduceInfo.setBeginPeriod(null);
+            prodlineProduceInfo.setProducedPeriod(0);
+            prodlineProduceInfo.setProdlineProduceStatus(ProdlineProduceStatus.NOT_USABLE);
+            produceDisplayVoList.add(copyFieldsFromEntityToVo(prodlineProduceInfo, new ProdlineProduceDisplayVo()));
+        }
+        List<ProdlineDevelopInfo> prodlineDevelopInfoList = prodlineDevelopInfoRepository.findByProdlineHoldingInfo_FactoryHoldingInfo_Id(factoryId);
+        for(ProdlineDevelopInfo prodlineDevelopInfo : prodlineDevelopInfoList) {
+            // 直接删除，不要怕；没修建完成的生产线是不会计入历史数据的，所以不会对生产线总数造成影响
+            // 顺便这可能是整个系统唯一一个用到delete的地方了qvq
+            prodlineDevelopInfoRepository.delete(prodlineDevelopInfo.getId());
+        }
+
+        // 最后返回这个停租了的厂房
+        return copyFieldsFromEntityToVo(factoryHoldingInfo, produceDisplayVoList, new ArrayList<>());
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public FactoryDisplayVo leaseContinue(Long factoryId) {
+
+        FactoryHoldingInfo factoryHoldingInfo = factoryHoldingInfoRepository.findOne(factoryId);
+
+        // 更新租赁日期与租赁状态
+        factoryHoldingInfo.setBeginPeriod(factoryHoldingInfo.getEnterpriseBasicInfo().getEnterpriseCurrentPeriod());
+        factoryHoldingInfo.setEndPeriod(null);
+        factoryHoldingInfo.setEnable(true);
+        factoryHoldingInfoRepository.save(factoryHoldingInfo);
+
+        // 事实上，续租时这个厂房里只可能存在处于生产状态的生产线了；所以这里直接将holdingInfo更新为生产状态
+        List<ProdlineHoldingInfo> prodlineHoldingInfoList = prodlineHoldingInfoRepository.findByFactoryHoldingInfo_Id(factoryId);
+        for(ProdlineHoldingInfo prodlineHoldingInfo : prodlineHoldingInfoList) {
+            prodlineHoldingInfo.setProdlineHoldingStatus(ProdlineHoldingStatus.PRODUCING);
+            prodlineHoldingInfoRepository.save(prodlineHoldingInfo);
+        }
+
+        // 获取厂房中处于生产状态的生产线
+        List<ProdlineProduceInfo> prodlineProduceInfoList = prodlineProduceInfoRepository.findByProdlineHoldingInfo_FactoryHoldingInfo_Id(factoryId);
+        List<ProdlineProduceDisplayVo> produceDisplayVoList = new ArrayList<>();
+        for (ProdlineProduceInfo prodlineProduceInfo : prodlineProduceInfoList) {
+            // 生产状态置为未生产
+            prodlineProduceInfo.setProdlineProduceStatus(ProdlineProduceStatus.TOPRODUCE);
+            produceDisplayVoList.add(copyFieldsFromEntityToVo(prodlineProduceInfo, new ProdlineProduceDisplayVo()));
+        }
+
+        // 最后返回这个租来的厂房
+        return copyFieldsFromEntityToVo(factoryHoldingInfo, produceDisplayVoList, new ArrayList<>());
     }
 
 }

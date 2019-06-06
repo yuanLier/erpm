@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * @author yuanyiwen
- * @create 2019-03-09 16:36
+ * @create 2019-06-05 21:55
  * @description
  */
 public interface ProdlineBasicInfoRepository extends BasicRepository<ProdlineBasicInfo, Long>, JpaSpecificationExecutor {
@@ -21,4 +21,11 @@ public interface ProdlineBasicInfoRepository extends BasicRepository<ProdlineBas
     @Query("from ProdlineBasicInfo pb where pb.enable = true group by pb.prodlineType")
     List<ProdlineBasicInfo> findNewestProdlineBasicInfos();
 
+
+    /**
+     * 获取处于某种状态（可用or不可用）下的生产线基本信息
+     * @param enable
+     * @return
+     */
+    List<ProdlineBasicInfo> findByEnable(boolean enable);
 }

@@ -42,7 +42,7 @@ public class FactoryHistoryInfo implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "是对哪个厂房进行的操作")
-    private FactoryBasicInfo factoryBasicInfo;
+    private GameFactoryBasicInfo factoryBasicInfo;
 
     @NotNull
     @Comment(comment = "具体操作")

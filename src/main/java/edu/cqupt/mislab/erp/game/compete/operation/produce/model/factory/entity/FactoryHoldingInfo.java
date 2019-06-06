@@ -35,28 +35,12 @@ public class FactoryHoldingInfo implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "厂房的基本信息")
-    private FactoryBasicInfo factoryBasicInfo;
+    private GameFactoryBasicInfo factoryBasicInfo;
 
     @Basic(optional = false)
     @Enumerated(EnumType.STRING)
     @Comment(comment = "厂房的拥有状态，对应到下面三个属性为 ：自建的 / 租赁的")
     private FactoryHoldingStatus factoryHoldingStatus;
-
-    /**
-     * @author yuanyiwen
-     * @description todo FactoryHoldingInfo重构规划
-     *
-     *      beginPeriod 语义修改为 ：建造完成的周期数 / 开始租赁的周期数
-     *      endPeriod   语义修改为 ：确认出售的周期数 / 停止租赁的周期数（默认均为null）
-     *
-     *      用户选择停止租赁，过段时间又继续租赁了的话，就会重置开始租赁的周期数
-     *
-     *      在每个时间推进时查询该周期的变动情况 还是要新建一张表的
-     *          通过 findbybeginPeriod=currentPeriod 查询增加的（修建完成/开始租）
-     *          通过 findbyendPeriod=currentPeriod 查询减少的厂房（出售/停租）
-     *
-     * @date 17:14 2019/5/6
-     **/
 
     @Basic
     @Comment(comment = "建造完成的周期数 / 开始租赁的周期数")

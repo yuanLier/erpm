@@ -13,6 +13,9 @@ public enum  ProdlineProduceStatus {
     PRODUCEPAUSE("生产暂停"),
     PRODUCED("生产完成"),
 
+    // 当且仅当holdingInfoStatus为NOT_USABLE的时候，生产状态转为不可用
+    NOT_USABLE("不可用"),
+
     // 转产完成后转入待生产状态
     TRANSFERRING("转产中");
 

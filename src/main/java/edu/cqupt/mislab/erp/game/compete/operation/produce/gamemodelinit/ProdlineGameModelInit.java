@@ -3,6 +3,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.produce.gamemodelinit;
 import edu.cqupt.mislab.erp.game.compete.basic.GameModelInit;
 import edu.cqupt.mislab.erp.game.compete.basic.impl.GameModelInitService;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryHoldingInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.GameProdlineBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineHoldingInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineProduceInfoRepository;
@@ -12,7 +13,9 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInf
 import edu.cqupt.mislab.erp.game.compete.operation.product.gamemodelinit.ProductGameModelInit;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
+import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,7 +39,12 @@ public class ProdlineGameModelInit implements GameModelInit {
     @Autowired
     private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
     @Autowired
+    private GameBasicInfoRepository gameBasicInfoRepository;
+
+    @Autowired
     private ProdlineBasicInfoRepository prodlineBasicInfoRepository;
+    @Autowired
+    private GameProdlineBasicInfoRepository gameProdlineBasicInfoRepository;
     @Autowired
     private ProdlineHoldingInfoRepository prodlineHoldingInfoRepository;
     @Autowired
@@ -68,9 +76,23 @@ public class ProdlineGameModelInit implements GameModelInit {
             try{
                 log.info("开始初始化产品模块的比赛数据");
 
+                // 在比赛开始时初始化本场比赛中使用的生产线基本信息
+                GameBasicInfo gameBasicInfo = gameBasicInfoRepository.findOne(gameId);
+
+                // 获取当前设定下的生产线基本信息
+                List<ProdlineBasicInfo> prodlineBasicInfoList = prodlineBasicInfoRepository.findNewestProdlineBasicInfos();
+                for(ProdlineBasicInfo prodlineBasicInfo : prodlineBasicInfoList) {
+                    gameProdlineBasicInfoRepository.save(
+                            GameProdlineBasicInfo.builder()
+                                    .gameBasicInfo(gameBasicInfo)
+                                    .prodlineBasicInfo(prodlineBasicInfo)
+                                    .build()
+                    );
+                }
+
                 // 随机选取一条生产线基本数据信息
-                List<ProdlineBasicInfo> prodlineBasicInfos = prodlineBasicInfoRepository.findNewestProdlineBasicInfos();
-                final ProdlineBasicInfo prodlineBasicInfo = prodlineBasicInfos.get(new Random().nextInt(prodlineBasicInfos.size()));
+                List<GameProdlineBasicInfo> prodlineBasicInfos = gameProdlineBasicInfoRepository.findByGameBasicInfo_Id(gameId);
+                final GameProdlineBasicInfo prodlineBasicInfo = prodlineBasicInfos.get(new Random().nextInt(prodlineBasicInfos.size()));
 
                 // 选取全部的企业
                 final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId);

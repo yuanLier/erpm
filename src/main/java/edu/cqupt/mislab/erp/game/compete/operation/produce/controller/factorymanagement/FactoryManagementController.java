@@ -2,10 +2,11 @@ package edu.cqupt.mislab.erp.game.compete.operation.produce.controller.factoryma
 
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryBasicInfoRepository;
+import edu.cqupt.mislab.erp.commons.validators.annotations.GameStatusValid;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryHoldingInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.GameFactoryBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.GameProdlineBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineProduceInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.*;
@@ -15,6 +16,8 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.Pro
 import edu.cqupt.mislab.erp.game.compete.operation.produce.service.factorymanagement.FactoryManagementService;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatusEnum;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +47,11 @@ public class FactoryManagementController {
 
     @ApiOperation(value = "获取全部可新建的类型生产线")
     @GetMapping("/prodline/type")
-    public WebResponseVo<List<ProdlineDevelopVo>> getAllProdlineTypeVos() {
+    public WebResponseVo<List<ProdlineDevelopVo>> getAllProdlineTypeVos(@Exist(repository = GameBasicInfoRepository.class)
+                                                                            @GameStatusValid(requireStatus = GameStatusEnum.PLAYING)
+                                                                            @RequestParam Long gameId) {
 
-//        todo 如果管理端改了 这个值不是就会发生变化
-        List<ProdlineDevelopVo> prodlineDevelopVoList = factoryManagementService.getAllProdlineDevelopVos();
+        List<ProdlineDevelopVo> prodlineDevelopVoList = factoryManagementService.getAllProdlineDevelopVosByType(gameId);
 
         if(prodlineDevelopVoList.size() == 0) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "最新版本下的生产线类型获取失败，请联系管理员");
@@ -60,7 +64,7 @@ public class FactoryManagementController {
 
     @ApiOperation(value = "新建生产线")
     @PostMapping("/prodline/develop")
-    public WebResponseVo<ProdlineDevelopDisplayVo> buildProdlineOfHoldingFactory(@Exist(repository = ProdlineBasicInfoRepository.class)
+    public WebResponseVo<ProdlineDevelopDisplayVo> buildProdlineOfHoldingFactory(@Exist(repository = GameProdlineBasicInfoRepository.class)
                                                                                              @RequestParam Long prodlineBasicId,
                                                                                  @Exist(repository = ProductDevelopInfoRepository.class)
                                                                                              @RequestParam Long productId,
@@ -117,10 +121,11 @@ public class FactoryManagementController {
 
     @ApiOperation(value = "获取全部可新建类型厂房")
     @GetMapping("/factory/type")
-    public WebResponseVo<List<FactoryDevelopVo>> getAllFactoryTypeVos() {
+    public WebResponseVo<List<FactoryDevelopVo>> getAllFactoryTypeVos(@Exist(repository = GameBasicInfoRepository.class)
+                                                                          @GameStatusValid(requireStatus = GameStatusEnum.PLAYING)
+                                                                          @RequestParam Long gameId) {
 
-//        todo 同上
-        List<FactoryDevelopVo> factoryDevelopVoList = factoryManagementService.getAllFactoryDevelopVos();
+        List<FactoryDevelopVo> factoryDevelopVoList = factoryManagementService.getAllFactoryDevelopVosByType(gameId);
 
         if(factoryDevelopVoList.size() == 0) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "最新版本下的厂房类型获取失败，请联系管理员");
@@ -135,7 +140,7 @@ public class FactoryManagementController {
     @PostMapping("/factory/develop")
     public WebResponseVo<FactoryDevelopDisplayVo> buildFactoryOfEnterprise(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                                @RequestParam Long enterpriseId,
-                                                                           @Exist(repository = FactoryBasicInfoRepository.class)
+                                                                           @Exist(repository = GameFactoryBasicInfoRepository.class)
                                                                                 @RequestParam Long factoryBasicId) {
 
         FactoryDevelopDisplayVo factoryDevelopDisplayVo = factoryManagementService.buildFactoryOfEnterprise(enterpriseId, factoryBasicId);
@@ -215,10 +220,11 @@ public class FactoryManagementController {
 
     @ApiOperation(value = "获取全部能租赁的厂房类型")
     @GetMapping("factory/lease/type")
-    public WebResponseVo<List<FactoryLeaseVo>> getAllFactoryLeaseVos() {
+    public WebResponseVo<List<FactoryLeaseVo>> getAllFactoryLeaseVos(@Exist(repository = GameBasicInfoRepository.class)
+                                                                         @GameStatusValid(requireStatus = GameStatusEnum.PLAYING)
+                                                                         @RequestParam Long gameId) {
 
-//        todo 同
-        List<FactoryLeaseVo> factoryLeaseVoList = factoryManagementService.getAllFactoryLeaseVos();
+        List<FactoryLeaseVo> factoryLeaseVoList = factoryManagementService.getAllFactoryLeaseVosByType(gameId);
 
         if(factoryLeaseVoList.size() == 0) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "最新版本下的厂房类型获取失败，请联系管理员");
@@ -231,7 +237,7 @@ public class FactoryManagementController {
 
     @ApiOperation(value = "租厂房")
     @PostMapping("factory/lease")
-    public WebResponseVo<FactoryDisplayVo> factoryLease(@Exist(repository = FactoryBasicInfoRepository.class)
+    public WebResponseVo<FactoryDisplayVo> factoryLease(@Exist(repository = GameFactoryBasicInfoRepository.class)
                                                                     @RequestParam Long factoryBasicId,
                                                         @Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                     @RequestParam Long enterpriseId) {
@@ -248,7 +254,7 @@ public class FactoryManagementController {
     public WebResponseVo<FactoryDisplayVo> updateFactoryLeaseStatusToPause(@Exist(repository = FactoryHoldingInfoRepository.class)
                                                                                 @RequestParam Long factoryId) {
 
-        FactoryDisplayVo factoryDisplayVo = factoryManagementService.updateFactoryLeaseStatus(factoryId, false);
+        FactoryDisplayVo factoryDisplayVo = factoryManagementService.leasePause(factoryId);
 
         return toSuccessResponseVoWithData(factoryDisplayVo);
     }
@@ -259,7 +265,7 @@ public class FactoryManagementController {
     public WebResponseVo<FactoryDisplayVo> updateFactoryLeaseStatusToLeasing(@Exist(repository = FactoryHoldingInfoRepository.class)
                                                                         @RequestParam Long factoryId) {
 
-        FactoryDisplayVo factoryDisplayVo = factoryManagementService.updateFactoryLeaseStatus(factoryId, true);
+        FactoryDisplayVo factoryDisplayVo = factoryManagementService.leaseContinue(factoryId);
 
         return toSuccessResponseVoWithData(factoryDisplayVo);
     }

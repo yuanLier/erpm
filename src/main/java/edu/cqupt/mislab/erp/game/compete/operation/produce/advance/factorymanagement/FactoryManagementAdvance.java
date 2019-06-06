@@ -133,7 +133,7 @@ public class FactoryManagementAdvance implements ModelAdvance {
             // 扣除修建完成后需要支付的维护费用
             Long enterpriseId = enterpriseBasicInfo.getId();
             String changeOperating = FinanceOperationConstant.FACTORY_MAINTAIN;
-            Double changeAmount = factoryHoldingInfo.getFactoryBasicInfo().getFactoryMaintainCost();
+            Double changeAmount = factoryHoldingInfo.getFactoryBasicInfo().getFactoryBasicInfo().getFactoryMaintainCost();
             financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
 
         }
@@ -151,7 +151,7 @@ public class FactoryManagementAdvance implements ModelAdvance {
             // 扣除租赁过程中需要支付的费用
             Long enterpriseId = enterpriseBasicInfo.getId();
             String changeOperating = FinanceOperationConstant.FACTORY_LEASING;
-            Double changeAmount = factoryHoldingInfo.getFactoryBasicInfo().getFactoryRentCost();
+            Double changeAmount = factoryHoldingInfo.getFactoryBasicInfo().getFactoryBasicInfo().getFactoryRentCost();
             financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
 
         }
@@ -167,12 +167,12 @@ public class FactoryManagementAdvance implements ModelAdvance {
         for (FactoryHoldingInfo factoryHoldingInfo : factoryHoldingInfoList) {
 
             // 若当前周期 - 确认出售的周期 = 延期到账所需要的周期
-            if(enterpriseBasicInfo.getEnterpriseCurrentPeriod() - factoryHoldingInfo.getEndPeriod() == factoryHoldingInfo.getFactoryBasicInfo().getFactoryDelayTime()) {
+            if(enterpriseBasicInfo.getEnterpriseCurrentPeriod() - factoryHoldingInfo.getEndPeriod() == factoryHoldingInfo.getFactoryBasicInfo().getFactoryBasicInfo().getFactoryDelayTime()) {
 
                 // 计算不考虑残值的情况下，确认出售时厂房的剩余价值（该值 = 最初厂房价值 - 每期折旧价值*(确认售卖周期-建造完成周期)）
-                Double actualValue = factoryHoldingInfo.getFactoryBasicInfo().getFactoryValue() - factoryHoldingInfo.getFactoryBasicInfo().getFactoryDepreciation()*(factoryHoldingInfo.getEndPeriod()-factoryHoldingInfo.getBeginPeriod());
+                Double actualValue = factoryHoldingInfo.getFactoryBasicInfo().getFactoryBasicInfo().getFactoryValue() - factoryHoldingInfo.getFactoryBasicInfo().getFactoryBasicInfo().getFactoryDepreciation()*(factoryHoldingInfo.getEndPeriod()-factoryHoldingInfo.getBeginPeriod());
                 // 则厂房实际售卖价值等于actualValue与厂房残值取其大
-                Double changeAmount = Math.max(actualValue, factoryHoldingInfo.getFactoryBasicInfo().getFactoryStumpCost());
+                Double changeAmount = Math.max(actualValue, factoryHoldingInfo.getFactoryBasicInfo().getFactoryBasicInfo().getFactoryStumpCost());
 
                 // 厂房出售所得金额到账
                 Long enterpriseId = enterpriseBasicInfo.getId();
@@ -195,7 +195,7 @@ public class FactoryManagementAdvance implements ModelAdvance {
             factoryDevelopInfo.setDevelopedPeriod(factoryDevelopInfo.getDevelopedPeriod()+1);
 
             // 如果已经修建的周期数达到了该厂房修建所需的周期数
-            if(factoryDevelopInfo.getDevelopedPeriod() == factoryDevelopInfo.getFactoryBasicInfo().getFactoryMakePeriod()) {
+            if(factoryDevelopInfo.getDevelopedPeriod() == factoryDevelopInfo.getFactoryBasicInfo().getFactoryBasicInfo().getFactoryMakePeriod()) {
 
                 // 设置为修建完成
                 factoryDevelopInfo.setEndPeriod(enterpriseBasicInfo.getEnterpriseCurrentPeriod());
@@ -218,7 +218,7 @@ public class FactoryManagementAdvance implements ModelAdvance {
             // 扣除修建过程中需要支付的费用
             Long enterpriseId = enterpriseBasicInfo.getId();
             String changeOperating = FinanceOperationConstant.FACTORY_DEVELOP;
-            Double changeAmount = factoryDevelopInfo.getFactoryBasicInfo().getFactoryMakeCost();
+            Double changeAmount = factoryDevelopInfo.getFactoryBasicInfo().getFactoryBasicInfo().getFactoryMakeCost();
             financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
         }
     }
@@ -236,7 +236,7 @@ public class FactoryManagementAdvance implements ModelAdvance {
             // 扣除安装完成后需要支付的维护费用
             Long enterpriseId = enterpriseBasicInfo.getId();
             String changeOperating = FinanceOperationConstant.PRODLINE_MAINTAIN;
-            Double changeAmount = prodlineHoldingInfo.getProdlineBasicInfo().getProdlineMainCost();
+            Double changeAmount = prodlineHoldingInfo.getProdlineBasicInfo().getProdlineBasicInfo().getProdlineMainCost();
             financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
 
         }
@@ -256,7 +256,7 @@ public class FactoryManagementAdvance implements ModelAdvance {
             prodlineDevelopInfo.setDevelopedPeriod(prodlineDevelopInfo.getDevelopedPeriod()+1);
 
             // 如果已经安装的周期数达到了该生产线安装所需的周期数
-            if(prodlineDevelopInfo.getDevelopedPeriod() == prodlineDevelopInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineSetupPeriod()) {
+            if(prodlineDevelopInfo.getDevelopedPeriod() == prodlineDevelopInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineBasicInfo().getProdlineSetupPeriod()) {
 
                 // 设置为安装完成
                 prodlineDevelopInfo.setProdlineDevelopStatus(ProdlineDevelopStatus.DEVELOPED);
@@ -269,7 +269,7 @@ public class FactoryManagementAdvance implements ModelAdvance {
                 prodlineHoldingInfoRepository.save(prodlineHoldingInfo);
 
                 // 计算产品实际需要的生产时间（值为产品的生产时间*生产线的加速时间取整）
-                Integer productDuration = (int)(prodlineDevelopInfo.getProductDevelopInfo().getProductBasicInfo().getProduceProductPeriod() * prodlineDevelopInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getExtraPeriod());
+                Integer productDuration = (int)(prodlineDevelopInfo.getProductDevelopInfo().getProductBasicInfo().getProduceProductPeriod() * prodlineDevelopInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineBasicInfo().getExtraPeriod());
                 // 添加一条信息到produceInfo
                 prodlineProduceInfoRepository.save(ProdlineProduceInfo.builder()
                         .prodlineHoldingInfo(prodlineHoldingInfo)
@@ -289,7 +289,7 @@ public class FactoryManagementAdvance implements ModelAdvance {
             // 扣除安装过程中需要支付的费用
             Long enterpriseId = enterpriseBasicInfo.getId();
             String changeOperating = FinanceOperationConstant.PRODLINE_DEVELOP;
-            Double changeAmount = prodlineDevelopInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineSetupPeriodPrice();
+            Double changeAmount = prodlineDevelopInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineBasicInfo().getProdlineSetupPeriodPrice();
             financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
         }
     }

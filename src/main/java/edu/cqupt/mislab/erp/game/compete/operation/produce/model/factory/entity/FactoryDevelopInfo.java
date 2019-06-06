@@ -35,7 +35,7 @@ public class FactoryDevelopInfo implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "厂房的基本信息")
-    private FactoryBasicInfo factoryBasicInfo;
+    private GameFactoryBasicInfo factoryBasicInfo;
 
     @Basic
     @Comment(comment = "开始建造的周期数，可以为空")

@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * @author yuanyiwen
- * @create 2019-03-22 15:25
+ * @create 2019-06-05 22:09
  * @description
  */
 public interface FactoryBasicInfoRepository extends BasicRepository<FactoryBasicInfo, Long>, JpaSpecificationExecutor {
@@ -20,4 +20,12 @@ public interface FactoryBasicInfoRepository extends BasicRepository<FactoryBasic
      */
     @Query("from FactoryBasicInfo f where f.enable = true group by f.factoryType")
     List<FactoryBasicInfo> findNewestFactoryBasicInfos();
+
+
+    /**
+     * 获取处于某种状态（可用or不可用）下的厂房基本信息
+     * @param enable
+     * @return
+     */
+    List<FactoryBasicInfo> findByEnable(boolean enable);
 }
