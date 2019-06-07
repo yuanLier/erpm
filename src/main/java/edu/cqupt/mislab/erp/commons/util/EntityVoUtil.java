@@ -11,10 +11,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryHoldingInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryHoldingStatus;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryDetailVo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryDevelopDetailVo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryDevelopDisplayVo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.GameProdlineBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineProduceInfo;
@@ -285,6 +282,39 @@ public abstract class EntityVoUtil {
     }
 
 
+    public static ProdlineDevelopVo copyFieldsFromEntityToVo(GameProdlineBasicInfo prodlineBasicInfo) {
+
+        ProdlineDevelopVo prodlineDevelopVo = new ProdlineDevelopVo();
+
+        prodlineDevelopVo.setId(prodlineBasicInfo.getId());
+        prodlineDevelopVo.setProdlineDepreciation(prodlineBasicInfo.getProdlineBasicInfo().getProdlineDepreciation());
+        prodlineDevelopVo.setExtraPeriod(prodlineBasicInfo.getProdlineBasicInfo().getExtraPeriod());
+        prodlineDevelopVo.setExtraValue(prodlineBasicInfo.getProdlineBasicInfo().getExtraValue());
+        prodlineDevelopVo.setProdlineMainCost(prodlineBasicInfo.getProdlineBasicInfo().getProdlineMainCost());
+        prodlineDevelopVo.setProdlineSetupPeriod(prodlineBasicInfo.getProdlineBasicInfo().getProdlineSetupPeriod());
+        prodlineDevelopVo.setProdlineSetupPeriodPrice(prodlineBasicInfo.getProdlineBasicInfo().getProdlineSetupPeriodPrice());
+        prodlineDevelopVo.setProdlineStumpcost(prodlineBasicInfo.getProdlineBasicInfo().getProdlineStumpcost());
+        prodlineDevelopVo.setProdlineType(prodlineBasicInfo.getProdlineBasicInfo().getProdlineType());
+
+        return prodlineDevelopVo;
+    }
+
+
+    public static FactoryDevelopVo copyFieldsFromEntityToVo(GameFactoryBasicInfo factoryBasicInfo) {
+
+        FactoryDevelopVo factoryDevelopVo = new FactoryDevelopVo();
+
+        factoryDevelopVo.setId(factoryBasicInfo.getId());
+        factoryDevelopVo.setFactoryCapacity(factoryBasicInfo.getFactoryBasicInfo().getFactoryCapacity());
+        factoryDevelopVo.setFactoryDepreciation(factoryBasicInfo.getFactoryBasicInfo().getFactoryDepreciation());
+        factoryDevelopVo.setFactoryMaintainCost(factoryBasicInfo.getFactoryBasicInfo().getFactoryMaintainCost());
+        factoryDevelopVo.setFactoryMakeCost(factoryBasicInfo.getFactoryBasicInfo().getFactoryMakeCost());
+        factoryDevelopVo.setFactoryMakePeriod(factoryBasicInfo.getFactoryBasicInfo().getFactoryMakePeriod());
+        factoryDevelopVo.setFactoryType(factoryBasicInfo.getFactoryBasicInfo().getFactoryType());
+
+        return factoryDevelopVo;
+    }
+
     public static FactoryDisplayVo copyFieldsFromEntityToVo(FactoryHoldingInfo factoryHoldingInfo, List<ProdlineProduceDisplayVo> prodlineProduceDisplayVoList, List<ProdlineDevelopDisplayVo> prodlineDevelopDisplayVoList) {
 
         FactoryDisplayVo factoryDisplayVo = new FactoryDisplayVo();
@@ -407,7 +437,6 @@ public abstract class EntityVoUtil {
         return prodlineTypeVoList;
     }
 
-//  todo 删掉？
     public static List<ProdlineProduceDisplayVo> copyFieldsFromEntityToVo(List<ProdlineProduceInfo> prodlineProduceInfoList, ProdlineProduceDisplayVo flag) {
 
         List<ProdlineProduceDisplayVo> prodlineProduceDisplayVoList = new ArrayList<>();
@@ -416,6 +445,8 @@ public abstract class EntityVoUtil {
         }
         return prodlineProduceDisplayVoList;
     }
+
+
     public static List<ProdlineDevelopDisplayVo> copyFieldsFromEntityToVo(List<ProdlineDevelopInfo> prodlineDevelopInfoList, ProdlineDevelopDisplayVo flag) {
 
         List<ProdlineDevelopDisplayVo> prodlineDevelopDisplayVoList = new ArrayList<>();

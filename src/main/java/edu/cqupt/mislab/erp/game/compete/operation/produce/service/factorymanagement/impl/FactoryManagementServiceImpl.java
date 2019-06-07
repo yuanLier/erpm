@@ -2,7 +2,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.produce.service.factorymanag
 
 import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
-import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
+import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryHoldingInfoRepository;
@@ -74,15 +74,10 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         // 获取当前设定下的全部生产线信息
         List<GameProdlineBasicInfo> prodlineBasicInfoList = gameProdlineBasicInfoRepository.findByGameBasicInfo_Id(gameId);
 
-        // 将生产线信息转化为List<ProdlineTypeVo>
+        // 将生产线信息转化为List<ProdlineDevelopVo>
         List<ProdlineDevelopVo> prodlineDevelopVoList = new ArrayList<>();
         for (GameProdlineBasicInfo prodlineBasicInfo : prodlineBasicInfoList) {
-
-            ProdlineDevelopVo prodlineDevelopVo = new ProdlineDevelopVo();
-
-            BeanCopyUtil.copyPropertiesSimple(prodlineBasicInfo, prodlineDevelopVo);
-
-            prodlineDevelopVoList.add(prodlineDevelopVo);
+            prodlineDevelopVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(prodlineBasicInfo));
         }
 
         return prodlineDevelopVoList;
@@ -152,11 +147,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         // 将生产线信息转化为List<FactoryDevelopVo>
         List<FactoryDevelopVo> factoryDevelopVoList = new ArrayList<>();
         for (GameFactoryBasicInfo factoryBasicInfo : factoryBasicInfoList) {
-
-            FactoryDevelopVo factoryDevelopVo = new FactoryDevelopVo();
-            BeanCopyUtil.copyPropertiesSimple(factoryBasicInfo, factoryDevelopVo);
-
-            factoryDevelopVoList.add(factoryDevelopVo);
+            factoryDevelopVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(factoryBasicInfo));
         }
 
         return factoryDevelopVoList;
@@ -358,6 +349,8 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
             // 直接删除，不要怕；没修建完成的生产线是不会计入历史数据的，所以不会对生产线总数造成影响
             // 顺便这可能是整个系统唯一一个用到delete的地方了qvq
             prodlineDevelopInfoRepository.delete(prodlineDevelopInfo.getId());
+            // 记得要把对应的holdingInfo也一起删了
+            prodlineHoldingInfoRepository.delete(prodlineDevelopInfo.getProdlineHoldingInfo().getId());
         }
 
         // 最后返回这个停租了的厂房

@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author yuanyiwen

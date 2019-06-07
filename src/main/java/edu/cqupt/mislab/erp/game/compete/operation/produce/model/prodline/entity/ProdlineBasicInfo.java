@@ -58,13 +58,13 @@ public class ProdlineBasicInfo implements Serializable {
 
     @DoubleMin(0.01)
     @Column(nullable = false, updatable = false)
-    @Comment(comment = "生产线建造后，每期折旧的价值。完工当期不折旧")
-    private double prodlineDepreciation;
+    @Comment(comment = "生产线的残值。即折旧到一定阶段后，无论怎么再折旧，都不再减少的价值")
+    private double prodlineStumpcost;
 
     @DoubleMin(0.01)
     @Column(nullable = false, updatable = false)
-    @Comment(comment = "生产线的残值。即折旧到一定阶段后，无论怎么再折旧，都不再减少的价值")
-    private double prodlineStumpcost;
+    @Comment(comment = "生产线建造后，每期折旧的价值。完工当期不折旧")
+    private double prodlineDepreciation;
 
     @DoubleMin(0.01)
     @Column(nullable = false, updatable = false)
