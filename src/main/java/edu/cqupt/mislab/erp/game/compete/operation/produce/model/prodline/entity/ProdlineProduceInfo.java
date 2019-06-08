@@ -40,7 +40,7 @@ public class ProdlineProduceInfo implements Serializable {
     private int produceDuration;
 
     @Basic
-    @Comment(comment = "开始生产的周期数，允许为空")
+    @Comment(comment = "开始生产的周期数 / 确认转产的周期数数，允许为空")
     private Integer beginPeriod;
 
     @Basic

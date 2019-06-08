@@ -33,6 +33,10 @@ public interface FinanceOperationConstant {
     String PRODLINE_SELL = "生产线售卖可得到的金额";
 
 
+    String PRODUCT_PRODUCE = "产品生产过程中需要支付的金额";
+    String PRODLINE_TRANSACTION = "生产线转产过程中需要支持的金额";
+
+
 
 
 }

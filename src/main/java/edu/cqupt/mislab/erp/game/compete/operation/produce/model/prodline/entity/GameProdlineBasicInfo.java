@@ -34,6 +34,6 @@ public class GameProdlineBasicInfo implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(nullable = false,updatable = false)
-    @Comment(comment = "厂房的基本信息")
+    @Comment(comment = "生产线的基本信息")
     private ProdlineBasicInfo prodlineBasicInfo;
 }

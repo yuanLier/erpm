@@ -1,4 +1,4 @@
-package edu.cqupt.mislab.erp.game.compete.operation.produce.advance.factorymanagement;
+package edu.cqupt.mislab.erp.game.compete.operation.produce.advance;
 
 import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
 import edu.cqupt.mislab.erp.commons.constant.ProduceOperationConstant;
@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * @author yuanyiwen
  * @create 2019-06-01 14:29
- * @description
+ * @description 厂房管理周期推进
  */
 @Slf4j
 @Component

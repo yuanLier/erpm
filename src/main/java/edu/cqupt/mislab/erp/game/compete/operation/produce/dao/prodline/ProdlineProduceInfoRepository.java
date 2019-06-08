@@ -63,4 +63,13 @@ public interface ProdlineProduceInfoRepository extends JpaSpecificationExecutor,
     List<ProdlineProduceInfo> findByProdlineHoldingInfo_EnterpriseBasicInfo_IdAndProductDevelopInfo_IdAndProdlineProduceStatusIsNot
             (Long enterpriseId, Long productId, ProdlineProduceStatus prodlineProduceStatus);
 
+
+    /**
+     * 获取某个企业中处于某种生产状态的全部生产线
+     * @param enterpriseId
+     * @param status
+     * @return
+     */
+    List<ProdlineProduceInfo> findByProdlineHoldingInfo_EnterpriseBasicInfo_IdAndAndProdlineProduceStatus
+            (Long enterpriseId, ProdlineProduceStatus status);
 }

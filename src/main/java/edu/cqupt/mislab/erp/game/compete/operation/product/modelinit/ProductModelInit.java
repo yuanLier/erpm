@@ -96,6 +96,7 @@ public class ProductModelInit implements ModelInit {
                     .productResearchPeriod((int)Math.ceil(Math.random() * 5) + 1)
                     .productResearchCost(MIN_DOUBLE + Math.ceil(Math.random() * 4) + 1)
                     .produceProductPeriod((int)Math.ceil(Math.random() * 5) + 1)
+                    .produceProductAmount(1000)
                     .produceProductCost(MIN_DOUBLE + Math.ceil(Math.random() * 4) + 1)
                     .productSellingPrice(MIN_DOUBLE + Math.ceil(Math.random() * 4) + 2)
                     .mount((int)Math.ceil(Math.random() * 50) + 40)
@@ -133,7 +134,7 @@ public class ProductModelInit implements ModelInit {
                         .builder()
                         .productBasicInfo(productBasicInfo)
                         .materialBasicInfo(materialBasicInfos.get(i))
-                        .number((int) Math.ceil(Math.random() * 3))//随机生成材料个数数据
+                        .number((int) Math.ceil(Math.random() * 3))
                         .enable(true)
                         .build();
 

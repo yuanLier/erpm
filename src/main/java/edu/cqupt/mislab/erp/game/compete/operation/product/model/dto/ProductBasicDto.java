@@ -37,8 +37,13 @@ public class ProductBasicDto {
 
     @Min(1)
     @NotNull
-    @ApiModelProperty(value = "生产该产品所需的基本周期数",required = true)
+    @ApiModelProperty(value = "生产x件该产品所需的基本周期数",required = true)
     private Integer produceProductPeriod;
+
+    @Min(1)
+    @NotNull
+    @ApiModelProperty(value = "这就是那个x",required = true)
+    private int produceProductAmount;
 
     @DoubleMin(0.01)
     @NotNull

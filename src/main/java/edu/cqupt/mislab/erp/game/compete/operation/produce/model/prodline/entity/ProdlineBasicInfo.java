@@ -5,6 +5,7 @@ import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
 
@@ -72,13 +73,15 @@ public class ProdlineBasicInfo implements Serializable {
     private double prodlineValue;
 
     @DoubleMin(0.01)
+    @Max(1)
     @Column(nullable = false, updatable = false)
-    @Comment(comment = "该生产线对产品每期生产价格的影响情况")
+    @Comment(comment = "该生产线对产品每期生产价格的影响情况，取值在0-1之间")
     private double extraValue;
 
     @DoubleMin(0.01)
+    @Max(1)
     @Column(nullable = false, updatable = false)
-    @Comment(comment = "该生产线对产品生产周期的影响情况")
+    @Comment(comment = "该生产线对产品生产周期的影响情况，取值在0-1之间")
     private double extraPeriod;
 
     @Basic(optional = false)

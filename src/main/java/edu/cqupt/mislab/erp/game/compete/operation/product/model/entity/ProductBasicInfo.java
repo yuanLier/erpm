@@ -45,19 +45,20 @@ public class ProductBasicInfo implements Serializable {
     private double productResearchCost;
 
     @Min(1)
-    @NotNull
-    @Comment(comment = "生产该产品所需的基本周期数")
-    private Integer produceProductPeriod;
+    @Comment(comment = "生产x件该产品所需的基本周期数")
+    private int produceProductPeriod;
+
+    @Min(1)
+    @Comment(comment = "这就是那个x")
+    private int produceProductAmount;
 
     @DoubleMin(0.01)
-    @NotNull
     @Comment(comment = "在产品生产过程中，每个周期需要支付的费用")
-    private Double produceProductCost;
+    private double produceProductCost;
 
     @DoubleMin(0.01)
-    @NotNull
     @Comment(comment = "产品的基本售价")
-    private Double productSellingPrice;
+    private double productSellingPrice;
 
     @Range(min = 0, max = 100)
     @Column(updatable = false)

@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 import javax.persistence.Column;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 /**
@@ -62,12 +63,14 @@ public class ProdlineBasicDto {
     private double prodlineValue;
 
     @DoubleMin(0.01)
+    @Max(1)
     @Column(nullable = false, updatable = false)
-    @Comment(comment = "该生产线对产品每期生产价格的影响情况")
+    @Comment(comment = "该生产线对产品每期生产价格的影响情况，取值在0-1之间")
     private double extraValue;
 
     @DoubleMin(0.01)
+    @Max(1)
     @Column(nullable = false, updatable = false)
-    @Comment(comment = "该生产线对产品生产周期的影响情况")
+    @Comment(comment = "该生产线对产品生产周期的影响情况，取值在0-1之间")
     private double extraPeriod;
 }

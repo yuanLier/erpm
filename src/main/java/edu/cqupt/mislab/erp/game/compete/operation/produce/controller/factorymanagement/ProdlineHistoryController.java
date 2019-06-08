@@ -1,4 +1,4 @@
-package edu.cqupt.mislab.erp.game.compete.operation.produce.advance.factorymanagement;
+package edu.cqupt.mislab.erp.game.compete.operation.produce.controller.factorymanagement;
 
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
