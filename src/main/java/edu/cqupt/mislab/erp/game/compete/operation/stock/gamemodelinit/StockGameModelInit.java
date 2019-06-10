@@ -103,7 +103,6 @@ public class StockGameModelInit implements GameModelInit {
                                 .enterpriseBasicInfo(enterpriseBasicInfo)
                                 .productBasicInfo(productBasicInfo)
                                 .productNumber(0)
-                                .period(1)
                                 .build()
                 );
             }

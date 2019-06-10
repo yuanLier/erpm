@@ -82,4 +82,21 @@ public interface ProductionPlanService {
      */
     ProductProduceVo updateProduceStatus(Long prodlineId, ProdlineProduceStatus prodlineProduceStatus);
 
+
+    /**
+     * 生产线转产
+     * @param prodlineId
+     * @param productDevelopId
+     * @return
+     */
+    ProductProduceVo prodlineTransfer(Long prodlineId, Long productDevelopId);
+
+
+    /**
+     * 收取产品
+     * @param prodlineId
+     * @return
+     */
+    ProductProduceVo receiveProducts(Long prodlineId);
+
 }

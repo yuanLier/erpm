@@ -213,7 +213,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public WebResponseVo<String> factorySell(Long factoryId) {
+    public WebResponseVo factorySell(Long factoryId) {
         // 能出售的肯定是已经建好的厂房，所以首先获取这个厂房的信息
         FactoryHoldingInfo factoryHoldingInfo = factoryHoldingInfoRepository.findOne(factoryId);
 
@@ -240,7 +240,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public WebResponseVo<String> prodlineSell(Long prodlineProductId) {
+    public WebResponseVo prodlineSell(Long prodlineProductId) {
         // 首先获取要出售的生产线
         ProdlineProduceInfo prodlineProduceInfo = prodlineProduceInfoRepository.findOne(prodlineProductId);
 
@@ -377,7 +377,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
             prodlineHoldingInfoRepository.save(prodlineHoldingInfo);
         }
 
-        // 获取厂房中处于生产状态的生产线
+        // 获取厂房中的生产线
         List<ProdlineProduceInfo> prodlineProduceInfoList = prodlineProduceInfoRepository.findByProdlineHoldingInfo_FactoryHoldingInfo_Id(factoryId);
         List<ProdlineProduceDisplayVo> produceDisplayVoList = new ArrayList<>();
         for (ProdlineProduceInfo prodlineProduceInfo : prodlineProduceInfoList) {

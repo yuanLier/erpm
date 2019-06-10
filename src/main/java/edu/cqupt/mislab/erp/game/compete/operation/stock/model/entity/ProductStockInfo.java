@@ -1,6 +1,5 @@
 package edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity;
 
-import com.google.common.base.Objects;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
@@ -43,23 +42,21 @@ public class ProductStockInfo {
     @Comment(comment = "产品的库存数")
     private int productNumber;
 
-    @Min(1)
-    @Basic(optional = false)
-    @Comment(comment = "哪一个周期的数据")
-    private int period;
 
     @Override
-    public boolean equals(Object o){
-        if(this == o)
-            return true;
-        if(o == null||getClass() != o.getClass())
-            return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         ProductStockInfo that = (ProductStockInfo) o;
-        return productNumber == that.productNumber&&period == that.period&&Objects.equal(id,that.id)&&Objects.equal(enterpriseBasicInfo,that.enterpriseBasicInfo)&&Objects.equal(productBasicInfo,that.productBasicInfo);
+        return productNumber == that.productNumber &&
+                java.util.Objects.equals(id, that.id) &&
+                java.util.Objects.equals(enterpriseBasicInfo, that.enterpriseBasicInfo) &&
+                java.util.Objects.equals(productBasicInfo, that.productBasicInfo);
     }
 
     @Override
-    public int hashCode(){
-        return Objects.hashCode(id,enterpriseBasicInfo,productBasicInfo,productNumber,period);
+    public int hashCode() {
+
+        return java.util.Objects.hash(id, enterpriseBasicInfo, productBasicInfo, productNumber);
     }
 }

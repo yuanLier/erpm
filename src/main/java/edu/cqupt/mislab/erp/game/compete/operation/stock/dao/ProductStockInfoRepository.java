@@ -28,4 +28,5 @@ public interface ProductStockInfoRepository extends BasicRepository<ProductStock
      * @return
      */
     ProductStockInfo findByEnterpriseBasicInfo_IdAndProductBasicInfo_Id(Long enterpriseId, Long productId);
+
 }

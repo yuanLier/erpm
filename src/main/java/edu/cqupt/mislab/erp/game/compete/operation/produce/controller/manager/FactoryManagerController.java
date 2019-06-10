@@ -5,7 +5,7 @@ import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.dto.FactoryBasicDto;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryBasicVo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.service.factorymanagement.FactoryManagerService;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.service.manager.FactoryManagerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

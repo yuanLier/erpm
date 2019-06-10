@@ -1,4 +1,4 @@
-package edu.cqupt.mislab.erp.game.compete.operation.produce.service.factorymanagement;
+package edu.cqupt.mislab.erp.game.compete.operation.produce.service.manager;
 
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.dto.ProdlineBasicDto;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineBasicVo;

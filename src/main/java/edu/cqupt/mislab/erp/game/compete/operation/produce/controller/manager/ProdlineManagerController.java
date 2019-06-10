@@ -5,7 +5,7 @@ import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.dto.ProdlineBasicDto;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.ProdlineBasicVo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.service.factorymanagement.ProdlineManagerService;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.service.manager.ProdlineManagerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
 
 /**
@@ -112,6 +113,10 @@ public class ProductionPlanController {
 
         ProductProduceVo productProduceVo = productionPlanService.productProduction(prodlineId);
 
+        if(productProduceVo == null) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "生产失败！该产品未完成研发");
+        }
+
         return toSuccessResponseVoWithData(productProduceVo);
     }
 
@@ -132,6 +137,38 @@ public class ProductionPlanController {
                                                                             @RequestParam Long prodlineId) {
 
         ProductProduceVo productProduceVo = productionPlanService.updateProduceStatus(prodlineId, ProdlineProduceStatus.PRODUCING);
+
+        if(productProduceVo == null) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "生产失败！该产品未完成研发");
+        }
+
+        return toSuccessResponseVoWithData(productProduceVo);
+    }
+
+
+    @ApiOperation(value = "生产线转产")
+    @PutMapping("/prodline/transfer")
+    public WebResponseVo<ProductProduceVo> prodlineTransfer(@Exist(repository = ProdlineProduceInfoRepository.class)
+                                                                    @RequestParam Long prodlineId,
+                                                            @Exist(repository = ProductDevelopInfoRepository.class)
+                                                                    @RequestParam Long productDevelopId) {
+
+        ProductProduceVo productProduceVo = productionPlanService.prodlineTransfer(prodlineId, productDevelopId);
+
+        return toSuccessResponseVoWithData(productProduceVo);
+    }
+
+
+    @ApiOperation(value = "收取产品")
+    @PutMapping("/prodline/produce/receive")
+    public WebResponseVo<ProductProduceVo> receiveProducts(@Exist(repository = ProdlineProduceInfoRepository.class)
+                                                                    @RequestParam Long prodlineId) {
+
+        ProductProduceVo productProduceVo = productionPlanService.receiveProducts(prodlineId);
+
+        if(productProduceVo == null) {
+            toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "无法收取产品！未完成生产");
+        }
 
         return toSuccessResponseVoWithData(productProduceVo);
     }

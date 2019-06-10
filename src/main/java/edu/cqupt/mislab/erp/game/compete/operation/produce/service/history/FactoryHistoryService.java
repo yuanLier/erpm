@@ -1,4 +1,4 @@
-package edu.cqupt.mislab.erp.game.compete.operation.produce.service.factorymanagement;
+package edu.cqupt.mislab.erp.game.compete.operation.produce.service.history;
 
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryHistoryVo;
 

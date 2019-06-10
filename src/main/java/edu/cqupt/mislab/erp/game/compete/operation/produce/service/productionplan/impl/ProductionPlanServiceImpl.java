@@ -16,6 +16,8 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInf
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.ProductStockInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.ProductStockInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +45,9 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
 
     @Autowired
     private ProductDevelopInfoRepository productDevelopInfoRepository;
+
+    @Autowired
+    private ProductStockInfoRepository productStockInfoRepository;
 
     @Override
     public List<ProductTypeVo> getProducableProduct(Long enterpriseId) {
@@ -162,9 +167,15 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
     public ProductProduceVo productProduction(Long prodlineId) {
         ProdlineProduceInfo prodlineProduceInfo = prodlineProduceInfoRepository.findOne(prodlineId);
 
-        // 更新生产开始的周期
+        // 若该产品未完成研发，则不允许生产
+        if(!ProductDevelopStatusEnum.DEVELOPED.equals(prodlineProduceInfo.getProductDevelopInfo().getProductDevelopStatus())) {
+            return null;
+        }
+
+        // 生产开始日期置为当前周期、生产结束日期置为null，已生产周期置为0，生产状态转为转产中
         prodlineProduceInfo.setBeginPeriod(prodlineProduceInfo.getProdlineHoldingInfo().getEnterpriseBasicInfo().getEnterpriseCurrentPeriod());
-        // 更新生产状态至生产中
+        prodlineProduceInfo.setEndPeriod(null);
+        prodlineProduceInfo.setProducedPeriod(0);
         prodlineProduceInfo.setProdlineProduceStatus(ProdlineProduceStatus.PRODUCING);
         // 保存修改
         prodlineProduceInfoRepository.save(prodlineProduceInfo);
@@ -178,10 +189,67 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
 
         ProdlineProduceInfo prodlineProduceInfo = prodlineProduceInfoRepository.findOne(prodlineId);
 
+        // 还是要加一个判断，防止这个接口被绕过前端直接调用
+        if(!ProductDevelopStatusEnum.DEVELOPED.equals(prodlineProduceInfo.getProductDevelopInfo().getProductDevelopStatus())) {
+            return null;
+        }
+
         // 更新生产状态
         prodlineProduceInfo.setProdlineProduceStatus(prodlineProduceStatus);
+
         // 保存修改
         prodlineProduceInfoRepository.save(prodlineProduceInfo);
+
+        return EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfo);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ProductProduceVo prodlineTransfer(Long prodlineId, Long productDevelopId) {
+
+        // 获取这个要转产的生产线和产品
+        ProductDevelopInfo productDevelopInfo = productDevelopInfoRepository.findOne(productDevelopId);
+        ProdlineProduceInfo prodlineProduceInfo = prodlineProduceInfoRepository.findOne(prodlineId);
+
+        prodlineProduceInfo.setProductDevelopInfo(productDevelopInfo);
+        // 生产开始日期、生产结束日期置为null，已生产周期置为0，生产状态转为转产中
+        prodlineProduceInfo.setBeginPeriod(null);
+        prodlineProduceInfo.setEndPeriod(null);
+        prodlineProduceInfo.setProducedPeriod(0);
+        prodlineProduceInfo.setProdlineProduceStatus(ProdlineProduceStatus.TRANSFERRING);
+
+        // 保存修改
+        prodlineProduceInfoRepository.save(prodlineProduceInfo);
+
+        return EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfo);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ProductProduceVo receiveProducts(Long prodlineId) {
+
+        ProdlineProduceInfo prodlineProduceInfo = prodlineProduceInfoRepository.findOne(prodlineId);
+
+        // 若该生产线未完成生产，不允许收取
+        if(!ProdlineProduceStatus.PRODUCED.equals(prodlineProduceInfo.getProdlineProduceStatus())) {
+            return null;
+        }
+
+        // 开始生产、结束生产的周期置为空，已生产的周期置为0，状态转为待生产
+        prodlineProduceInfo.setBeginPeriod(null);
+        prodlineProduceInfo.setEndPeriod(null);
+        prodlineProduceInfo.setProducedPeriod(0);
+        prodlineProduceInfo.setProdlineProduceStatus(ProdlineProduceStatus.TOPRODUCE);
+
+        // 保存修改
+        prodlineProduceInfoRepository.save(prodlineProduceInfo);
+
+        // 获取产品的库存信息
+        ProductStockInfo productStockInfo = productStockInfoRepository.findByEnterpriseBasicInfo_IdAndProductBasicInfo_Id(prodlineProduceInfo.getProdlineHoldingInfo().getEnterpriseBasicInfo().getId(), prodlineProduceInfo.getProductDevelopInfo().getProductBasicInfo().getId());
+        // 更新产品的库存数量
+        productStockInfo.setProductNumber(productStockInfo.getProductNumber()+prodlineProduceInfo.getProductDevelopInfo().getProductBasicInfo().getProduceProductAmount());
+        // 保存修改
+        productStockInfoRepository.save(productStockInfo);
 
         return EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfo);
     }

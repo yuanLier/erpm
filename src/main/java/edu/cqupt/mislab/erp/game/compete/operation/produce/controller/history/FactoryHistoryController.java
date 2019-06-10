@@ -1,10 +1,10 @@
-package edu.cqupt.mislab.erp.game.compete.operation.produce.controller.factorymanagement;
+package edu.cqupt.mislab.erp.game.compete.operation.produce.controller.history;
 
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.commons.validators.annotations.GameStatusValid;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryHistoryVo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.service.factorymanagement.FactoryHistoryService;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.service.history.FactoryHistoryService;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatusEnum;
 import io.swagger.annotations.Api;

@@ -94,11 +94,11 @@ public interface FactoryManagementService {
 
 
     /**
-     * 厂房出售 --> 返回String是因为感觉没啥好展示的但可能遇到的错误信息好像不少(Ｔ▽Ｔ)
+     * 厂房出售
      * @param factoryId
      * @return
      */
-    WebResponseVo<String> factorySell(Long factoryId);
+    WebResponseVo factorySell(Long factoryId);
 
 
     /**
@@ -106,7 +106,7 @@ public interface FactoryManagementService {
      * @param prodlineProductId
      * @return
      */
-    WebResponseVo<String> prodlineSell(Long prodlineProductId);
+    WebResponseVo prodlineSell(Long prodlineProductId);
 
 
     /**

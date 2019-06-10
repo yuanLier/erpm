@@ -1,4 +1,4 @@
-package edu.cqupt.mislab.erp.game.compete.operation.produce.service.factorymanagement.impl;
+package edu.cqupt.mislab.erp.game.compete.operation.produce.service.history.impl;
 
 import edu.cqupt.mislab.erp.commons.constant.ProduceOperationConstant;
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
@@ -7,7 +7,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryHistoryVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryOperationVo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.service.factorymanagement.FactoryHistoryService;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.service.history.FactoryHistoryService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import org.springframework.beans.factory.annotation.Autowired;
