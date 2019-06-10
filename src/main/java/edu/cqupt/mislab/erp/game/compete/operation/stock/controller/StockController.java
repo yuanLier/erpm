@@ -5,12 +5,13 @@ import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.MaterialOrderInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.MaterialStockInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.ProductStockInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.TransportBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.GameTransportBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.dto.MaterialOrderDto;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.TransportStatusEnum;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.service.StockService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +52,10 @@ public class StockController {
 
     @ApiOperation(value = "展示当前设定下的全部可用的运输方式")
     @GetMapping("/transport")
-    public WebResponseVo<List<TransportMethodDisplayVo>> getAllTransportVos() {
+    public WebResponseVo<List<TransportMethodDisplayVo>> getAllTransportVos(@Exist(repository = GameBasicInfoRepository.class)
+                                                                                @RequestParam Long gameId) {
 
-        List<TransportMethodDisplayVo> transportMethodDisplayVoList = stockService.getAllTransportVos();
+        List<TransportMethodDisplayVo> transportMethodDisplayVoList = stockService.getAllTransportVos(gameId);
 
         if (transportMethodDisplayVoList.size() == 0) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "无可用的运输方式，请联系管理员");
@@ -64,7 +66,7 @@ public class StockController {
 
     @ApiOperation(value = "根据id获取某种运输方式详情")
     @GetMapping("/transport/detail")
-    public WebResponseVo<TransportMethodDisplayVo> getTransportVoyId(@Exist(repository = TransportBasicInfoRepository.class)
+    public WebResponseVo<TransportMethodDisplayVo> getTransportVoyId(@Exist(repository = GameTransportBasicInfoRepository.class)
                                                                                  @RequestParam Long transportBasicId) {
 
         TransportMethodDisplayVo transportMethodDisplayVo = stockService.getTransportVoyId(transportBasicId);

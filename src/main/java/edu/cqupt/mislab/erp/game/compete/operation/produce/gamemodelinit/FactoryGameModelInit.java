@@ -57,7 +57,7 @@ public class FactoryGameModelInit implements GameModelInit {
                 // 在比赛开始时初始化本场比赛中使用的厂房基本信息
                 GameBasicInfo gameBasicInfo = gameBasicInfoRepository.findOne(gameId);
 
-                // 获取当前设定下的厂房基本信息
+                // 初始化当前设定下的厂房基本信息
                 List<FactoryBasicInfo> factoryBasicInfoList = factoryBasicInfoRepository.findNewestFactoryBasicInfos();
                 for(FactoryBasicInfo factoryBasicInfo : factoryBasicInfoList) {
                     gameFactoryBasicInfoRepository.save(
@@ -67,6 +67,7 @@ public class FactoryGameModelInit implements GameModelInit {
                                     .build()
                     );
                 }
+
                 // 随机获取一条基本厂房信息
                 List<GameFactoryBasicInfo> factoryBasicInfos = gameFactoryBasicInfoRepository.findByGameBasicInfo_Id(gameId);
                 final GameFactoryBasicInfo factoryBasicInfo = factoryBasicInfos.get(new Random().nextInt(factoryBasicInfos.size()));

@@ -79,7 +79,7 @@ public class ProdlineGameModelInit implements GameModelInit {
                 // 在比赛开始时初始化本场比赛中使用的生产线基本信息
                 GameBasicInfo gameBasicInfo = gameBasicInfoRepository.findOne(gameId);
 
-                // 获取当前设定下的生产线基本信息
+                // 初始化当前设定下的生产线基本信息
                 List<ProdlineBasicInfo> prodlineBasicInfoList = prodlineBasicInfoRepository.findNewestProdlineBasicInfos();
                 for(ProdlineBasicInfo prodlineBasicInfo : prodlineBasicInfoList) {
                     gameProdlineBasicInfoRepository.save(

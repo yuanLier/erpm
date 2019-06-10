@@ -43,7 +43,7 @@ public class MaterialOrderInfo implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false,updatable = false)
     @Comment(comment = "哪一种运输方式")
-    private TransportBasicInfo transportMethod;
+    private GameTransportBasicInfo transportMethod;
 
     @Min(1)
     @Basic(optional = false)

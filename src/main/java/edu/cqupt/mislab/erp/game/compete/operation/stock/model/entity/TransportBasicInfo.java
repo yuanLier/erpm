@@ -11,8 +11,8 @@ import java.io.Serializable;
 
 /**
  * @author yuanyiwen
- * @create 2019-03-31 22:09
- * @description 用于描述材料订购时运输方式的基本信息表
+ * @create 2019-06-10 9:39
+ * @description
  */
 @Getter
 @Setter

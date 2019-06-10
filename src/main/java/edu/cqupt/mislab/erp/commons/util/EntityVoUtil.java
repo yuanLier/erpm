@@ -22,7 +22,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeV
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialOrderInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialStockInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.ProductStockInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.TransportBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.GameTransportBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.vo.MaterialOrderDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.vo.MaterialStockDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.vo.ProductStockDisplayVo;
@@ -529,17 +529,17 @@ public abstract class EntityVoUtil {
         return productStockDisplayVo;
     }
 
-    public static TransportMethodDisplayVo copyFieldsFromEntityToVo(TransportBasicInfo transportBasicInfo) {
+    public static TransportMethodDisplayVo copyFieldsFromEntityToVo(GameTransportBasicInfo transportBasicInfo) {
         TransportMethodDisplayVo transportMethodDisplayVo = new TransportMethodDisplayVo();
 
         transportMethodDisplayVo.setId(transportBasicInfo.getId());
 
         // 运输方式
-        transportMethodDisplayVo.setTransportName(transportBasicInfo.getTransportName());
+        transportMethodDisplayVo.setTransportName(transportBasicInfo.getTransportBasicInfo().getTransportName());
         // 该运输方式所需要的周期数
-        transportMethodDisplayVo.setTransportPeriod(transportBasicInfo.getTransportPeriod());
+        transportMethodDisplayVo.setTransportPeriod(transportBasicInfo.getTransportBasicInfo().getTransportPeriod());
         // 每周期运费
-        transportMethodDisplayVo.setTransportPrice(transportBasicInfo.getTransportPrice());
+        transportMethodDisplayVo.setTransportPrice(transportBasicInfo.getTransportBasicInfo().getTransportPrice());
 
         return transportMethodDisplayVo;
     }

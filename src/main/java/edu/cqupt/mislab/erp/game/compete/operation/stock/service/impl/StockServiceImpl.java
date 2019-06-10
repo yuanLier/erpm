@@ -7,7 +7,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.material.dao.MaterialBasicInf
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.MaterialOrderInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.MaterialStockInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.ProductStockInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.TransportBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.GameTransportBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.dto.MaterialOrderDto;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.*;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.vo.*;
@@ -40,7 +40,7 @@ public class StockServiceImpl implements StockService {
     @Autowired
     private ProductStockInfoRepository productStockInfoRepository;
     @Autowired
-    private TransportBasicInfoRepository transportBasicInfoRepository;
+    private GameTransportBasicInfoRepository transportBasicInfoRepository;
 
     @Autowired
     private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
@@ -62,13 +62,12 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public List<TransportMethodDisplayVo> getAllTransportVos() {
+    public List<TransportMethodDisplayVo> getAllTransportVos(Long gameId) {
 
-//        todo 运输方式的最新版本问题 同生产线厂房
-        List<TransportBasicInfo> transportBasicInfoList = transportBasicInfoRepository.findNewestTransportBasicInfos();
+        List<GameTransportBasicInfo> transportBasicInfoList = transportBasicInfoRepository.findByGameBasicInfo_Id(gameId);
 
         List<TransportMethodDisplayVo> transportMethodDisplayVoList = new ArrayList<>();
-        for (TransportBasicInfo transportBasicInfo : transportBasicInfoList) {
+        for (GameTransportBasicInfo transportBasicInfo : transportBasicInfoList) {
             transportMethodDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(transportBasicInfo));
         }
 
@@ -78,7 +77,7 @@ public class StockServiceImpl implements StockService {
     @Override
     public TransportMethodDisplayVo getTransportVoyId(Long transportBasicId) {
 
-        TransportBasicInfo transportBasicInfo = transportBasicInfoRepository.findOne(transportBasicId);
+        GameTransportBasicInfo transportBasicInfo = transportBasicInfoRepository.findOne(transportBasicId);
 
         return EntityVoUtil.copyFieldsFromEntityToVo(transportBasicInfo);
     }

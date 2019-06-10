@@ -7,12 +7,18 @@ import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.Materia
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.gamemodelinit.ProductGameModelInit;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.GameTransportBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.MaterialStockInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.ProductStockInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.TransportBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.GameTransportBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialStockInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.ProductStockInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.TransportBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
+import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,9 +34,18 @@ import java.util.List;
 @Component
 public class StockGameModelInit implements GameModelInit {
 
-    @Autowired private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
+    @Autowired
+    private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
     @Autowired private MaterialStockInfoRepository materialStockInfoRepository;
     @Autowired private MaterialBasicInfoRepository materialBasicInfoRepository;
+
+    @Autowired
+    private GameBasicInfoRepository gameBasicInfoRepository;
+    @Autowired
+    private GameTransportBasicInfoRepository gameTransportBasicInfoRepository;
+    @Autowired
+    private TransportBasicInfoRepository transportBasicInfoRepository;
+
     @Autowired private ProductStockInfoRepository productStockInfoRepository;
     @Autowired private ProductBasicInfoRepository productBasicInfoRepository;
     @Autowired private GameModelInitService gameModelInitService;
@@ -81,12 +96,24 @@ public class StockGameModelInit implements GameModelInit {
      **/
     private void initStockInfos(Long gameId){
 
+        // 在比赛开始时初始化本场比赛中使用的运输方式基本信息
+        GameBasicInfo gameBasicInfo = gameBasicInfoRepository.findOne(gameId);
+
+        List<TransportBasicInfo> transportBasicInfoList = transportBasicInfoRepository.findNewestTransportBasicInfos();
+        for(TransportBasicInfo transportBasicInfo : transportBasicInfoList) {
+            gameTransportBasicInfoRepository.save(
+                    GameTransportBasicInfo.builder()
+                            .gameBasicInfo(gameBasicInfo)
+                            .transportBasicInfo(transportBasicInfo)
+                            .build()
+            );
+        }
+
         // 选取所有的企业
         final List<EnterpriseBasicInfo> enterpriseBasicInfos = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId);
 
         // 选取当前设定下的全部产品信息
         final List<ProductBasicInfo> productBasicInfoList = productBasicInfoRepository.findNewestProductBasicInfos();
-
         // 选取当前设定下的全部原材料信息
         final List<MaterialBasicInfo> materialBasicInfoList = materialBasicInfoRepository.findNewestMaterialBasicInfos();
 

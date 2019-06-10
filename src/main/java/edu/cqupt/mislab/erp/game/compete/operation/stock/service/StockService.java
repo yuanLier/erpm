@@ -24,9 +24,10 @@ public interface StockService {
 
     /**
      * 展示当前设定下的全部可用的运输方式
+     * @param gameId
      * @return
      */
-    List<TransportMethodDisplayVo> getAllTransportVos();
+    List<TransportMethodDisplayVo> getAllTransportVos(Long gameId);
 
 
     /**
