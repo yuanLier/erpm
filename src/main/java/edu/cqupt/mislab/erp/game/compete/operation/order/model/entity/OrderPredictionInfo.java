@@ -12,6 +12,12 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
 
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/5 12:52
+ * @Description: 订单的预测信息
+ **/
+
 @Getter
 @Setter
 @Builder
@@ -20,12 +26,6 @@ import java.io.Serializable;
 @Entity
 @Table
 public class OrderPredictionInfo implements Serializable {
-
-    /*
-     * @Author: chuyunfei
-     * @Date: 2019/3/5 12:52
-     * @Description: 订单的预测信息
-     **/
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

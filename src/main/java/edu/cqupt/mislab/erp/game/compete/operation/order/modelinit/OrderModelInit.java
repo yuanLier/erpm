@@ -5,6 +5,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * @author chuyunfei
+ * @description 
+ **/
+
 @Component
 public class OrderModelInit implements ModelInit {
 

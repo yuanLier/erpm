@@ -10,6 +10,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.ProductStockInfoRep
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.ProductStockInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,7 @@ public class OrderDeliveryServiceImpl implements OrderDeliveryService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public WebResponseVo<String> deliveryOrder(Long orderId) {
 
         // 根据订单id获取订单
@@ -74,21 +76,11 @@ public class OrderDeliveryServiceImpl implements OrderDeliveryService {
 
         // 更新库存数量并进行持久化
         productStockInfo.setProductNumber(productStockInfo.getProductNumber()-gameOrderInfo.getProductNumber());
-        try {
-            productStockInfoRepository.save(productStockInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "交货失败！请联系开发人员");
-        }
+        productStockInfoRepository.save(productStockInfo);
 
         // 更新订单状态至已交货，并进行持久化
         gameOrderInfo.setOrderStatus(true);
-        try {
-            gameOrderInfoRepository.save(gameOrderInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "交货失败！请联系开发人员");
-        }
+        gameOrderInfoRepository.save(gameOrderInfo);
 
         return toSuccessResponseVoWithNoData();
     }

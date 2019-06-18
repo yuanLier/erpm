@@ -1,6 +1,7 @@
 package edu.cqupt.mislab.erp.game.compete.operation.order.service.impl;
 
 import edu.cqupt.mislab.erp.commons.websocket.CommonWebSocketMessagePublisher;
+import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketStatusEnum;
@@ -32,6 +33,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/15 11:17
+ * @Description: 订单选择的具体实现
+ **/
+
 @Slf4j
 @Component
 public class OrderChooseServiceImpl implements OrderChooseService {
@@ -41,12 +48,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
     @PostConstruct
     public void postConstruct(){
 
-        /*
-         * @Author: chuyunfei
-         * @Date: 2019/3/15 11:17
-         * @Description: 开启轮询线程任务
-         **/
-
+        // 开启轮询线程任务
         Runnable runnableTask = () -> {
 
             int DEFAULT_SLEEP_TIME = 60;
@@ -121,7 +123,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         threadPoolExecutor.execute(runnableTask);
     }
 
-    /*
+    /**
      * @Author: chuyunfei
      * @Date: 2019/3/9 15:31
      * @Description: 1、用于选单计时功能；2、订单排序功能；
@@ -135,10 +137,12 @@ public class OrderChooseServiceImpl implements OrderChooseService {
     @Autowired private ProductDevelopInfoRepository productDevelopInfoRepository;
     @Autowired private MarketDevelopInfoRepository marketDevelopInfoRepository;
 
-    //用于记录每一个比赛的信息
+    /**
+     * 用于记录每一个比赛的信息
+     */
     private Map<Long,OrderChooseHelper> orderChooseHelperMap = new ConcurrentHashMap<>();
 
-    /*
+    /**
      * @Author: chuyunfei
      * @Date: 2019/3/10 12:35
      * @Description: 移除某个比赛的比赛订单选择信息
@@ -149,7 +153,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         orderChooseHelperMap.remove(gameId);
     }
 
-    /*
+    /**
      * @Author: chuyunfei
      * @Date: 2019/3/9 16:06
      * @Description: 初始化一个比赛的订单选择信息，即初始化比赛选择的基本辅助信息
@@ -209,40 +213,40 @@ public class OrderChooseServiceImpl implements OrderChooseService {
     @Setter
     public class OrderChooseHelper {
 
-        //用于持久化数据
+        @Comment(comment = "用于持久化数据")
         private GameOrderChooseInfo gameOrderChooseInfo;
 
-        //用于记录所有的已研发的按照研发周期进行排序的所有产品信息
+        @Comment(comment = "用于记录所有的已研发的按照研发周期进行排序的所有产品信息")
         private List<ProductBasicInfo> productBasicInfos;
 
-        //当前正在进行订单选择的产品
+        @Comment(comment = "当前正在进行订单选择的产品")
         private ProductBasicInfo concurrentProductBasicInfo;
 
-        //用于记录所有的已开拓的按照开拓周期进行排序的所有市场信息
+        @Comment(comment = "用于记录所有的已开拓的按照开拓周期进行排序的所有市场信息")
         private List<MarketBasicInfo> marketBasicInfos;
 
-        //当亲正在进行订单选择的市场信息
+        @Comment(comment = "当亲正在进行订单选择的市场信息")
         private MarketBasicInfo concurrentMarketBasicInfo;
 
-        //用于记录订单的顺序
+        @Comment(comment = "用于记录订单的顺序")
         private List<EnterpriseAdInfo> enterpriseAdInfos;
 
-        //当前是哪一个订单正在进行订单的选择
+        @Comment(comment = "当前是哪一个订单正在进行订单的选择")
         private EnterpriseAdInfo concurrentEnterpriseAdInfo;
 
-        //用于记录那一年
+        @Comment(comment = "用于记录那一年")
         private Integer concurrentYear;
 
-        //该比赛已经选择已经多少轮
+        @Comment(comment = "该比赛已经选择已经多少轮")
         private Integer frequency;
 
-        //用于记录是否结束
+        @Comment(comment = "用于记录是否结束")
         private boolean finish;
 
-        //用于记录时间
+        @Comment(comment = "用于记录时间")
         private Long lastChangeTime;
 
-        /*
+        /**
          * @Author: chuyunfei
          * @Date: 2019/3/10 21:11
          * @Description: 获取当前比赛的信息
@@ -275,7 +279,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
             return displayVo;
         }
 
-        /*
+        /**
          * @Author: chuyunfei
          * @Date: 2019/3/10 13:39
          * @Description: 构造函数
@@ -288,7 +292,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
             this.lastChangeTime = System.currentTimeMillis();
         }
 
-        /*
+        /**
          * @Author: chuyunfei
          * @Date: 2019/3/10 12:54
          * @Description: 初始化一个OrderChooseHelper
@@ -416,7 +420,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
             this.gameOrderChooseInfo = gameOrderChooseInfoRepository.save(this.gameOrderChooseInfo);
         }
 
-        /*
+        /**
          * @Author: chuyunfei
          * @Date: 2019/3/13 18:48
          * @Description: 刷新数据
@@ -500,7 +504,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         }
     }
 
-    /*
+    /**
      * @Author: chuyunfei
      * @Date: 2019/3/9 16:40
      * @Description: 获取在某比赛当年的所有的企业的全部以开发产品集合信息
@@ -534,7 +538,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         return result;
     }
 
-    /*
+    /**
      * @Author: chuyunfei
      * @Date: 2019/3/9 20:59
      * @Description: 获取在某比赛当年的所有的企业的全部以开发市场集合信息

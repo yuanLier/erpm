@@ -6,16 +6,18 @@ import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
-import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
 import lombok.*;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
 import java.util.Date;
+
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/5 13:02
+ * @Description: 企业广告信息数据表
+ **/
 
 @Getter
 @Setter
@@ -25,12 +27,6 @@ import java.util.Date;
 @Entity
 @Table
 public class EnterpriseAdInfo implements Serializable {
-
-    /*
-     * @Author: chuyunfei
-     * @Date: 2019/3/5 13:02
-     * @Description: 企业广告信息数据表
-     **/
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

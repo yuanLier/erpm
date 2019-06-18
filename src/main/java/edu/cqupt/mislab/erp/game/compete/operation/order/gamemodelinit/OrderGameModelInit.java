@@ -30,7 +30,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * author： chuyunfei date：2019/3/1
+ * @author： chuyunfei
+ * @date：2019/3/1
  */
 @Slf4j
 @Component
@@ -93,7 +94,7 @@ public class OrderGameModelInit implements GameModelInit {
         return null;
     }
 
-    /*
+    /**
      * @Author: chuyunfei
      * @Date: 2019/3/3 16:50
      * @Description: 为所有的订单附加ISO条件
@@ -177,7 +178,7 @@ public class OrderGameModelInit implements GameModelInit {
         });
     }
 
-    /*
+    /**
      * @Author: chuyunfei
      * @Date: 2019/3/3 16:50
      * @Description: 初始化所有的订单信息
@@ -208,7 +209,8 @@ public class OrderGameModelInit implements GameModelInit {
             final OrderPredictionInfo orderPredictionInfo = orderPredictionInfos.get(i);
 
             //获取预测的基本信息
-            final Integer totalMount = orderPredictionInfo.getMount();//这个数值必须是大于0的，不然会出错
+            // 这个数值必须是大于0的，不然会出错
+            final Integer totalMount = orderPredictionInfo.getMount();
             final Double basicPrice = orderPredictionInfo.getPrice();
 
             //获取总共能够生成的最大订单数量
@@ -273,7 +275,7 @@ public class OrderGameModelInit implements GameModelInit {
         gameOrderInfoRepository.save(gameOrderInfos);
     }
 
-    /*
+    /**
      * @Author: chuyunfei
      * @Date: 2019/3/3 16:49
      * @Description: 为比赛创建产品销量的预测信息
@@ -326,9 +328,10 @@ public class OrderGameModelInit implements GameModelInit {
                     当产品的价格为0时将会出现死循环，需要控制产品价格
                      */
                     do{
-                        price = productBasicInfo.getProductSellingPrice() //原价
-                                + productBasicInfo.getProductSellingPrice() * productBasicInfo.getPriceDifference() * Math.pow(-1,Math.ceil(Math.random() * 2)) //价格差异
-                                + productBasicInfo.getProductSellingPrice() * productBasicInfo.getPriceFloat() * Math.pow(-1,Math.ceil(Math.random() * 2)); //价格波动
+                        //原价、价格差异、价格波动
+                        price = productBasicInfo.getProductSellingPrice()
+                                + productBasicInfo.getProductSellingPrice() * productBasicInfo.getPriceDifference() * Math.pow(-1,Math.ceil(Math.random() * 2))
+                                + productBasicInfo.getProductSellingPrice() * productBasicInfo.getPriceFloat() * Math.pow(-1,Math.ceil(Math.random() * 2));
                     }while(price <= 0);
 
                     double mount = -1;
@@ -337,9 +340,10 @@ public class OrderGameModelInit implements GameModelInit {
                     当产品的个数为0时将会出现死循环，需要控制产品价格
                      */
                     do{
-                        mount = productBasicInfo.getMount() //原个数
-                                + productBasicInfo.getMount() * productBasicInfo.getMountDifference() * Math.pow(-1,Math.ceil(Math.random() * 2))//数量差异
-                                + productBasicInfo.getMount() * productBasicInfo.getMount() * Math.pow(-1,Math.ceil(Math.random() * 2));//数量波动
+                        // 原个数、数量差异、数量波动
+                        mount = productBasicInfo.getMount()
+                                + productBasicInfo.getMount() * productBasicInfo.getMountDifference() * Math.pow(-1,Math.ceil(Math.random() * 2))
+                                + productBasicInfo.getMount() * productBasicInfo.getMount() * Math.pow(-1,Math.ceil(Math.random() * 2));
                     }while(mount <= 0);
 
                     //对生成的数值进行向上取整处理

@@ -1,8 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.order.model.vo;
 
-import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketTypeVo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

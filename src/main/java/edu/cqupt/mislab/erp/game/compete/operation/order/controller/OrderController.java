@@ -16,6 +16,13 @@ import java.util.List;
 
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
 
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/6 20:10
+ * @Description: 以下部分为投广告操作期间的接口 -----但还没写
+ *            --> 所以以下其实是销售管理即按订单交货之类的接口 你可爱的yyw留
+ **/
+
 @Api(description = "学生端-订单管理")
 @CrossOrigin
 @Validated
@@ -28,16 +35,8 @@ public class OrderController {
     private OrderDeliveryService orderDeliveryService;
 
 
-    /* 
-     * @Author: chuyunfei
-     * @Date: 2019/3/6 20:10
-     * @Description: 以下部分为投广告操作期间的接口 -----但还没写
-     *            --> 所以以下其实是销售管理即按订单交货之类的接口 你可爱的yyw留
-     **/
-
-
     @ApiOperation(value = "获取一个企业的全部订单信息")
-    @GetMapping("/all/get")
+    @GetMapping("/all")
     WebResponseVo<List<OrderDisplayVo>> getAllOrderDisplayVos(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                       @RequestParam Long enterpriseId) {
 
@@ -47,26 +46,17 @@ public class OrderController {
     }
 
 
-    @ApiOperation(value = "获取一个企业的全部未交货订单信息")
-    @GetMapping("/undelivery/get")
-    WebResponseVo<List<OrderDisplayVo>> getAllUnDeliveryOrderDisplayVos(@Exist(repository = EnterpriseBasicInfoRepository.class)
-                                                                            @RequestParam Long enterpriseId) {
+    @ApiOperation(value = "获取一个企业的处于某种交货状态（已交货or未交货）的订单信息")
+    @GetMapping("/status")
+    WebResponseVo<List<OrderDisplayVo>> getAllOrderDisplayVosByStatus(@Exist(repository = EnterpriseBasicInfoRepository.class)
+                                                                            @RequestParam Long enterpriseId,
+                                                                      @RequestParam boolean orderStatus) {
 
-        List<OrderDisplayVo> orderDisplayVoList = orderDeliveryService.getAllOrderDisplayVosOfOneStatus(enterpriseId,false);
-
-        return toSuccessResponseVoWithData(orderDisplayVoList);
-    }
-
-
-    @ApiOperation(value = "获取一个企业的全部已交货订单信息")
-    @GetMapping("/deliveried/get")
-    WebResponseVo<List<OrderDisplayVo>> getAllDeliveriedOrderDisplayVos(@Exist(repository = EnterpriseBasicInfoRepository.class)
-                                                                            @RequestParam Long enterpriseId) {
-
-        List<OrderDisplayVo> orderDisplayVoList = orderDeliveryService.getAllOrderDisplayVosOfOneStatus(enterpriseId,true);
+        List<OrderDisplayVo> orderDisplayVoList = orderDeliveryService.getAllOrderDisplayVosOfOneStatus(enterpriseId, orderStatus);
 
         return toSuccessResponseVoWithData(orderDisplayVoList);
     }
+
 
     @ApiOperation(value = "提交订单")
     @PostMapping("/delivery")

@@ -15,6 +15,12 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
 
+/**
+ * @Author: chuyunfei
+ * @Date: 2019/3/5 13:13
+ * @Description: 用于记录所有的订单信息
+ **/
+
 @Getter
 @Setter
 @Builder
@@ -23,12 +29,6 @@ import java.io.Serializable;
 @Entity
 @Table
 public class GameOrderInfo implements Serializable {
-
-    /*
-     * @Author: chuyunfei
-     * @Date: 2019/3/5 13:13
-     * @Description: 用于记录所有的订单信息
-     **/
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

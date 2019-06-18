@@ -14,26 +14,27 @@ public interface OrderDeliveryService {
 
 
     /**
-     * @author yuanyiwen
-     * @description 获取一个企业的全部订单信息
-     * @date 22:26 2019/4/7
-     **/
+     * 获取一个企业的全部订单信息
+     * @param enterpriseId
+     * @return
+     */
     List<OrderDisplayVo> getAllOrderDisplayVos(Long enterpriseId);
 
 
     /**
-     * @author yuanyiwen
-     * @description 获取一个企业处于某种订单状态的订单信息
-     * @date 22:06 2019/4/7
-     **/
+     * 获取一个企业处于某种订单状态的订单信息
+     * @param enterpriseId
+     * @param orderStatus
+     * @return
+     */
     List<OrderDisplayVo> getAllOrderDisplayVosOfOneStatus(Long enterpriseId, boolean orderStatus);
 
 
     /**
-     * @author yuanyiwen
-     * @description 按订单交货（点击确认出库按钮后再调用
-     * @date 22:28 2019/4/7
-     **/
+     * 按订单交货（点击确认出库按钮后再调用
+     * @param orderId
+     * @return
+     */
     WebResponseVo<String> deliveryOrder(Long orderId);
 
 }

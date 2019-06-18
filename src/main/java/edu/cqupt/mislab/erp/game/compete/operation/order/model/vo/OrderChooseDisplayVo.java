@@ -1,9 +1,5 @@
 package edu.cqupt.mislab.erp.game.compete.operation.order.model.vo;
 
-import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.order.model.entity.EnterpriseAdInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.order.model.entity.GameOrderChooseInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -12,7 +8,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * author： chuyunfei date：2019/3/10
+ * @author： chuyunfei
+ * @date：2019/3/10
  */
 @Data
 @ApiModel
