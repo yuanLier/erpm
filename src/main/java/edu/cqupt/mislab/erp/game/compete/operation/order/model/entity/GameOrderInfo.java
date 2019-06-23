@@ -67,7 +67,7 @@ public class GameOrderInfo implements Serializable {
 
     @Min(1)
     @Column(nullable = false,updatable = false)
-    @Comment(comment = "订单交货后，需要几个账期，货款可以到账")
+    @Comment(comment = "订单交货后，需要几个账期，金额可以到账")
     private Integer moneyTime;
 
     @DoubleMin(0.01)

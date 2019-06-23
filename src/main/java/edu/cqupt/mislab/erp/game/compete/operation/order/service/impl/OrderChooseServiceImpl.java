@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 /**
  * @Author: chuyunfei
  * @Date: 2019/3/15 11:17
- * @Description: 订单选择的具体实现
+ * @Description: 订单生成的具体实现
  **/
 
 @Slf4j
@@ -225,7 +225,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         @Comment(comment = "用于记录所有的已开拓的按照开拓周期进行排序的所有市场信息")
         private List<MarketBasicInfo> marketBasicInfos;
 
-        @Comment(comment = "当亲正在进行订单选择的市场信息")
+        @Comment(comment = "当前正在进行订单选择的市场信息")
         private MarketBasicInfo concurrentMarketBasicInfo;
 
         @Comment(comment = "用于记录订单的顺序")
@@ -354,7 +354,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
 
             //查询需要继续进行排序的订单
             this.enterpriseAdInfos = enterpriseAdInfoRepository
-                    .findByEnterpriseBasicInfo_GameBasicInfo_IdAndYearAndProductBasicInfo_IdAndMarketBasicInfo_IdAndFinishedIsFalseOrderByMoneyDescTimeStampAsc(
+                    .findByEnterpriseBasicInfo_GameBasicInfo_IdAndYearAndProductBasicInfo_IdAndMarketBasicInfo_IdAndFinishedIsFalse(
                             gameId,currentYear,this.concurrentProductBasicInfo.getId(),this.concurrentMarketBasicInfo.getId()
                     );
 
@@ -388,7 +388,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
 
                 //查询需要继续进行排序的订单
                 this.enterpriseAdInfos = enterpriseAdInfoRepository
-                        .findByEnterpriseBasicInfo_GameBasicInfo_IdAndYearAndProductBasicInfo_IdAndMarketBasicInfo_IdAndFinishedIsFalseOrderByMoneyDescTimeStampAsc(
+                        .findByEnterpriseBasicInfo_GameBasicInfo_IdAndYearAndProductBasicInfo_IdAndMarketBasicInfo_IdAndFinishedIsFalse(
                                 gameId,currentYear,this.concurrentProductBasicInfo.getId(),this.concurrentMarketBasicInfo.getId()
                         );
 
@@ -481,7 +481,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
 
                     //查询需要继续进行排序的订单
                     this.enterpriseAdInfos = enterpriseAdInfoRepository
-                            .findByEnterpriseBasicInfo_GameBasicInfo_IdAndYearAndProductBasicInfo_IdAndMarketBasicInfo_IdAndFinishedIsFalseOrderByMoneyDescTimeStampAsc(
+                            .findByEnterpriseBasicInfo_GameBasicInfo_IdAndYearAndProductBasicInfo_IdAndMarketBasicInfo_IdAndFinishedIsFalse(
                                     this.gameOrderChooseInfo.getGameBasicInfo().getId()
                                     ,this.getConcurrentYear(),this.concurrentProductBasicInfo.getId(),this.concurrentMarketBasicInfo.getId()
                             );

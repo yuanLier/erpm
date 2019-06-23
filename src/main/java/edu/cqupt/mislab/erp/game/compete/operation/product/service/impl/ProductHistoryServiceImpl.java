@@ -41,7 +41,7 @@ public class ProductHistoryServiceImpl implements ProductHistoryService {
             productHistoryVo.setPeriod(period);
 
 
-            // 若该周期该企业已破产，则返回破产前最后一周期的研发情况
+            // 若该周期该企业已结束经营，则返结束前最后一周期的研发情况
             Integer bankruptPeriod = enterpriseBasicInfo.getEnterpriseCurrentPeriod();
             period = (period < bankruptPeriod) ? period : bankruptPeriod;
 

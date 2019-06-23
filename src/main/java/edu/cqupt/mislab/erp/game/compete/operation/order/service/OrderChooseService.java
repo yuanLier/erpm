@@ -3,7 +3,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.order.service;
 /**
  * @Author: chuyunfei
  * @Date: 2019/3/13 18:11
- * @Description: 订单选择
+ * @Description: 订单生成
  **/
 public interface OrderChooseService {
 

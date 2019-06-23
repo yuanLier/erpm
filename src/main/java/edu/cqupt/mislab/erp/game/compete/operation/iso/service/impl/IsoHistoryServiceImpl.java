@@ -41,7 +41,7 @@ public class IsoHistoryServiceImpl implements IsoHistoryService {
             isoHistoryVo.setEnterpriseId(enterpriseBasicInfo.getId());
             isoHistoryVo.setPeriod(period);
 
-            // 若该周期该企业已破产，则返回破产前最后一周期的认证情况
+            // 若该周期该企业已结束经营，则返回结束前最后一周期的认证情况
             Integer bankruptPeriod = enterpriseBasicInfo.getEnterpriseCurrentPeriod();
             period = (period < bankruptPeriod) ? period : bankruptPeriod;
 

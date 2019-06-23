@@ -49,10 +49,10 @@ public class ProdlineHistoryServiceImpl implements ProdlineHistoryService {
 
             ProdlineOperationVo prodlineOperationVo = new ProdlineOperationVo();
 
-            // 若该周期该企业已破产，标记为“已破产”；否则，依次判断三种操作标签
+            // 若该周期该企业经营已结束，标记为“结束经营”；否则，依次判断三种操作标签
             if (period > enterpriseBasicInfo.getEnterpriseCurrentPeriod()) {
-                // 操作标签为“已破产”，操作列表为空
-                prodlineOperationVo.setOperation(ProduceOperationConstant.ENTERPRISE_BANKRUPT);
+                // 操作标签为“结束经营”，操作列表为空
+                prodlineOperationVo.setOperation(ProduceOperationConstant.BUSINESS_END);
                 prodlineOperationVo.setOperationAmount(new HashMap<>(0));
 
                 prodlineOperationVoList.add(prodlineOperationVo);

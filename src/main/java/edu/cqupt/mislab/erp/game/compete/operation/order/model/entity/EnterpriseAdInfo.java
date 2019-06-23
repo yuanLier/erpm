@@ -1,6 +1,5 @@
 package edu.cqupt.mislab.erp.game.compete.operation.order.model.entity;
 
-import com.google.common.base.Objects;
 import edu.cqupt.mislab.erp.commons.validators.annotations.DoubleMin;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
@@ -11,7 +10,6 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @Author: chuyunfei
@@ -55,13 +53,8 @@ public class EnterpriseAdInfo implements Serializable {
 
     @DoubleMin(0.01D)
     @Column(nullable = false,updatable = false)
-    @Comment(comment = "多少钱")
+    @Comment(comment = "投了多少钱")
     private Double money;
-
-    @Column(nullable = false,updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @Comment(comment = "哪一个时间投的")
-    private Date timeStamp;
 
     @Min(0)
     @Column(columnDefinition = "int default 0")
@@ -73,17 +66,23 @@ public class EnterpriseAdInfo implements Serializable {
     private Boolean finished;
 
     @Override
-    public boolean equals(Object o){
-        if(this == o)
-            return true;
-        if(o == null||getClass() != o.getClass())
-            return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         EnterpriseAdInfo that = (EnterpriseAdInfo) o;
-        return frequency == that.frequency&&finished == that.finished&&Objects.equal(id,that.id)&&Objects.equal(year,that.year)&&Objects.equal(money,that.money)&&Objects.equal(timeStamp,that.timeStamp);
+        return java.util.Objects.equals(id, that.id) &&
+                java.util.Objects.equals(enterpriseBasicInfo, that.enterpriseBasicInfo) &&
+                java.util.Objects.equals(productBasicInfo, that.productBasicInfo) &&
+                java.util.Objects.equals(marketBasicInfo, that.marketBasicInfo) &&
+                java.util.Objects.equals(year, that.year) &&
+                java.util.Objects.equals(money, that.money) &&
+                java.util.Objects.equals(frequency, that.frequency) &&
+                java.util.Objects.equals(finished, that.finished);
     }
 
     @Override
-    public int hashCode(){
-        return Objects.hashCode(id,year,money,timeStamp,frequency,finished);
+    public int hashCode() {
+
+        return java.util.Objects.hash(id, enterpriseBasicInfo, productBasicInfo, marketBasicInfo, year, money, frequency, finished);
     }
 }

@@ -20,5 +20,5 @@ public interface EnterpriseAdInfoRepository extends BasicRepository<EnterpriseAd
      * @param marketId
      * @return
      */
-    List<EnterpriseAdInfo> findByEnterpriseBasicInfo_GameBasicInfo_IdAndYearAndProductBasicInfo_IdAndMarketBasicInfo_IdAndFinishedIsFalseOrderByMoneyDescTimeStampAsc(long gameId,int year,long productId,long marketId);
+    List<EnterpriseAdInfo> findByEnterpriseBasicInfo_GameBasicInfo_IdAndYearAndProductBasicInfo_IdAndMarketBasicInfo_IdAndFinishedIsFalse(long gameId,int year,long productId,long marketId);
 }

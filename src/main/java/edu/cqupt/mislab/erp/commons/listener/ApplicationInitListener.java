@@ -33,6 +33,7 @@ public class ApplicationInitListener implements ServletContextListener, Applicat
 
     @Autowired private ModelInitService modelInitService;
     @Autowired private AppInitTokenRepository appInitTokenRepository;
+
     @Autowired private OrderChooseService orderChooseService;
 
     @Override
