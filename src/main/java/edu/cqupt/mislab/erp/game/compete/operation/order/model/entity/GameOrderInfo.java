@@ -62,7 +62,7 @@ public class GameOrderInfo implements Serializable {
 
     @Min(1)
     @Column(nullable = false,updatable = false)
-    @Comment(comment = "需要的交货的日期，为总第几期")
+    @Comment(comment = "截止交货的日期为第几期")
     private Integer deliveryPeriod;
 
     @Min(1)
@@ -84,6 +84,10 @@ public class GameOrderInfo implements Serializable {
     @Column(nullable = false,updatable = false)
     @Comment(comment = "哪一年的订单")
     private Integer year;
+
+    @Basic
+    @Comment(comment = "该订单是否被允许选择")
+    private Boolean selected;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn

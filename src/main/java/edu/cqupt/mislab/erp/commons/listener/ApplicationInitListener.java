@@ -3,7 +3,6 @@ package edu.cqupt.mislab.erp.commons.listener;
 import edu.cqupt.mislab.erp.commons.appinit.dao.AppInitTokenRepository;
 import edu.cqupt.mislab.erp.commons.appinit.model.AppInitToken;
 import edu.cqupt.mislab.erp.commons.basic.modelinit.ModelInitService;
-import edu.cqupt.mislab.erp.game.compete.operation.order.service.OrderChooseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class ApplicationInitListener implements ServletContextListener, Applicat
     @Autowired private ModelInitService modelInitService;
     @Autowired private AppInitTokenRepository appInitTokenRepository;
 
-    @Autowired private OrderChooseService orderChooseService;
+//    @Autowired private OrderChooseService orderChooseService;
 
     @Override
     public void contextInitialized(ServletContextEvent sce){
@@ -59,8 +58,10 @@ public class ApplicationInitListener implements ServletContextListener, Applicat
             return;
         }
 
-        //提取订单半成品信息，防止半成品信息造成数据混乱
-        orderChooseService.loadOrderChooseInfoFromDatabase();
+
+//          todo ?
+//        //提取订单半成品信息，防止半成品信息造成数据混乱
+//        orderChooseService.loadOrderChooseInfoFromDatabase();
 
     }
     @Override

@@ -1,6 +1,5 @@
 package edu.cqupt.mislab.erp.game.manage.model.entity;
 
-import com.google.common.base.Objects;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import lombok.*;
@@ -67,12 +66,21 @@ public class EnterpriseBasicInfo implements Serializable {
     private Integer enterpriseCurrentPeriod;
 
     @Basic(optional = false)
-    @Comment(comment = "企业是否会投广告")
+    @Comment(comment = "企业是否会投广告，每年更新")
     private Boolean advertising;
 
     @Basic(optional = false)
-    @Comment(comment = "企业是否投过了广告")
-    private Boolean advertisingCost;
+    @Comment(comment = "企业是否投过了广告，每年更新")
+    private Boolean finishAdvertising;
+
+    @Min(0)
+    @Basic
+    @Comment(comment = "企业订单的选取顺序，每年更新")
+    private Integer sequence;
+
+    @Basic
+    @Comment(comment = "企业是否退出订单会，每年更新")
+    private Boolean finishChoice;
 
     @Basic(optional = false)
     @Enumerated(EnumType.STRING)
@@ -87,20 +95,29 @@ public class EnterpriseBasicInfo implements Serializable {
     @Comment(comment = "企业的成员信息集合")
     private List<EnterpriseMemberInfo> enterpriseMemberInfos = new ArrayList<>();
 
+
     @Override
-    public boolean equals(Object o){
-        if(this == o) {
-            return true;
-        }
-        if(o == null||getClass() != o.getClass()) {
-            return false;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         EnterpriseBasicInfo that = (EnterpriseBasicInfo) o;
-        return Objects.equal(id,that.id)&&Objects.equal(enterpriseName,that.enterpriseName)&&Objects.equal(enterpriseMaxMemberNumber,that.enterpriseMaxMemberNumber)&&Objects.equal(enterpriseCurrentPeriod,that.enterpriseCurrentPeriod)&&Objects.equal(advertising,that.advertising)&&Objects.equal(advertisingCost,that.advertisingCost)&& enterpriseStatus == that.enterpriseStatus &&Objects.equal(gameContributionRateSure,that.gameContributionRateSure);
+        return java.util.Objects.equals(id, that.id) &&
+                java.util.Objects.equals(gameBasicInfo, that.gameBasicInfo) &&
+                java.util.Objects.equals(enterpriseName, that.enterpriseName) &&
+                java.util.Objects.equals(userStudentInfo, that.userStudentInfo) &&
+                java.util.Objects.equals(enterpriseMaxMemberNumber, that.enterpriseMaxMemberNumber) &&
+                java.util.Objects.equals(enterpriseCurrentPeriod, that.enterpriseCurrentPeriod) &&
+                java.util.Objects.equals(advertising, that.advertising) &&
+                java.util.Objects.equals(finishAdvertising, that.finishAdvertising) &&
+                java.util.Objects.equals(finishChoice, that.finishChoice) &&
+                enterpriseStatus == that.enterpriseStatus &&
+                java.util.Objects.equals(gameContributionRateSure, that.gameContributionRateSure) &&
+                java.util.Objects.equals(enterpriseMemberInfos, that.enterpriseMemberInfos);
     }
 
     @Override
-    public int hashCode(){
-        return Objects.hashCode(id,enterpriseName,enterpriseMaxMemberNumber,enterpriseCurrentPeriod,advertising,advertisingCost, enterpriseStatus,gameContributionRateSure);
+    public int hashCode() {
+
+        return java.util.Objects.hash(id, gameBasicInfo, enterpriseName, userStudentInfo, enterpriseMaxMemberNumber, enterpriseCurrentPeriod, advertising, finishAdvertising, finishChoice, enterpriseStatus, gameContributionRateSure, enterpriseMemberInfos);
     }
 }

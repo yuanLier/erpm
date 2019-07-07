@@ -48,22 +48,13 @@ public class EnterpriseAdInfo implements Serializable {
 
     @Min(1L)
     @Column(nullable = false,updatable = false)
-    @Comment(comment = "那一年投的广告费")
+    @Comment(comment = "哪一年投的广告费")
     private Integer year;
 
     @DoubleMin(0.01D)
     @Column(nullable = false,updatable = false)
     @Comment(comment = "投了多少钱")
     private Double money;
-
-    @Min(0)
-    @Column(columnDefinition = "int default 0")
-    @Comment(comment = "该订单已经选择已经多少轮")
-    private Integer frequency;
-
-    @Column(nullable = false)
-    @Comment(comment = "该订单是否退出排序")
-    private Boolean finished;
 
     @Override
     public boolean equals(Object o) {
@@ -75,14 +66,12 @@ public class EnterpriseAdInfo implements Serializable {
                 java.util.Objects.equals(productBasicInfo, that.productBasicInfo) &&
                 java.util.Objects.equals(marketBasicInfo, that.marketBasicInfo) &&
                 java.util.Objects.equals(year, that.year) &&
-                java.util.Objects.equals(money, that.money) &&
-                java.util.Objects.equals(frequency, that.frequency) &&
-                java.util.Objects.equals(finished, that.finished);
+                java.util.Objects.equals(money, that.money);
     }
 
     @Override
     public int hashCode() {
 
-        return java.util.Objects.hash(id, enterpriseBasicInfo, productBasicInfo, marketBasicInfo, year, money, frequency, finished);
+        return java.util.Objects.hash(id, enterpriseBasicInfo, productBasicInfo, marketBasicInfo, year, money);
     }
 }

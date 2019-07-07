@@ -37,6 +37,8 @@ public interface FinanceOperationConstant {
     String PRODLINE_TRANSACTION = "生产线转产过程中需要支持的金额";
 
 
+    String ENTERPRISE_ADVERTISING = "广告投放过程中需要支付的金额";
+
 
 
 }

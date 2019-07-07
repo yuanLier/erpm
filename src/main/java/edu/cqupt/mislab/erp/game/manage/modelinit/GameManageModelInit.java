@@ -116,7 +116,7 @@ public class GameManageModelInit implements ModelInit {
         //初始化一个企业
         EnterpriseBasicInfo enterpriseBasicInfo = EnterpriseBasicInfo.builder()
                 .advertising(true)
-                .advertisingCost(false)
+                .finishAdvertising(false)
                 .gameContributionRateSure(false)
                 .enterpriseStatus(EnterpriseStatusEnum.CREATE)
                 .userStudentInfo(userStudentInfo)
