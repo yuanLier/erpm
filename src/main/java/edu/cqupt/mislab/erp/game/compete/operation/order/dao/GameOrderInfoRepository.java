@@ -39,21 +39,13 @@ public interface GameOrderInfoRepository extends BasicRepository<GameOrderInfo, 
 
 
     /**
-     * 获取某场比赛处于某年时，综合企业已有的市场产品ISO选出的订单
-     *  （没办法，jpa中and的优先级比or高，所以只能拆开写，中间用or连接
-     *  （或者也可以改成 @Query，然后手动用括号表达逻辑顺序
-     * @param gameId0 哪场比赛
-     * @param year0 哪一年的订单
-     * @param isoBasicIdList0 iso认证率不足某一比率的isoId
-     * @param marketIdList 市场占有率高于某一比率的marketId
-     * @param gameId1 哪场比赛，值同gameId0
-     * @param year1 哪一年的订单，值同year0
-     * @param isoBasicIdList1 iso认证率不足某一比率的isoId，同上
-     * @param productIdList 产品研发率高于某一比率的productId
+     * 获取某场比赛处于某一年时，全部生成的订单
+     * @param gameId
+     * @param year
      * @return
      */
-    List<GameOrderInfo> findByGameBasicInfo_IdAndYearAndIsoBasicInfo_IdNotInAndMarketBasicInfo_IdInOrGameBasicInfo_IdAndYearAndIsoBasicInfo_IdNotInAndProductBasicInfo_IdIn(Long gameId0, Integer year0, List<Long> isoBasicIdList0, List<Long> marketIdList,
-                                                                                                                                                                            Long gameId1, Integer year1, List<Long> isoBasicIdList1, List<Long> productIdList);
+    List<GameOrderInfo> findByGameBasicInfo_IdAndYear(Long gameId, Integer year);
+
 
     /**
      * 获取某场比赛处于某一年时，可被选取的订单

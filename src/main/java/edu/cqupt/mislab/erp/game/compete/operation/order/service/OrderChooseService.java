@@ -3,7 +3,6 @@ package edu.cqupt.mislab.erp.game.compete.operation.order.service;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.dto.EnterpriseAdDto;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.entity.GameOrderInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.vo.GameOrderVo;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public interface OrderChooseService {
 
 
     /**
-     * 综合企业产品研发、ISO认证等情况，选择某一年中可供企业选取的订单，仅作为内部接口使用
+     * 根据企业存货情况选择某一年中可供企业选取的订单，仅作为内部接口使用
      * @param year
      * @return
      */
@@ -50,11 +49,11 @@ public interface OrderChooseService {
 
 
     /**
-     * 企业结束选单 todo websocket通知前端
+     * 企业结束选单
      * @param enterpriseId
-     * @return 返回下一个进行选单操作的企业
+     * @return 返回下一个进行选单操作的企业id
      */
-    EnterpriseBasicInfo enterpriseFinishChoose(Long enterpriseId);
+    Long enterpriseFinishCurrentChoice(Long enterpriseId);
 
 
     /**
@@ -62,5 +61,5 @@ public interface OrderChooseService {
      * @param enterpriseId
      * @return 返回成功退出与否
      */
-    boolean enterpriseDropOut(Long enterpriseId);
+    boolean enterpriseFinishChoice(Long enterpriseId);
 }

@@ -6,6 +6,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDev
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.entity.GameOrderInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.order.model.vo.GameOrderVo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.vo.OrderDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.GameFactoryBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryDevelopInfo;
@@ -542,6 +543,23 @@ public abstract class EntityVoUtil {
         transportMethodDisplayVo.setTransportPrice(transportBasicInfo.getTransportBasicInfo().getTransportPrice());
 
         return transportMethodDisplayVo;
+    }
+
+    public static GameOrderVo copyFieldsFromEntityToVo(GameOrderInfo gameOrderInfo, GameOrderVo flag) {
+        GameOrderVo gameOrderVo = new GameOrderVo();
+        BeanCopyUtil.copyPropertiesSimple(gameOrderInfo, gameOrderVo);
+
+        gameOrderVo.setGameBasicInfoId(gameOrderInfo.getGameBasicInfo().getId());
+
+        gameOrderVo.setMarketBasicInfoId(gameOrderInfo.getMarketBasicInfo().getId());
+        gameOrderVo.setProductBasicInfoId(gameOrderInfo.getProductBasicInfo().getId());
+        if(gameOrderInfo.getIsoBasicInfo() != null) {
+            gameOrderVo.setIsoBasicInfoId(gameOrderInfo.getIsoBasicInfo().getId());
+        }
+
+        gameOrderVo.setOrderId(gameOrderInfo.getId());
+
+        return gameOrderVo;
     }
 
 }

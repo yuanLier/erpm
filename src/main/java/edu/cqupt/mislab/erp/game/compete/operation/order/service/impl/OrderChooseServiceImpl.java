@@ -1,17 +1,13 @@
 package edu.cqupt.mislab.erp.game.compete.operation.order.service.impl;
 
 import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
-import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
+import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.commons.websocket.CommonWebSocketMessagePublisher;
 import edu.cqupt.mislab.erp.game.compete.operation.constant.GameSettingConstant;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoDevelopInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoDevelopInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoStatusEnum;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketDevelopInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketStatusEnum;
 import edu.cqupt.mislab.erp.game.compete.operation.order.dao.EnterpriseAdInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.order.dao.GameOrderInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.dto.EnterpriseAdDto;
@@ -21,8 +17,6 @@ import edu.cqupt.mislab.erp.game.compete.operation.order.model.vo.GameOrderVo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.service.OrderChooseService;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import edu.cqupt.mislab.erp.game.manage.constant.ManageConstant;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
@@ -33,10 +27,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.TextMessage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -101,6 +92,10 @@ public class OrderChooseServiceImpl implements OrderChooseService {
                     .build());
         }
 
+        // 设置该企业为已投放
+        enterpriseBasicInfo.setFinishAdvertising(true);
+        enterpriseBasicInfoRepository.save(enterpriseBasicInfo);
+
         // 判断是否全部企业都投放完毕
         finishAdvertise(enterpriseBasicInfo.getGameBasicInfo().getId(), getCurrentYearByCurrentPeriod(enterpriseBasicInfo));
 
@@ -111,67 +106,18 @@ public class OrderChooseServiceImpl implements OrderChooseService {
     @Transactional(rollbackFor = Exception.class)
     public List<GameOrderInfo> selectOrdersOfOneYear(Long gameId, Integer year) {
 
-        // 获取该比赛中全部存活的企业
-        List<EnterpriseBasicInfo> enterpriseBasicInfoList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndEnterpriseStatus(gameId, EnterpriseStatusEnum.PLAYING);
+        // 获取该年的订单
+        List<GameOrderInfo> gameOrderInfoList = gameOrderInfoRepository.findByGameBasicInfo_IdAndYear(gameId, year);
 
-        Map<MarketDevelopInfo, Integer> marketMap = new HashMap<>(10);
-        Map<ProductDevelopInfo, Integer> productMap = new HashMap<>(10);
-        Map<IsoDevelopInfo, Integer> isoMap = new HashMap<>(10);
-
-        for (EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
-
-            // 获取该企业已经开拓完成的市场，并计数到marketMap
-            List<MarketDevelopInfo> marketDevelopInfoList = marketDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndMarketStatus(enterpriseBasicInfo.getId(), MarketStatusEnum.DEVELOPED);
-            for(MarketDevelopInfo marketDevelopInfo : marketDevelopInfoList) {
-                Integer marketNumber = (marketMap.containsKey(marketDevelopInfo)) ? marketMap.get(marketDevelopInfo)+1 : 1;
-                marketMap.put(marketDevelopInfo, marketNumber);
-            }
-            // 获取该企业已经研发完成的产品，并计数到productMap
-            List<ProductDevelopInfo> productDevelopInfoList = productDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndProductDevelopStatus(enterpriseBasicInfo.getId(), ProductDevelopStatusEnum.DEVELOPED);
-            for(ProductDevelopInfo productDevelopInfo : productDevelopInfoList) {
-                Integer productNumber = (productMap.containsKey(productDevelopInfo)) ? marketMap.get(productDevelopInfo)+1 : 1;
-                productMap.put(productDevelopInfo, productNumber);
-            }
-
-            // 获取该企业已经认证完成的iso，并计数到isoMap
-            List<IsoDevelopInfo> isoDevelopInfoList = isoDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndIsoStatus(enterpriseBasicInfo.getId(), IsoStatusEnum.DEVELOPED);
-            for(IsoDevelopInfo isoDevelopInfo : isoDevelopInfoList) {
-                Integer isoNumber = (isoMap.containsKey(isoDevelopInfo)) ? marketMap.get(isoDevelopInfo)+1 : 1;
-                isoMap.put(isoDevelopInfo, isoNumber);
-            }
-        }
-
-        // 选取研发比率超过HOLDING_RATE的市场产品，研发比率不足HOLDING_RATE的ISO
-        final Double holdingRate = GameSettingConstant.HOLDING_RATE;
-
-        List<Long> marketIdList = new ArrayList<>();
-        marketMap.forEach((k, v) -> {
-            if(v > enterpriseBasicInfoList.size()*holdingRate) {
-                marketIdList.add(k.getId());
-            }
-        });
-        List<Long> productIdList = new ArrayList<>();
-        productMap.forEach((k, v) -> {
-            if(v > enterpriseBasicInfoList.size()*holdingRate) {
-                productIdList.add(k.getId());
-            }
-        });
-        List<Long> isoIdList = new ArrayList<>();
-        isoMap.forEach((k, v) -> {
-            if(v <= enterpriseBasicInfoList.size()*holdingRate) {
-                isoIdList.add(k.getId());
-            }
-        });
-
-        // 获取满足市场和产品要求的全部订单
-        List<GameOrderInfo> gameOrderInfoList = gameOrderInfoRepository.findByGameBasicInfo_IdAndYearAndIsoBasicInfo_IdNotInAndMarketBasicInfo_IdInOrGameBasicInfo_IdAndYearAndIsoBasicInfo_IdNotInAndProductBasicInfo_IdIn(gameId, year, isoIdList, marketIdList, gameId, year, isoIdList, productIdList);
-
+        // 获取该比赛中全部存活的企业数量
+        final int enterpriseSize = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndEnterpriseStatus(gameId, EnterpriseStatusEnum.PLAYING).size();
         // 订单总数设置为企业总数的ENTERPRISE_SIZE_RATE倍
         final double enterpriseSizeRate = GameSettingConstant.ENTERPRISE_SIZE_RATE;
 
         // totalOrders取当前订单总数与预期订单总数的较小值
-        int totalOrders = Math.max(gameOrderInfoList.size(), (int)(enterpriseBasicInfoList.size()*enterpriseSizeRate));
-        // 取钱totalOrders个元素作为返回结果
+        int totalOrders = Math.min(gameOrderInfoList.size(), (int)(enterpriseSize*enterpriseSizeRate));
+        // 打乱顺序然后取前totalOrders个元素作为返回结果，相当于随机选取totalOrders个元素
+        Collections.shuffle(gameOrderInfoList);
         gameOrderInfoList = gameOrderInfoList.subList(0, totalOrders);
 
         for(GameOrderInfo gameOrderInfo : gameOrderInfoList) {
@@ -191,11 +137,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
 
         List<GameOrderVo> gameOrderVoList = new ArrayList<>();
         for(GameOrderInfo gameOrderInfo : gameOrderInfoList) {
-
-            GameOrderVo gameOrderVo = new GameOrderVo();
-            BeanCopyUtil.copyPropertiesSimple(gameOrderInfo, gameOrderVo);
-
-            gameOrderVoList.add(gameOrderVo);
+            gameOrderVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(gameOrderInfo, new GameOrderVo()));
         }
 
         return gameOrderVoList;
@@ -216,7 +158,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
     }
 
     @Override
-    public EnterpriseBasicInfo enterpriseFinishChoose(Long enterpriseId) {
+    public Long enterpriseFinishCurrentChoice(Long enterpriseId) {
 
         // 获取当前企业
         EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findOne(enterpriseId);
@@ -226,7 +168,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
 
         // 获取下一个企业的选取顺序（记得对总数取模，总数指该年实际投放了订单的企业总数）
         // 注 ：已破产的企业虽然处于完成投放状态，但实际并未投放订单，所以在这里不用考虑
-        Integer nextSequence = (enterpriseBasicInfo.getSequence()+1) % (int)(long)enterpriseAdInfoRepository.distinctByEnterpriseOfOneYear(year);
+        Integer nextSequence = enterpriseBasicInfo.getSequence() % (int)(long)enterpriseAdInfoRepository.distinctByEnterpriseOfOneYear(year) + 1;
 
         // 获取下一个选取订单的企业
         EnterpriseBasicInfo nextEnterprise = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndSequence(gameId, nextSequence);
@@ -234,20 +176,20 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         // 如果下一个企业已经退出订单会了，重复，直到选出没有退出订单会的那个
         // 注 ：这里不需要考虑死循环，因为选择了结束选单就说明没有退出订单会，也就是说至少还有一个当前企业的getFinishAdvertising()为false
         // 所以最极端的情况就是只有当前企业没有退出订单会，那么下一个选单的企业就还是它，还是符合订单会的选单流程的
-        while(nextEnterprise.getFinishAdvertising()) {
-            nextSequence = (enterpriseBasicInfo.getSequence()+1) % (int)(long)enterpriseAdInfoRepository.distinctByEnterpriseOfOneYear(year);
+        while(nextEnterprise.getFinishChoice()) {
+            nextSequence = enterpriseBasicInfo.getSequence() % (int)(long)enterpriseAdInfoRepository.distinctByEnterpriseOfOneYear(year) + 1;
             nextEnterprise = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndSequence(gameId, nextSequence);
         }
 
         // 通知前端并返回结果
         webSocketMessagePublisher.publish(gameId, new TextMessage(ManageConstant.ENTERPRISE_ORDER_SEQUENCE + nextEnterprise.getId()));
 
-        return nextEnterprise;
+        return nextEnterprise.getId();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean enterpriseDropOut(Long enterpriseId) {
+    public boolean enterpriseFinishChoice(Long enterpriseId) {
 
         EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findOne(enterpriseId);
 
@@ -256,7 +198,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         enterpriseBasicInfoRepository.save(enterpriseBasicInfo);
 
         // 判断是否所有企业均已退出订单会
-        finishOrderMeeting(enterpriseBasicInfo.getGameBasicInfo().getId(), getCurrentYearByCurrentPeriod(enterpriseBasicInfo));
+        finishOrderMeeting(enterpriseBasicInfo.getGameBasicInfo().getId());
 
         return true;
     }
@@ -272,7 +214,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         Integer currentPeriod = enterpriseBasicInfo.getEnterpriseCurrentPeriod();
         Integer totalOfOneYear = enterpriseBasicInfo.getGameBasicInfo().getGameInitBasicInfo().getPeriodOfOneYear();
 
-        return (int)Math.ceil(currentPeriod/totalOfOneYear);
+        return (int)Math.ceil(currentPeriod*0.1/totalOfOneYear);
     }
 
 
@@ -298,16 +240,16 @@ public class OrderChooseServiceImpl implements OrderChooseService {
             // 获取并通知前端第一个轮到哪个企业投广告
             EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndSequence(gameId, 1);
             webSocketMessagePublisher.publish(gameId, new TextMessage(ManageConstant.ORDER_CHOOSE_BEGIN + enterpriseBasicInfo.getId()));
+
         }
     }
 
     /**
      * 判断是否全部企业已经退出订单会，仅作为内部接口在每个企业退出订单会时调用
      * @param gameId
-     * @param year
      * @return 若全部退出，通知前端订单会已结束，并允许企业进入下一年 todo 允许进入下一年
      */
-    private boolean finishOrderMeeting(Long gameId, Integer year) {
+    private boolean finishOrderMeeting(Long gameId) {
 
         // 获取该年已退出订单会的企业
         List<EnterpriseBasicInfo> finishList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndFinishChoiceIsTrue(gameId);

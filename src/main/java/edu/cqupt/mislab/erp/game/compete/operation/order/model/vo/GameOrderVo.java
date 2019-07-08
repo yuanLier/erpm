@@ -1,10 +1,5 @@
 package edu.cqupt.mislab.erp.game.compete.operation.order.model.vo;
 
-import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
-import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -18,14 +13,17 @@ import lombok.Data;
 @ApiModel("订单池中订单信息展示视图")
 public class GameOrderVo {
 
+    @ApiModelProperty(value = "订单id")
+    private Long orderId;
+
     @ApiModelProperty(value = "哪一场比赛")
-    private GameBasicInfo gameBasicInfo;
+    private Long gameBasicInfoId;
 
     @ApiModelProperty(value = "哪一个产品")
-    private ProductBasicInfo productBasicInfo;
+    private Long productBasicInfoId;
 
     @ApiModelProperty(value = "哪一个市场")
-    private MarketBasicInfo marketBasicInfo;
+    private Long marketBasicInfoId;
 
     @ApiModelProperty(value = "产品数量")
     private Integer productNumber;
@@ -43,12 +41,9 @@ public class GameOrderVo {
     private Double penalPercent;
 
     @ApiModelProperty(value = "所需要的质量认证信息")
-    private IsoBasicInfo isoBasicInfo;
+    private Long isoBasicInfoId;
 
     @ApiModelProperty(value = "哪一年的订单")
     private Integer year;
-
-    @ApiModelProperty(value = "该订单被哪个企业选择")
-    private EnterpriseBasicInfo enterpriseBasicInfo;
 
 }
