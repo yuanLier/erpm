@@ -5,9 +5,7 @@ import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.commons.websocket.CommonWebSocketMessagePublisher;
 import edu.cqupt.mislab.erp.game.compete.operation.constant.GameSettingConstant;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
-import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.order.dao.EnterpriseAdInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.order.dao.GameOrderInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.dto.EnterpriseAdDto;
@@ -16,7 +14,6 @@ import edu.cqupt.mislab.erp.game.compete.operation.order.model.entity.GameOrderI
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.vo.GameOrderVo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.service.OrderChooseService;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.constant.ManageConstant;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
@@ -52,13 +49,6 @@ public class OrderChooseServiceImpl implements OrderChooseService {
 
     @Autowired
     private GameOrderInfoRepository gameOrderInfoRepository;
-
-    @Autowired
-    private ProductDevelopInfoRepository productDevelopInfoRepository;
-    @Autowired
-    private MarketDevelopInfoRepository marketDevelopInfoRepository;
-    @Autowired
-    private IsoDevelopInfoRepository isoDevelopInfoRepository;
 
     @Autowired
     private FinanceService financeService;
