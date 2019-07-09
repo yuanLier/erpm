@@ -7,15 +7,15 @@ package edu.cqupt.mislab.erp.game.compete.operation.constant;
  */
 public interface GameSettingConstant {
 
-
-    /**
-     * 选取研发比率超过HOLDING_RATE的市场产品，研发比率不足HOLDING_RATE的ISO
-     */
-    Double HOLDING_RATE = 0.65;
-
     /**
      * 订单总数设置为企业总数的ENTERPRISE_SIZE_RATE倍
      */
     Double ENTERPRISE_SIZE_RATE = 2.2;
+
+
+    /**
+     * 系统分配的初始化金额 todo 设置为管理员可更改
+     */
+    Double INIT_FINANCE = 100000D;
 
 }
