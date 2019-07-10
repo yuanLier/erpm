@@ -59,6 +59,13 @@ public interface ManageConstant {
 
     /**
      * @author yuanyiwen
+     * @description 企业进入下一年
+     * @date 16:59 2019/7/10
+     **/
+    String NEW_YEAR = "新的一年 ：year = ";
+
+    /**
+     * @author yuanyiwen
      * @description 订单会开始
      * @date 18:35 2019/7/7
      **/

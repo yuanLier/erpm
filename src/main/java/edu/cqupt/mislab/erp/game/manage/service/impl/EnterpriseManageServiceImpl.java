@@ -83,7 +83,6 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
             maxMemberNumber = gameBasicInfo.getGameMaxEnterpriseNumber();
         }
 
-//        todo 好像是在这里初始化的？
         //构建这个企业
         EnterpriseBasicInfo enterpriseBasicInfo = EnterpriseBasicInfo.builder()
                 .userStudentInfo(userStudentInfo)
@@ -91,6 +90,10 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
                 .advertising(true)
                 //默认未投广告费
                 .finishAdvertising(false)
+                // 默认顺序为0
+                .sequence(0)
+                // 默认未结束订单会
+                .finishChoice(false)
                 .enterpriseName(createDto.getEnterpriseName())
                 .enterpriseMaxMemberNumber(maxMemberNumber)
                 //当前周期为第一期

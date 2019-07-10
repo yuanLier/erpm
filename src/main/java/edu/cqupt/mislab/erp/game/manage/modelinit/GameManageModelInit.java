@@ -117,6 +117,8 @@ public class GameManageModelInit implements ModelInit {
         EnterpriseBasicInfo enterpriseBasicInfo = EnterpriseBasicInfo.builder()
                 .advertising(true)
                 .finishAdvertising(false)
+                .sequence(0)
+                .finishChoice(false)
                 .gameContributionRateSure(false)
                 .enterpriseStatus(EnterpriseStatusEnum.CREATE)
                 .userStudentInfo(userStudentInfo)

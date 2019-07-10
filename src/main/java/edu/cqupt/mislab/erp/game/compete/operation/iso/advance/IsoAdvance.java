@@ -10,7 +10,6 @@ import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoHistoryIn
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoStatusEnum;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,34 +41,28 @@ public class IsoAdvance implements ModelAdvance {
      * Iso模块比赛期间历史数据 ：
      *      查一下企业拥有的ISO信息就好
      *      市场开拓、产品研发同理（产品生产隶属于生产线 所以不在这里考虑）
-     * @param gameId
+     * @param enterpriseBasicInfo
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean modelHistory(Long gameId) {
+    public boolean modelHistory(EnterpriseBasicInfo enterpriseBasicInfo) {
 
         log.info("开始记录iso模块比赛期间历史数据");
 
-        // 获取该比赛中全部进行中企业
-        List<EnterpriseBasicInfo> enterpriseBasicInfoList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndEnterpriseStatus(gameId, EnterpriseStatusEnum.PLAYING);
+        // 获取全部认证完成的iso
+        List<IsoDevelopInfo> isoDevelopInfoList = isoDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndIsoStatus(enterpriseBasicInfo.getId(), IsoStatusEnum.DEVELOPED);
 
-        for(EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
+        for(IsoDevelopInfo isoDevelopInfo : isoDevelopInfoList) {
 
-            // 获取全部认证完成的iso
-            List<IsoDevelopInfo> isoDevelopInfoList = isoDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndIsoStatus(enterpriseBasicInfo.getId(), IsoStatusEnum.DEVELOPED);
+            IsoHistoryInfo isoHistoryInfo = new IsoHistoryInfo();
 
-            for(IsoDevelopInfo isoDevelopInfo : isoDevelopInfoList) {
+            isoHistoryInfo.setEnterpriseBasicInfo(enterpriseBasicInfo);
+            isoHistoryInfo.setIsoBasicInfo(isoDevelopInfo.getIsoBasicInfo());
+            isoHistoryInfo.setPeriod(enterpriseBasicInfo.getEnterpriseCurrentPeriod());
 
-                IsoHistoryInfo isoHistoryInfo = new IsoHistoryInfo();
-
-                isoHistoryInfo.setEnterpriseBasicInfo(enterpriseBasicInfo);
-                isoHistoryInfo.setIsoBasicInfo(isoDevelopInfo.getIsoBasicInfo());
-                isoHistoryInfo.setPeriod(enterpriseBasicInfo.getEnterpriseCurrentPeriod());
-
-                // 记录截止到当前周期，各个企业认证完成的iso
-                isoHistoryRepository.save(isoHistoryInfo);
-            }
+            // 记录截止到当前周期，各个企业认证完成的iso
+            isoHistoryRepository.save(isoHistoryInfo);
         }
 
         log.info("iso模块-比赛期间历史数据记录成功");
@@ -79,51 +72,43 @@ public class IsoAdvance implements ModelAdvance {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean modelAdvance(Long gameId) {
+    public boolean modelAdvance(EnterpriseBasicInfo enterpriseBasicInfo) {
 
         log.info("开始进行iso模块比赛期间周期推进");
 
-        // 获取该比赛中全部进行中企业
-        List<EnterpriseBasicInfo> enterpriseBasicInfoList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndEnterpriseStatus(gameId, EnterpriseStatusEnum.PLAYING);
+        // 获取该企业中全部认证完成的iso（一定是先认证完成再认证中，顺序不可颠倒）
+        List<IsoDevelopInfo> isoDevelopInfoList = isoDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndIsoStatus(enterpriseBasicInfo.getId(), IsoStatusEnum.DEVELOPED);
 
-        for (EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
+        for (IsoDevelopInfo isoDevelopInfo : isoDevelopInfoList) {
 
-            // 获取该企业中全部认证完成的iso（一定是先认证完成再认证中，顺序不可颠倒）
-            List<IsoDevelopInfo> isoDevelopInfoList = isoDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndIsoStatus(enterpriseBasicInfo.getId(), IsoStatusEnum.DEVELOPED);
+            // 扣除认证完成后需要支付的维护费用
+            String changeOperating = FinanceOperationConstant.ISO_MAINTAIN;
+            Double changeAmount = isoDevelopInfo.getIsoBasicInfo().getIsoMaintainCost();
+            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true);
 
-            for (IsoDevelopInfo isoDevelopInfo : isoDevelopInfoList) {
+        }
 
-                // 扣除认证完成后需要支付的维护费用
-                Long enterpriseId = enterpriseBasicInfo.getId();
-                String changeOperating = FinanceOperationConstant.ISO_MAINTAIN;
-                Double changeAmount = isoDevelopInfo.getIsoBasicInfo().getIsoMaintainCost();
-                financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
+        // 获取该企业中全部认证中的iso
+        isoDevelopInfoList = isoDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndIsoStatus(enterpriseBasicInfo.getId(), IsoStatusEnum.DEVELOPING);
 
+        for (IsoDevelopInfo isoDevelopInfo : isoDevelopInfoList) {
+
+            // 已经研发的周期数+1
+            isoDevelopInfo.setResearchedPeriod(isoDevelopInfo.getResearchedPeriod()+1);
+
+            // 如果已经认证的周期数达到了该iso认证所需的周期数
+            if(isoDevelopInfo.getResearchedPeriod() == isoDevelopInfo.getIsoBasicInfo().getIsoResearchPeriod()) {
+                // 设置为已认证
+                isoDevelopInfo.setIsoStatus(IsoStatusEnum.DEVELOPED);
             }
 
-            // 获取该企业中全部认证中的iso
-            isoDevelopInfoList = isoDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndIsoStatus(enterpriseBasicInfo.getId(), IsoStatusEnum.DEVELOPING);
+            // 保存修改
+            isoDevelopInfoRepository.save(isoDevelopInfo);
 
-            for (IsoDevelopInfo isoDevelopInfo : isoDevelopInfoList) {
-
-                // 已经研发的周期数+1
-                isoDevelopInfo.setResearchedPeriod(isoDevelopInfo.getResearchedPeriod()+1);
-
-                // 如果已经认证的周期数达到了该iso认证所需的周期数
-                if(isoDevelopInfo.getResearchedPeriod() == isoDevelopInfo.getIsoBasicInfo().getIsoResearchPeriod()) {
-                    // 设置为已认证
-                    isoDevelopInfo.setIsoStatus(IsoStatusEnum.DEVELOPED);
-                }
-
-                // 保存修改
-                isoDevelopInfoRepository.save(isoDevelopInfo);
-
-                // 扣除认证过程中需要支付的费用
-                Long enterpriseId = enterpriseBasicInfo.getId();
-                String changeOperating = FinanceOperationConstant.ISO_DEVELOP;
-                Double changeAmount = isoDevelopInfo.getIsoBasicInfo().getIsoResearchCost();
-                financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
-            }
+            // 扣除认证过程中需要支付的费用
+            String changeOperating = FinanceOperationConstant.ISO_DEVELOP;
+            Double changeAmount = isoDevelopInfo.getIsoBasicInfo().getIsoResearchCost();
+            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true);
         }
 
         log.info("iso模块-比赛期间周期推进正常");

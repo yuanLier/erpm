@@ -7,7 +7,6 @@ import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.*;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.*;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,47 +43,40 @@ public class StockAdvance implements ModelAdvance {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean modelHistory(Long gameId) {
+    public boolean modelHistory(EnterpriseBasicInfo enterpriseBasicInfo) {
 
         log.info("开始记录库存管理模块比赛期间历史数据");
 
-        // 获取该比赛中全部进行中企业
-        List<EnterpriseBasicInfo> enterpriseBasicInfoList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndEnterpriseStatus(gameId, EnterpriseStatusEnum.PLAYING);
+        // 获取该企业当前全部的材料库存情况
+        List<MaterialStockInfo> materialStockInfoList = materialStockInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseBasicInfo.getId());
 
-        for(EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
+        for (MaterialStockInfo materialStockInfo : materialStockInfoList) {
 
-            // 获取该企业当前全部的材料库存情况
-            List<MaterialStockInfo> materialStockInfoList = materialStockInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseBasicInfo.getId());
+            // 构建并存储材料库存历史记录
+            MaterialStockHistoryInfo materialStockHistoryInfo = new MaterialStockHistoryInfo();
 
-            for (MaterialStockInfo materialStockInfo : materialStockInfoList) {
+            materialStockHistoryInfo.setEnterpriseBasicInfo(enterpriseBasicInfo);
+            materialStockHistoryInfo.setPeriod(enterpriseBasicInfo.getEnterpriseCurrentPeriod());
+            materialStockHistoryInfo.setMaterialBasicInfo(materialStockInfo.getMaterialBasicInfo());
+            materialStockHistoryInfo.setMaterialNumber(materialStockInfo.getMaterialNumber());
 
-                // 构建并存储材料库存历史记录
-                MaterialStockHistoryInfo materialStockHistoryInfo = new MaterialStockHistoryInfo();
+            materialStockHistoryRepository.save(materialStockHistoryInfo);
+        }
 
-                materialStockHistoryInfo.setEnterpriseBasicInfo(enterpriseBasicInfo);
-                materialStockHistoryInfo.setPeriod(enterpriseBasicInfo.getEnterpriseCurrentPeriod());
-                materialStockHistoryInfo.setMaterialBasicInfo(materialStockInfo.getMaterialBasicInfo());
-                materialStockHistoryInfo.setMaterialNumber(materialStockInfo.getMaterialNumber());
+        // 获取该企业当前全部的产品库存情况
+        List<ProductStockInfo> productStockInfoList = productStockInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseBasicInfo.getId());
 
-                materialStockHistoryRepository.save(materialStockHistoryInfo);
-            }
+        for (ProductStockInfo productStockInfo : productStockInfoList) {
 
-            // 获取该企业当前全部的产品库存情况
-            List<ProductStockInfo> productStockInfoList = productStockInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseBasicInfo.getId());
+            // 构建并存储产品库存历史记录
+            ProductStockHistoryInfo productStockHistoryInfo = new ProductStockHistoryInfo();
 
-            for (ProductStockInfo productStockInfo : productStockInfoList) {
+            productStockHistoryInfo.setEnterpriseBasicInfo(enterpriseBasicInfo);
+            productStockHistoryInfo.setPeriod(enterpriseBasicInfo.getEnterpriseCurrentPeriod());
+            productStockHistoryInfo.setProductBasicInfo(productStockInfo.getProductBasicInfo());
+            productStockHistoryInfo.setProductNumber(productStockInfo.getProductNumber());
 
-                // 构建并存储产品库存历史记录
-                ProductStockHistoryInfo productStockHistoryInfo = new ProductStockHistoryInfo();
-
-                productStockHistoryInfo.setEnterpriseBasicInfo(enterpriseBasicInfo);
-                productStockHistoryInfo.setPeriod(enterpriseBasicInfo.getEnterpriseCurrentPeriod());
-                productStockHistoryInfo.setProductBasicInfo(productStockInfo.getProductBasicInfo());
-                productStockHistoryInfo.setProductNumber(productStockInfo.getProductNumber());
-
-                productStockHistoryRepository.save(productStockHistoryInfo);
-            }
-
+            productStockHistoryRepository.save(productStockHistoryInfo);
         }
 
         log.info("库存管理模块-比赛期间历史数据记录成功");
@@ -94,50 +86,43 @@ public class StockAdvance implements ModelAdvance {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean modelAdvance(Long gameId) {
+    public boolean modelAdvance(EnterpriseBasicInfo enterpriseBasicInfo) {
 
         log.info("开始进行库存管理模块比赛期间周期推进");
 
-        // 获取该比赛中全部进行中企业
-        List<EnterpriseBasicInfo> enterpriseBasicInfoList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndEnterpriseStatus(gameId, EnterpriseStatusEnum.PLAYING);
+        // 获取该企业中全部处于运输中状态下的订单
+        List<MaterialOrderInfo> materialOrderInfoList = materialOrderInfoRepository.findByEnterpriseBasicInfo_IdAndTransportStatus(enterpriseBasicInfo.getId(), TransportStatusEnum.TRANSPORTING);
 
-        for (EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
+        for (MaterialOrderInfo materialOrderInfo : materialOrderInfoList) {
 
-            // 获取该企业中全部处于运输中状态下的订单
-            List<MaterialOrderInfo> materialOrderInfoList = materialOrderInfoRepository.findByEnterpriseBasicInfo_IdAndTransportStatus(enterpriseBasicInfo.getId(), TransportStatusEnum.TRANSPORTING);
+            // 如果企业所处的当前周期达到了该种运输方式所需要的周期数
+            if(enterpriseBasicInfo.getEnterpriseCurrentPeriod() == materialOrderInfo.getPurchaseTime() + materialOrderInfo.getTransportMethod().getTransportBasicInfo().getTransportPeriod()) {
 
-            for (MaterialOrderInfo materialOrderInfo : materialOrderInfoList) {
-
-                // 如果企业所处的当前周期达到了该种运输方式所需要的周期数
-                if(enterpriseBasicInfo.getEnterpriseCurrentPeriod() == materialOrderInfo.getPurchaseTime() + materialOrderInfo.getTransportMethod().getTransportBasicInfo().getTransportPeriod()) {
-
-                    // 设置为已送达
-                    materialOrderInfo.setTransportStatus(TransportStatusEnum.ARRIVED);
-
-                    // 保存修改
-                    materialOrderInfoRepository.save(materialOrderInfo);
-                }
-
-                // 扣除运输过程中需要支付的费用
-                Long enterpriseId = enterpriseBasicInfo.getId();
-                String changeOperating = FinanceOperationConstant.ISO_DEVELOP;
-                Double changeAmount = materialOrderInfo.getTransportMethod().getTransportBasicInfo().getTransportPrice();
-                financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
-            }
-
-            // 获取该企业中全部处于已审核状态的订单
-            materialOrderInfoList = materialOrderInfoRepository.findByEnterpriseBasicInfo_IdAndTransportStatus(enterpriseBasicInfo.getId(), TransportStatusEnum.CHECKED);
-
-            for (MaterialOrderInfo materialOrderInfo : materialOrderInfoList) {
-
-                // 设置为运输中
-                materialOrderInfo.setTransportStatus(TransportStatusEnum.TRANSPORTING);
+                // 设置为已送达
+                materialOrderInfo.setTransportStatus(TransportStatusEnum.ARRIVED);
 
                 // 保存修改
                 materialOrderInfoRepository.save(materialOrderInfo);
             }
 
+            // 扣除运输过程中需要支付的费用
+            String changeOperating = FinanceOperationConstant.ISO_DEVELOP;
+            Double changeAmount = materialOrderInfo.getTransportMethod().getTransportBasicInfo().getTransportPrice();
+            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true);
         }
+
+        // 获取该企业中全部处于已审核状态的订单
+        materialOrderInfoList = materialOrderInfoRepository.findByEnterpriseBasicInfo_IdAndTransportStatus(enterpriseBasicInfo.getId(), TransportStatusEnum.CHECKED);
+
+        for (MaterialOrderInfo materialOrderInfo : materialOrderInfoList) {
+
+            // 设置为运输中
+            materialOrderInfo.setTransportStatus(TransportStatusEnum.TRANSPORTING);
+
+            // 保存修改
+            materialOrderInfoRepository.save(materialOrderInfo);
+        }
+
 
         log.info("库存管理模块-比赛期间周期推进正常");
 

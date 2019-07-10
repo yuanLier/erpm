@@ -1,5 +1,7 @@
 package edu.cqupt.mislab.erp.game.compete.basic;
 
+import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
+
 /**
  * @author yuanyiwen
  * @create 2019-05-12 11:32
@@ -9,30 +11,32 @@ public interface ModelAdvance {
 
     /**
      * 这个方法用来记录比赛期间各模块的历史数据
-     * @param gameId
+     * @param enterpriseBasicInfo
      * @return
      */
-    boolean modelHistory(Long gameId);
+    boolean modelHistory(EnterpriseBasicInfo enterpriseBasicInfo);
+
 
     /**
      * 这个方法用来实现各模块自己的周期推进
-     * @param gameId
+     * @param enterpriseBasicInfo
      * @return
      */
-    boolean modelAdvance(Long gameId);
+    boolean modelAdvance(EnterpriseBasicInfo enterpriseBasicInfo);
+
 
     /**
      * 推进模板
-     * @param gameId
+     * @param enterpriseBasicInfo
      * @return
      */
-    default boolean advance(Long gameId) {
+    default boolean advance(EnterpriseBasicInfo enterpriseBasicInfo) {
 
         // 历史记录是否成功
-        boolean historyBoolean = modelHistory(gameId);
+        boolean historyBoolean = modelHistory(enterpriseBasicInfo);
 
         // 周期推进是否成功
-        boolean advanceBoolean = modelAdvance(gameId);
+        boolean advanceBoolean = modelAdvance(enterpriseBasicInfo);
 
         return historyBoolean && advanceBoolean;
     }

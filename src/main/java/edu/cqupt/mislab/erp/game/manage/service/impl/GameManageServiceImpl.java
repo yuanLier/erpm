@@ -177,6 +177,11 @@ public class GameManageServiceImpl implements GameManageService {
             //向前端广播这个比赛已经初始化完成的信息
             webSocketMessagePublisher.publish(gameId,new TextMessage(ManageConstant.GAME_INIT_COMPLETE + gameId));
 
+            // 通知前端新的一年开始了
+            webSocketMessagePublisher.publish(gameId, new TextMessage(ManageConstant.NEW_YEAR + gameBasicInfo.getGameCurrentYear()));
+            // 通知前端订单会开始了
+            webSocketMessagePublisher.publish(gameId, new TextMessage(ManageConstant.ORDER_MEETING_BEGIN + gameId));
+
             //响应比赛创建者信息
             return toSuccessResponseVoWithNoData();
         }

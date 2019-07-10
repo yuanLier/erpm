@@ -18,7 +18,6 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.*;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -59,21 +58,15 @@ public class FactoryManagementAdvance implements ModelAdvance {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean modelHistory(Long gameId) {
+    public boolean modelHistory(EnterpriseBasicInfo enterpriseBasicInfo) {
 
         log.info("开始记录厂房管理模块比赛期间历史数据");
 
-        // 获取该比赛中全部进行中企业
-        List<EnterpriseBasicInfo> enterpriseBasicInfoList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndEnterpriseStatus(gameId, EnterpriseStatusEnum.PLAYING);
+        // 记录厂房的历史数据
+        factoryHistoryRecord(enterpriseBasicInfo);
 
-        for(EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
-
-            // 记录厂房的历史数据
-            factoryHistoryRecord(enterpriseBasicInfo);
-
-            // 记录生产线的历史数据
-            prodlineHistoryRecord(enterpriseBasicInfo);
-        }
+        // 记录生产线的历史数据
+        prodlineHistoryRecord(enterpriseBasicInfo);
 
         log.info("厂房管理模块-比赛期间历史数据记录成功");
 
@@ -82,35 +75,28 @@ public class FactoryManagementAdvance implements ModelAdvance {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean modelAdvance(Long gameId) {
+    public boolean modelAdvance(EnterpriseBasicInfo enterpriseBasicInfo) {
 
         log.info("开始进行厂房管理模块比赛期间周期推进");
 
-        // 获取该比赛中全部进行中企业
-        List<EnterpriseBasicInfo> enterpriseBasicInfoList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndEnterpriseStatus(gameId, EnterpriseStatusEnum.PLAYING);
+        // 对该企业中全部修建完成且投入使用的厂房进行周期推进
+        holdingEnableFactory(enterpriseBasicInfo);
 
-        for (EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
+        // 对该企业中全部租来且投入使用的厂房进行周期推进
+        leasingEnableFactory(enterpriseBasicInfo);
 
-            // 对该企业中全部修建完成且投入使用的厂房进行周期推进
-            holdingEnableFactory(enterpriseBasicInfo);
+        // 对该企业中全部修建完成且确认出售的厂房进行周期推进
+        soldFactory(enterpriseBasicInfo);
 
-            // 对该企业中全部租来且投入使用的厂房进行周期推进
-            leasingEnableFactory(enterpriseBasicInfo);
-
-            // 对该企业中全部修建完成且确认出售的厂房进行周期推进
-            soldFactory(enterpriseBasicInfo);
-
-            // 对该企业中全部修建中的厂房进行周期推进
-            developingFactory(enterpriseBasicInfo);
+        // 对该企业中全部修建中的厂房进行周期推进
+        developingFactory(enterpriseBasicInfo);
 
 
-            // 对该企业中全部安装完成且投入使用的生产线进行周期推进
-            holdingEnableProdline(enterpriseBasicInfo);
+        // 对该企业中全部安装完成且投入使用的生产线进行周期推进
+        holdingEnableProdline(enterpriseBasicInfo);
 
-            // 对该企业中全部安装中的生产线进行周期推进
-            developingProdline(enterpriseBasicInfo);
-
-        }
+        // 对该企业中全部安装中的生产线进行周期推进
+        developingProdline(enterpriseBasicInfo);
 
 
         log.info("厂房管理模块-比赛期间周期推进正常");
