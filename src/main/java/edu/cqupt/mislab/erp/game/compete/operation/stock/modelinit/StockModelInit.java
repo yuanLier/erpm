@@ -34,7 +34,7 @@ public class StockModelInit implements ModelInit {
             try{
                 log.info("开始初始化运输方式基本信息");
 
-                //初始化项目的ISO基本数据信息
+                //初始化项目的传输方式基本信息
                 initTransportBasicInfo();
 
                 log.info("初始化应用运输方式基本信息完成");

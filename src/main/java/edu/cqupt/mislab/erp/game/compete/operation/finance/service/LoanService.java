@@ -1,4 +1,4 @@
-package edu.cqupt.mislab.erp.game.compete.operation.finance.service.finance;
+package edu.cqupt.mislab.erp.game.compete.operation.finance.service;
 
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.dto.LoanEnterpriseDto;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.dto.LoanSelectDto;

@@ -1,6 +1,8 @@
 package edu.cqupt.mislab.erp.game.compete.basic.impl;
 
 import edu.cqupt.mislab.erp.game.compete.basic.GameModelInit;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.dao.LoanBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.model.entity.LoanBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketBasicInfoRepository;
@@ -15,6 +17,8 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoR
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductMaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.TransportBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.TransportBasicInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +46,8 @@ public class GameModelInitService implements ApplicationContextAware {
     @Autowired private ProductMaterialBasicInfoRepository productMaterialBasicInfoRepository;
     @Autowired private FactoryBasicInfoRepository factoryBasicInfoRepository;
     @Autowired private ProdlineBasicInfoRepository prodlineBasicInfoRepository;
+    @Autowired private TransportBasicInfoRepository transportBasicInfoRepository;
+    @Autowired private LoanBasicInfoRepository loanBasicInfoRepository;
 
     private ApplicationContext applicationContext;
 
@@ -183,7 +189,22 @@ public class GameModelInitService implements ApplicationContextAware {
         }
 
 
-//        todo 其他模块初始化
+        // 运输方式基本信息
+        final List<TransportBasicInfo> transportBasicInfoList = transportBasicInfoRepository.findNewestTransportBasicInfos();
+
+        if(transportBasicInfoList.size() == 0) {
+            return Collections.singletonList("运输方式基本信息必须存在，否则无法初始化比赛!");
+        }
+
+        // 贷款基本信息
+        final List<LoanBasicInfo> loanBasicInfoList = loanBasicInfoRepository.findNewestLoanBasicInfos();
+
+        if(loanBasicInfoList.size() == 0) {
+            return Collections.singletonList("贷款基本信息必须存在，否则无法初始化比赛!");
+        }
+
+
+//        todo 其他模块初始化？
 
 
         return null;

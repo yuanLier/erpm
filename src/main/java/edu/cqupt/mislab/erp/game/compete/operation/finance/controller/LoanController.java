@@ -7,7 +7,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.finance.model.dto.LoanEnterpr
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.dto.LoanSelectDto;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.vo.LoanBasicDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.vo.LoanEnterpriseDisplayVo;
-import edu.cqupt.mislab.erp.game.compete.operation.finance.service.finance.LoanService;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.service.LoanService;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

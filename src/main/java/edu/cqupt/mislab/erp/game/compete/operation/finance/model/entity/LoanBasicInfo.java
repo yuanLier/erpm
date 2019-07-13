@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author yuanyiwen
@@ -37,4 +38,25 @@ public class LoanBasicInfo implements Serializable {
 
     @Comment(comment = "贷款期限，即最长允许在多少周期后还款")
     private int maxDuration;
+
+    @Comment(comment = "该条设置是否被启用")
+    private boolean enable;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LoanBasicInfo that = (LoanBasicInfo) o;
+        return Double.compare(that.loanRate, loanRate) == 0 &&
+                maxDuration == that.maxDuration &&
+                enable == that.enable &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(loanType, that.loanType);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, loanType, loanRate, maxDuration, enable);
+    }
 }

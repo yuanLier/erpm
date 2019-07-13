@@ -1,11 +1,11 @@
-package edu.cqupt.mislab.erp.game.compete.operation.finance.service.finance.impl;
+package edu.cqupt.mislab.erp.game.compete.operation.finance.service.impl;
 
 import edu.cqupt.mislab.erp.commons.aspect.InsufficientBalanceException;
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.dao.FinanceEnterpriseRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.entity.FinanceEnterpriseInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.vo.FinanceEnterpriseVo;
-import edu.cqupt.mislab.erp.game.compete.operation.finance.service.finance.FinanceService;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.extern.slf4j.Slf4j;

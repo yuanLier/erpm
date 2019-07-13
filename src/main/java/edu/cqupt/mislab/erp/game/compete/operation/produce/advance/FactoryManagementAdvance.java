@@ -3,7 +3,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.produce.advance;
 import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
 import edu.cqupt.mislab.erp.commons.constant.ProduceOperationConstant;
 import edu.cqupt.mislab.erp.game.compete.basic.ModelAdvance;
-import edu.cqupt.mislab.erp.game.compete.operation.finance.service.finance.FinanceService;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryHistoryRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryHoldingInfoRepository;

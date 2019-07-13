@@ -1,6 +1,5 @@
-package edu.cqupt.mislab.erp.game.compete.operation.finance.service.finance;
+package edu.cqupt.mislab.erp.game.compete.operation.finance.service;
 
-import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.vo.FinanceEnterpriseVo;
 
 import java.util.List;

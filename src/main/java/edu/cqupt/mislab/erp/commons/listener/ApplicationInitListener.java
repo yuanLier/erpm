@@ -33,8 +33,6 @@ public class ApplicationInitListener implements ServletContextListener, Applicat
     @Autowired private ModelInitService modelInitService;
     @Autowired private AppInitTokenRepository appInitTokenRepository;
 
-//    @Autowired private OrderChooseService orderChooseService;
-
     @Override
     public void contextInitialized(ServletContextEvent sce){
 
@@ -54,14 +52,7 @@ public class ApplicationInitListener implements ServletContextListener, Applicat
             appInitToken.setToken(UUID.randomUUID().toString());
 
             appInitTokenRepository.save(appInitToken);
-
-            return;
         }
-
-
-//          todo ?
-//        //提取订单半成品信息，防止半成品信息造成数据混乱
-//        orderChooseService.loadOrderChooseInfoFromDatabase();
 
     }
     @Override

@@ -1,4 +1,4 @@
-package edu.cqupt.mislab.erp.game.compete.operation.finance.service.finance.impl;
+package edu.cqupt.mislab.erp.game.compete.operation.finance.service.impl;
 
 import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
@@ -10,8 +10,8 @@ import edu.cqupt.mislab.erp.game.compete.operation.finance.model.entity.GameLoan
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.entity.LoanEnterpriseInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.vo.LoanBasicDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.vo.LoanEnterpriseDisplayVo;
-import edu.cqupt.mislab.erp.game.compete.operation.finance.service.finance.FinanceService;
-import edu.cqupt.mislab.erp.game.compete.operation.finance.service.finance.LoanService;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.service.LoanService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import org.springframework.beans.factory.annotation.Autowired;

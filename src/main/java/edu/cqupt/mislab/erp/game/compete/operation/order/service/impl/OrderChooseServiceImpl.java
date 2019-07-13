@@ -4,7 +4,7 @@ import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.commons.websocket.CommonWebSocketMessagePublisher;
 import edu.cqupt.mislab.erp.game.compete.operation.constant.GameSettingConstant;
-import edu.cqupt.mislab.erp.game.compete.operation.finance.service.finance.FinanceService;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.order.dao.EnterpriseAdInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.order.dao.GameOrderInfoRepository;
@@ -237,7 +237,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
     /**
      * 判断是否全部企业已经退出订单会，仅作为内部接口在每个企业退出订单会时调用
      * @param gameId
-     * @return 若全部退出，通知前端订单会已结束，并允许企业进入下一年 todo 允许进入下一年
+     * @return 若全部退出，通知前端订单会已结束，并允许企业进入下一年
      */
     private boolean finishOrderMeeting(Long gameId) {
 
@@ -289,7 +289,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
 
             EnterpriseBasicInfo enterpriseBasicInfo = enterpriseTurn.get(i);
 
-            // 更新企业今年的订单选取顺序 todo 周期推进到某年的时候初始化一下这个顺序，初始化为0
+            // 更新企业今年的订单选取顺序
             enterpriseBasicInfo.setSequence(i + 1);
             enterpriseBasicInfoRepository.save(enterpriseBasicInfo);
         }
