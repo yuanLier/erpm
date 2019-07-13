@@ -23,5 +23,5 @@ public class UserTeacherInfo implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    //todo 增加教师端功能
+    // todo 增加教师端功能
 }
