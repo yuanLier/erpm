@@ -1,6 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.finance.service.finance.impl;
 
-import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
+import edu.cqupt.mislab.erp.commons.aspect.InsufficientBalanceException;
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.dao.FinanceEnterpriseRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.entity.FinanceEnterpriseInfo;
@@ -8,20 +8,21 @@ import edu.cqupt.mislab.erp.game.compete.operation.finance.model.vo.FinanceEnter
 import edu.cqupt.mislab.erp.game.compete.operation.finance.service.finance.FinanceService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
 
 /**
  * @author yuanyiwen
  * @create 2019-05-22 8:41
  * @description
  */
+@Slf4j
 @Service
 public class FinanceServiceImpl implements FinanceService {
 
@@ -33,7 +34,7 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public WebResponseVo updateFinanceInfo(Long enterpriseId, String changeOperating, double changeAmount, boolean minus) {
+    public void updateFinanceInfo(Long enterpriseId, String changeOperating, double changeAmount, boolean minus) {
 
         // 是否为扣除操作
         changeAmount = minus ? -changeAmount : changeAmount;
@@ -42,12 +43,15 @@ public class FinanceServiceImpl implements FinanceService {
         FinanceEnterpriseInfo financeEnterpriseInfo = financeEnterpriseRepository.findByEnterpriseBasicInfo_IdAndCurrent(enterpriseId, true);
 
         // 若当前余额不支持该操作
-        Double account = financeEnterpriseInfo.getCurrentAccount();
-        if(account + changeAmount < 0) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "操作失败！请检查当前余额");
+        Double account = financeEnterpriseInfo.getCurrentAccount() + changeAmount;
+        if(account < 0) {
+            throw new InsufficientBalanceException();
         }
 
         // 走到这里说明允许更新账户余额
+
+        // 保留两位小数
+        account = new BigDecimal(account).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
 
         // 关闭前一个账户余额信息
         financeEnterpriseInfo.setCurrent(false);
@@ -59,11 +63,11 @@ public class FinanceServiceImpl implements FinanceService {
                 .enterpriseBasicInfo(enterpriseBasicInfo)
                 .changeOperating(changeOperating)
                 .changeAmount(changeAmount)
-                .currentAccount(account + changeAmount)
+                .currentAccount(account)
                 .current(true).build();
         financeEnterpriseRepository.save(currentInfo);
 
-        return null;
+        log.info("余额变动成功！操作 ：" + changeOperating + "；变动数量 ：" + changeAmount + "；当前余额 ：" + account);
     }
 
     @Override

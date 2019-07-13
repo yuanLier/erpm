@@ -113,8 +113,24 @@ public class ControllerAdvance {
 
         exception.printStackTrace();
 
-        return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "数据删除异常 ：" + exception.getMessage());
+        return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "数据删除异常！");
     }
+
+    
+    /**
+     * @author yuanyiwen
+     * @description 余额不足导致的用户操作异常
+     * @date 18:19 2019/7/13
+     **/
+    @ResponseBody
+    @ExceptionHandler(InsufficientBalanceException.class)
+    public WebResponseVo<Object> insufficientBalanceExceptionHandler(InsufficientBalanceException exception) {
+
+        exception.printStackTrace();
+
+        return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "操作失败！请检查账户余额");
+    }
+
 
     /**
      * @author chuyunfei
@@ -129,6 +145,6 @@ public class ControllerAdvance {
         exception.printStackTrace();
 
         //除了直接响应，我实在是没有办法啊
-        return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "未知异常[" + exception.getMessage() + "]！请联系管理员");
+        return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.INTERNAL_SERVER_ERROR, "未知异常！请联系管理员");
     }
 }

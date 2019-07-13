@@ -19,7 +19,7 @@ public interface FinanceService {
      * @param changeAmount 造成企业财务改变的金额，传入时金额统一为正
      * @param minus 是否为扣除操作
      */
-    WebResponseVo updateFinanceInfo(Long enterpriseId, String changeOperating, double changeAmount, boolean minus);
+    void updateFinanceInfo(Long enterpriseId, String changeOperating, double changeAmount, boolean minus);
 
 
     /**
