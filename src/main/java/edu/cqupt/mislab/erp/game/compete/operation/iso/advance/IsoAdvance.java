@@ -2,7 +2,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.iso.advance;
 
 import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
 import edu.cqupt.mislab.erp.game.compete.basic.ModelAdvance;
-import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.service.finance.FinanceService;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoHistoryRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoDevelopInfo;

@@ -3,7 +3,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.finance.controller;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.vo.FinanceEnterpriseVo;
-import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.service.finance.FinanceService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

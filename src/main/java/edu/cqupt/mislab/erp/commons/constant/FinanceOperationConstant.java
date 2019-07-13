@@ -40,5 +40,9 @@ public interface FinanceOperationConstant {
     String ENTERPRISE_ADVERTISING = "广告投放过程中需要支付的金额";
 
 
+    String LOAN_AMOUNT = "贷款所得到的金额";
+    String LOAN_REPLAY = "归还贷款时所需要支付的金额";
+
+
 
 }

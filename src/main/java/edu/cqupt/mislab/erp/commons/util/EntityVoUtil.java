@@ -1,5 +1,7 @@
 package edu.cqupt.mislab.erp.commons.util;
 
+import edu.cqupt.mislab.erp.game.compete.operation.finance.model.entity.LoanEnterpriseInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.model.vo.LoanEnterpriseDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
@@ -8,10 +10,10 @@ import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.entity.GameOrderInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.vo.GameOrderVo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.vo.OrderDisplayVo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.GameFactoryBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryHoldingInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryHoldingStatus;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.GameFactoryBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.GameProdlineBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineDevelopInfo;
@@ -20,10 +22,10 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.GameTransportBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialOrderInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialStockInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.ProductStockInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.GameTransportBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.vo.MaterialOrderDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.vo.MaterialStockDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.vo.ProductStockDisplayVo;
@@ -560,6 +562,20 @@ public abstract class EntityVoUtil {
         gameOrderVo.setOrderId(gameOrderInfo.getId());
 
         return gameOrderVo;
+    }
+
+    public static LoanEnterpriseDisplayVo copyFieldsFromEntityToVo(LoanEnterpriseInfo loanEnterpriseInfo) {
+
+        LoanEnterpriseDisplayVo loanEnterpriseDisplayVo = new LoanEnterpriseDisplayVo();
+
+        loanEnterpriseDisplayVo.setBeginPeriod(loanEnterpriseInfo.getBeginPeriod());
+        loanEnterpriseDisplayVo.setEndPeriod(loanEnterpriseInfo.getEndPeriod());
+        loanEnterpriseDisplayVo.setLoanAmount(loanEnterpriseInfo.getLoanAmount());
+        loanEnterpriseDisplayVo.setLoanId(loanEnterpriseInfo.getId());
+        loanEnterpriseDisplayVo.setLoanNumber(NumberFormatUtil.numberFormat(loanEnterpriseInfo.getId(), 4));
+        loanEnterpriseDisplayVo.setRepaid(loanEnterpriseInfo.isRepaid());
+
+        return loanEnterpriseDisplayVo;
     }
 
 }

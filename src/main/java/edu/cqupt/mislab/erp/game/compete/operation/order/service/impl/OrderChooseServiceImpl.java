@@ -4,7 +4,7 @@ import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.commons.websocket.CommonWebSocketMessagePublisher;
 import edu.cqupt.mislab.erp.game.compete.operation.constant.GameSettingConstant;
-import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.service.finance.FinanceService;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.order.dao.EnterpriseAdInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.order.dao.GameOrderInfoRepository;

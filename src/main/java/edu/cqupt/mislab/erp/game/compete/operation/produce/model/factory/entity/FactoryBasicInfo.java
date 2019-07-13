@@ -7,12 +7,11 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * @author yuanyiwen
  * @create 2019-06-05 21:17
- * @description 记录某场比赛所使用的厂房信息，在且仅在比赛开始时进行初始化
+ * @description 厂房基本信息
  */
 @Getter
 @Setter

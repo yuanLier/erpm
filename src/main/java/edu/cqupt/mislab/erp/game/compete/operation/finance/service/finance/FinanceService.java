@@ -1,4 +1,4 @@
-package edu.cqupt.mislab.erp.game.compete.operation.finance.service;
+package edu.cqupt.mislab.erp.game.compete.operation.finance.service.finance;
 
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.vo.FinanceEnterpriseVo;
