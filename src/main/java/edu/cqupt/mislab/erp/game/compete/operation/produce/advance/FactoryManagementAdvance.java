@@ -120,7 +120,7 @@ public class FactoryManagementAdvance implements ModelAdvance {
             Long enterpriseId = enterpriseBasicInfo.getId();
             String changeOperating = FinanceOperationConstant.FACTORY_MAINTAIN;
             Double changeAmount = factoryHoldingInfo.getFactoryBasicInfo().getFactoryBasicInfo().getFactoryMaintainCost();
-            financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
+            financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true, true);
 
         }
     }
@@ -138,7 +138,7 @@ public class FactoryManagementAdvance implements ModelAdvance {
             Long enterpriseId = enterpriseBasicInfo.getId();
             String changeOperating = FinanceOperationConstant.FACTORY_LEASING;
             Double changeAmount = factoryHoldingInfo.getFactoryBasicInfo().getFactoryBasicInfo().getFactoryRentCost();
-            financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
+            financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true, true);
 
         }
     }
@@ -163,7 +163,7 @@ public class FactoryManagementAdvance implements ModelAdvance {
                 // 厂房出售所得金额到账
                 Long enterpriseId = enterpriseBasicInfo.getId();
                 String changeOperating = FinanceOperationConstant.FACTORY_SELL;
-                financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, false);
+                financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, false, true);
             }
         }
     }
@@ -205,7 +205,7 @@ public class FactoryManagementAdvance implements ModelAdvance {
             Long enterpriseId = enterpriseBasicInfo.getId();
             String changeOperating = FinanceOperationConstant.FACTORY_DEVELOP;
             Double changeAmount = factoryDevelopInfo.getFactoryBasicInfo().getFactoryBasicInfo().getFactoryMakeCost();
-            financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
+            financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true, true);
         }
     }
 
@@ -223,7 +223,7 @@ public class FactoryManagementAdvance implements ModelAdvance {
             Long enterpriseId = enterpriseBasicInfo.getId();
             String changeOperating = FinanceOperationConstant.PRODLINE_MAINTAIN;
             Double changeAmount = prodlineHoldingInfo.getProdlineBasicInfo().getProdlineBasicInfo().getProdlineMainCost();
-            financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
+            financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true, true);
 
         }
     }
@@ -276,7 +276,7 @@ public class FactoryManagementAdvance implements ModelAdvance {
             Long enterpriseId = enterpriseBasicInfo.getId();
             String changeOperating = FinanceOperationConstant.PRODLINE_DEVELOP;
             Double changeAmount = prodlineDevelopInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineBasicInfo().getProdlineSetupPeriodPrice();
-            financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true);
+            financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, true, true);
         }
     }
 

@@ -1,7 +1,9 @@
 package edu.cqupt.mislab.erp.game.compete.operation.order.service.impl;
 
+import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
 import edu.cqupt.mislab.erp.game.compete.operation.order.dao.GameOrderInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.entity.GameOrderInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.vo.OrderDisplayVo;
@@ -30,6 +32,9 @@ public class OrderDeliveryServiceImpl implements OrderDeliveryService {
     private GameOrderInfoRepository gameOrderInfoRepository;
     @Autowired
     private ProductStockInfoRepository productStockInfoRepository;
+
+    @Autowired
+    private FinanceService financeService;
 
     @Override
     public List<OrderDisplayVo> getAllOrderDisplayVos(Long enterpriseId) {
@@ -81,6 +86,11 @@ public class OrderDeliveryServiceImpl implements OrderDeliveryService {
         // 更新订单状态至已交货，并进行持久化
         gameOrderInfo.setOrderStatus(true);
         gameOrderInfoRepository.save(gameOrderInfo);
+
+        // 当场打钱
+        String changeOperating = FinanceOperationConstant.ORDER_DELIVERY;
+        Double changeAmount = gameOrderInfo.getPrice()*gameOrderInfo.getProductNumber();
+        financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, false, true);
 
         return toSuccessResponseVoWithNoData();
     }

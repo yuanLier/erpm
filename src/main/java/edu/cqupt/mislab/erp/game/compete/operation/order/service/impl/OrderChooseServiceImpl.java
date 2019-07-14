@@ -68,7 +68,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         Double totalMoney = enterpriseAdDtoList.stream().mapToDouble(EnterpriseAdDto::getMoney).sum();
         // 扣除研投放广告过程中需要支付的费用
         String changeOperating = FinanceOperationConstant.ENTERPRISE_ADVERTISING;
-        financeService.updateFinanceInfo(enterpriseId, changeOperating, totalMoney, true);
+        financeService.updateFinanceInfo(enterpriseId, changeOperating, totalMoney, true, false);
 
         // 走到这里说明余额充足，允许投放广告
         for (EnterpriseAdDto enterpriseAdDto : enterpriseAdDtoList) {

@@ -48,7 +48,7 @@ public class EnterpriseBasicInfo implements Serializable {
     @Column(nullable = false,updatable = false)
     @Comment(comment = "企业允许的最大成员个数")
     private Integer enterpriseMaxMemberNumber;
-    
+
     @Min(1)
     @Basic(optional = false)
     @Comment(comment = "这个企业所处于的周期；企业破产后该字段值即为破产周期")

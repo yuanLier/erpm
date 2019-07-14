@@ -96,7 +96,7 @@ public class ProductAdvance implements ModelAdvance {
             // 扣除研发过程中需要支付的费用
             String changeOperating = FinanceOperationConstant.PRODUCT_DEVELOP;
             Double changeAmount = productDevelopInfo.getProductBasicInfo().getProductResearchCost();
-            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true);
+            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true, true);
 
         }
 

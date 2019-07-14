@@ -72,7 +72,7 @@ public class ProductionPlanAdvance implements ModelAdvance {
             // 扣除生产过程中需要支付的费用
             String changeOperating = FinanceOperationConstant.PRODUCT_PRODUCE;
             Double changeAmount = prodlineProduceInfo.getProductDevelopInfo().getProductBasicInfo().getProduceProductCost();
-            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true);
+            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true, true);
         }
 
         // 获取全部转产中的生产线
@@ -98,7 +98,7 @@ public class ProductionPlanAdvance implements ModelAdvance {
             // 扣除转产过程中需要支付的费用
             String changeOperating = FinanceOperationConstant.PRODLINE_TRANSACTION;
             Double changeAmount = prodlineProduceInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineBasicInfo().getProdlineChangeCost();
-            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true);
+            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true, true);
         }
 
         log.info("生产计划模块-比赛期间周期推进正常");

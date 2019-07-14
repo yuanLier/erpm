@@ -1,7 +1,9 @@
 package edu.cqupt.mislab.erp.game.compete.basic.impl;
 
+import edu.cqupt.mislab.erp.commons.aspect.EnterpriseBankruptException;
 import edu.cqupt.mislab.erp.commons.websocket.CommonWebSocketMessagePublisher;
 import edu.cqupt.mislab.erp.game.compete.basic.ModelAdvance;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.dao.FinanceEnterpriseRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.order.service.OrderChooseService;
 import edu.cqupt.mislab.erp.game.manage.constant.ManageConstant;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
@@ -40,6 +42,8 @@ public class ModelAdvanceService implements ApplicationContextAware {
     GameBasicInfoRepository gameBasicInfoRepository;
     @Autowired
     EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
+    @Autowired
+    FinanceEnterpriseRepository financeEnterpriseRepository;
 
     @Autowired
     OrderChooseService orderChooseService;
@@ -153,6 +157,19 @@ public class ModelAdvanceService implements ApplicationContextAware {
                     throw new RuntimeException("模块推进异常");
                 }
             }
+        }
+
+        // 走到这里说明模块推进成功
+
+        // 若推进周期后，企业资产为负，企业破产，比赛结束
+        Double currentFinanceAmount = financeEnterpriseRepository.findByEnterpriseBasicInfo_IdAndCurrentIsTrue(enterpriseId).getCurrentAccount();
+        if(currentFinanceAmount < 0) {
+
+            // 更新企业所处状态
+            enterpriseBasicInfo.setEnterpriseStatus(EnterpriseStatusEnum.BANKRUPT);
+            enterpriseBasicInfoRepository.save(enterpriseBasicInfo);
+
+            throw new EnterpriseBankruptException();
         }
 
         log.info("比赛各模块推进成功，企业将进入下一周期...");

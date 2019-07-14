@@ -34,17 +34,17 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateFinanceInfo(Long enterpriseId, String changeOperating, double changeAmount, boolean minus) {
+    public void updateFinanceInfo(Long enterpriseId, String changeOperating, double changeAmount, boolean minus, boolean force) {
 
         // 是否为扣除操作
         changeAmount = minus ? -changeAmount : changeAmount;
 
         // 获取企业的当前账户余额
-        FinanceEnterpriseInfo financeEnterpriseInfo = financeEnterpriseRepository.findByEnterpriseBasicInfo_IdAndCurrent(enterpriseId, true);
+        FinanceEnterpriseInfo financeEnterpriseInfo = financeEnterpriseRepository.findByEnterpriseBasicInfo_IdAndCurrentIsTrue(enterpriseId);
 
-        // 若当前余额不支持该操作
+        // 若为非强制扣款且当前余额不支持该操作
         Double account = financeEnterpriseInfo.getCurrentAccount() + changeAmount;
-        if(account < 0) {
+        if(!force && account < 0) {
             throw new InsufficientBalanceException();
         }
 
@@ -93,7 +93,7 @@ public class FinanceServiceImpl implements FinanceService {
     @Override
     public FinanceEnterpriseVo getCurrentFinanceInfo(Long enterpriseId) {
 
-        FinanceEnterpriseInfo financeEnterpriseInfo = financeEnterpriseRepository.findByEnterpriseBasicInfo_IdAndCurrent(enterpriseId, true);
+        FinanceEnterpriseInfo financeEnterpriseInfo = financeEnterpriseRepository.findByEnterpriseBasicInfo_IdAndCurrentIsTrue(enterpriseId);
 
         if (financeEnterpriseInfo == null) {
             return null;

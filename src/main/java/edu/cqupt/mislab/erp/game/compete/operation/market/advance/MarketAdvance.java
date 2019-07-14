@@ -86,7 +86,7 @@ public class MarketAdvance implements ModelAdvance {
             // 扣除开拓完成后需要支付的维护费用
             String changeOperating = FinanceOperationConstant.MARKET_MAINTAIN;
             Double changeAmount = marketDevelopInfo.getMarketBasicInfo().getMarketMaintainCost();
-            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true);
+            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true, true);
 
         }
 
@@ -110,7 +110,7 @@ public class MarketAdvance implements ModelAdvance {
             // 扣除开拓过程中需要支付的费用
             String changeOperating = FinanceOperationConstant.MARKET_DEVELOP;
             Double changeAmount = marketDevelopInfo.getMarketBasicInfo().getMarketResearchCost();
-            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true);
+            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true, true);
 
         }
 

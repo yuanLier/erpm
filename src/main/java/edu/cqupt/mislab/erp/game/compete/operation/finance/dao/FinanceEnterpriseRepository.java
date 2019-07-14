@@ -27,5 +27,5 @@ public interface FinanceEnterpriseRepository extends BasicRepository<FinanceEnte
      * @param enterpriseId
      * @return
      */
-    FinanceEnterpriseInfo findByEnterpriseBasicInfo_IdAndCurrent(Long enterpriseId, boolean current);
+    FinanceEnterpriseInfo findByEnterpriseBasicInfo_IdAndCurrentIsTrue(Long enterpriseId);
 }

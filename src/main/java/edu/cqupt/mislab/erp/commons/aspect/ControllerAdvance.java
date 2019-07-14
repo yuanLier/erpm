@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
+import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
 
 /**
  * @author chuyunfei
@@ -129,6 +130,19 @@ public class ControllerAdvance {
         exception.printStackTrace();
 
         return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "操作失败！请检查账户余额");
+    }
+
+
+    /**
+     * @author yuanyiwen
+     * @description 企业破产
+     * @date 20:56 2019/7/14
+     **/
+    @ResponseBody
+    @ExceptionHandler(EnterpriseBankruptException.class)
+    public WebResponseVo<Object> enterpriseBankruptExceptionHandler(EnterpriseBankruptException exception) {
+
+        return toSuccessResponseVoWithData("企业破产，游戏结束！");
     }
 
 

@@ -25,7 +25,7 @@ public enum EnterpriseStatusEnum {
      */
     BANKRUPT,
     /*
-    企业正常完成所有的周期完结
+    企业正常完成所有的周期完结 todo 添加企业正常完成所有周期的情况、比赛正常结束的情况、所有企业均破产时比赛结束的情况
      */
     OVER,
     ;

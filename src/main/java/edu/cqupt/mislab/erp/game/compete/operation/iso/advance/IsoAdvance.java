@@ -84,7 +84,7 @@ public class IsoAdvance implements ModelAdvance {
             // 扣除认证完成后需要支付的维护费用
             String changeOperating = FinanceOperationConstant.ISO_MAINTAIN;
             Double changeAmount = isoDevelopInfo.getIsoBasicInfo().getIsoMaintainCost();
-            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true);
+            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true, true);
 
         }
 
@@ -108,7 +108,7 @@ public class IsoAdvance implements ModelAdvance {
             // 扣除认证过程中需要支付的费用
             String changeOperating = FinanceOperationConstant.ISO_DEVELOP;
             Double changeAmount = isoDevelopInfo.getIsoBasicInfo().getIsoResearchCost();
-            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true);
+            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true, true);
         }
 
         log.info("iso模块-比赛期间周期推进正常");

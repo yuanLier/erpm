@@ -44,5 +44,9 @@ public interface FinanceOperationConstant {
     String LOAN_REPLAY = "归还贷款时所需要支付的金额";
 
 
+    String ORDER_DELIVERY = "按订单交货时所获得的金额";
+    String ORDER_DELAY = "订单延期交货时每期所需要扣除的违约金额";
+
+
 
 }

@@ -17,8 +17,9 @@ public interface FinanceService {
      * @param changeOperating 造成企业财务改变的操作
      * @param changeAmount 造成企业财务改变的金额，传入时金额统一为正
      * @param minus 是否为扣除操作
+     * @param force 是否为强制扣款（理论上除用户可控操作外均为强制扣款
      */
-    void updateFinanceInfo(Long enterpriseId, String changeOperating, double changeAmount, boolean minus);
+    void updateFinanceInfo(Long enterpriseId, String changeOperating, double changeAmount, boolean minus, boolean force);
 
 
     /**

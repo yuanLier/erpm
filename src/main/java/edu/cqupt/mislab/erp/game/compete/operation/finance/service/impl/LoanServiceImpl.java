@@ -86,7 +86,7 @@ public class LoanServiceImpl implements LoanService {
 
         // 打钱
         String changeOperating = FinanceOperationConstant.LOAN_AMOUNT;
-        financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, loanAmount, false);
+        financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, loanAmount, false, true);
 
         return EntityVoUtil.copyFieldsFromEntityToVo(loanEnterpriseInfo);
 
@@ -100,11 +100,13 @@ public class LoanServiceImpl implements LoanService {
 
         EnterpriseBasicInfo enterpriseBasicInfo = loanEnterpriseInfo.getEnterpriseBasicInfo();
 
+        // 计算还款数量
+        Integer totalYear = enterpriseBasicInfo.getGameBasicInfo().getGameInitBasicInfo().getTotalYear();
+        Integer year = (enterpriseBasicInfo.getEnterpriseCurrentPeriod()-loanEnterpriseInfo.getBeginPeriod())/totalYear;
+        Double amount = loanEnterpriseInfo.getLoanAmount()*Math.pow(1+loanEnterpriseInfo.getGameLoanBasicInfo().getLoanBasicInfo().getLoanRate(), year);
         // 扣钱
         String changeOperating = FinanceOperationConstant.LOAN_REPLAY;
-        // todo 使用正确的公式计算还款数量
-        Double amount = loanEnterpriseInfo.getLoanAmount()*(1+loanEnterpriseInfo.getGameLoanBasicInfo().getLoanBasicInfo().getLoanRate());
-        financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, amount, true);
+        financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, amount, true, true);
 
         // 更新还款情况
         loanEnterpriseInfo.setEndPeriod(loanEnterpriseInfo.getEnterpriseBasicInfo().getEnterpriseCurrentPeriod());

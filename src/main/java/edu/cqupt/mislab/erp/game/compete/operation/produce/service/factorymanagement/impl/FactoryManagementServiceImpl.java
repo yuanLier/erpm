@@ -263,7 +263,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         // 生产线出售所得金额到账
         Long enterpriseId = prodlineHoldingInfo.getEnterpriseBasicInfo().getId();
         String changeOperating = FinanceOperationConstant.PRODLINE_SELL;
-        financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, false);
+        financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, false, true);
 
         // 保存修改
         prodlineHoldingInfoRepository.save(prodlineHoldingInfo);

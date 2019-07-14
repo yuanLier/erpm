@@ -234,9 +234,6 @@ public class OrderGameModelInit implements GameModelInit {
                 //随机生成交货日期
                 int deliveryPeriod = (int) Math.ceil(gameCurrentYear * period + random.nextInt(period) + 2);
 
-                //随机生成到账日期
-                int moneyTime = (int) Math.ceil(random.nextInt(period) + 2);
-
                 //随机生成罚金率
                 double penalPercent = -1;
 
@@ -253,7 +250,6 @@ public class OrderGameModelInit implements GameModelInit {
                         .productNumber(orderProductNumber)
                         .price(orderProductPerPrice)
                         .deliveryPeriod(deliveryPeriod)
-                        .moneyTime(moneyTime)
                         .penalPercent(penalPercent)
                         .build();
 

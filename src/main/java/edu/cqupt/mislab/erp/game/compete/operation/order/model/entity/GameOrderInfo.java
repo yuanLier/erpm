@@ -65,11 +65,6 @@ public class GameOrderInfo implements Serializable {
     @Comment(comment = "截止交货的日期为第几期")
     private Integer deliveryPeriod;
 
-    @Min(1)
-    @Column(nullable = false,updatable = false)
-    @Comment(comment = "订单交货后，需要几个账期，金额可以到账")
-    private Integer moneyTime;
-
     @DoubleMin(0.01)
     @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
     @Comment(comment = "违约金比率，超过1期交纳1期的违约金，超过多期，进行累计")

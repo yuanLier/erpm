@@ -5,7 +5,6 @@ import edu.cqupt.mislab.erp.game.compete.basic.ModelAdvance;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.*;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.*;
-import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,6 @@ public class StockAdvance implements ModelAdvance {
 
     @Autowired
     private MaterialOrderInfoRepository materialOrderInfoRepository;
-    @Autowired
-    private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
 
     @Autowired
     private MaterialStockInfoRepository materialStockInfoRepository;
@@ -108,7 +105,7 @@ public class StockAdvance implements ModelAdvance {
             // 扣除运输过程中需要支付的费用
             String changeOperating = FinanceOperationConstant.ISO_DEVELOP;
             Double changeAmount = materialOrderInfo.getTransportMethod().getTransportBasicInfo().getTransportPrice();
-            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true);
+            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true, true);
         }
 
         // 获取该企业中全部处于已审核状态的订单
