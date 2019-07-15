@@ -57,6 +57,6 @@ public class OrderAdvance implements ModelAdvance {
             }
         }
 
-        return false;
+        return true;
     }
 }
