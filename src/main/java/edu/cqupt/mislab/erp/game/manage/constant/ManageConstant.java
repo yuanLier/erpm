@@ -13,7 +13,7 @@ public interface ManageConstant {
      * @description 前端连接websocket需要携带的哪一个比赛的参数名称
      * @date 22:40 2019/4/26
      **/
-    String WEBSOCKET_REQUEST_ATTR_GAME_ID = "gameId ：";
+    String WEBSOCKET_REQUEST_ATTR_GAME_ID = "gameId";
 
     /**
      * @author chuyunfei
