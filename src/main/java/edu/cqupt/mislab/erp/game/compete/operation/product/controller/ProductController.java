@@ -70,7 +70,7 @@ public class ProductController {
     public WebResponseVo<ProductDisplayVo> startDevelopProduct(@Exist(repository = ProductDevelopInfoRepository.class)
                                                        @RequestParam Long productDevelopId) {
 
-        return toSuccessResponseVoWithData(productService.updateProductStatus(productDevelopId, ProductDevelopStatusEnum.DEVELOPING));
+        return toSuccessResponseVoWithData(productService.startProduct(productDevelopId));
 
     }
 

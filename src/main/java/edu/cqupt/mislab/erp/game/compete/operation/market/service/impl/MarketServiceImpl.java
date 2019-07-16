@@ -59,6 +59,25 @@ public class MarketServiceImpl implements MarketService {
     }
 
     @Override
+    public MarketDisplayVo startMarketDevelop(Long marketDevelopId) {
+
+        // 根据id查询市场信息
+        MarketDevelopInfo marketDevelopInfo = marketDevelopInfoRepository.findOne(marketDevelopId);
+
+        // 修改市场状态
+        marketDevelopInfo.setMarketStatus(MarketStatusEnum.DEVELOPING);
+        // 设置市场开拓的开始周期与已开拓周期
+        marketDevelopInfo.setDevelopBeginPeriod(marketDevelopInfo.getEnterpriseBasicInfo().getEnterpriseCurrentPeriod());
+        marketDevelopInfo.setResearchedPeriod(0);
+
+        // 保存修改
+        marketDevelopInfoRepository.save(marketDevelopInfo);
+
+        // 转换为vo实体并返回
+        return EntityVoUtil.copyFieldsFromEntityToVo(marketDevelopInfo);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public MarketDisplayVo updateMarketStatus(Long marketDevelopId, MarketStatusEnum marketStatus) {
 

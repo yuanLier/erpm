@@ -54,12 +54,31 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ProductDisplayVo updateProductStatus(Long productDevelopId, ProductDevelopStatusEnum productDevelopStatus) {
+    public ProductDisplayVo startProduct(Long productDevelopId) {
         // 根据id查询产品信息
         ProductDevelopInfo productDevelopInfo = productDevelopInfoRepository.findOne(productDevelopId);
 
-        // 修改市场状态
-        productDevelopInfo.setProductDevelopStatus(productDevelopStatus);
+        // 开始研发
+        productDevelopInfo.setProductDevelopStatus(ProductDevelopStatusEnum.DEVELOPING);
+        // 设置开始研发的周期与已经研发的周期数
+        productDevelopInfo.setBeginPeriod(productDevelopInfo.getEnterpriseBasicInfo().getEnterpriseCurrentPeriod());
+        productDevelopInfo.setDevelopedPeriod(0);
+
+        // 保存修改
+        productDevelopInfoRepository.save(productDevelopInfo);
+
+        // 转换为vo实体并返回
+        return EntityVoUtil.copyFieldsFromEntityToVo(productDevelopInfo);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ProductDisplayVo updateProductStatus(Long productDevelopId, ProductDevelopStatusEnum productDevelopStatusEnum) {
+        // 根据id查询产品信息
+        ProductDevelopInfo productDevelopInfo = productDevelopInfoRepository.findOne(productDevelopId);
+
+        // 更新研发状态
+        productDevelopInfo.setProductDevelopStatus(productDevelopStatusEnum);
 
         // 保存修改
         productDevelopInfoRepository.save(productDevelopInfo);

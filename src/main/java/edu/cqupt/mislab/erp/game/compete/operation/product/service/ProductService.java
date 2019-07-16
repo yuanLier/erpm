@@ -13,6 +13,7 @@ import java.util.List;
  **/
 
 public interface ProductService {
+
     /**
      * 获取某个企业全部产品研发信息
      * @param enterpriseId
@@ -31,12 +32,19 @@ public interface ProductService {
 
 
     /**
-     * 修改某个产品的研发状态
+     * 开始研发
      * @param productDevelopId
-     * @param productDevelopStatus
      * @return
      */
-    ProductDisplayVo updateProductStatus(Long productDevelopId, ProductDevelopStatusEnum productDevelopStatus);
+    ProductDisplayVo startProduct(Long productDevelopId);
+
+
+    /**
+     * 修改研发状态
+     * @param productDevelopId
+     * @return
+     */
+    ProductDisplayVo updateProductStatus(Long productDevelopId, ProductDevelopStatusEnum productDevelopStatusEnum);
 
 
     /**

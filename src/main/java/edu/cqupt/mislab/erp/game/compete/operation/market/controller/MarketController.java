@@ -69,7 +69,7 @@ public class MarketController {
     public WebResponseVo<MarketDisplayVo> startDevelopMarket(@Exist(repository = MarketDevelopInfoRepository.class)
                                                        @RequestParam Long marketDevelopId) {
 
-        return toSuccessResponseVoWithData(marketService.updateMarketStatus(marketDevelopId, MarketStatusEnum.DEVELOPING));
+        return toSuccessResponseVoWithData(marketService.startMarketDevelop(marketDevelopId));
     }
 
 

@@ -30,6 +30,14 @@ public interface IsoService {
 
 
     /**
+     * 开始认证
+     * @param isoDevelopId
+     * @return
+     */
+    IsoDisplayVo startDevelopIso(Long isoDevelopId);
+
+
+    /**
      * 修改某个iso的认证状态
      * @param isoDevelopId
      * @param isoStatus

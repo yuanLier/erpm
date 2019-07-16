@@ -1,8 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.market.service;
 
-import edu.cqupt.mislab.erp.game.compete.operation.market.model.dto.MarketBasicDto;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketStatusEnum;
-import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
 
 import java.util.List;
@@ -29,6 +27,14 @@ public interface MarketService {
      * @return
      */
     List<MarketDisplayVo> findByEnterpriseIdAndMarketStatus(Long enterpriseId, MarketStatusEnum marketStatus);
+
+
+    /**
+     * 开始开拓
+     * @param marketDevelopId
+     * @return
+     */
+    MarketDisplayVo startMarketDevelop(Long marketDevelopId);
 
 
     /**

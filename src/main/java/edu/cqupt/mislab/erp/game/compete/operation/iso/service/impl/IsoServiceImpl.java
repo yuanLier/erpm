@@ -57,6 +57,25 @@ public class IsoServiceImpl implements IsoService {
     }
 
     @Override
+    public IsoDisplayVo startDevelopIso(Long isoDevelopId) {
+        // 根据id获取对应要修改的那条iso认证
+        IsoDevelopInfo isoDevelopInfo = isoDevelopInfoRepository.findOne(isoDevelopId);
+
+        // 开始认证
+        isoDevelopInfo.setIsoStatus(IsoStatusEnum.DEVELOPING);
+        // 设置认证开始的周期及已经认证的周期数
+        isoDevelopInfo.setDevelopBeginPeriod(isoDevelopInfo.getEnterpriseBasicInfo().getEnterpriseCurrentPeriod());
+        isoDevelopInfo.setResearchedPeriod(0);
+
+        // 保存修改
+        isoDevelopInfoRepository.save(isoDevelopInfo);
+
+        // 转换为vo实体并返回
+        return EntityVoUtil.copyFieldsFromEntityToVo(isoDevelopInfo);
+
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public IsoDisplayVo updateIsoStatus(Long isoDevelopId, IsoStatusEnum isoStatus) {
 
