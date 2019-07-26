@@ -13,6 +13,7 @@ import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseMemberInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatusEnum;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameEnterpriseUserRoleEnum;
+import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseDetailInfoVo;
 import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseMemberDisplayVo;
 import edu.cqupt.mislab.erp.game.manage.service.EnterpriseMemberManageService;
 import edu.cqupt.mislab.erp.game.manage.service.GameUserRoleService;
@@ -248,5 +249,19 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
 
         //响应前端
         return toSuccessResponseVoWithNoData();
+    }
+
+    @Override
+    public EnterpriseDetailInfoVo getEnterpriseOfMember(Long userId, Long gameId) {
+
+        // 获取这个企业的信息
+        EnterpriseMemberInfo enterpriseMemberInfo = enterpriseMemberInfoRepository.findByUserStudentInfo_IdAndEnterpriseBasicInfo_GameBasicInfo_Id(userId, gameId);
+        EnterpriseBasicInfo enterpriseBasicInfo = enterpriseMemberInfo.getEnterpriseBasicInfo();
+
+        // 转化为vo实体并返回
+        EnterpriseDetailInfoVo enterpriseDetailInfoVo = new EnterpriseDetailInfoVo();
+        EntityVoUtil.copyFieldsFromEntityToVo(enterpriseBasicInfo,enterpriseDetailInfoVo);
+
+        return enterpriseDetailInfoVo;
     }
 }

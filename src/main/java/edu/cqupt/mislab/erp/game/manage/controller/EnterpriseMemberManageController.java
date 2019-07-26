@@ -6,11 +6,14 @@ import edu.cqupt.mislab.erp.commons.validators.annotations.EnterpriseStatusValid
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.dto.EnterpriseJoinDto;
 import edu.cqupt.mislab.erp.game.manage.model.dto.UserContributionRateSureDto;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatusEnum;
+import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseDetailInfoVo;
 import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseMemberDisplayVo;
 import edu.cqupt.mislab.erp.game.manage.service.EnterpriseMemberManageService;
+import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,5 +76,21 @@ public class EnterpriseMemberManageController {
             @Valid @RequestBody UserContributionRateSureDto rateSureDto){
 
         return enterpriseMemberManageService.sureGameContributionRate(rateSureDto);
+    }
+
+    @ApiOperation("获取用户处于比赛中的哪个企业")
+    @GetMapping("/enterpriseMember/enterprise")
+    public WebResponseVo<EnterpriseDetailInfoVo> getEnterpriseByMember(@Exist(repository = UserStudentRepository.class)
+                                                                                   @RequestParam Long userId,
+                                                                       @Exist(repository = GameBasicInfoRepository.class)
+                                                                               @RequestParam Long gameId) {
+
+        EnterpriseDetailInfoVo enterpriseDetailInfoVo = enterpriseMemberManageService.getEnterpriseOfMember(userId, gameId);
+
+        if(enterpriseDetailInfoVo == null) {
+            return WebResponseUtil.toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "用户未加入该企业");
+        }
+
+        return WebResponseUtil.toSuccessResponseVoWithData(enterpriseDetailInfoVo);
     }
 }

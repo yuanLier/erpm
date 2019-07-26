@@ -40,4 +40,11 @@ public interface EnterpriseMemberInfoRepository extends BasicRepository<Enterpri
      * @date 21:03 2019/4/26
      **/
     void deleteByEnterpriseBasicInfo_Id(long enterpriseId);
+
+    /**
+     * @author yuanyiwen
+     * @description 获取用户在比赛中的哪个企业
+     * @date 9:23 2019/7/26
+     **/
+    EnterpriseMemberInfo findByUserStudentInfo_IdAndEnterpriseBasicInfo_GameBasicInfo_Id(Long studentId, Long gameId);
 }

@@ -3,6 +3,7 @@ package edu.cqupt.mislab.erp.game.manage.service;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.game.manage.model.dto.EnterpriseJoinDto;
 import edu.cqupt.mislab.erp.game.manage.model.dto.UserContributionRateSureDto;
+import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseDetailInfoVo;
 import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseMemberDisplayVo;
 
 import java.util.List;
@@ -42,4 +43,11 @@ public interface EnterpriseMemberManageService {
      * @date 21:31 2019/4/26
      **/
     WebResponseVo<String> sureGameContributionRate(UserContributionRateSureDto rateSureDto);
+
+    /**
+     * @author yuanyiwen
+     * @description 获取一个用户是在比赛中的哪个企业
+     * @date 9:27 2019/7/26
+     **/
+    EnterpriseDetailInfoVo getEnterpriseOfMember(Long userId, Long gameId);
 }
