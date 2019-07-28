@@ -2,6 +2,7 @@ package edu.cqupt.mislab.erp.game.manage.controller;
 
 import edu.cqupt.mislab.erp.commons.response.WebResponseUtil;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
+import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.commons.validators.annotations.GameStatusValid;
 import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
 import edu.cqupt.mislab.erp.game.manage.model.dto.GameCreateDto;
@@ -9,6 +10,7 @@ import edu.cqupt.mislab.erp.game.manage.model.dto.GamesSearchDto;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatusEnum;
 import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailInfoVo;
 import edu.cqupt.mislab.erp.game.manage.service.GameManageService;
+import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author chuyunfei
@@ -59,9 +62,18 @@ public class GameManageController {
     }
 
     @ApiOperation("查询指定条件的全部比赛")
-    @PostMapping("/gameInfos/search")
+    @PostMapping("/search")
     public WebResponseVo<GamesSearchDto> getOneUserGameInfos(@Valid @RequestBody GamesSearchDto searchDto){
 
         return WebResponseUtil.toSuccessResponseVoWithData(gameManageService.getGameDetailVosBySearchDto(searchDto));
+    }
+
+    @ApiOperation("查询用户处于某种比赛状态的全部比赛")
+    @GetMapping("/status")
+    public WebResponseVo<List<GameDetailInfoVo>> getGamesOfUser(@Exist(repository = UserStudentRepository.class)
+                                                                @RequestParam Long userId,
+                                                                @RequestParam GameStatusEnum gameStatus) {
+
+        return WebResponseUtil.toSuccessResponseVoWithData(gameManageService.getGamesOfUser(userId, gameStatus));
     }
 }

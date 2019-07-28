@@ -4,8 +4,11 @@ import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.game.manage.model.dto.GameCreateDto;
 import edu.cqupt.mislab.erp.game.manage.model.dto.GamesSearchDto;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
+import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatusEnum;
 import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailInfoVo;
 import org.springframework.data.domain.Example;
+
+import java.util.List;
 
 /**
  * @author chuyunfei
@@ -49,4 +52,11 @@ public interface GameManageService {
      * @date 21:46 2019/4/26
      **/
     WebResponseVo<String> beginOneGame(Long userId,Long gameId);
+    
+    /**
+     * @author yuanyiwen
+     * @description 获取一个用户处于某种状态的全部企业
+     * @date 13:38 2019/7/28
+     **/
+    List<GameDetailInfoVo> getGamesOfUser(Long userId, GameStatusEnum gameStatus);
 }

@@ -7,6 +7,7 @@ import edu.cqupt.mislab.erp.commons.websocket.CommonWebSocketMessagePublisher;
 import edu.cqupt.mislab.erp.game.compete.basic.impl.GameModelInitService;
 import edu.cqupt.mislab.erp.game.manage.constant.ManageConstant;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseMemberInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.GameInitInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.dto.GameCreateDto;
@@ -43,8 +44,10 @@ public class GameManageServiceImpl implements GameManageService {
     @Autowired private GameBasicInfoRepository gameBasicInfoRepository;
     @Autowired private UserStudentRepository userStudentRepository;
     @Autowired private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
+    @Autowired private EnterpriseMemberInfoRepository enterpriseMemberInfoRepository;
     @Autowired private GameModelInitService gameCompeteInitService;
     @Autowired private CommonWebSocketMessagePublisher webSocketMessagePublisher;
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -334,5 +337,25 @@ public class GameManageServiceImpl implements GameManageService {
         }
 
         return gamesSearchDto;
+    }
+
+    @Override
+    public List<GameDetailInfoVo> getGamesOfUser(Long userId, GameStatusEnum gameStatus) {
+
+        // 获取该用户全部参与过的比赛企业信息
+        List<EnterpriseMemberInfo> enterpriseMemberInfoList = enterpriseMemberInfoRepository.findByUserStudentInfo_Id(userId);
+
+        List<GameDetailInfoVo> gameDetailInfoVoList = new ArrayList<>();
+        for(EnterpriseMemberInfo enterpriseMemberInfo : enterpriseMemberInfoList) {
+            GameBasicInfo gameBasicInfo = enterpriseMemberInfo.getEnterpriseBasicInfo().getGameBasicInfo();
+
+            // 当该企业所在比赛的比赛状态与要查询的状态相同时，加入集合
+            if(gameStatus.equals(gameBasicInfo.getGameStatus())) {
+                GameDetailInfoVo gameDetailInfoVo = new GameDetailInfoVo();
+                EntityVoUtil.copyFieldsFromEntityToVo(gameBasicInfo, gameDetailInfoVo);
+            }
+        }
+
+        return gameDetailInfoVoList;
     }
 }
