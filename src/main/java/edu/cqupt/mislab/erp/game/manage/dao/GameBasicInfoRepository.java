@@ -27,4 +27,12 @@ public interface GameBasicInfoRepository extends BasicRepository<GameBasicInfo, 
      * @date 21:03 2019/4/26
      **/
     List<GameBasicInfo> findByGameStatus(GameStatusEnum gameStatusEnum);
+
+
+    /**
+     * @author yuanyiwen
+     * @description 获取一个用户创建的全部比赛
+     * @date 17:33 2019/7/30
+     **/
+    List<GameBasicInfo> findByUserStudentInfo_Id(Long userId);
 }

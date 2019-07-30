@@ -9,6 +9,7 @@ import edu.cqupt.mislab.erp.game.manage.model.dto.GameCreateDto;
 import edu.cqupt.mislab.erp.game.manage.model.dto.GamesSearchDto;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatusEnum;
 import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailInfoVo;
+import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailPageVo;
 import edu.cqupt.mislab.erp.game.manage.service.GameManageService;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import io.swagger.annotations.Api;
@@ -18,7 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * @author chuyunfei
@@ -68,12 +68,24 @@ public class GameManageController {
         return WebResponseUtil.toSuccessResponseVoWithData(gameManageService.getGameDetailVosBySearchDto(searchDto));
     }
 
-    @ApiOperation("查询用户处于某种比赛状态的全部比赛")
+    @ApiOperation(value = "查询用户处于某种比赛状态的全部比赛", notes = "currentPage和amountOfPage分别表示当前请求的页码和每页的数据数量")
     @GetMapping("/status")
-    public WebResponseVo<List<GameDetailInfoVo>> getGamesOfUser(@Exist(repository = UserStudentRepository.class)
+    public WebResponseVo<GameDetailPageVo> getGamesOfUser(@Exist(repository = UserStudentRepository.class)
                                                                 @RequestParam Long userId,
-                                                                @RequestParam GameStatusEnum gameStatus) {
+                                                          @RequestParam GameStatusEnum gameStatus,
+                                                          @RequestParam Integer currentPage,
+                                                          @RequestParam Integer amountOfPage) {
 
-        return WebResponseUtil.toSuccessResponseVoWithData(gameManageService.getGamesOfUser(userId, gameStatus));
+        if(currentPage <= 0 || amountOfPage <= 0) {
+            return WebResponseUtil.toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "页码请求应大于0");
+        }
+
+        GameDetailPageVo gameDetailPageVo = gameManageService.getGamesOfUser(userId, gameStatus, currentPage, amountOfPage);
+
+        if(gameDetailPageVo == null) {
+            return WebResponseUtil.toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "当前页码不存在！");
+        }
+
+        return WebResponseUtil.toSuccessResponseVoWithData(gameDetailPageVo);
     }
 }

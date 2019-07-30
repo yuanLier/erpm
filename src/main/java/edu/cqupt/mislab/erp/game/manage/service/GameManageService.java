@@ -6,9 +6,8 @@ import edu.cqupt.mislab.erp.game.manage.model.dto.GamesSearchDto;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatusEnum;
 import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailInfoVo;
+import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailPageVo;
 import org.springframework.data.domain.Example;
-
-import java.util.List;
 
 /**
  * @author chuyunfei
@@ -58,5 +57,5 @@ public interface GameManageService {
      * @description 获取一个用户处于某种状态的全部企业
      * @date 13:38 2019/7/28
      **/
-    List<GameDetailInfoVo> getGamesOfUser(Long userId, GameStatusEnum gameStatus);
+    GameDetailPageVo getGamesOfUser(Long userId, GameStatusEnum gameStatus, Integer currentPage, Integer amountOfPage);
 }

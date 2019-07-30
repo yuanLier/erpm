@@ -15,6 +15,7 @@ import edu.cqupt.mislab.erp.game.manage.model.dto.GamesSearchDto;
 import edu.cqupt.mislab.erp.game.manage.model.entity.*;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo.GameBasicInfoBuilder;
 import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailInfoVo;
+import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailPageVo;
 import edu.cqupt.mislab.erp.game.manage.service.GameManageService;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
@@ -340,14 +341,23 @@ public class GameManageServiceImpl implements GameManageService {
     }
 
     @Override
-    public List<GameDetailInfoVo> getGamesOfUser(Long userId, GameStatusEnum gameStatus) {
+    public GameDetailPageVo getGamesOfUser(Long userId, GameStatusEnum gameStatus, Integer currentPage, Integer amountOfPage) {
+
+        GameDetailPageVo gameDetailPageVo = new GameDetailPageVo();
 
         // 获取该用户全部参与过的比赛企业信息
         List<EnterpriseMemberInfo> enterpriseMemberInfoList = enterpriseMemberInfoRepository.findByUserStudentInfo_Id(userId);
+        // 获取该用户创建的全部比赛信息
+        List<GameBasicInfo> gameBasicInfoList = gameBasicInfoRepository.findByUserStudentInfo_Id(userId);
+
+        // 整理出用户参与的全部比赛
+        Set<GameBasicInfo> gameBasicInfoSet = new HashSet<>(gameBasicInfoList);
+        for(EnterpriseMemberInfo enterpriseMemberInfo : enterpriseMemberInfoList) {
+            gameBasicInfoSet.add(enterpriseMemberInfo.getEnterpriseBasicInfo().getGameBasicInfo());
+        }
 
         List<GameDetailInfoVo> gameDetailInfoVoList = new ArrayList<>();
-        for(EnterpriseMemberInfo enterpriseMemberInfo : enterpriseMemberInfoList) {
-            GameBasicInfo gameBasicInfo = enterpriseMemberInfo.getEnterpriseBasicInfo().getGameBasicInfo();
+        for(GameBasicInfo gameBasicInfo : gameBasicInfoSet) {
 
             // 当该企业所在比赛的比赛状态与要查询的状态相同时，加入集合
             if(gameStatus.equals(gameBasicInfo.getGameStatus())) {
@@ -358,6 +368,17 @@ public class GameManageServiceImpl implements GameManageService {
             }
         }
 
-        return gameDetailInfoVoList;
+        Integer size = gameDetailInfoVoList.size();
+        Integer begin = (currentPage-1)*amountOfPage;
+        if(begin > size) {
+            return null;
+        }
+        Integer end = Math.min(currentPage*amountOfPage, size);
+
+        gameDetailPageVo.setCurrentPage(currentPage);
+        gameDetailPageVo.setTotalAmount(size);
+        gameDetailPageVo.setGameDetailInfoVo(gameDetailInfoVoList.subList(begin, end));
+
+        return gameDetailPageVo;
     }
 }
