@@ -353,6 +353,8 @@ public class GameManageServiceImpl implements GameManageService {
             if(gameStatus.equals(gameBasicInfo.getGameStatus())) {
                 GameDetailInfoVo gameDetailInfoVo = new GameDetailInfoVo();
                 EntityVoUtil.copyFieldsFromEntityToVo(gameBasicInfo, gameDetailInfoVo);
+
+                gameDetailInfoVoList.add(gameDetailInfoVo);
             }
         }
 
