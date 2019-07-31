@@ -10,6 +10,7 @@ import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.dto.EnterpriseCreateDto;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseStatusEnum;
 import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseDetailInfoVo;
+import edu.cqupt.mislab.erp.game.manage.model.vo.EnterprisePeriodVo;
 import edu.cqupt.mislab.erp.game.manage.service.EnterpriseManageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -89,5 +90,12 @@ public class EnterpriseManageController {
         }
 
         return WebResponseUtil.toSuccessResponseVoWithData(detailInfoVos);
+    }
+
+    @ApiOperation("获取某一企业当前所处的周期")
+    @GetMapping("/period")
+    public WebResponseVo<EnterprisePeriodVo> getCurrentPeriod(@Exist(repository = EnterpriseBasicInfoRepository.class)
+                                                       @RequestParam Long enterpriseId) {
+        return WebResponseUtil.toSuccessResponseVoWithData(enterpriseManageService.getCurrentPeriod(enterpriseId));
     }
 }

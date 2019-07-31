@@ -3,11 +3,13 @@ package edu.cqupt.mislab.erp.game.compete.operation.product.service.impl;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductMaterialBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,25 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductDevelopInfoRepository productDevelopInfoRepository;
 
+    @Override
+    public List<ProductTypeVo> getAllProductTypes(Long enterpriseId) {
+
+        List<ProductDevelopInfo> productDevelopInfoList =
+                productDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId);
+
+        List<ProductTypeVo> productTypeVoList = new ArrayList<>();
+        for(ProductDevelopInfo productDevelopInfo : productDevelopInfoList) {
+            ProductBasicInfo productBasicInfo = productDevelopInfo.getProductBasicInfo();
+
+            ProductTypeVo productTypeVo = new ProductTypeVo();
+            productTypeVo.setId(productBasicInfo.getId());
+            productTypeVo.setProductName(productBasicInfo.getProductName());
+
+            productTypeVoList.add(productTypeVo);
+        }
+
+        return productTypeVoList;
+    }
 
     @Override
     public List<ProductDisplayVo> findByEnterpriseId(Long enterpriseId) {

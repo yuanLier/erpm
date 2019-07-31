@@ -69,7 +69,7 @@ public class IsoController {
     public WebResponseVo<IsoDisplayVo> startDevelopIso(@Exist(repository = IsoDevelopInfoRepository.class)
                                                            @RequestParam Long isoDevelopId) {
 
-        return toSuccessResponseVoWithData(isoService.updateIsoStatus(isoDevelopId, IsoStatusEnum.DEVELOPING));
+        return toSuccessResponseVoWithData(isoService.startDevelopIso(isoDevelopId));
     }
 
 

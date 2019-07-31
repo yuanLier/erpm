@@ -3,6 +3,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.product.service;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
 
 import java.util.List;
 
@@ -13,6 +14,14 @@ import java.util.List;
  **/
 
 public interface ProductService {
+
+    /**
+     * 获取一场比赛中使用的全部产品类型
+     * @param enterpriseId
+     * @return
+     */
+    List<ProductTypeVo> getAllProductTypes(Long enterpriseId);
+
 
     /**
      * 获取某个企业全部产品研发信息

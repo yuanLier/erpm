@@ -6,6 +6,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInf
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.service.ProductService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import io.swagger.annotations.Api;
@@ -33,6 +34,14 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @ApiOperation("获取一场比赛中使用的全部产品类型")
+    @GetMapping("/type")
+    public WebResponseVo<List<ProductTypeVo>> getAllProductTypes(@Exist(repository = EnterpriseBasicInfoRepository.class)
+                                                                     @RequestParam Long enterpriseId) {
+
+        return toSuccessResponseVoWithData(productService.getAllProductTypes(enterpriseId));
+    }
 
     @ApiOperation(value = "获取某个企业的全部产品研发信息")
     @GetMapping

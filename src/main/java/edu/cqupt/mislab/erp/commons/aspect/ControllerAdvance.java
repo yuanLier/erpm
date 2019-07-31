@@ -139,10 +139,10 @@ public class ControllerAdvance {
      * @date 20:56 2019/7/14
      **/
     @ResponseBody
-    @ExceptionHandler(EnterpriseBankruptException.class)
-    public WebResponseVo<Object> enterpriseBankruptExceptionHandler(EnterpriseBankruptException exception) {
+    @ExceptionHandler(EnterpriseStatusChangeException.class)
+    public WebResponseVo<Object> enterpriseBankruptExceptionHandler(EnterpriseStatusChangeException exception) {
 
-        return toSuccessResponseVoWithData("企业破产，游戏结束！");
+        return toSuccessResponseVoWithData(exception.getMessage());
     }
 
 

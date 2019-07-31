@@ -9,6 +9,7 @@ import edu.cqupt.mislab.erp.game.manage.dao.*;
 import edu.cqupt.mislab.erp.game.manage.model.dto.EnterpriseCreateDto;
 import edu.cqupt.mislab.erp.game.manage.model.entity.*;
 import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseDetailInfoVo;
+import edu.cqupt.mislab.erp.game.manage.model.vo.EnterprisePeriodVo;
 import edu.cqupt.mislab.erp.game.manage.service.EnterpriseManageService;
 import edu.cqupt.mislab.erp.game.manage.service.GameUserRoleService;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
@@ -235,5 +236,23 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
         });
 
         return detailInfoVos;
+    }
+
+    @Override
+    public EnterprisePeriodVo getCurrentPeriod(Long enterpriseId) {
+
+        EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findOne(enterpriseId);
+
+        // 获取企业当前所处的年与周期
+        Integer currentPeriod = enterpriseBasicInfo.getEnterpriseCurrentPeriod();
+        Integer currentYear = enterpriseBasicInfo.getGameBasicInfo().getGameCurrentYear();
+        Integer totalPeriod = enterpriseBasicInfo.getGameBasicInfo().getGameInitBasicInfo().getPeriodOfOneYear();
+        Integer periodOfYear = (currentPeriod % totalPeriod == 0) ? totalPeriod : currentPeriod % totalPeriod;
+
+        EnterprisePeriodVo enterprisePeriodVo = new EnterprisePeriodVo();
+        enterprisePeriodVo.setYear(currentYear);
+        enterprisePeriodVo.setPeriod(periodOfYear);
+
+        return enterprisePeriodVo;
     }
 }

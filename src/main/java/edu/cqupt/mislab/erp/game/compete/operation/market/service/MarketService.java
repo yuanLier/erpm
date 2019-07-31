@@ -2,6 +2,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.market.service;
 
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketStatusEnum;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketTypeVo;
 
 import java.util.List;
 
@@ -11,6 +12,14 @@ import java.util.List;
  **/
 
 public interface MarketService {
+
+    /**
+     * 获取一场比赛中使用的全部市场类型
+     * @param enterpriseId
+     * @return
+     */
+    List<MarketTypeVo> getAllMarketTypes(Long enterpriseId);
+
 
     /**
      * 获取某个企业全部市场开拓信息

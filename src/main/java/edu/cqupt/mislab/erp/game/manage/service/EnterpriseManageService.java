@@ -3,6 +3,7 @@ package edu.cqupt.mislab.erp.game.manage.service;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.game.manage.model.dto.EnterpriseCreateDto;
 import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseDetailInfoVo;
+import edu.cqupt.mislab.erp.game.manage.model.vo.EnterprisePeriodVo;
 
 import java.util.List;
 
@@ -48,4 +49,11 @@ public interface EnterpriseManageService {
      * @date 21:29 2019/4/26
      **/
     List<EnterpriseDetailInfoVo> getEnterpriseInfos(Long gameId);
+
+    /**
+     * @author yuanyiwen
+     * @description 获取某一企业当前所处的年与周期
+     * @date 10:03 2019/7/31
+     **/
+    EnterprisePeriodVo getCurrentPeriod(Long enterpriseId);
 }
