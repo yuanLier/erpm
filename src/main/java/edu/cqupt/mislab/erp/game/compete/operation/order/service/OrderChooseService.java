@@ -19,7 +19,7 @@ public interface OrderChooseService {
      * @param enterpriseAdDtoList 广告投放列表
      * @return
      */
-    boolean advertising(Long enterpriseId, List<EnterpriseAdDto> enterpriseAdDtoList);
+    Boolean advertising(Long enterpriseId, List<EnterpriseAdDto> enterpriseAdDtoList);
 
 
     /**

@@ -42,7 +42,13 @@ public class OrderChooseController {
                                             @RequestParam Long enterpriseId,
                                        @RequestBody List<EnterpriseAdDto> enterpriseAdDtoList) {
 
-        return toSuccessResponseVoWithData(orderChooseService.advertising(enterpriseId, enterpriseAdDtoList));
+        Boolean advertise = orderChooseService.advertising(enterpriseId, enterpriseAdDtoList);
+
+        if(advertise == null) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "该企业已完成广告投放，请不要重复进行");
+        }
+
+        return toSuccessResponseVoWithData(advertise);
     }
 
 
@@ -56,13 +62,7 @@ public class OrderChooseController {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "年份应大于1");
         }
 
-        List<GameOrderVo> gameOrderVoList = orderChooseService.getOrderOfOneYear(gameId, year);
-
-        if(gameOrderVoList.size() == 0) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.SERVICE_UNAVAILABLE, "订单获取失败");
-        }
-
-        return toSuccessResponseVoWithData(gameOrderVoList);
+        return toSuccessResponseVoWithData(orderChooseService.getOrderOfOneYear(gameId, year));
     }
 
 

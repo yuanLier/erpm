@@ -59,10 +59,15 @@ public class OrderChooseServiceImpl implements OrderChooseService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean advertising(Long enterpriseId, List<EnterpriseAdDto> enterpriseAdDtoList) {
+    public Boolean advertising(Long enterpriseId, List<EnterpriseAdDto> enterpriseAdDtoList) {
 
         // 首先获取这个企业
         EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findOne(enterpriseId);
+
+        // 如果这个企业已经投放完成了 就不允许再投放
+        if(enterpriseBasicInfo.getFinishAdvertising()) {
+            return null;
+        }
 
         // 获取广告费用总和
         Double totalMoney = enterpriseAdDtoList.stream().mapToDouble(EnterpriseAdDto::getMoney).sum();

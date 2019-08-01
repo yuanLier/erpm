@@ -5,6 +5,7 @@ import edu.cqupt.mislab.erp.commons.response.WebResponseVo.ResponseStatus;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.commons.websocket.CommonWebSocketMessagePublisher;
 import edu.cqupt.mislab.erp.game.compete.basic.impl.GameModelInitService;
+import edu.cqupt.mislab.erp.game.compete.operation.order.service.OrderChooseService;
 import edu.cqupt.mislab.erp.game.manage.constant.ManageConstant;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseMemberInfoRepository;
@@ -48,6 +49,8 @@ public class GameManageServiceImpl implements GameManageService {
     @Autowired private EnterpriseMemberInfoRepository enterpriseMemberInfoRepository;
     @Autowired private GameModelInitService gameCompeteInitService;
     @Autowired private CommonWebSocketMessagePublisher webSocketMessagePublisher;
+
+    @Autowired private OrderChooseService orderChooseService;
 
 
     @Override
@@ -183,6 +186,8 @@ public class GameManageServiceImpl implements GameManageService {
 
             // 通知前端新的一年开始了
             webSocketMessagePublisher.publish(gameId, new TextMessage(ManageConstant.NEW_YEAR + gameBasicInfo.getGameCurrentYear()));
+            // 生成第一年可供企业选择的订单
+            orderChooseService.selectOrdersOfOneYear(gameId, 1);
             // 通知前端订单会开始了
             webSocketMessagePublisher.publish(gameId, new TextMessage(ManageConstant.ORDER_MEETING_BEGIN + gameId));
 
