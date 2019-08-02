@@ -23,7 +23,7 @@ public interface OrderChooseService {
 
 
     /**
-     * 根据企业存货情况选择某一年中可供企业选取的订单，仅作为内部接口使用
+     * 根据企业存活情况选择某一年中可供企业选取的订单，仅作为内部接口使用
      * @param year
      * @return
      */
@@ -62,4 +62,12 @@ public interface OrderChooseService {
      * @return 返回成功退出与否
      */
     boolean enterpriseFinishChoice(Long enterpriseId);
+
+
+    /**
+     * 判断此时是否轮到某一企业选订单
+     * @param enterpriseId
+     * @return 返回true or false
+     */
+    boolean isTurnOfEnterprise(Long enterpriseId);
 }

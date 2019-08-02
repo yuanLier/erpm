@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
-import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
+import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.*;
 
 /**
  * @author yuanyiwen
@@ -88,10 +87,25 @@ public class OrderChooseController {
 
     @ApiOperation(value = "企业退出订单会")
     @GetMapping("/drop")
-    WebResponseVo<Boolean> enterpriseDropOut(@Exist(repository = EnterpriseBasicInfoRepository.class)
+    WebResponseVo enterpriseDropOut(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                              @RequestParam Long enterpriseId) {
 
-        return toSuccessResponseVoWithData(orderChooseService.enterpriseFinishChoice(enterpriseId));
+        boolean finish = orderChooseService.enterpriseFinishChoice(enterpriseId);
+
+        if(!finish) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "请先结束本轮的订单选取！");
+        }
+
+        return toSuccessResponseVoWithNoData();
+    }
+
+
+    @ApiOperation(value = "是否轮到某企业选取订单")
+    @GetMapping("/turn")
+    WebResponseVo<Boolean> isTurnOfEnterprise(@Exist(repository = EnterpriseBasicInfoRepository.class)
+                                              @RequestParam Long enterpriseId) {
+
+        return toSuccessResponseVoWithData(orderChooseService.isTurnOfEnterprise(enterpriseId));
     }
 
 }

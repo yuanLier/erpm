@@ -96,6 +96,7 @@ public class ModelAdvanceService implements ApplicationContextAware {
                 enterpriseBasicInfo.setAdvertising(true);
                 enterpriseBasicInfo.setFinishAdvertising(false);
                 enterpriseBasicInfo.setSequence(0);
+                enterpriseBasicInfo.setMyTurn(false);
                 enterpriseBasicInfo.setFinishChoice(false);
                 enterpriseBasicInfoRepository.save(enterpriseBasicInfo);
             }

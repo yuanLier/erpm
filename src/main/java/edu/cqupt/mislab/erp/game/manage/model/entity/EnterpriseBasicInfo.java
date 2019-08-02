@@ -68,6 +68,10 @@ public class EnterpriseBasicInfo implements Serializable {
     private Integer sequence;
 
     @Basic
+    @Comment(comment = "是否轮到这个企业选订单了，每年更新")
+    private Boolean myTurn;
+
+    @Basic
     @Comment(comment = "企业是否退出订单会，每年更新")
     private Boolean finishChoice;
 

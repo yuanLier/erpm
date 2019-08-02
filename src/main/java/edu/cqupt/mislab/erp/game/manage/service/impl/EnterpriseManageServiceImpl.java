@@ -93,6 +93,8 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
                 .finishAdvertising(false)
                 // 默认顺序为0
                 .sequence(0)
+                // 默认不轮到这个企业选单
+                .myTurn(false)
                 // 默认未结束订单会
                 .finishChoice(false)
                 .enterpriseName(createDto.getEnterpriseName())

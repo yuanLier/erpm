@@ -176,6 +176,12 @@ public class OrderChooseServiceImpl implements OrderChooseService {
             nextEnterprise = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndSequence(gameId, nextSequence);
         }
 
+        // 轮换顺序
+        enterpriseBasicInfo.setMyTurn(false);
+        nextEnterprise.setMyTurn(true);
+        enterpriseBasicInfoRepository.save(enterpriseBasicInfo);
+        enterpriseBasicInfoRepository.save(nextEnterprise);
+
         // 通知前端并返回结果
         webSocketMessagePublisher.publish(gameId, new TextMessage(ManageConstant.ENTERPRISE_ORDER_SEQUENCE + nextEnterprise.getId()));
 
@@ -188,14 +194,30 @@ public class OrderChooseServiceImpl implements OrderChooseService {
 
         EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findOne(enterpriseId);
 
+        // 如果是轮到这个用户选单 就必须先完成选单再退出订单会，除非只剩这一个企业了
+        List<EnterpriseBasicInfo> enterpriseBasicInfoList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndFinishChoiceIsFalse(enterpriseBasicInfo.getGameBasicInfo().getId());
+        if(isTurnOfEnterprise(enterpriseId) && enterpriseBasicInfoList.size() > 1) {
+            return false;
+        }
+
         // 是否退出订单会 置为true
         enterpriseBasicInfo.setFinishChoice(true);
+        // 保险起见将“是否轮到这个企业”置为false
+        enterpriseBasicInfo.setMyTurn(false);
         enterpriseBasicInfoRepository.save(enterpriseBasicInfo);
 
         // 判断是否所有企业均已退出订单会
         finishOrderMeeting(enterpriseBasicInfo.getGameBasicInfo().getId());
 
         return true;
+    }
+
+    @Override
+    public boolean isTurnOfEnterprise(Long enterpriseId) {
+
+        EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findOne(enterpriseId);
+
+        return enterpriseBasicInfo.getMyTurn();
     }
 
 
@@ -232,8 +254,12 @@ public class OrderChooseServiceImpl implements OrderChooseService {
             // 确定企业订单的选取顺序
             enterpriseChooseSequence(gameId, year);
 
-            // 获取并通知前端第一个轮到哪个企业投广告
+            // 获取第一个轮到哪个企业选取订单
             EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndSequence(gameId, 1);
+            // 设置这个企业为当前订单的选取者
+            enterpriseBasicInfo.setMyTurn(true);
+            enterpriseBasicInfoRepository.save(enterpriseBasicInfo);
+            // 通知前端
             webSocketMessagePublisher.publish(gameId, new TextMessage(ManageConstant.ORDER_CHOOSE_BEGIN + enterpriseBasicInfo.getId()));
 
         }

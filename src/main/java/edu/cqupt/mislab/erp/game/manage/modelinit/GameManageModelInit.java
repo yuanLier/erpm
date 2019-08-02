@@ -118,6 +118,7 @@ public class GameManageModelInit implements ModelInit {
                 .advertising(true)
                 .finishAdvertising(false)
                 .sequence(0)
+                .myTurn(false)
                 .finishChoice(false)
                 .gameContributionRateSure(false)
                 .enterpriseStatus(EnterpriseStatusEnum.CREATE)

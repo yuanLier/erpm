@@ -62,6 +62,13 @@ public interface EnterpriseBasicInfoRepository extends BasicRepository<Enterpris
 
     /**
      * @author yuanyiwen
+     * @description 获取某场比赛处于某年时，全部未退出订单会的企业
+     * @date 21:57 2019/8/2
+     **/
+    List<EnterpriseBasicInfo> findByGameBasicInfo_IdAndFinishChoiceIsFalse(Long gameId);
+
+    /**
+     * @author yuanyiwen
      * @description 根据某场比赛中企业选取订单的顺序定位企业
      * @date 16:34 2019/7/7
      **/
