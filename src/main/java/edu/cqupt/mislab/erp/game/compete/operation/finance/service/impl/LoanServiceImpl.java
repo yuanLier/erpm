@@ -119,8 +119,13 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public List<LoanEnterpriseDisplayVo> getLoansOfEnterprise(LoanSelectDto loanSelectDto) {
 
+        String loanType = null;
+        if(loanSelectDto.getLoanId() != null) {
+            GameLoanBasicInfo loanBasicInfo = gameLoanBasicInfoRepository.findOne(loanSelectDto.getLoanId());
+            loanType = loanBasicInfo.getLoanBasicInfo().getLoanType();
+        }
 
-        List<LoanEnterpriseInfo> loanEnterpriseInfoList = loanEnterpriseRepository.getLoansOfEnterprise(loanSelectDto.getLoanType(), loanSelectDto.getRepaid());
+        List<LoanEnterpriseInfo> loanEnterpriseInfoList = loanEnterpriseRepository.getLoansOfEnterprise(loanType, loanSelectDto.getRepaid());
 
         List<LoanEnterpriseDisplayVo> loanEnterpriseDisplayVoList = new ArrayList<>();
         for (LoanEnterpriseInfo loanEnterpriseInfo : loanEnterpriseInfoList) {

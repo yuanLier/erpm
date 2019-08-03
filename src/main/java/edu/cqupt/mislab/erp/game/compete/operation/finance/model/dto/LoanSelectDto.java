@@ -13,8 +13,8 @@ import lombok.Data;
 @ApiModel("贷款信息筛选传输数据")
 public class LoanSelectDto {
 
-    @ApiModelProperty("贷款类型")
-    private String loanType;
+    @ApiModelProperty("贷款类型所对应的id")
+    private Long loanId;
 
     @ApiModelProperty("是否还款")
     private Boolean repaid;
