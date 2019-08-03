@@ -122,6 +122,12 @@ public class LoanServiceImpl implements LoanService {
         String loanType = null;
         if(loanSelectDto.getLoanId() != null) {
             GameLoanBasicInfo loanBasicInfo = gameLoanBasicInfoRepository.findOne(loanSelectDto.getLoanId());
+
+            // 这里要做一下非空校验
+            if(loanBasicInfo == null) {
+                return null;
+            }
+
             loanType = loanBasicInfo.getLoanBasicInfo().getLoanType();
         }
 

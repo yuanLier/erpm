@@ -80,7 +80,13 @@ public class LoanController {
     @PostMapping
     public WebResponseVo<List<LoanEnterpriseDisplayVo>> getLoansOfEnterprise(@RequestBody LoanSelectDto loanSelectDto) {
 
-        return toSuccessResponseVoWithData(loanService.getLoansOfEnterprise(loanSelectDto));
+        List<LoanEnterpriseDisplayVo> loanEnterpriseDisplayVoList = loanService.getLoansOfEnterprise(loanSelectDto);
+
+        if(loanEnterpriseDisplayVoList == null) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "该id所对应的贷款情况不存在");
+        }
+
+        return toSuccessResponseVoWithData(loanEnterpriseDisplayVoList);
     }
 
 }
