@@ -1,6 +1,5 @@
 package edu.cqupt.mislab.erp.game.compete.operation.finance.model.vo;
 
-import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -18,7 +17,7 @@ public class FinanceEnterpriseVo {
     private Long id;
 
     @ApiModelProperty("哪个企业的账户余额")
-    private EnterpriseBasicInfo enterpriseBasicInfo;
+    private Long enterpriseId;
 
     @ApiModelProperty("当前账户余额")
     private double currentAccount;

@@ -84,6 +84,7 @@ public class FinanceServiceImpl implements FinanceService {
             FinanceEnterpriseVo financeEnterpriseVo = new FinanceEnterpriseVo();
 
             BeanCopyUtil.copyPropertiesSimple(financeEnterpriseInfo, financeEnterpriseVo);
+            financeEnterpriseVo.setEnterpriseId(financeEnterpriseInfo.getEnterpriseBasicInfo().getId());
             financeEnterpriseVoList.add(financeEnterpriseVo);
         }
 
@@ -100,6 +101,7 @@ public class FinanceServiceImpl implements FinanceService {
         }
 
         FinanceEnterpriseVo financeEnterpriseVo = new FinanceEnterpriseVo();
+        financeEnterpriseVo.setEnterpriseId(financeEnterpriseInfo.getEnterpriseBasicInfo().getId());
         BeanCopyUtil.copyPropertiesSimple(financeEnterpriseInfo, financeEnterpriseVo);
 
         return financeEnterpriseVo;
