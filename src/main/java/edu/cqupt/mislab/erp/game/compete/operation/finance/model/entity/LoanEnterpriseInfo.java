@@ -41,10 +41,6 @@ public class LoanEnterpriseInfo implements Serializable {
     @Comment(comment = "哪个企业贷的款")
     private EnterpriseBasicInfo enterpriseBasicInfo;
 
-    @Basic
-    @Comment(comment = "贷款类型，提出来放在这里是方便筛选的")
-    private String loanType;
-
     @DoubleMin(0.01)
     @Column(updatable = false)
     @Comment(comment = "贷款金额")

@@ -14,7 +14,7 @@ import lombok.Data;
 public class LoanSelectDto {
 
     @ApiModelProperty("贷款类型所对应的id")
-    private Long loanId;
+    private Long loanBasicId;
 
     @ApiModelProperty("是否还款")
     private Boolean repaid;

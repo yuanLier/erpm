@@ -80,7 +80,6 @@ public class LoanServiceImpl implements LoanService {
                 .enterpriseBasicInfo(enterpriseBasicInfo)
                 .gameLoanBasicInfo(gameLoanBasicInfo)
                 .loanAmount(loanAmount)
-                .loanType(gameLoanBasicInfo.getLoanBasicInfo().getLoanType())
                 .build();
         loanEnterpriseRepository.save(loanEnterpriseInfo);
 
@@ -119,19 +118,13 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public List<LoanEnterpriseDisplayVo> getLoansOfEnterprise(LoanSelectDto loanSelectDto) {
 
-        String loanType = null;
-        if(loanSelectDto.getLoanId() != null) {
-            GameLoanBasicInfo loanBasicInfo = gameLoanBasicInfoRepository.findOne(loanSelectDto.getLoanId());
-
-            // 这里要做一下非空校验
-            if(loanBasicInfo == null) {
-                return null;
-            }
-
-            loanType = loanBasicInfo.getLoanBasicInfo().getLoanType();
+        List<LoanEnterpriseInfo> loanEnterpriseInfoList;
+        // 布尔值的判断要单独提出来，直接用null会有一点问题
+        if(loanSelectDto.getRepaid() != null) {
+            loanEnterpriseInfoList = loanEnterpriseRepository.getLoansOfEnterprise(loanSelectDto.getLoanBasicId(), loanSelectDto.getRepaid());
+        } else {
+            loanEnterpriseInfoList = loanEnterpriseRepository.getLoansOfEnterprise(loanSelectDto.getLoanBasicId());
         }
-
-        List<LoanEnterpriseInfo> loanEnterpriseInfoList = loanEnterpriseRepository.getLoansOfEnterprise(loanType, loanSelectDto.getRepaid());
 
         List<LoanEnterpriseDisplayVo> loanEnterpriseDisplayVoList = new ArrayList<>();
         for (LoanEnterpriseInfo loanEnterpriseInfo : loanEnterpriseInfoList) {
