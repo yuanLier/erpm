@@ -5,6 +5,7 @@ import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.commons.validators.annotations.GameStatusValid;
 import edu.cqupt.mislab.erp.commons.validators.annotations.UserStatusValid;
+import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.dto.GameCreateDto;
 import edu.cqupt.mislab.erp.game.manage.model.dto.GamesSearchDto;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameStatusEnum;
@@ -87,5 +88,15 @@ public class GameManageController {
         }
 
         return WebResponseUtil.toSuccessResponseVoWithData(gameDetailPageVo);
+    }
+
+    @ApiOperation(value = "判断用户是否存在于某一比赛中", notes = "注 ：如果用户创建了比赛但并未参与该比赛中的企业，则返回值为false")
+    @GetMapping("/judge")
+    public WebResponseVo<Boolean> whetherUserIsInGame(@Exist(repository = GameBasicInfoRepository.class)
+                                                            @RequestParam Long gameId,
+                                                      @Exist(repository = UserStudentRepository.class)
+                                                            @RequestParam Long userId) {
+
+        return WebResponseUtil.toSuccessResponseVoWithData(gameManageService.whetherUserIsInGame(gameId, userId));
     }
 }

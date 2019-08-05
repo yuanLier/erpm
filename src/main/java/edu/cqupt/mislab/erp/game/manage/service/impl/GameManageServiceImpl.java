@@ -386,4 +386,20 @@ public class GameManageServiceImpl implements GameManageService {
 
         return gameDetailPageVo;
     }
+
+    @Override
+    public boolean whetherUserIsInGame(Long gameId, Long userId) {
+        // 获取用户参与过的全部比赛企业信息
+        List<EnterpriseMemberInfo> enterpriseMemberInfoList = enterpriseMemberInfoRepository.findByUserStudentInfo_Id(userId);
+
+        // 判断gameId是否在其中
+        for(EnterpriseMemberInfo enterpriseMemberInfo : enterpriseMemberInfoList) {
+            if(gameId.equals(enterpriseMemberInfo.getEnterpriseBasicInfo().getGameBasicInfo().getId())) {
+                return true;
+            }
+        }
+
+        // 值得注意的是 如果用户创建了比赛但并未参与该比赛中的企业，则也返回false
+        return false;
+    }
 }

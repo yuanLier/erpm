@@ -58,4 +58,11 @@ public interface GameManageService {
      * @date 13:38 2019/7/28
      **/
     GameDetailPageVo getGamesOfUser(Long userId, GameStatusEnum gameStatus, Integer currentPage, Integer amountOfPage);
+
+    /**
+     * @author yuanyiwen
+     * @description 判断用户是否存在于某一比赛中，主要用于前端的掉线重连
+     * @date 17:46 2019/8/5
+     **/
+    boolean whetherUserIsInGame(Long gameId, Long userId);
 }
