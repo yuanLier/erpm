@@ -17,7 +17,7 @@ public class MaterialStockDisplayVo {
     private Long id;
 
     @ApiModelProperty("原材料基本信息id")
-    private Long MaterialBasicId;
+    private Long materialBasicId;
 
     @ApiModelProperty("原材料名称")
     private String materialName;
@@ -25,7 +25,7 @@ public class MaterialStockDisplayVo {
     @ApiModelProperty("原材料库存数量")
     private Integer materialNumber;
 
-    @ApiModelProperty("原材料单价")
+    @ApiModelProperty("原材料售卖价格")
     private Double materialPrice;
 
 }

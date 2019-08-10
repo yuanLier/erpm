@@ -39,6 +39,7 @@ import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailInfoVo;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import edu.cqupt.mislab.erp.user.model.vo.UserStudentInfoBasicVo;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -511,8 +512,9 @@ public abstract class EntityVoUtil {
         materialStockDisplayVo.setMaterialName(materialStockInfo.getMaterialBasicInfo().getMaterialName());
         // 该材料库存数量
         materialStockDisplayVo.setMaterialNumber(materialStockInfo.getMaterialNumber());
-        // 原材料单价
-        materialStockDisplayVo.setMaterialPrice(materialStockInfo.getMaterialBasicInfo().getMaterialPrice());
+        // 原材料单价（保留两位小数）
+        Double sellPrice = materialStockInfo.getMaterialBasicInfo().getMaterialPrice()*materialStockInfo.getMaterialBasicInfo().getSellRate();
+        materialStockDisplayVo.setMaterialPrice(new BigDecimal(sellPrice).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 
         return materialStockDisplayVo;
     }

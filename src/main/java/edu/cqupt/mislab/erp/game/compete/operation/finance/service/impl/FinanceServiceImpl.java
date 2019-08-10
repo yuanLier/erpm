@@ -51,7 +51,7 @@ public class FinanceServiceImpl implements FinanceService {
         // 走到这里说明允许更新账户余额
 
         // 保留两位小数
-        account = new BigDecimal(account).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
+        account = new BigDecimal(account).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
         // 关闭前一个账户余额信息
         financeEnterpriseInfo.setCurrent(false);
