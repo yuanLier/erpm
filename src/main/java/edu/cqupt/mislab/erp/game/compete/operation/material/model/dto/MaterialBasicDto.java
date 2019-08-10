@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.material.model.dto;
 
+import edu.cqupt.mislab.erp.commons.validators.annotations.DoubleMax;
 import edu.cqupt.mislab.erp.commons.validators.annotations.DoubleMin;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,7 +8,6 @@ import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  * @author yuanyiwen
@@ -26,7 +26,8 @@ public class MaterialBasicDto {
     @ApiModelProperty(value = "原料的价格,该值必须大于0")
     private double materialPrice;
 
-    @Size(min = 0, max = 1)
+    @DoubleMin(0.01)
+    @DoubleMax(1.00)
     @ApiModelProperty(value = "原料的售卖价格占购买价格的比例，即购买价格*sellRate=售卖价格，波动区间为0.01-1.00")
     private double sellRate;
 
