@@ -89,9 +89,10 @@ public interface StockService {
 
 
     /**
-     * @author yuanyiwen
-     * @description 产品售卖（同上
-     * @date 22:04 2019/4/1
-     **/
+     * 产品售卖（同上
+     * @param productStockId
+     * @param sellNumber
+     * @return
+     */
     WebResponseVo<String> sellProduct(Long productStockId, Integer sellNumber);
 }

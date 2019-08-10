@@ -23,6 +23,9 @@ public class MaterialBasicVo {
     @ApiModelProperty(value = "原料的价格,该值必须大于0")
     private double materialPrice;
 
+    @ApiModelProperty(value = "原料的售卖价格占购买价格的比例，即购买价格*sellRate=售卖价格")
+    private double sellRate;
+
     @ApiModelProperty(value = "指原料从采购开始到原料运到仓库，需要等待的周期数，该值必须大于0")
     private int materialDelayTime;
 

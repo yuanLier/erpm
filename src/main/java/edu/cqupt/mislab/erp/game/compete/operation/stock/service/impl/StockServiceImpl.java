@@ -1,9 +1,13 @@
 package edu.cqupt.mislab.erp.game.compete.operation.stock.service.impl;
 
+import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
 import edu.cqupt.mislab.erp.game.compete.operation.material.dao.MaterialBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.MaterialOrderInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.MaterialStockInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.ProductStockInfoRepository;
@@ -46,6 +50,9 @@ public class StockServiceImpl implements StockService {
     private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
     @Autowired
     private MaterialBasicInfoRepository materialBasicInfoRepository;
+
+    @Autowired
+    private FinanceService financeService;
 
 
     @Override
@@ -94,7 +101,8 @@ public class StockServiceImpl implements StockService {
             EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findOne(materialOrderDto.getEnterpriseId());
             materialOrderInfo.setEnterpriseBasicInfo(enterpriseBasicInfo);
             // 哪种材料
-            materialOrderInfo.setMaterialBasicInfo(materialBasicInfoRepository.findOne(materialOrderDto.getMaterialBasicId()));
+            MaterialBasicInfo materialBasicInfo = materialBasicInfoRepository.findOne(materialOrderDto.getMaterialBasicId());
+            materialOrderInfo.setMaterialBasicInfo(materialBasicInfo);
             // 哪种运输方式
             materialOrderInfo.setTransportMethod(transportBasicInfoRepository.findOne(materialOrderDto.getTransportBasicId()));
             // 采购数量
@@ -108,6 +116,11 @@ public class StockServiceImpl implements StockService {
             materialOrderInfo = materialOrderInfoRepository.saveAndFlush(materialOrderInfo);
 
             materialOrderDisplayVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(materialOrderInfo));
+
+            // 当场扣钱
+            String changeOperating = FinanceOperationConstant.MATERIAL_PURCHASE;
+            Double changeAmount = materialOrderDto.getPurchaseNumber()*materialBasicInfo.getMaterialPrice();
+            financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true, false);
         }
 
         return materialOrderDisplayVoList;
@@ -183,6 +196,12 @@ public class StockServiceImpl implements StockService {
         materialStockInfo.setMaterialNumber(materialStockInfo.getMaterialNumber()-sellNumber);
         materialStockInfoRepository.save(materialStockInfo);
 
+        // 当场收钱
+        String changeOperating = FinanceOperationConstant.MATERIAL_SELL;
+        MaterialBasicInfo materialBasicInfo = materialStockInfo.getMaterialBasicInfo();
+        Double changeAmount = materialBasicInfo.getMaterialPrice()*materialBasicInfo.getSellRate()*sellNumber;
+        financeService.updateFinanceInfo(materialStockInfo.getEnterpriseBasicInfo().getId(), changeOperating, changeAmount, false, false);
+
         return toSuccessResponseVoWithNoData();
     }
 
@@ -198,6 +217,12 @@ public class StockServiceImpl implements StockService {
         // 更新库存量并进行持久化
         productStockInfo.setProductNumber(productStockInfo.getProductNumber()-sellNumber);
         productStockInfoRepository.save(productStockInfo);
+
+        // 当场收钱
+        String changeOperating = FinanceOperationConstant.PRODUCT_SELL;
+        ProductBasicInfo productBasicInfo = productStockInfo.getProductBasicInfo();
+        Double changeAmount = productBasicInfo.getProductSellingPrice()*sellNumber;
+        financeService.updateFinanceInfo(productStockInfo.getEnterpriseBasicInfo().getId(), changeOperating, changeAmount, false, false);
 
         return toSuccessResponseVoWithNoData();
     }

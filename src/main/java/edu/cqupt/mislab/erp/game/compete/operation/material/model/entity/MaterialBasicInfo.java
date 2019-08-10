@@ -1,6 +1,5 @@
 package edu.cqupt.mislab.erp.game.compete.operation.material.model.entity;
 
-import com.google.common.base.Objects;
 import edu.cqupt.mislab.erp.commons.validators.annotations.DoubleMin;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import lombok.*;
@@ -8,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * @Author: chuyunfei
@@ -36,8 +36,13 @@ public class MaterialBasicInfo {
 
     @DoubleMin(0.01)
     @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 1.00")
-    @Comment(comment = "原料的价格,该值必须大于0")
+    @Comment(comment = "原料的购买价格,该值必须大于0")
     private double materialPrice;
+
+    @Size(min = 0, max = 1)
+    @Column(nullable = false,updatable = false,columnDefinition = "double(10,2) default 0.85")
+    @Comment(comment = "原料的售卖价格占购买价格的比例，即购买价格*sellRate=售卖价格")
+    private double sellRate;
 
     @Min(1)
     @Column(nullable = false,updatable = false)
@@ -48,19 +53,19 @@ public class MaterialBasicInfo {
     @Basic(optional = false)
     @Comment(comment = "该数据是否被启用，当前最新数据是启用，所有的历史数据均为未启用，必须保证同一个材料信息最多只有一个Enable = true")
     private boolean enable;
-
-    @Override
-    public boolean equals(Object o){
-        if(this == o)
-            return true;
-        if(o == null||getClass() != o.getClass())
-            return false;
-        MaterialBasicInfo that = (MaterialBasicInfo) o;
-        return Double.compare(that.materialPrice,materialPrice) == 0&&enable == that.enable&&Objects.equal(id,that.id)&&Objects.equal(materialName,that.materialName)&&Objects.equal(materialDelayTime,that.materialDelayTime);
-    }
-
-    @Override
-    public int hashCode(){
-        return Objects.hashCode(id,materialName,materialPrice,materialDelayTime,enable);
-    }
+//
+//    @Override
+//    public boolean equals(Object o){
+//        if(this == o)
+//            return true;
+//        if(o == null||getClass() != o.getClass())
+//            return false;
+//        MaterialBasicInfo that = (MaterialBasicInfo) o;
+//        return Double.compare(that.materialPrice,materialPrice) == 0&&enable == that.enable&&Objects.equal(id,that.id)&&Objects.equal(materialName,that.materialName)&&Objects.equal(materialDelayTime,that.materialDelayTime);
+//    }
+//
+//    @Override
+//    public int hashCode(){
+//        return Objects.hashCode(id,materialName,materialPrice,materialDelayTime,enable);
+//    }
 }

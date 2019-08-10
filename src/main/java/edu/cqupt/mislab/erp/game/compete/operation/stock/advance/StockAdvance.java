@@ -103,7 +103,7 @@ public class StockAdvance implements ModelAdvance {
             }
 
             // 扣除运输过程中需要支付的费用
-            String changeOperating = FinanceOperationConstant.ISO_DEVELOP;
+            String changeOperating = FinanceOperationConstant.MATERIAL_TRANSPORT;
             Double changeAmount = materialOrderInfo.getTransportMethod().getTransportBasicInfo().getTransportPrice();
             financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true, true);
         }

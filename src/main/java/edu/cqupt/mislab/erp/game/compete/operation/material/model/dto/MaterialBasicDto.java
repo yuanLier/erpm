@@ -7,6 +7,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * @author yuanyiwen
@@ -24,6 +25,10 @@ public class MaterialBasicDto {
     @DoubleMin(0.01)
     @ApiModelProperty(value = "原料的价格,该值必须大于0")
     private double materialPrice;
+
+    @Size(min = 0, max = 1)
+    @ApiModelProperty(value = "原料的售卖价格占购买价格的比例，即购买价格*sellRate=售卖价格，波动区间为0.01-1.00")
+    private double sellRate;
 
     @Min(1)
     @ApiModelProperty(value = "指原料从采购开始到原料运到仓库，需要等待的周期数，该值必须大于0")
