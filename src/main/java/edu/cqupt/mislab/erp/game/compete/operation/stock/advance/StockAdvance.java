@@ -97,9 +97,12 @@ public class StockAdvance implements ModelAdvance {
 
                 // 设置为已送达
                 materialOrderInfo.setTransportStatus(TransportStatusEnum.ARRIVED);
-
-                // 保存修改
                 materialOrderInfoRepository.save(materialOrderInfo);
+
+                // 更新材料的库存情况
+                MaterialStockInfo materialStockInfo = materialStockInfoRepository.findByEnterpriseBasicInfo_IdAndMaterialBasicInfo_Id(enterpriseBasicInfo.getId(), materialOrderInfo.getMaterialBasicInfo().getId());
+                materialStockInfo.setMaterialNumber(materialStockInfo.getMaterialNumber()+materialOrderInfo.getPurchaseNumber());
+                materialStockInfoRepository.save(materialStockInfo);
             }
 
             // 扣除运输过程中需要支付的费用
