@@ -116,6 +116,7 @@ public class EnterpriseManageServiceImpl implements EnterpriseManageService {
                 .gameEnterpriseRole("创建者")
                 .userStudentInfo(userStudentInfo)
                 .enterpriseBasicInfo(enterpriseBasicInfo)
+                .gameExperience("请填写实验报告...")
                 .build();
 
         //企业成员增加一个

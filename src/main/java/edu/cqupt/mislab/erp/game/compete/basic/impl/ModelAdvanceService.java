@@ -168,6 +168,9 @@ public class ModelAdvanceService implements ApplicationContextAware {
             enterpriseBasicInfo.setEnterpriseStatus(EnterpriseStatusEnum.BANKRUPT);
             enterpriseBasicInfoRepository.save(enterpriseBasicInfo);
 
+            // 判断这个比赛是否随之结束
+            gameOverJudge(enterpriseBasicInfo);
+
             return toSuccessResponseVoWithData("企业破产，游戏结束！");
         }
 
@@ -183,6 +186,8 @@ public class ModelAdvanceService implements ApplicationContextAware {
             enterpriseBasicInfo.setEnterpriseStatus(EnterpriseStatusEnum.OVER);
             enterpriseBasicInfoRepository.save(enterpriseBasicInfo);
 
+            gameOverJudge(enterpriseBasicInfo);
+
             return toSuccessResponseVoWithData("企业已完成全部周期，游戏结束！");
         }
 
@@ -194,5 +199,21 @@ public class ModelAdvanceService implements ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
+    }
+
+    /**
+     * 一个企业结束运营后（不论是正常结束还是破产结束），判断是否比赛也随之结束
+     * @param enterpriseBasicInfo
+     */
+    private void gameOverJudge(EnterpriseBasicInfo enterpriseBasicInfo) {
+        // 获取当前比赛的全部存活中企业
+        List<EnterpriseBasicInfo> enterpriseBasicInfoList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndEnterpriseStatus(enterpriseBasicInfo.getId(), EnterpriseStatusEnum.PLAYING);
+        // 如果这个企业退出后，比赛中一个存活的企业都没有了
+        if(enterpriseBasicInfoList.size() == 0) {
+            // 比赛结束
+            GameBasicInfo gameBasicInfo = enterpriseBasicInfo.getGameBasicInfo();
+            gameBasicInfo.setGameStatus(GameStatusEnum.OVER);
+            gameBasicInfoRepository.save(gameBasicInfo);
+        }
     }
 }
