@@ -35,7 +35,6 @@ public class FinanceEnterpriseInfo implements Serializable {
     @Comment(comment = "哪个企业的账户余额")
     private EnterpriseBasicInfo enterpriseBasicInfo;
 
-    @DoubleMin(0.01)
     @Column(updatable = false)
     @Comment(comment = "当前账户余额")
     private double currentAccount;
