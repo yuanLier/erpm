@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  * @author chuyunfei
@@ -24,7 +25,7 @@ import javax.validation.constraints.Pattern;
 public class UserStudentInfoRegisterDto {
 
     @NotNull
-    @Pattern(regexp = "^[a-zA-Z]{0,15}[0-9]{3,14}$",message = "学号，作为系统账号，以S开头的长度为5-16的账号")
+    @Pattern(regexp = "^[a-zA-Z]{0,15}[0-9]{3,14}$",message = "学号，作为系统账号，长度为5-16的账号")
     @ApiModelProperty("学号，作为系统账号，长度为4-15的账号")
     private String studentAccount;
 
@@ -43,12 +44,14 @@ public class UserStudentInfoRegisterDto {
     private String studentClass;
 
     @NotNull
-    @Pattern(regexp = "^[a-zA-Z]\\w{5,17}$",message = "密码，长度在6-18个之间，只能包含数字、字母、下划线，以字母开头")
-    @ApiModelProperty("密码，长度在6-18个之间，只能包含数字、字母、下划线，以字母开头")
+    @Size(min = 6, max = 18)
+    @Pattern(regexp = "^[A-Za-z0-9]+$",message = "密码，长度在6-18个之间，只能包含数字、字母")
+    @ApiModelProperty("密码，长度在6-18个之间，只能包含数字、字母")
     private String studentPassword;
 
     @NotNull
-    @Pattern(regexp = "^[a-zA-Z]\\w{5,17}$",message = "重复密码必须和密码相同")
-    @ApiModelProperty("密码，长度在6-18个之间，只能包含数字、字母、下划线，以字母开头")
+    @Size(min = 6, max = 18)
+    @Pattern(regexp = "^[A-Za-z0-9]+$",message = "重复密码必须和密码相同")
+    @ApiModelProperty("密码，长度在6-18个之间，只能包含数字、字母")
     private String rePassword;
 }
