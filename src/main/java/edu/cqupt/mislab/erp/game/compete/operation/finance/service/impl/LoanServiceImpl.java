@@ -121,9 +121,9 @@ public class LoanServiceImpl implements LoanService {
         List<LoanEnterpriseInfo> loanEnterpriseInfoList;
         // 布尔值的判断要单独提出来，直接用null会有一点问题
         if(loanSelectDto.getRepaid() != null) {
-            loanEnterpriseInfoList = loanEnterpriseRepository.getLoansOfEnterprise(loanSelectDto.getLoanBasicId(), loanSelectDto.getRepaid());
+            loanEnterpriseInfoList = loanEnterpriseRepository.getLoansOfEnterprise(loanSelectDto.getLoanBasicId(), loanSelectDto.getRepaid(), loanSelectDto.getEnterpriseId());
         } else {
-            loanEnterpriseInfoList = loanEnterpriseRepository.getLoansOfEnterprise(loanSelectDto.getLoanBasicId());
+            loanEnterpriseInfoList = loanEnterpriseRepository.getLoansOfEnterprise(loanSelectDto.getLoanBasicId(), loanSelectDto.getEnterpriseId());
         }
 
         List<LoanEnterpriseDisplayVo> loanEnterpriseDisplayVoList = new ArrayList<>();

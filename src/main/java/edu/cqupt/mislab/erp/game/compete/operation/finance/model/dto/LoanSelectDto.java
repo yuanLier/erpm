@@ -13,6 +13,9 @@ import lombok.Data;
 @ApiModel("贷款信息筛选传输数据")
 public class LoanSelectDto {
 
+    @ApiModelProperty("要查询的是哪个企业的数据")
+    private Long enterpriseId;
+
     @ApiModelProperty("贷款类型所对应的id")
     private Long loanBasicId;
 

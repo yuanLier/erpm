@@ -27,15 +27,15 @@ public interface LoanEnterpriseRepository extends BasicRepository<LoanEnterprise
      * @param repaid
      * @return
      */
-    @Query(value = "select * from loan_enterprise_info l where if(?1 != '', l.game_loan_basic_info_id = ?1, 1=1) and l.repaid = ?2", nativeQuery = true)
-    List<LoanEnterpriseInfo> getLoansOfEnterprise(Long gameLoanBasicInfoId, Boolean repaid);
+    @Query(value = "select * from loan_enterprise_info l where if(?1 != '', l.game_loan_basic_info_id = ?1, 1=1) and l.repaid = ?2 and enterprise_basic_info_id = ?3", nativeQuery = true)
+    List<LoanEnterpriseInfo> getLoansOfEnterprise(Long gameLoanBasicInfoId, Boolean repaid, Long enterpriseId);
 
     /**
      * 当loanType为空，调用这个函数
      * @param gameLoanBasicInfoId
      * @return
      */
-    @Query(value = "select * from loan_enterprise_info l where if(?1 != '', l.game_loan_basic_info_id = ?1, 1=1)", nativeQuery = true)
-    List<LoanEnterpriseInfo> getLoansOfEnterprise(Long gameLoanBasicInfoId);
+    @Query(value = "select * from loan_enterprise_info l where if(?1 != '', l.game_loan_basic_info_id = ?1, 1=1) and enterprise_basic_info_id = ?2", nativeQuery = true)
+    List<LoanEnterpriseInfo> getLoansOfEnterprise(Long gameLoanBasicInfoId, Long enterpriseId);
 
 }
