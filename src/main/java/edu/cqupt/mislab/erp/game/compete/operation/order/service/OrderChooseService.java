@@ -70,4 +70,12 @@ public interface OrderChooseService {
      * @return 返回true or false
      */
     boolean isTurnOfEnterprise(Long enterpriseId);
+
+
+    /**
+     * 判断某一企业是否退出订单会
+     * @param enterpriseId
+     * @return
+     */
+    boolean isEnterpriseFinishChoice(Long enterpriseId);
 }

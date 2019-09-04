@@ -108,4 +108,12 @@ public class OrderChooseController {
         return toSuccessResponseVoWithData(orderChooseService.isTurnOfEnterprise(enterpriseId));
     }
 
+    @ApiOperation(value = "企业是否退出订单会", notes = "注 ：该数据仅对比赛正处于的年份有效")
+    @GetMapping("/isDrop")
+    WebResponseVo<Boolean> isEnterpriseFinishChoice(@Exist(repository = EnterpriseBasicInfoRepository.class)
+                                              @RequestParam Long enterpriseId) {
+
+        return toSuccessResponseVoWithData(orderChooseService.isEnterpriseFinishChoice(enterpriseId));
+    }
+
 }

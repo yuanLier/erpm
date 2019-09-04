@@ -220,6 +220,14 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         return enterpriseBasicInfo.getMyTurn();
     }
 
+    @Override
+    public boolean isEnterpriseFinishChoice(Long enterpriseId) {
+
+        EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findOne(enterpriseId);
+
+        return enterpriseBasicInfo.getFinishChoice();
+    }
+
 
     /**
      * 获取当前周期所属的年数
