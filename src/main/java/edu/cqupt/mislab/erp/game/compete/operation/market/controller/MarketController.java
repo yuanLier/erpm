@@ -6,7 +6,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketDevelopInfoR
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketStatusEnum;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.service.MarketService;
-import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketTypeVo;
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketBasicTypeVo;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +36,7 @@ public class MarketController {
 
     @ApiOperation("获取一场比赛中使用的全部市场类型")
     @GetMapping("/type")
-    public WebResponseVo<List<MarketTypeVo>> getAllMarketTypes(@Exist(repository = EnterpriseBasicInfoRepository.class)
+    public WebResponseVo<List<MarketBasicTypeVo>> getAllMarketTypes(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                                                  @RequestParam Long enterpriseId) {
         return toSuccessResponseVoWithData(marketService.getAllMarketTypes(enterpriseId));
     }

@@ -6,7 +6,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketBas
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketStatusEnum;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
-import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketTypeVo;
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketBasicTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.service.MarketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,23 +27,23 @@ public class MarketServiceImpl implements MarketService {
     private MarketDevelopInfoRepository marketDevelopInfoRepository;
 
     @Override
-    public List<MarketTypeVo> getAllMarketTypes(Long enterpriseId) {
+    public List<MarketBasicTypeVo> getAllMarketTypes(Long enterpriseId) {
 
         List<MarketDevelopInfo> marketDevelopInfoList =
                 marketDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId);
 
-        List<MarketTypeVo> marketTypeVoList = new ArrayList<>();
+        List<MarketBasicTypeVo> marketBasicTypeVoList = new ArrayList<>();
         for(MarketDevelopInfo marketDevelopInfo : marketDevelopInfoList) {
             MarketBasicInfo marketBasicInfo = marketDevelopInfo.getMarketBasicInfo();
 
-            MarketTypeVo marketTypeVo = new MarketTypeVo();
-            marketTypeVo.setId(marketBasicInfo.getId());
-            marketTypeVo.setMarketName(marketBasicInfo.getMarketName());
+            MarketBasicTypeVo marketBasicTypeVo = new MarketBasicTypeVo();
+            marketBasicTypeVo.setId(marketBasicInfo.getId());
+            marketBasicTypeVo.setMarketName(marketBasicInfo.getMarketName());
 
-            marketTypeVoList.add(marketTypeVo);
+            marketBasicTypeVoList.add(marketBasicTypeVo);
         }
 
-        return marketTypeVoList;
+        return marketBasicTypeVoList;
     }
 
     @Override

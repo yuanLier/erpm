@@ -13,7 +13,7 @@ import lombok.Data;
 @ApiModel("产品类型选择视图")
 public class ProductTypeVo {
 
-    @ApiModelProperty("代理主键，值同ProductDevelopInfo")
+    @ApiModelProperty("代理主键，值同ProductDevelopInfoId")
     private Long id;
 
     @ApiModelProperty("用户已生产的产品类型")

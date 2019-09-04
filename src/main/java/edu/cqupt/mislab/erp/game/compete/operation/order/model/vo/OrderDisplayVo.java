@@ -1,6 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.order.model.vo;
 
-import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketTypeVo;
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketBasicTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -22,7 +22,7 @@ public class OrderDisplayVo {
     private String orderNumber;
 
     @ApiModelProperty("哪个市场的订单")
-    private MarketTypeVo marketType;
+    private MarketBasicTypeVo marketType;
 
     @ApiModelProperty("哪个产品的订单")
     private ProductTypeVo productType;

@@ -1,5 +1,8 @@
 package edu.cqupt.mislab.erp.game.compete.operation.order.model.vo;
 
+import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoBasicTypeVo;
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketBasicTypeVo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductBasicTypeVo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -20,10 +23,10 @@ public class GameOrderVo {
     private Long gameBasicInfoId;
 
     @ApiModelProperty(value = "哪一个产品")
-    private Long productBasicInfoId;
+    private ProductBasicTypeVo productBasicType;
 
     @ApiModelProperty(value = "哪一个市场")
-    private Long marketBasicInfoId;
+    private MarketBasicTypeVo marketBasicType;
 
     @ApiModelProperty(value = "产品数量")
     private Integer productNumber;
@@ -38,7 +41,7 @@ public class GameOrderVo {
     private Double penalPercent;
 
     @ApiModelProperty(value = "所需要的质量认证信息")
-    private Long isoBasicInfoId;
+    private IsoBasicTypeVo isoBasicType;
 
     @ApiModelProperty(value = "哪一年的订单")
     private Integer year;

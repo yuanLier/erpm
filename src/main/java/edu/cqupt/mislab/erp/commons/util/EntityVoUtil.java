@@ -3,10 +3,11 @@ package edu.cqupt.mislab.erp.commons.util;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.entity.LoanEnterpriseInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.vo.LoanEnterpriseDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoDevelopInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoBasicTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
-import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketTypeVo;
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketBasicTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.entity.GameOrderInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.vo.GameOrderVo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.vo.OrderDisplayVo;
@@ -20,6 +21,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineProduceInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductBasicTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.GameTransportBasicInfo;
@@ -122,9 +124,9 @@ public abstract class EntityVoUtil {
         orderDisplayVo.setId(gameOrderInfo.getId());
 
         // 所在市场
-        MarketTypeVo marketTypeVo = new MarketTypeVo();
-        BeanCopyUtil.copyPropertiesSimple(gameOrderInfo.getMarketBasicInfo(), marketTypeVo);
-        orderDisplayVo.setMarketType(marketTypeVo);
+        MarketBasicTypeVo marketBasicTypeVo = new MarketBasicTypeVo();
+        BeanCopyUtil.copyPropertiesSimple(gameOrderInfo.getMarketBasicInfo(), marketBasicTypeVo);
+        orderDisplayVo.setMarketType(marketBasicTypeVo);
         // 所需产品
         ProductTypeVo productTypeVo = new ProductTypeVo();
         BeanCopyUtil.copyPropertiesSimple(gameOrderInfo.getProductBasicInfo(), productTypeVo);
@@ -555,10 +557,10 @@ public abstract class EntityVoUtil {
 
         gameOrderVo.setGameBasicInfoId(gameOrderInfo.getGameBasicInfo().getId());
 
-        gameOrderVo.setMarketBasicInfoId(gameOrderInfo.getMarketBasicInfo().getId());
-        gameOrderVo.setProductBasicInfoId(gameOrderInfo.getProductBasicInfo().getId());
+        gameOrderVo.setMarketBasicType(new MarketBasicTypeVo(gameOrderInfo.getMarketBasicInfo().getId(), gameOrderInfo.getMarketBasicInfo().getMarketName()));
+        gameOrderVo.setProductBasicType(new ProductBasicTypeVo(gameOrderInfo.getProductBasicInfo().getId(), gameOrderInfo.getProductBasicInfo().getProductName()));
         if(gameOrderInfo.getIsoBasicInfo() != null) {
-            gameOrderVo.setIsoBasicInfoId(gameOrderInfo.getIsoBasicInfo().getId());
+            gameOrderVo.setIsoBasicType(new IsoBasicTypeVo(gameOrderInfo.getIsoBasicInfo().getId(), gameOrderInfo.getIsoBasicInfo().getIsoName()));
         }
 
         gameOrderVo.setOrderId(gameOrderInfo.getId());
