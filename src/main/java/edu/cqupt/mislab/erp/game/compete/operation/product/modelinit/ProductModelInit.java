@@ -6,18 +6,17 @@ import edu.cqupt.mislab.erp.game.compete.operation.material.dao.MaterialBasicInf
 import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.material.modelinit.MaterialModelInit;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductMaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo.ProductBasicInfoBuilder;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
-import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author chuyunfei
@@ -38,8 +37,6 @@ public class ProductModelInit implements ModelInit {
     @Autowired private MaterialBasicInfoRepository materialBasicInfoRepository;
     @Autowired private ProductBasicInfoRepository productBasicInfoRepository;
     @Autowired private ProductMaterialBasicInfoRepository productMaterialBasicInfoRepository;
-    @Autowired private ProductDevelopInfoRepository productDevelopInfoRepository;
-    @Autowired private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
     @Autowired private ModelInitService modelInitService;
 
     @Override

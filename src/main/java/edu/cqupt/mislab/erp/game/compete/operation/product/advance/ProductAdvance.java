@@ -27,8 +27,6 @@ import java.util.List;
 public class ProductAdvance implements ModelAdvance {
 
     @Autowired
-    private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
-    @Autowired
     private ProductDevelopInfoRepository productDevelopInfoRepository;
     @Autowired
     private ProductHistoryRepository productHistoryRepository;

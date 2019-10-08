@@ -12,6 +12,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.gamemodelinit.ProductGameModelInit;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
@@ -90,7 +91,7 @@ public class ProdlineGameModelInit implements GameModelInit {
                     );
                 }
 
-                // 随机选取一条生产线基本数据信息
+                // 随机选取一条生产线基本数据信息 TODO 拓展为管理员可控的，让管理员选择默认建造的是哪种生产线，以及默认建造的数量
                 List<GameProdlineBasicInfo> prodlineBasicInfos = gameProdlineBasicInfoRepository.findByGameBasicInfo_Id(gameId);
                 final GameProdlineBasicInfo prodlineBasicInfo = prodlineBasicInfos.get(new Random().nextInt(prodlineBasicInfos.size()));
 
@@ -100,8 +101,8 @@ public class ProdlineGameModelInit implements GameModelInit {
                 // 为所有企业自带的那条厂房初始化一条生产线
                 for(EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfos){
 
-                    // 获取这个企业初始时候默认研发完成的产品和生产线
-                    List<ProductDevelopInfo> productDevelopInfoList = productDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseBasicInfo.getId());
+                    // 获取这个企业初始时候默认研发完成的产品和默认建造了的厂房
+                    List<ProductDevelopInfo> productDevelopInfoList = productDevelopInfoRepository.findByEnterpriseBasicInfo_IdAndProductDevelopStatus(enterpriseBasicInfo.getId(), ProductDevelopStatusEnum.DEVELOPED);
                     List<FactoryHoldingInfo> factoryHoldingInfoList = factoryHoldingInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseBasicInfo.getId());
 
                     // 若初始时候没有默认研发完成的产品或厂房

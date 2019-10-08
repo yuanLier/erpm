@@ -68,7 +68,7 @@ public class FactoryGameModelInit implements GameModelInit {
                     );
                 }
 
-                // 随机获取一条基本厂房信息
+                // 随机获取一条基本厂房信息 TODO 拓展为管理员可控的，让管理员选择默认建造的是哪种厂房，以及默认建造的数量
                 List<GameFactoryBasicInfo> factoryBasicInfos = gameFactoryBasicInfoRepository.findByGameBasicInfo_Id(gameId);
                 final GameFactoryBasicInfo factoryBasicInfo = factoryBasicInfos.get(new Random().nextInt(factoryBasicInfos.size()));
 
