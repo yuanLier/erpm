@@ -103,7 +103,8 @@ public class ProductModelInit implements ModelInit {
                     .mountFloat((MIN_DOUBLE + Math.random() + Math.random()) / 2)
                     .enable(true);
 
-            if(i % 2 == 0){
+            int random = (int)Math.floor(Math.random()*4);
+            if(i % random == 0){
 
                 builder.productDevelopStatus(ProductDevelopStatusEnum.TODEVELOP);
             }else {
