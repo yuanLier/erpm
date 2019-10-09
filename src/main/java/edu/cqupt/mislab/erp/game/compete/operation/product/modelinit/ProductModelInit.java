@@ -104,7 +104,7 @@ public class ProductModelInit implements ModelInit {
                     .enable(true);
 
             int random = (int)Math.floor(Math.random()*4);
-            if(i % random == 0){
+            if(random == 0 || i % random == 0){
 
                 builder.productDevelopStatus(ProductDevelopStatusEnum.TODEVELOP);
             }else {

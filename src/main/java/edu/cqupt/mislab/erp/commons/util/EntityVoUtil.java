@@ -8,6 +8,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketBasicTypeVo;
+import edu.cqupt.mislab.erp.game.compete.operation.material.model.vo.MaterialTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.entity.GameOrderInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.vo.GameOrderVo;
 import edu.cqupt.mislab.erp.game.compete.operation.order.model.vo.OrderDisplayVo;
@@ -21,8 +22,10 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineProduceInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductBasicTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialBasicVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.GameTransportBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialOrderInfo;
@@ -209,6 +212,29 @@ public abstract class EntityVoUtil {
         productDisplayVo.setDevelopedPeriod(productDevelopInfo.getDevelopedPeriod());
 
         return productDisplayVo;
+    }
+
+
+    public static ProductMaterialBasicVo copyFieldsFromEntityToVo(ProductMaterialBasicInfo productMaterialBasicInfo) {
+        ProductMaterialBasicVo productMaterialBasicVo = new ProductMaterialBasicVo();
+
+        productMaterialBasicVo.setNumber(productMaterialBasicInfo.getNumber());
+        productMaterialBasicVo.setEnable(productMaterialBasicInfo.isEnable());
+        productMaterialBasicVo.setId(productMaterialBasicInfo.getId());
+
+        // 产品vo
+        ProductTypeVo productTypeVo = new ProductTypeVo();
+        productTypeVo.setId(productMaterialBasicInfo.getProductBasicInfo().getId());
+        productTypeVo.setProductName(productMaterialBasicInfo.getProductBasicInfo().getProductName());
+        productMaterialBasicVo.setProductTypeVo(productTypeVo);
+
+        // 材料vo
+        MaterialTypeVo materialTypeVo = new MaterialTypeVo ();
+        materialTypeVo.setId(productMaterialBasicInfo.getMaterialBasicInfo().getId());
+        materialTypeVo.setMaterialName(productMaterialBasicInfo.getMaterialBasicInfo().getMaterialName());
+        productMaterialBasicVo.setMaterialTypeVo(materialTypeVo);
+
+        return productMaterialBasicVo;
     }
 
 

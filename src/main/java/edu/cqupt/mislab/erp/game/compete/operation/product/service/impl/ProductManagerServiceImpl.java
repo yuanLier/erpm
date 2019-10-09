@@ -1,6 +1,7 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.service.impl;
 
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
+import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.material.dao.MaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductMaterialBasicInfoRepository;
@@ -114,12 +115,8 @@ public class ProductManagerServiceImpl implements ProductManagerService {
         // 保存修改并刷新
         productMaterialBasicInfo = productMaterialBasicInfoRepository.saveAndFlush(productMaterialBasicInfo);
 
-        // 将获取了新id的info数据复制给productMaterialBasicVo
-        ProductMaterialBasicVo productMaterialBasicVo = new ProductMaterialBasicVo();
-        BeanCopyUtil.copyPropertiesSimple(productMaterialBasicInfo, productMaterialBasicVo);
-
         // 返回vo
-        return productMaterialBasicVo;
+        return EntityVoUtil.copyFieldsFromEntityToVo(productMaterialBasicInfo);
     }
 
     @Override
@@ -143,10 +140,7 @@ public class ProductManagerServiceImpl implements ProductManagerService {
 
         newProductMaterialBasicInfo = productMaterialBasicInfoRepository.saveAndFlush(newProductMaterialBasicInfo);
 
-        ProductMaterialBasicVo productMaterialBasicVo = new ProductMaterialBasicVo();
-        BeanCopyUtil.copyPropertiesSimple(newProductMaterialBasicInfo, productMaterialBasicVo);
-
-        return productMaterialBasicVo;
+        return EntityVoUtil.copyFieldsFromEntityToVo(productMaterialBasicInfo);
     }
 
     @Override
@@ -161,10 +155,7 @@ public class ProductManagerServiceImpl implements ProductManagerService {
         // 保存修改
         productMaterialBasicInfoRepository.save(productMaterialBasicInfo);
 
-        ProductMaterialBasicVo productMaterialBasicVo = new ProductMaterialBasicVo();
-        BeanCopyUtil.copyPropertiesSimple(productMaterialBasicInfo, productMaterialBasicVo);
-
-        return productMaterialBasicVo;
+        return EntityVoUtil.copyFieldsFromEntityToVo(productMaterialBasicInfo);
     }
 
     @Override
@@ -190,10 +181,7 @@ public class ProductManagerServiceImpl implements ProductManagerService {
 
         List<ProductMaterialBasicVo> productMaterialBasicVoList = new ArrayList<>();
         for (ProductMaterialBasicInfo productMaterialBasicInfo : productMaterialBasicInfoList) {
-            ProductMaterialBasicVo productMaterialBasicVo = new ProductMaterialBasicVo();
-            BeanCopyUtil.copyPropertiesSimple(productMaterialBasicInfo, productMaterialBasicVo);
-
-            productMaterialBasicVoList.add(productMaterialBasicVo);
+            productMaterialBasicVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(productMaterialBasicInfo));
         }
 
         return productMaterialBasicVoList;
