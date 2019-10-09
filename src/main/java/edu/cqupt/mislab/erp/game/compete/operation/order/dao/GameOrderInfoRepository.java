@@ -48,10 +48,10 @@ public interface GameOrderInfoRepository extends BasicRepository<GameOrderInfo, 
 
 
     /**
-     * 获取某场比赛处于某一年时，可被选取的订单
+     * 获取某场比赛处于某一年时，订单池中剩余的订单
      * @param gameId
      * @param year
      * @return
      */
-    List<GameOrderInfo> findByGameBasicInfo_IdAndYearAndSelectedIsTrue(Long gameId, Integer year);
+    List<GameOrderInfo> findByGameBasicInfo_IdAndYearAndSelectedIsTrueAndEnterpriseBasicInfoIsNull(Long gameId, Integer year);
 }

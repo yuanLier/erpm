@@ -51,7 +51,8 @@ public class OrderChooseController {
     }
 
 
-    @ApiOperation(value = "获取某年中挑选出的订单")
+    @ApiOperation(value = "获取当前订单池中的全部订单",
+                    notes = "订单池中的订单 ：指被选中成为当年的订单，且当前未被其他企业选走的订单")
     @GetMapping("/all")
     WebResponseVo<List<GameOrderVo>> getOrderOfOneYear(@Exist(repository = GameBasicInfoRepository.class)
                                                                @RequestParam Long gameId,

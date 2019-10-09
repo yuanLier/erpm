@@ -127,8 +127,8 @@ public class OrderChooseServiceImpl implements OrderChooseService {
     @Override
     public List<GameOrderVo> getOrderOfOneYear(Long gameId, Integer year) {
 
-        // 获取该场比赛处于某年时，可被选取的订单
-        List<GameOrderInfo> gameOrderInfoList = gameOrderInfoRepository.findByGameBasicInfo_IdAndYearAndSelectedIsTrue(gameId, year);
+        // 获取该场比赛处于某年时，当前订单池中剩余的订单
+        List<GameOrderInfo> gameOrderInfoList = gameOrderInfoRepository.findByGameBasicInfo_IdAndYearAndSelectedIsTrueAndEnterpriseBasicInfoIsNull(gameId, year);
 
         List<GameOrderVo> gameOrderVoList = new ArrayList<>();
         for(GameOrderInfo gameOrderInfo : gameOrderInfoList) {

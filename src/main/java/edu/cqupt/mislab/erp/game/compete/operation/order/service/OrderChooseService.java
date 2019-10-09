@@ -31,7 +31,7 @@ public interface OrderChooseService {
 
 
     /**
-     * 获取某年中挑选出的订单，作为对外展示的接口使用
+     * 获取某年中挑选出来且未被选走的订单，作为对外展示的接口使用
      * @param gameId
      * @param year
      * @return
