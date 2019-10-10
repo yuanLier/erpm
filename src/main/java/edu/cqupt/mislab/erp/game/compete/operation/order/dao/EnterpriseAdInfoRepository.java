@@ -32,10 +32,17 @@ public interface EnterpriseAdInfoRepository extends BasicRepository<EnterpriseAd
 
 
     /**
-     * 获取某年投了广告的企业总数
+     * 获取某场比赛中，某年投了广告的企业总数
      * @param year
+     * @param gameId
      * @return
      */
-    @Query(value = "select count(distinct ad.enterprise_basic_info_id) from erpm.enterprise_ad_info ad where ad.year = ?1", nativeQuery = true)
-    Long distinctByEnterpriseOfOneYear(Integer year);
+    @Query(value =
+            "select count(distinct ad.enterprise_basic_info_id) " +
+            "from erpm.enterprise_ad_info ad " +
+            "where ad.year = ?1 " +
+            "and ad.enterprise_basic_info_id in " +
+            "(select e.id from erpm.enterprise_basic_info e where e.game_basic_info_id = ?2)",
+            nativeQuery = true)
+    Long distinctByEnterpriseOfOneYear(Integer year, Long gameId);
 }

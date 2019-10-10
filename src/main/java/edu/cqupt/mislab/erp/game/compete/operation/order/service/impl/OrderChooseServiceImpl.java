@@ -163,7 +163,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
 
         // 获取下一个企业的选取顺序（记得对总数取模，总数指该年实际投放了订单的企业总数）
         // 注 ：已破产的企业虽然处于完成投放状态，但实际并未投放订单，所以在这里不用考虑
-        Integer nextSequence = enterpriseBasicInfo.getSequence() % (int)(long)enterpriseAdInfoRepository.distinctByEnterpriseOfOneYear(year) + 1;
+        Integer nextSequence = enterpriseBasicInfo.getSequence() % (int)(long)enterpriseAdInfoRepository.distinctByEnterpriseOfOneYear(year, enterpriseBasicInfo.getGameBasicInfo().getId()) + 1;
 
         // 获取下一个选取订单的企业
         EnterpriseBasicInfo nextEnterprise = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndSequence(gameId, nextSequence);
@@ -172,7 +172,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         // 注 ：这里不需要考虑死循环，因为选择了结束选单就说明没有退出订单会，也就是说至少还有一个当前企业的getFinishAdvertising()为false
         // 所以最极端的情况就是只有当前企业没有退出订单会，那么下一个选单的企业就还是它，还是符合订单会的选单流程的
         while(nextEnterprise.getFinishChoice()) {
-            nextSequence = enterpriseBasicInfo.getSequence() % (int)(long)enterpriseAdInfoRepository.distinctByEnterpriseOfOneYear(year) + 1;
+            nextSequence = enterpriseBasicInfo.getSequence() % (int)(long)enterpriseAdInfoRepository.distinctByEnterpriseOfOneYear(year, enterpriseBasicInfo.getGameBasicInfo().getId()) + 1;
             nextEnterprise = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndSequence(gameId, nextSequence);
         }
 
