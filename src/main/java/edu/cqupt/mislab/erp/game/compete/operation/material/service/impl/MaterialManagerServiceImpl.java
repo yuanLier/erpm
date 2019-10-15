@@ -92,14 +92,14 @@ public class MaterialManagerServiceImpl implements MaterialManagerService {
     @Transactional(rollbackFor = Exception.class)
     public MaterialBasicVo closeMaterialBasicInfo(Long materialBasicId) {
 
-        // 获取全部使用了该材料的产品
+        // 获取全部使用了该材料的产品材料信息
         List<ProductMaterialBasicInfo> productMaterialBasicInfoList = productMaterialBasicInfoRepository.findByMaterialBasicInfo_IdAndEnableIsTrue(materialBasicId);
-        // 确认该产品集是否为空
+        // 确认该产品材料集是否为空
         if(productMaterialBasicInfoList.size() != 0) {
             return null;
         }
 
-        // 只有满足了“所有使用了该材料的产品信息已被关闭”这一条件，才允许关闭材料信息
+        // 只有满足了“所有使用了该材料的产品材料信息已被关闭，即所有现有产品都不由该材料构成”这一条件，才允许关闭材料信息
 
         // 获取这个材料信息
         MaterialBasicInfo materialBasicInfo = materialBasicInfoRepository.findOne(materialBasicId);

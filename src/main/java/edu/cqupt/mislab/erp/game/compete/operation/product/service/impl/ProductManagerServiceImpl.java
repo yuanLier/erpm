@@ -103,12 +103,18 @@ public class ProductManagerServiceImpl implements ProductManagerService {
 
         // 获取这个产品信息
         ProductBasicInfo productBasicInfo = productBasicInfoRepository.findOne(productBasicId);
-
         // 设置为不启用
         productBasicInfo.setEnable(false);
-
         // 保存修改
         productBasicInfoRepository.save(productBasicInfo);
+
+        // 获取和原产品有关的全部材料信息
+        List<ProductMaterialBasicInfo> productMaterialBasicInfoList = productMaterialBasicInfoRepository.findByEnableIsTrueAndProductBasicInfo_Id(productBasicInfo.getId());
+        for(ProductMaterialBasicInfo productMaterialBasicInfo : productMaterialBasicInfoList) {
+            // 设为不可用
+            productMaterialBasicInfo.setEnable(false);
+            productMaterialBasicInfoRepository.save(productMaterialBasicInfo);
+        }
 
         ProductBasicVo productBasicVo = new ProductBasicVo();
         BeanCopyUtil.copyPropertiesSimple(productBasicInfo, productBasicVo);
@@ -165,8 +171,17 @@ public class ProductManagerServiceImpl implements ProductManagerService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ProductMaterialBasicVo closeProductMaterialBasicInfo(Long productMaterialId) {
+
+
         // 获取这个产品原材料信息
         ProductMaterialBasicInfo productMaterialBasicInfo = productMaterialBasicInfoRepository.findOne(productMaterialId);
+
+        // 获取这个产品所有的原料信息
+        List<ProductMaterialBasicInfo> productMaterialBasicInfoList = productMaterialBasicInfoRepository.findByEnableIsTrueAndProductBasicInfo_Id(productMaterialBasicInfo.getProductBasicInfo().getId());
+        // 如果该条数据是产品最后的原料组成，拒绝删除，交给上层处理
+        if(productMaterialBasicInfoList.size() == 1) {
+            return null;
+        }
 
         // 设置为不启用
         productMaterialBasicInfo.setEnable(false);

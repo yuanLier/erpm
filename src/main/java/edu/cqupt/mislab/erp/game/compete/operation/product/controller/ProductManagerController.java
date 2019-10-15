@@ -123,12 +123,20 @@ public class ProductManagerController {
 
     @ApiOperation(value = "关闭一个产品原材料信息",
             notes = "一旦关闭将不能重新启用，如果要启用只能重新添加一个相同的；" +
-                    "所以需要前端在调用前给用户一些必要的提示信息")
+                    "一个产品至少需要由一条材料构成，所以当材料只剩一种时，无法删除；" +
+                    "此时用户可以选择先添加一条新的材料构成再删除原材料构成，或直接关闭该产品；" +
+                    "需要前端在调用前给用户一些必要的提示信息")
     @PutMapping("material/close")
     public WebResponseVo<ProductMaterialBasicVo> closeProductMaterialBasicInfo(@Exist(repository = ProductMaterialBasicInfoRepository.class)
                                                                @RequestParam Long productMaterialBasicId) {
 
-        return toSuccessResponseVoWithData(productManagerService.closeProductMaterialBasicInfo(productMaterialBasicId));
+        ProductMaterialBasicVo productMaterialBasicVo = productManagerService.closeProductMaterialBasicInfo(productMaterialBasicId);
+
+        if(productMaterialBasicVo == null) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "请检查您的操作，以确保任何时候该产品至少由一条材料构成！");
+        }
+
+        return toSuccessResponseVoWithData(productMaterialBasicVo);
     }
 
 
