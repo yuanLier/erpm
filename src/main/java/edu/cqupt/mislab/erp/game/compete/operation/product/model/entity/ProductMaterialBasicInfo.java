@@ -28,13 +28,13 @@ public class ProductMaterialBasicInfo {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
-    @JoinColumn(nullable = false,updatable = false)
-    @Comment(comment = "哪一个产品")
+    @JoinColumn(nullable = false)
+    @Comment(comment = "哪一个产品，在修改产品信息的时候需要同步修改这个")
     private ProductBasicInfo productBasicInfo;
 
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(nullable = false)
-    @Comment(comment = "哪一个原料，要注意这个原料信息是可以被修改的")
+    @Comment(comment = "哪一个原料，在修改原料信息的时候需要同步修改这个")
     private MaterialBasicInfo materialBasicInfo;
 
     @Column(nullable = false,updatable = false)

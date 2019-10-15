@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.service.impl;
 
+import edu.cqupt.mislab.erp.commons.aspect.BadModificationException;
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.material.dao.MaterialBasicInfoRepository;
@@ -63,6 +64,10 @@ public class ProductManagerServiceImpl implements ProductManagerService {
 
         // 获取之前的产品信息并设置为不启用
         ProductBasicInfo productBasicInfo = productBasicInfoRepository.findOne(productBasicId);
+        // 但是首先要检查确保参数正确
+        if(!productBasicInfo.isEnable()) {
+            throw new BadModificationException();
+        }
         productBasicInfo.setEnable(false);
 
         productBasicInfoRepository.save(productBasicInfo);
@@ -78,6 +83,17 @@ public class ProductManagerServiceImpl implements ProductManagerService {
         ProductBasicVo productBasicVo = new ProductBasicVo();
         BeanCopyUtil.copyPropertiesSimple(newProductBasicInfo, productBasicVo);
 
+        // 这里很重要 ：修改产品信息的时候是要同步修改产品的材料组成信息的
+        // 获取和原产品有关的全部材料信息
+        List<ProductMaterialBasicInfo> productMaterialBasicInfoList = productMaterialBasicInfoRepository.findByEnableIsTrueAndProductBasicInfo_Id(productBasicInfo.getId());
+        for(ProductMaterialBasicInfo productMaterialBasicInfo : productMaterialBasicInfoList) {
+            // 修改材料的所属产品为这个修改后的新产品
+            productMaterialBasicInfo.setProductBasicInfo(newProductBasicInfo);
+            // enable不用调整，直接保存即可
+            productMaterialBasicInfoRepository.save(productMaterialBasicInfo);
+        }
+
+        // 最后返回这个修改完成的产品信息
         return productBasicVo;
     }
 
@@ -124,6 +140,9 @@ public class ProductManagerServiceImpl implements ProductManagerService {
     public ProductMaterialBasicVo updateProductMaterialBasicInfo(Long productMaterialId, Integer number) {
         // 获取之前的产品原材料信息并设置为不启用
         ProductMaterialBasicInfo productMaterialBasicInfo = productMaterialBasicInfoRepository.findOne(productMaterialId);
+        if(!productMaterialBasicInfo.isEnable()) {
+            throw new BadModificationException();
+        }
         productMaterialBasicInfo.setEnable(false);
 
         productMaterialBasicInfoRepository.save(productMaterialBasicInfo);
@@ -140,7 +159,7 @@ public class ProductManagerServiceImpl implements ProductManagerService {
 
         newProductMaterialBasicInfo = productMaterialBasicInfoRepository.saveAndFlush(newProductMaterialBasicInfo);
 
-        return EntityVoUtil.copyFieldsFromEntityToVo(productMaterialBasicInfo);
+        return EntityVoUtil.copyFieldsFromEntityToVo(newProductMaterialBasicInfo);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.produce.service.manager.impl;
 
+import edu.cqupt.mislab.erp.commons.aspect.BadModificationException;
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.factory.FactoryBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.dto.FactoryBasicDto;
@@ -52,6 +53,9 @@ public class FactoryManagerServiceImpl implements FactoryManagerService {
 
         // 获取之前的厂房信息并设置为不启用
         FactoryBasicInfo factoryBasicInfo = factoryBasicInfoRepository.findOne(factoryBasicId);
+        if(!factoryBasicInfo.isEnable()) {
+            throw new BadModificationException();
+        }
         factoryBasicInfo.setEnable(false);
 
         factoryBasicInfoRepository.save(factoryBasicInfo);

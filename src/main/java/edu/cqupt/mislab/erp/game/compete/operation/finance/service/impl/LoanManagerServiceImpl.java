@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.finance.service.impl;
 
+import edu.cqupt.mislab.erp.commons.aspect.BadModificationException;
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.dao.LoanBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.dto.LoanBasicDto;
@@ -54,6 +55,9 @@ public class LoanManagerServiceImpl implements LoanManagerService {
 
         // 获取之前的贷款方式信息并设置为不启用
         LoanBasicInfo loanBasicInfo = loanBasicInfoRepository.findOne(loanBasicId);
+        if(!loanBasicInfo.isEnable()) {
+            throw new BadModificationException();
+        }
         loanBasicInfo.setEnable(false);
 
         loanBasicInfoRepository.save(loanBasicInfo);

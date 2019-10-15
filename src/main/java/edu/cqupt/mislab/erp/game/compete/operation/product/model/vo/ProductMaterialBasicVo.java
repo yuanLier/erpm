@@ -14,11 +14,11 @@ import lombok.Data;
 @ApiModel("（管理员端修改）产品原料构成视图")
 public class ProductMaterialBasicVo {
 
-    @ApiModelProperty(value = "新生成的产品id")
+    @ApiModelProperty(value = "新生成的产品原料id")
     private Long id;
 
     @ApiModelProperty(value = "哪一个产品")
-    private ProductTypeVo productTypeVo;
+    private ProductBasicVo productBasicVo;
 
     @ApiModelProperty(value = "哪一种原料")
     private MaterialTypeVo materialTypeVo;

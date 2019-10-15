@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.stock.service.impl;
 
+import edu.cqupt.mislab.erp.commons.aspect.BadModificationException;
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.TransportBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.dto.TransportBasicDto;
@@ -53,6 +54,9 @@ public class TransportManagerServiceImpl implements TransportManagerService {
 
         // 获取之前的运输方式信息并设置为不启用
         TransportBasicInfo transportBasicInfo = transportBasicInfoRepository.findOne(transportBasicId);
+        if(!transportBasicInfo.isEnable()) {
+            throw new BadModificationException();
+        }
         transportBasicInfo.setEnable(false);
 
         transportBasicInfoRepository.save(transportBasicInfo);

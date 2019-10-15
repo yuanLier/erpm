@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.produce.service.manager.impl;
 
+import edu.cqupt.mislab.erp.commons.aspect.BadModificationException;
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.dto.ProdlineBasicDto;
@@ -52,6 +53,9 @@ public class ProdlineManagerServiceImpl implements ProdlineManagerService {
 
         // 获取之前的生产线信息并设置为不启用
         ProdlineBasicInfo prodlineBasicInfo = prodlineBasicInfoRepository.findOne(prodlineBasicId);
+        if(!prodlineBasicInfo.isEnable()) {
+            throw new BadModificationException();
+        }
         prodlineBasicInfo.setEnable(false);
 
         prodlineBasicInfoRepository.save(prodlineBasicInfo);

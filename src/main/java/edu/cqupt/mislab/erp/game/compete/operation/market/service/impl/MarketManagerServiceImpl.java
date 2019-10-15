@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.market.service.impl;
 
+import edu.cqupt.mislab.erp.commons.aspect.BadModificationException;
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.dto.MarketBasicDto;
@@ -55,6 +56,9 @@ public class MarketManagerServiceImpl implements MarketManagerService {
 
         // 获取之前的市场信息并设置为不启用
         MarketBasicInfo marketBasicInfo = marketBasicInfoRepository.findOne(marketBasicId);
+        if(!marketBasicInfo.isEnable()) {
+            throw new BadModificationException();
+        }
         marketBasicInfo.setEnable(false);
 
         marketBasicInfoRepository.save(marketBasicInfo);

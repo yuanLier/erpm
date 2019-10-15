@@ -131,6 +131,20 @@ public class ControllerAdvance {
         return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "操作失败！请检查账户余额");
     }
 
+    
+    /**
+     * @author yuanyiwen
+     * @description 数据修改异常：管理员试图修改已被关闭的历史数据
+     * @date 13:10 2019/10/15
+     **/
+    @ResponseBody
+    @ExceptionHandler(BadModificationException.class)
+    public WebResponseVo<Object> badModificationException(BadModificationException exception) {
+
+        exception.printStackTrace();
+
+        return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "该信息已被关闭，无法被修改，请检查您的操作");
+    }
 
     /**
      * @author chuyunfei

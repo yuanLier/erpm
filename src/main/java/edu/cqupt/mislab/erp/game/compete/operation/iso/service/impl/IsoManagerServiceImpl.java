@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.iso.service.impl;
 
+import edu.cqupt.mislab.erp.commons.aspect.BadModificationException;
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.dao.IsoBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.dto.IsoBasicDto;
@@ -52,6 +53,9 @@ public class IsoManagerServiceImpl implements IsoManagerService {
 
         // 获取之前的iso信息并设置为不启用
         IsoBasicInfo isoBasicInfo = isoBasicInfoRepository.findOne(isoBasicId);
+        if(!isoBasicInfo.isEnable()) {
+            throw new BadModificationException();
+        }
         isoBasicInfo.setEnable(false);
 
         isoBasicInfoRepository.save(isoBasicInfo);

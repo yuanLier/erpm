@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.material.service.impl;
 
+import edu.cqupt.mislab.erp.commons.aspect.BadModificationException;
 import edu.cqupt.mislab.erp.commons.util.BeanCopyUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.material.dao.MaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.material.model.dto.MaterialBasicDto;
@@ -56,6 +57,9 @@ public class MaterialManagerServiceImpl implements MaterialManagerService {
 
         // 获取之前的材料信息并设置为不启用
         MaterialBasicInfo materialBasicInfo = materialBasicInfoRepository.findOne(materialBasicId);
+        if(!materialBasicInfo.isEnable()) {
+            throw new BadModificationException();
+        }
         materialBasicInfo.setEnable(false);
 
         materialBasicInfoRepository.save(materialBasicInfo);

@@ -70,7 +70,12 @@ public class ProductManagerController {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "开拓状态只允许为未开拓或已开拓！");
         }
 
-        return toSuccessResponseVoWithData(productManagerService.updateProductBasicInfo(productBasicId, productBasicDto));
+        ProductBasicVo productBasicVo = productManagerService.updateProductBasicInfo(productBasicId, productBasicDto);
+        if(productBasicVo == null) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "该产品信息已被关闭，请检查您的操作");
+        }
+
+        return toSuccessResponseVoWithData(productBasicVo);
     }
 
 
@@ -107,7 +112,12 @@ public class ProductManagerController {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "所需原料数量至少为1");
         }
 
-        return toSuccessResponseVoWithData(productManagerService.updateProductMaterialBasicInfo(productMaterialBasicId, number));
+        ProductMaterialBasicVo productMaterialBasicVo = productManagerService.updateProductMaterialBasicInfo(productMaterialBasicId, number);
+        if(productMaterialBasicVo == null) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "该产品材料信息已被关闭，请检查您的操作");
+        }
+
+        return toSuccessResponseVoWithData(productMaterialBasicVo);
     }
 
 

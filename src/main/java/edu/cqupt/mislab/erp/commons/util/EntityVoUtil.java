@@ -23,10 +23,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductBasicTypeVo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialBasicVo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.GameTransportBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialOrderInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.MaterialStockInfo;
@@ -222,13 +219,12 @@ public abstract class EntityVoUtil {
         productMaterialBasicVo.setEnable(productMaterialBasicInfo.isEnable());
         productMaterialBasicVo.setId(productMaterialBasicInfo.getId());
 
-        // 产品vo
-        ProductTypeVo productTypeVo = new ProductTypeVo();
-        productTypeVo.setId(productMaterialBasicInfo.getProductBasicInfo().getId());
-        productTypeVo.setProductName(productMaterialBasicInfo.getProductBasicInfo().getProductName());
-        productMaterialBasicVo.setProductTypeVo(productTypeVo);
+        // 产品vo，直接返回整个产品信息
+        ProductBasicVo productBasicVo = new ProductBasicVo();
+        BeanCopyUtil.copyPropertiesSimple(productMaterialBasicInfo.getProductBasicInfo(), productBasicVo);
+        productMaterialBasicVo.setProductBasicVo(productBasicVo);
 
-        // 材料vo
+        // 材料vo，只返回材料类型
         MaterialTypeVo materialTypeVo = new MaterialTypeVo ();
         materialTypeVo.setId(productMaterialBasicInfo.getMaterialBasicInfo().getId());
         materialTypeVo.setMaterialName(productMaterialBasicInfo.getMaterialBasicInfo().getMaterialName());

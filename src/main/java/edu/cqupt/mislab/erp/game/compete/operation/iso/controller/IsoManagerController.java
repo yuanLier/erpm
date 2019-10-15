@@ -66,7 +66,12 @@ public class IsoManagerController {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "认证状态只允许为未认证或已认证！");
         }
 
-        return toSuccessResponseVoWithData(isoManagerService.updateIsoBasicInfo(isoBasicId, isoBasicDto));
+        IsoBasicVo isoBasicVo = isoManagerService.updateIsoBasicInfo(isoBasicId, isoBasicDto);
+        if(isoBasicVo == null) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "该iso信息已被关闭，请检查您的操作");
+        }
+
+        return toSuccessResponseVoWithData(isoBasicVo);
     }
 
 
