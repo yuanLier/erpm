@@ -264,32 +264,4 @@ public class EnterpriseMemberManageServiceImpl implements EnterpriseMemberManage
 
         return enterpriseDetailInfoVo;
     }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Boolean submitExperimentalReport(Long userId, Long gameId, String report) {
-
-        EnterpriseMemberInfo enterpriseMemberInfo = enterpriseMemberInfoRepository.findByUserStudentInfo_IdAndEnterpriseBasicInfo_GameBasicInfo_Id(userId, gameId);
-        EnterpriseBasicInfo enterpriseBasicInfo = enterpriseMemberInfo.getEnterpriseBasicInfo();
-
-        // 若该用户所在的企业未完成经营，不允许提交报告
-        boolean isOver = EnterpriseStatusEnum.BANKRUPT.equals(enterpriseBasicInfo.getEnterpriseStatus()) || EnterpriseStatusEnum.OVER.equals(enterpriseBasicInfo.getEnterpriseStatus());
-        if(!isOver) {
-            return null;
-        }
-
-        // 保存报告
-        enterpriseMemberInfo.setGameExperience(report);
-        enterpriseMemberInfoRepository.save(enterpriseMemberInfo);
-
-        return true;
-    }
-
-    @Override
-    public String checkExperimentalReport(Long userId, Long gameId) {
-
-        EnterpriseMemberInfo enterpriseMemberInfo = enterpriseMemberInfoRepository.findByUserStudentInfo_IdAndEnterpriseBasicInfo_GameBasicInfo_Id(userId, gameId);
-
-        return enterpriseMemberInfo.getGameExperience();
-    }
 }

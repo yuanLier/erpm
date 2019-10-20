@@ -1,6 +1,5 @@
 package edu.cqupt.mislab.erp.game.manage.model.entity;
 
-import com.google.common.base.Objects;
 import edu.cqupt.mislab.erp.game.compete.basic.Comment;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import lombok.*;
@@ -8,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @Author: chuyunfei
@@ -43,29 +43,35 @@ public class EnterpriseMemberInfo implements Serializable {
     @Comment(comment = "成员企业角色")
     private String gameEnterpriseRole;
 
+    /**
+     * todo 检查成员贡献率
+     */
     @Min(0)
     @Basic
     @Comment(comment = "成员的贡献率，按100分计算，只有企业CEO才可以进行修改")
     private Integer gameContributionRate;
 
-    @Basic
-    @Comment(comment = "该成员在这场比赛中的心得体会，支持实验心得个性化")
-    private String gameExperience;
+    @Column
+    @Comment(comment = "成员心得体会的存储路径的键值；" +
+            "文件存储路径由文件所在空间与键值共同构成，展示给前端时需要通过FileUtil拼接")
+    private String reportKey;
 
     @Override
-    public boolean equals(Object o){
-        if(this == o) {
-            return true;
-        }
-        if(o == null||getClass() != o.getClass()) {
-            return false;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         EnterpriseMemberInfo that = (EnterpriseMemberInfo) o;
-        return Objects.equal(id,that.id)&&Objects.equal(gameEnterpriseRole,that.gameEnterpriseRole);
+        return Objects.equals(id, that.id) &&
+                Objects.equals(enterpriseBasicInfo, that.enterpriseBasicInfo) &&
+                Objects.equals(userStudentInfo, that.userStudentInfo) &&
+                Objects.equals(gameEnterpriseRole, that.gameEnterpriseRole) &&
+                Objects.equals(gameContributionRate, that.gameContributionRate) &&
+                Objects.equals(reportKey, that.reportKey);
     }
 
     @Override
-    public int hashCode(){
-        return Objects.hashCode(id,gameEnterpriseRole);
+    public int hashCode() {
+
+        return Objects.hash(id, enterpriseBasicInfo, userStudentInfo, gameEnterpriseRole, gameContributionRate, reportKey);
     }
 }

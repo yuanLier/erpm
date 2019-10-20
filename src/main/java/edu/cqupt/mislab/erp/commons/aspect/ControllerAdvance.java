@@ -145,6 +145,40 @@ public class ControllerAdvance {
 
         return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "该信息已被关闭，无法被修改，请检查您的操作");
     }
+    
+    /**
+     * @author yuanyiwen
+     * @description 七牛云文件存储（上传或删除）异常；提示一下就好 毕竟它本质上是一个检查型异常
+     * @date 12:41 2019/10/20
+     **/
+    @ResponseBody
+    @ExceptionHandler(FileOperateException.class)
+    public WebResponseVo<Object> fileUploadException(FileOperateException exception) {
+
+        // todo 将部分堆栈错误改为打log
+        exception.printStackTrace();
+
+        String message = (exception.getMessage() == null) ? "文件存储服务不可用" : exception.getMessage();
+
+        return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.SERVICE_UNAVAILABLE, message);
+    }
+
+
+    /**
+     * 企业状态异常
+     * @param exception
+     * @return
+     */
+    @ResponseBody
+    @ExceptionHandler(EnterpriseStatusException.class)
+    public WebResponseVo<Object> fileUploadException(EnterpriseStatusException exception) {
+
+        exception.printStackTrace();
+
+        String message = (exception.getMessage() == null) ? "操作失败！企业未处于指定状态！" : exception.getMessage();
+
+        return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, message);
+    }
 
     /**
      * @author chuyunfei

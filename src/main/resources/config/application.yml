@@ -5,6 +5,7 @@ server:
     cookie:
       max-age: 1800
       http-only: true
+
 spring:
   profiles:
     active: dev
@@ -19,6 +20,14 @@ spring:
         dialect: org.hibernate.dialect.MySQL5Dialect
 #        默认值即true
     open-in-view: true
+
+# 配置七牛云相关
+qiniu:
+  accessKey: 9ph7mdDAtNMgVpVz97PBcfKmcJa9Te63755XDnZ5
+  secretKey: 3L0DqhDyqPGNpdSu1e3hldqiVgSBhrpuXpuupy5i
+  bucket: erpm
+  domain: pzkmr6658.bkt.clouddn.com
+
 ---
 # 开发环境数据库可以自己单独配置
 spring:

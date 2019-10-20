@@ -13,7 +13,6 @@ import java.util.List;
  * @description 企业中成员变动与查询
  * @date 21:31 2019/4/26
  **/
-
 public interface EnterpriseMemberManageService {
 
     /**
@@ -51,19 +50,4 @@ public interface EnterpriseMemberManageService {
      **/
     EnterpriseDetailInfoVo getEnterpriseOfMember(Long userId, Long gameId);
 
-
-    /**
-     * @author yuanyiwen
-     * @description 企业经营结束后，用户提交实验报告
-     * @date 16:43 2019/8/12
-     **/
-    Boolean submitExperimentalReport(Long userId, Long gameId, String report);
-
-
-    /**
-     * @author yuanyiwen
-     * @description 查看某一学生的实验报告 todo 教师端批量查看
-     * @date 17:48 2019/8/12
-     **/
-    String checkExperimentalReport(Long userId, Long gameId);
 }

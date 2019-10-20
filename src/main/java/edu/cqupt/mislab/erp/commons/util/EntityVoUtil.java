@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.commons.util;
 
+import edu.cqupt.mislab.erp.commons.config.QiniuProperties;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.entity.LoanEnterpriseInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.vo.LoanEnterpriseDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoDevelopInfo;
@@ -37,6 +38,7 @@ import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseMemberInfo;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseDetailInfoVo;
 import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseMemberDisplayVo;
+import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseMemberReportVo;
 import edu.cqupt.mislab.erp.game.manage.model.vo.GameDetailInfoVo;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;
 import edu.cqupt.mislab.erp.user.model.vo.UserStudentInfoBasicVo;
@@ -497,7 +499,7 @@ public abstract class EntityVoUtil {
         return productProduceVo;
     }
 
-    /******************************* 以上 喵 ***********************************/
+    /******************************* 以上 ***********************************/
 
 
     public static MaterialOrderDisplayVo copyFieldsFromEntityToVo(MaterialOrderInfo materialOrderInfo) {
@@ -602,6 +604,27 @@ public abstract class EntityVoUtil {
         loanEnterpriseDisplayVo.setRepaid(loanEnterpriseInfo.isRepaid());
 
         return loanEnterpriseDisplayVo;
+    }
+
+    public static EnterpriseMemberReportVo copyFieldsFromEntityToVo(QiniuProperties qiniuProperties, EnterpriseMemberInfo enterpriseMemberInfo) {
+        EnterpriseMemberReportVo enterpriseMemberReportVo = new EnterpriseMemberReportVo();
+
+        enterpriseMemberReportVo.setId(enterpriseMemberInfo.getId());
+
+        // 如果成员报告的键值为空，说明该成员报告未提交或已删除；直接返回null
+        if(enterpriseMemberInfo.getReportKey() == null) {
+            return null;
+        }
+
+        // 注意这里要调一个拼接
+        enterpriseMemberReportVo.setReportLocation(FileUtil.getLocationByKey(qiniuProperties, enterpriseMemberInfo.getReportKey()));
+
+        UserStudentInfoBasicVo userStudentInfoBasicVo = new UserStudentInfoBasicVo();
+        EntityVoUtil.copyFieldsFromEntityToVo(enterpriseMemberInfo.getUserStudentInfo(), userStudentInfoBasicVo);
+
+        enterpriseMemberReportVo.setStudentInfoBasicVo(userStudentInfoBasicVo);
+
+        return enterpriseMemberReportVo;
     }
 
 }

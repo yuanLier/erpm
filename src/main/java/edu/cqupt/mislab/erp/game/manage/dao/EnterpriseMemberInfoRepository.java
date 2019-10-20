@@ -54,5 +54,12 @@ public interface EnterpriseMemberInfoRepository extends BasicRepository<Enterpri
      * @date 13:41 2019/7/28
      **/
     List<EnterpriseMemberInfo> findByUserStudentInfo_Id(Long userId);
+    
+    /**
+     * @author yuanyiwen
+     * @description 获取某一比赛中的全部企业成员信息
+     * @date 18:40 2019/10/20
+     **/
+    List<EnterpriseMemberInfo> findByEnterpriseBasicInfo_GameBasicInfo_Id(Long gameId);
 
 }

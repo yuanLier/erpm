@@ -137,7 +137,7 @@ public class GameManageModelInit implements ModelInit {
                 .enterpriseBasicInfo(enterpriseBasicInfo)
                 .gameEnterpriseRole("创建者")
                 .gameContributionRate(null)
-                .gameExperience("请填写实验报告...")
+                .reportKey(null)
                 .build();
 
         enterpriseMemberInfo = enterpriseMemberInfoRepository.save(enterpriseMemberInfo);

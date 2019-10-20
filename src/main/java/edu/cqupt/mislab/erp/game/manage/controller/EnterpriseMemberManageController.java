@@ -94,32 +94,4 @@ public class EnterpriseMemberManageController {
         return WebResponseUtil.toSuccessResponseVoWithData(enterpriseDetailInfoVo);
     }
 
-
-    @ApiOperation("企业经营结束后，用户提交实验报告")
-    @PostMapping("/report/submit")
-    public WebResponseVo<Boolean> submitExperimentalReport(@Exist(repository = UserStudentRepository.class)
-                                                                @RequestParam Long userId,
-                                                           @Exist(repository = GameBasicInfoRepository.class)
-                                                                @RequestParam Long gameId,
-                                                           @RequestParam String report) {
-
-        Boolean resp = enterpriseMemberManageService.submitExperimentalReport(userId, gameId, report);
-
-        if(resp == null) {
-            return WebResponseUtil.toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "企业经营未结束，无法填写实验报告");
-        }
-
-        return WebResponseUtil.toSuccessResponseVoWithData(resp);
-    }
-
-
-    @ApiOperation("查看某一学生的实验报告")
-    @PostMapping("/report/check")
-    public WebResponseVo<String> checkExperimentalReport(@Exist(repository = UserStudentRepository.class)
-                                                           @RequestParam Long userId,
-                                                           @Exist(repository = GameBasicInfoRepository.class)
-                                                           @RequestParam Long gameId) {
-
-        return WebResponseUtil.toSuccessResponseVoWithData(enterpriseMemberManageService.checkExperimentalReport(userId, gameId));
-    }
 }
