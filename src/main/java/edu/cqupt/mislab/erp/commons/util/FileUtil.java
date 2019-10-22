@@ -42,7 +42,7 @@ public abstract class FileUtil {
         try {
             // 文件上传
             Response response = uploadManager.put(file, key, upToken, null, null);
-            // 解析上传成功的结果
+            // 解析上传成功的结果 todo 改为返回键值（因为中文可能会有转义）
             DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
 
         } catch (QiniuException e) {

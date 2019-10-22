@@ -3,9 +3,6 @@ package edu.cqupt.mislab.erp.game.compete.operation.market.dao;
 import edu.cqupt.mislab.erp.commons.basic.repository.BasicRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketStatusEnum;
-import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 
@@ -22,6 +19,14 @@ public interface MarketDevelopInfoRepository extends BasicRepository<MarketDevel
      * @return
      */
     List<MarketDevelopInfo> findByEnterpriseBasicInfo_Id(Long enterpriseId);
+
+
+    /**
+     * 获取某场比赛中的全部市场开拓信息
+     * @param gameId
+     * @return
+     */
+    List<MarketDevelopInfo> findByEnterpriseBasicInfo_GameBasicInfo_Id(Long gameId);
 
 
     /**

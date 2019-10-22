@@ -7,6 +7,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.iso.model.entity.IsoStatusEnu
 import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.service.IsoService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,10 @@ public class IsoController {
 
     @ApiOperation(value = "获取某个企业的全部ISO认证信息")
     @GetMapping
-    public WebResponseVo<List<IsoDisplayVo>> findByEnterpriseId(@Exist(repository = EnterpriseBasicInfoRepository.class)
-                                                                    @RequestParam Long enterpriseId) {
+    public WebResponseVo<List<IsoDisplayVo>> findByEnterpriseId(@Exist(repository = GameBasicInfoRepository.class)
+                                                                    @RequestParam Long gameId) {
 
-        List<IsoDisplayVo> isoDisplayVoList = isoService.findByEnterpriseId(enterpriseId);
+        List<IsoDisplayVo> isoDisplayVoList = isoService.findByEnterpriseId(gameId);
 
         if(isoDisplayVoList.size() == 0) {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.NOT_FOUND, "该企业对应的iso认证不存在");

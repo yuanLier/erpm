@@ -165,6 +165,24 @@ public class ControllerAdvance {
 
 
     /**
+     * @author yuanyiwen
+     * @description Excel数据导入异常
+     * @date 12:41 2019/10/20
+     **/
+    @ResponseBody
+    @ExceptionHandler(ExcelOperationException.class)
+    public WebResponseVo<Object> fileUploadException(ExcelOperationException exception) {
+
+        // todo 将部分堆栈错误改为打log
+        exception.printStackTrace();
+
+        String message = (exception.getMessage() == null) ? "数据导入服务不可用" : exception.getMessage();
+
+        return toFailResponseVoWithMessage(exception.getResponseStatus(), message);
+    }
+
+
+    /**
      * 企业状态异常
      * @param exception
      * @return

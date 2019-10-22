@@ -37,23 +37,24 @@ public class UserStudentInfo implements Serializable {
     @Comment(comment = "真实姓名")
     private String studentName;
 
-    @Basic(optional = false)
+    @Basic(optional = true)
     @Enumerated(EnumType.STRING)
     @Comment(comment = "性别")
     private UserGenderEnum gender;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = true)
     @Comment(comment = "专业信息")
     private MajorBasicInfo majorBasicInfo;
 
-    @Basic(optional = false)
-    @Comment(comment = "班级，教师班级")
+    @Column(nullable = false)
+    @Comment(comment = "班级")
     private String studentClass;
 
     @Comment(comment = "电子邮箱")
     private String email;
 
+    @Column(nullable = false)
     @Comment(comment = "电话")
     private String phone;
 

@@ -27,10 +27,10 @@ public class MarketServiceImpl implements MarketService {
     private MarketDevelopInfoRepository marketDevelopInfoRepository;
 
     @Override
-    public List<MarketBasicTypeVo> getAllMarketTypes(Long enterpriseId) {
+    public List<MarketBasicTypeVo> getAllMarketTypes(Long gameId) {
 
         List<MarketDevelopInfo> marketDevelopInfoList =
-                marketDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId);
+                marketDevelopInfoRepository.findByEnterpriseBasicInfo_GameBasicInfo_Id(gameId);
 
         List<MarketBasicTypeVo> marketBasicTypeVoList = new ArrayList<>();
         for(MarketDevelopInfo marketDevelopInfo : marketDevelopInfoList) {

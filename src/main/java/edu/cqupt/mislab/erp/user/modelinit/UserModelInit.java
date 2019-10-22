@@ -71,7 +71,8 @@ public class UserModelInit implements ModelInit {
      */
     private void initUserStudentInfo(){
 
-        final UserTeacherInfo userTeacherInfo = userTeacherRepository.save(UserTeacherInfo.builder().build());
+        // todo 教师端写了之后记得把这个初始化完善一下
+        final UserTeacherInfo userTeacherInfo = userTeacherRepository.save(UserTeacherInfo.builder().password("123456").build());
 
         UserStudentInfo userStudentInfo = UserStudentInfo.builder()
                 .accountEnable(true)

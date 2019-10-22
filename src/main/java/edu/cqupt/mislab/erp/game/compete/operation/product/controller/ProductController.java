@@ -9,6 +9,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMater
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.service.ProductService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +38,10 @@ public class ProductController {
 
     @ApiOperation("获取一场比赛中使用的全部产品类型")
     @GetMapping("/type")
-    public WebResponseVo<List<ProductTypeVo>> getAllProductTypes(@Exist(repository = EnterpriseBasicInfoRepository.class)
-                                                                     @RequestParam Long enterpriseId) {
+    public WebResponseVo<List<ProductTypeVo>> getAllProductTypes(@Exist(repository = GameBasicInfoRepository.class)
+                                                                     @RequestParam Long gameId) {
 
-        return toSuccessResponseVoWithData(productService.getAllProductTypes(enterpriseId));
+        return toSuccessResponseVoWithData(productService.getAllProductTypes(gameId));
     }
 
     @ApiOperation(value = "获取某个企业的全部产品研发信息")

@@ -20,6 +20,15 @@ public interface ProductDevelopInfoRepository extends BasicRepository<ProductDev
      */
     List<ProductDevelopInfo> findByEnterpriseBasicInfo_Id(Long enterpriseId);
 
+
+    /**
+     * 选取某个比赛中的全部产品信息
+     * @param gameId
+     * @return
+     */
+    List<ProductDevelopInfo> findByEnterpriseBasicInfo_GameBasicInfo_Id(Long gameId);
+
+
     /**
      * 选取某个企业处于某种状态的数据
      * @param enterpriseId
