@@ -32,6 +32,19 @@ public class FactoryHistoryServiceImpl implements FactoryHistoryService {
     private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
 
     @Override
+    public Map<Integer, List<FactoryHistoryVo>> findFactoryHistoryVoOfGame(Long gameId) {
+
+        Integer totalPeriod = getTotalPeriod(gameId);
+
+        Map<Integer, List<FactoryHistoryVo>> map = new HashMap<>(totalPeriod);
+        for(int period = 1; period <= totalPeriod; period++) {
+            map.put(period, findFactoryHistoryVoOfGameAndPeriod(gameId, period));
+        }
+
+        return map;
+    }
+
+    @Override
     public List<FactoryHistoryVo> findFactoryHistoryVoOfGameAndPeriod(Long gameId, Integer period) {
 
         List<FactoryHistoryVo> factoryHistoryVoList = new ArrayList<>();
@@ -80,6 +93,25 @@ public class FactoryHistoryServiceImpl implements FactoryHistoryService {
         }
 
         return factoryHistoryVoList;
+    }
+
+
+    @Override
+    public Integer getTotalPeriod(Long gameId) {
+
+        Integer totalPeriod = 0;
+
+        // 获取当前比赛中的全部企业
+        List<EnterpriseBasicInfo> enterpriseBasicInfoList = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId);
+        for (EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
+
+            Integer currentPeriod = enterpriseBasicInfo.getEnterpriseCurrentPeriod();
+
+            // 其实就是获取企业的最大存活周期
+            totalPeriod = (totalPeriod > currentPeriod) ? totalPeriod : currentPeriod;
+        }
+
+        return totalPeriod;
     }
 
 

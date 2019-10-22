@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
@@ -33,6 +34,14 @@ public class ProdlineHistoryController {
     @Autowired
     private ProdlineHistoryService prodlineHistoryService;
 
+    @ApiOperation(value = "获取某一比赛中，各个周期的，各个企业的全部厂房拥有情况")
+    @GetMapping("/all")
+    public WebResponseVo<Map<Integer, List<ProdlineHistoryVo>>> prodlineHistory(@Exist(repository = GameBasicInfoRepository.class)
+                                                                              @GameStatusValid(requireStatus = GameStatusEnum.OVER)
+                                                                              @RequestParam Long gameId) {
+
+        return toSuccessResponseVoWithData(prodlineHistoryService.findProdlineHistoryVoOfGame(gameId));
+    }
 
     @ApiOperation(value = "获取某一比赛中处于某一周期的各个企业的全部生产线拥有情况")
     @GetMapping

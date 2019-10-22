@@ -1,5 +1,6 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.model.vo;
 
+import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseBasicInfoVo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -17,7 +18,7 @@ import java.util.List;
 public class ProductHistoryVo {
 
     @ApiModelProperty("哪个企业")
-    private Long enterpriseId;
+    private EnterpriseBasicInfoVo enterpriseBasicInfoVo;
 
     @ApiModelProperty("哪个周期")
     private Integer period;

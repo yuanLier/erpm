@@ -8,6 +8,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.iso.model.vo.IsoHistoryVo;
 import edu.cqupt.mislab.erp.game.compete.operation.iso.service.IsoHistoryService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
+import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseBasicInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class IsoHistoryServiceImpl implements IsoHistoryService {
         for (EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
 
             IsoHistoryVo isoHistoryVo = new IsoHistoryVo();
-            isoHistoryVo.setEnterpriseId(enterpriseBasicInfo.getId());
+            isoHistoryVo.setEnterpriseBasicInfoVo(new EnterpriseBasicInfoVo(enterpriseBasicInfo.getId(), enterpriseBasicInfo.getEnterpriseName()));
             isoHistoryVo.setPeriod(period);
 
             // 若该周期该企业已结束经营，则返回结束前最后一周期的认证情况

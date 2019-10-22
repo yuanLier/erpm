@@ -8,6 +8,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductHisto
 import edu.cqupt.mislab.erp.game.compete.operation.product.service.ProductHistoryService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
+import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseBasicInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +38,7 @@ public class ProductHistoryServiceImpl implements ProductHistoryService {
         for (EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
 
             ProductHistoryVo productHistoryVo = new ProductHistoryVo();
-            productHistoryVo.setEnterpriseId(enterpriseBasicInfo.getId());
+            productHistoryVo.setEnterpriseBasicInfoVo(new EnterpriseBasicInfoVo(enterpriseBasicInfo.getId(), enterpriseBasicInfo.getEnterpriseName()));
             productHistoryVo.setPeriod(period);
 
 

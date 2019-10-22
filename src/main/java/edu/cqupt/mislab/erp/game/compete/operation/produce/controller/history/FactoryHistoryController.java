@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toFailResponseVoWithMessage;
 import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessResponseVoWithData;
@@ -33,9 +34,18 @@ public class FactoryHistoryController {
     @Autowired
     private FactoryHistoryService factoryHistoryService;
 
+    @ApiOperation(value = "获取某一比赛中，各个周期的，各个企业的全部厂房拥有情况")
+    @GetMapping("/all")
+    public WebResponseVo<Map<Integer, List<FactoryHistoryVo>>> factoryHistory(@Exist(repository = GameBasicInfoRepository.class)
+                                                                @GameStatusValid(requireStatus = GameStatusEnum.OVER)
+                                                                @RequestParam Long gameId) {
+
+        return toSuccessResponseVoWithData(factoryHistoryService.findFactoryHistoryVoOfGame(gameId));
+    }
+
     @ApiOperation(value = "获取某一比赛中处于某一周期的各个企业的全部厂房拥有情况")
     @GetMapping
-    public WebResponseVo<List<FactoryHistoryVo>> factoryHistory(@Exist(repository = GameBasicInfoRepository.class)
+    public WebResponseVo<List<FactoryHistoryVo>> factoryHistoryOfPeriod(@Exist(repository = GameBasicInfoRepository.class)
                                                         @GameStatusValid(requireStatus = GameStatusEnum.OVER)
                                                         @RequestParam Long gameId,
                                                                 @RequestParam Integer period) {

@@ -8,6 +8,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketHistory
 import edu.cqupt.mislab.erp.game.compete.operation.market.service.MarketHistoryService;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
+import edu.cqupt.mislab.erp.game.manage.model.vo.EnterpriseBasicInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class MarketHistoryServiceImpl implements MarketHistoryService {
         for (EnterpriseBasicInfo enterpriseBasicInfo : enterpriseBasicInfoList) {
 
             MarketHistoryVo marketHistoryVo = new MarketHistoryVo();
-            marketHistoryVo.setEnterpriseId(enterpriseBasicInfo.getId());
+            marketHistoryVo.setEnterpriseBasicInfoVo(new EnterpriseBasicInfoVo(enterpriseBasicInfo.getId(), enterpriseBasicInfo.getEnterpriseName()));
             marketHistoryVo.setPeriod(period);
 
             // 若该周期该企业已结束经营，则返回结束前最后一周期的开拓情况
