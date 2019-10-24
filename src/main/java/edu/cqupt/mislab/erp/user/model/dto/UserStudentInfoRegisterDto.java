@@ -43,6 +43,10 @@ public class UserStudentInfoRegisterDto {
     @ApiModelProperty("班级")
     private String studentClass;
 
+    @NotNull(message = "电话不能为空")
+    @ApiModelProperty("电话")
+    private String phone;
+
     @NotNull
     @Size(min = 6, max = 18)
     @Pattern(regexp = "^[A-Za-z0-9]+$",message = "密码，长度在6-18个之间，只能包含数字、字母")
