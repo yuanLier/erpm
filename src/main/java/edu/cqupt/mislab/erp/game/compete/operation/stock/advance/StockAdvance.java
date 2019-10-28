@@ -93,7 +93,7 @@ public class StockAdvance implements ModelAdvance {
         for (MaterialOrderInfo materialOrderInfo : materialOrderInfoList) {
 
             // 如果企业所处的当前周期达到了该种运输方式所需要的周期数
-            if(enterpriseBasicInfo.getEnterpriseCurrentPeriod() == materialOrderInfo.getPurchaseTime() + materialOrderInfo.getTransportMethod().getTransportBasicInfo().getTransportPeriod()) {
+            if(enterpriseBasicInfo.getEnterpriseCurrentPeriod() == materialOrderInfo.getTransportTime() + materialOrderInfo.getTransportMethod().getTransportBasicInfo().getTransportPeriod()) {
 
                 // 设置为已送达
                 materialOrderInfo.setTransportStatus(TransportStatusEnum.ARRIVED);
@@ -118,6 +118,8 @@ public class StockAdvance implements ModelAdvance {
 
             // 设置为运输中
             materialOrderInfo.setTransportStatus(TransportStatusEnum.TRANSPORTING);
+            // 更新开始运输的时间
+            materialOrderInfo.setTransportTime(enterpriseBasicInfo.getEnterpriseCurrentPeriod());
 
             // 保存修改
             materialOrderInfoRepository.save(materialOrderInfo);

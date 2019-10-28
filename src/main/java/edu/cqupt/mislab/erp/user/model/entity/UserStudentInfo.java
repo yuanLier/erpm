@@ -28,7 +28,7 @@ public class UserStudentInfo implements Serializable {
     @Column(unique = true,nullable = false,updatable = false)
     @Comment(comment = "学号，作为系统账号")
     private String studentAccount;
-
+    
     @Basic(optional = false)
     @Comment(comment = "账号密码")
     private String studentPassword;
