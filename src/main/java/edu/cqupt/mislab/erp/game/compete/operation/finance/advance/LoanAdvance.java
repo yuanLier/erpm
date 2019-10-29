@@ -57,9 +57,12 @@ public class LoanAdvance implements ModelAdvance {
             LoanBasicInfo loanBasicInfo = loanEnterpriseInfo.getGameLoanBasicInfo().getLoanBasicInfo();
             // 如果到了最后还款日期还没还上的，强制还款并收取违约金
             if(loanEnterpriseInfo.getBeginPeriod()+loanBasicInfo.getMaxDuration() == enterpriseBasicInfo.getEnterpriseCurrentPeriod()) {
-                String changeOperating = FinanceOperationConstant.PRODLINE_TRANSACTION;
+                String changeOperating = FinanceOperationConstant.LOAN_FORCE;
                 Double changeAmount = LoanAmountUtil.getRepaymentAmount(loanEnterpriseInfo);
                 financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, changeAmount, true, true);
+                // 虽然是强制的但还是要给人家设置为已还款的
+                loanEnterpriseInfo.setRepaid(true);
+                loanEnterpriseRepository.save(loanEnterpriseInfo);
             }
         }
 

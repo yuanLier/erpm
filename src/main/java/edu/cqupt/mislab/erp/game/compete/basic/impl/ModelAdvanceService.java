@@ -1,9 +1,14 @@
 package edu.cqupt.mislab.erp.game.compete.basic.impl;
 
+import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
+import edu.cqupt.mislab.erp.commons.util.LoanAmountUtil;
 import edu.cqupt.mislab.erp.commons.websocket.CommonWebSocketMessagePublisher;
 import edu.cqupt.mislab.erp.game.compete.basic.ModelAdvance;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.dao.FinanceEnterpriseRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.dao.LoanEnterpriseRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.model.entity.LoanEnterpriseInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceService;
 import edu.cqupt.mislab.erp.game.compete.operation.order.service.OrderChooseService;
 import edu.cqupt.mislab.erp.game.manage.constant.ManageConstant;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
@@ -44,9 +49,13 @@ public class ModelAdvanceService implements ApplicationContextAware {
     EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
     @Autowired
     FinanceEnterpriseRepository financeEnterpriseRepository;
+    @Autowired
+    LoanEnterpriseRepository loanEnterpriseRepository;
 
     @Autowired
     OrderChooseService orderChooseService;
+    @Autowired
+    FinanceService financeService;
 
     @Autowired
     CommonWebSocketMessagePublisher webSocketMessagePublisher;
@@ -179,16 +188,42 @@ public class ModelAdvanceService implements ApplicationContextAware {
 
         enterpriseBasicInfo.setEnterpriseCurrentPeriod(enterpriseBasicInfo.getEnterpriseCurrentPeriod() + 1);
 
-        // 若推进周期后，企业完成全部比赛进程，则更新企业状态
+        // 若推进周期后，企业完成全部比赛进程，则更新企业状态：若账户余额支持还款，则正常结束比赛；否则，以破产的方式结束
         GameInitBasicInfo gameInitBasicInfo = enterpriseBasicInfo.getGameBasicInfo().getGameInitBasicInfo();
         Integer overPeriod = gameInitBasicInfo.getPeriodOfOneYear() * gameInitBasicInfo.getTotalYear();
         if (overPeriod.equals(enterpriseBasicInfo.getEnterpriseCurrentPeriod())) {
-            enterpriseBasicInfo.setEnterpriseStatus(EnterpriseStatusEnum.OVER);
+
+            // 默认为正常结束比赛
+            EnterpriseStatusEnum enterpriseStatus = EnterpriseStatusEnum.OVER;
+            String message = "企业已完成全部周期，游戏结束！";
+
+            // 归还全部未归还的借款并更新贷款状态
+            Double totalLoanAmount = 0D;
+            List<LoanEnterpriseInfo> loanEnterpriseInfoList = loanEnterpriseRepository.getLoansOfEnterprise(null, false, enterpriseId);
+            for(LoanEnterpriseInfo loanEnterpriseInfo : loanEnterpriseInfoList) {
+                loanEnterpriseInfo.setEndPeriod(enterpriseBasicInfo.getEnterpriseCurrentPeriod());
+                totalLoanAmount += LoanAmountUtil.getRepaymentAmount(loanEnterpriseInfo);
+                loanEnterpriseInfo.setRepaid(true);
+                loanEnterpriseRepository.save(loanEnterpriseInfo);
+            }
+            // 一次性更新企业余额
+            if(totalLoanAmount > 0) {
+                String changeOperating = FinanceOperationConstant.REPAY_WHEN_GAME_END;
+                financeService.updateFinanceInfo(enterpriseId, changeOperating, totalLoanAmount, true, true);
+            }
+
+            // 若企业余额不足以支撑还款，更新结束状态与返回信息
+            if(currentFinanceAmount < totalLoanAmount) {
+                enterpriseStatus = EnterpriseStatusEnum.BANKRUPT;
+                message = "企业已完成全部周期，当前余额不足以归还还款，企业破产，游戏结束！";
+            }
+
+            enterpriseBasicInfo.setEnterpriseStatus(enterpriseStatus);
             enterpriseBasicInfoRepository.save(enterpriseBasicInfo);
 
             gameOverJudge(enterpriseBasicInfo);
 
-            return toSuccessResponseVoWithData("企业已完成全部周期，游戏结束！");
+            return toSuccessResponseVoWithData(message);
         }
 
         log.info("推进企业：" + enterpriseId + " 进入下一个比赛周期成功");

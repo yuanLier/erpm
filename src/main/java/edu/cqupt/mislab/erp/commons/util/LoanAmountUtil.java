@@ -16,20 +16,20 @@ public abstract class LoanAmountUtil {
      */
     public static double getRepaymentAmount(LoanEnterpriseInfo loanEnterpriseInfo) {
 
-        double rate = 0D;
+        double amount = 0D;
         int duration = loanEnterpriseInfo.getGameLoanBasicInfo().getLoanBasicInfo().getMaxDuration();
         if(loanEnterpriseInfo.getEndPeriod() == null) {
             // 若还款日期为空，说明是非主动性还款，即逾期自动还款：则需要算上赔偿金
-            rate += loanEnterpriseInfo.getGameLoanBasicInfo().getLoanBasicInfo().getPenaltyRate();
+            amount += loanEnterpriseInfo.getLoanAmount()*loanEnterpriseInfo.getGameLoanBasicInfo().getLoanBasicInfo().getPenaltyRate();
         } else {
             // 若为主动还款，周期数更新为借款到还款这段时间的总周期数
             duration = loanEnterpriseInfo.getEndPeriod() - loanEnterpriseInfo.getBeginPeriod();
         }
 
         // 通过年利率与每年的周期数计算周期利率
-        Integer periodOfYear = loanEnterpriseInfo.getEnterpriseBasicInfo().getGameBasicInfo().getGameInitBasicInfo().getPeriodOfOneYear();
-        rate += (loanEnterpriseInfo.getGameLoanBasicInfo().getLoanBasicInfo().getLoanRate() / periodOfYear) * duration;
+        duration /= loanEnterpriseInfo.getEnterpriseBasicInfo().getGameBasicInfo().getGameInitBasicInfo().getPeriodOfOneYear();
+        amount += loanEnterpriseInfo.getLoanAmount()*Math.pow(1+loanEnterpriseInfo.getGameLoanBasicInfo().getLoanBasicInfo().getLoanRate(), duration);
 
-        return loanEnterpriseInfo.getLoanAmount()*(1+rate);
+        return amount;
     }
 }

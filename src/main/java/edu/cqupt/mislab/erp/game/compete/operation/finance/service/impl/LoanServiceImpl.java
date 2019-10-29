@@ -2,6 +2,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.finance.service.impl;
 
 import edu.cqupt.mislab.erp.commons.constant.FinanceOperationConstant;
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
+import edu.cqupt.mislab.erp.commons.util.LoanAmountUtil;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.dao.GameLoanBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.dao.LoanEnterpriseRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.dto.LoanEnterpriseDto;
@@ -100,16 +101,14 @@ public class LoanServiceImpl implements LoanService {
 
         EnterpriseBasicInfo enterpriseBasicInfo = loanEnterpriseInfo.getEnterpriseBasicInfo();
 
-        // 计算还款数量
-        Integer totalYear = enterpriseBasicInfo.getGameBasicInfo().getGameInitBasicInfo().getTotalYear();
-        Integer year = (enterpriseBasicInfo.getEnterpriseCurrentPeriod()-loanEnterpriseInfo.getBeginPeriod())/totalYear;
-        Double amount = loanEnterpriseInfo.getLoanAmount()*Math.pow(1+loanEnterpriseInfo.getGameLoanBasicInfo().getLoanBasicInfo().getLoanRate(), year);
+        // 更新还款结束日期
+        loanEnterpriseInfo.setEndPeriod(loanEnterpriseInfo.getEnterpriseBasicInfo().getEnterpriseCurrentPeriod());
+
         // 扣钱
-        String changeOperating = FinanceOperationConstant.LOAN_REPLAY;
+        String changeOperating = FinanceOperationConstant.LOAN_REPAY;
+        Double amount = LoanAmountUtil.getRepaymentAmount(loanEnterpriseInfo);
         financeService.updateFinanceInfo(enterpriseBasicInfo.getId(), changeOperating, amount, true, true);
 
-        // 更新还款情况
-        loanEnterpriseInfo.setEndPeriod(loanEnterpriseInfo.getEnterpriseBasicInfo().getEnterpriseCurrentPeriod());
         loanEnterpriseInfo.setRepaid(true);
         loanEnterpriseRepository.save(loanEnterpriseInfo);
 

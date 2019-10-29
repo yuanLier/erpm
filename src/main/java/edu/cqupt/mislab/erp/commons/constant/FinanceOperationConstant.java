@@ -41,7 +41,9 @@ public interface FinanceOperationConstant {
 
 
     String LOAN_AMOUNT = "贷款所得到的金额";
-    String LOAN_REPLAY = "归还贷款时所需要支付的金额";
+    String LOAN_REPAY = "归还贷款时所需要支付的金额";
+    String LOAN_FORCE = "强制归还贷款时所需要支付的金额";
+    String REPAY_WHEN_GAME_END = "比赛结束时自动还款所支付的金额";
 
 
     String ORDER_DELIVERY = "按订单交货时所获得的金额";
