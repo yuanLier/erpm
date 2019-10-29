@@ -40,6 +40,7 @@ public class EnterpriseMemberReportServiceImpl implements EnterpriseMemberReport
     private QiniuProperties qiniuProperties;
 
 
+    // todo 加一个添加钱判断是否已经提交；若已提交，删除之前的报告
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean submitExperimentalReport(Long userId, Long gameId, MultipartFile multipartFile) {

@@ -103,13 +103,12 @@ public class ProductModelInit implements ModelInit {
                     .mountFloat((MIN_DOUBLE + Math.random() + Math.random()) / 2)
                     .enable(true);
 
-            int random = (int)Math.floor(Math.random()*4);
-            if(random == 0 || i % random == 0){
-
-                builder.productDevelopStatus(ProductDevelopStatusEnum.TODEVELOP);
-            }else {
+            if(i == (int)Math.floor(Math.random()*4)){
 
                 builder.productDevelopStatus(ProductDevelopStatusEnum.DEVELOPED);
+            }else {
+
+                builder.productDevelopStatus(ProductDevelopStatusEnum.TODEVELOP);
             }
 
             productBasicInfoRepository.save(builder.build());
@@ -124,7 +123,7 @@ public class ProductModelInit implements ModelInit {
         for(ProductBasicInfo productBasicInfo : productBasicInfos){
 
             //随机选择材料种类数据
-            int number = (int) Math.ceil(Math.random() * size) ;
+            int number = (int) Math.ceil(Math.random() * size);
 
             for(int i = 0; i < number; i ++){
 

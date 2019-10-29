@@ -6,7 +6,6 @@ import edu.cqupt.mislab.erp.game.compete.operation.finance.service.FinanceServic
 import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.ProdlineProduceInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineProduceInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineProduceStatus;
-import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,6 @@ import java.util.List;
 @Component
 public class ProductionPlanAdvance implements ModelAdvance {
 
-    @Autowired
-    private EnterpriseBasicInfoRepository enterpriseBasicInfoRepository;
     @Autowired
     private ProdlineProduceInfoRepository prodlineProduceInfoRepository;
 

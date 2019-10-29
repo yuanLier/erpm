@@ -51,6 +51,7 @@ public class LoanServiceImpl implements LoanService {
             LoanBasicDisplayVo loanBasicDisplayVo = new LoanBasicDisplayVo();
             loanBasicDisplayVo.setId(gameLoanBasicInfo.getId());
             loanBasicDisplayVo.setLoanRate(gameLoanBasicInfo.getLoanBasicInfo().getLoanRate());
+            loanBasicDisplayVo.setPenaltyRate(gameLoanBasicInfo.getLoanBasicInfo().getPenaltyRate());
             loanBasicDisplayVo.setLoanType(gameLoanBasicInfo.getLoanBasicInfo().getLoanType());
             loanBasicDisplayVo.setMaxDuration(gameLoanBasicInfo.getLoanBasicInfo().getMaxDuration());
 

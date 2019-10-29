@@ -60,6 +60,7 @@ public class FinanceModelInit implements ModelInit {
         loanBasicInfoRepository.save(
                 LoanBasicInfo.builder()
                         .loanRate(0.12)
+                        .penaltyRate(0.06)
                         .loanType("长期贷款")
                         .maxDuration(10)
                         .enable(true)
@@ -69,6 +70,7 @@ public class FinanceModelInit implements ModelInit {
         loanBasicInfoRepository.save(
                 LoanBasicInfo.builder()
                         .loanRate(0.08)
+                        .penaltyRate(0.03)
                         .loanType("短期贷款")
                         .maxDuration(3)
                         .enable(true)
@@ -78,6 +80,7 @@ public class FinanceModelInit implements ModelInit {
         loanBasicInfoRepository.save(
                 LoanBasicInfo.builder()
                         .loanRate(0.37)
+                        .penaltyRate(0.1)
                         .loanType("高利贷")
                         .maxDuration(7)
                         .enable(true)

@@ -36,6 +36,11 @@ public class LoanBasicInfo implements Serializable {
     @Comment(comment = "年利率")
     private double loanRate;
 
+    @DoubleMin(0.0001)
+    @Column(updatable = false)
+    @Comment(comment = "超过最后还款期限仍未还款时，需要按比例支付赔偿金；这是那个比例")
+    private double penaltyRate;
+
     @Comment(comment = "贷款期限，即最长允许在多少周期后还款")
     private int maxDuration;
 
