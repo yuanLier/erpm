@@ -68,6 +68,6 @@ public class LoanAdvance implements ModelAdvance {
 
         log.info("财务模块-比赛期间周期成功");
 
-        return false;
+        return true;
     }
 }

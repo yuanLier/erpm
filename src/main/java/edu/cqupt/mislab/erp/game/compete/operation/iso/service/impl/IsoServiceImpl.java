@@ -25,10 +25,10 @@ public class IsoServiceImpl implements IsoService {
     private IsoDevelopInfoRepository isoDevelopInfoRepository;
 
     @Override
-    public List<IsoDisplayVo> findByEnterpriseId(Long gameId) {
+    public List<IsoDisplayVo> findByEnterpriseId(Long enterpriseId) {
 
-        // 根据比赛id获取全部iso认证信息
-        List<IsoDevelopInfo> isoDevelopInfoList = isoDevelopInfoRepository.findByEnterpriseBasicInfo_GameBasicInfo_Id(gameId);
+        // 获取全部iso认证信息
+        List<IsoDevelopInfo> isoDevelopInfoList = isoDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId);
 
         // 将认证信息依次转换为vo实体
         List<IsoDisplayVo> isoDisplayVoList = new ArrayList<>();

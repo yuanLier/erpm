@@ -36,10 +36,10 @@ public class ProductServiceImpl implements ProductService {
     private ProductDevelopInfoRepository productDevelopInfoRepository;
 
     @Override
-    public List<ProductTypeVo> getAllProductTypes(Long gameId) {
+    public List<ProductTypeVo> getAllProductTypes(Long enterpriseId) {
 
         List<ProductDevelopInfo> productDevelopInfoList =
-                productDevelopInfoRepository.findByEnterpriseBasicInfo_GameBasicInfo_Id(gameId);
+                productDevelopInfoRepository.findByEnterpriseBasicInfo_Id(enterpriseId);
 
         List<ProductTypeVo> productTypeVoList = new ArrayList<>();
         for(ProductDevelopInfo productDevelopInfo : productDevelopInfoList) {

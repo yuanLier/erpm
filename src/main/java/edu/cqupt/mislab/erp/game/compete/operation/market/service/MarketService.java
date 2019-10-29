@@ -15,10 +15,10 @@ public interface MarketService {
 
     /**
      * 获取一场比赛中使用的全部市场类型
-     * @param gameId
+     * @param enterpriseId 传入企业id就行，一场比赛中各个企业的市场类型是一样的
      * @return
      */
-    List<MarketBasicTypeVo> getAllMarketTypes(Long gameId);
+    List<MarketBasicTypeVo> getAllMarketTypes(Long enterpriseId);
 
 
     /**

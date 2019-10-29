@@ -20,15 +20,6 @@ public interface IsoDevelopInfoRepository extends BasicRepository<IsoDevelopInfo
      */
     List<IsoDevelopInfo> findByEnterpriseBasicInfo_Id(Long enterpriseId);
 
-
-    /**
-     * 获取某比赛中的全部iso认证信息
-     * @param gameId
-     * @return
-     */
-    List<IsoDevelopInfo> findByEnterpriseBasicInfo_GameBasicInfo_Id(Long gameId);
-
-
     /**
      * 获取某企业中处于某认证状态的iso认证信息
      * @param enterpriseId

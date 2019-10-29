@@ -17,10 +17,10 @@ public interface ProductService {
 
     /**
      * 获取一场比赛中使用的全部产品类型
-     * @param gameId
+     * @param enterpriseId
      * @return
      */
-    List<ProductTypeVo> getAllProductTypes(Long gameId);
+    List<ProductTypeVo> getAllProductTypes(Long enterpriseId);
 
 
     /**

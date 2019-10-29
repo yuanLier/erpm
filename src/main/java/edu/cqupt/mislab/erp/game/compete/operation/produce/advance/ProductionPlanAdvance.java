@@ -55,8 +55,9 @@ public class ProductionPlanAdvance implements ModelAdvance {
             // 已经生产的周期数+1
             prodlineProduceInfo.setProducedPeriod(prodlineProduceInfo.getProducedPeriod()+1);
 
-            // 计算需要生产的总周期（总周期 = 该产品需要生产的总周期*生产线对产品生产周期的影响）
+            // 计算需要生产的总周期（总周期 = 该产品需要生产的总周期*生产线对产品生产周期的影响），最少为一周期
             Integer totalPeriod = (int)(prodlineProduceInfo.getProductDevelopInfo().getProductBasicInfo().getProduceProductPeriod()*prodlineProduceInfo.getProdlineHoldingInfo().getProdlineBasicInfo().getProdlineBasicInfo().getExtraPeriod());
+            totalPeriod = Math.max(1, totalPeriod);
             // 判断是否完成生产
             if(totalPeriod.equals(prodlineProduceInfo.getProducedPeriod())) {
                 // 生产状态转入完成生产

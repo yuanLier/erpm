@@ -4,11 +4,10 @@ import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
 import edu.cqupt.mislab.erp.game.compete.operation.market.dao.MarketDevelopInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.entity.MarketStatusEnum;
+import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketBasicTypeVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.market.service.MarketService;
-import edu.cqupt.mislab.erp.game.compete.operation.market.model.vo.MarketBasicTypeVo;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +36,9 @@ public class MarketController {
 
     @ApiOperation("获取一场比赛中使用的全部市场类型")
     @GetMapping("/type")
-    public WebResponseVo<List<MarketBasicTypeVo>> getAllMarketTypes(@Exist(repository = GameBasicInfoRepository.class)
-                                                                 @RequestParam Long gameId) {
-        return toSuccessResponseVoWithData(marketService.getAllMarketTypes(gameId));
+    public WebResponseVo<List<MarketBasicTypeVo>> getAllMarketTypes(@Exist(repository = EnterpriseBasicInfoRepository.class)
+                                                                 @RequestParam Long enterpriseId) {
+        return toSuccessResponseVoWithData(marketService.getAllMarketTypes(enterpriseId));
     }
 
     @ApiOperation(value = "获取某个企业的全部市场开拓信息")

@@ -18,6 +18,8 @@ public class ProductMaterialDisplayVo {
     @ApiModelProperty("代理主键，值同ProductDevelopInfo的主键")
     private Long id;
 
+    // TODO 加一个产品名称
+
     @ApiModelProperty("构成该产品的原料（key-value:原料名-该原料所需个数）")
     private Map<String, Integer> materialMap;
 

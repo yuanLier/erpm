@@ -14,10 +14,10 @@ public interface IsoService {
 
     /**
      * 获取某企业的全部iso
-     * @param gameId
+     * @param enterpriseId
      * @return
      */
-    List<IsoDisplayVo> findByEnterpriseId(Long gameId);
+    List<IsoDisplayVo> findByEnterpriseId(Long enterpriseId);
 
 
     /**

@@ -22,14 +22,6 @@ public interface MarketDevelopInfoRepository extends BasicRepository<MarketDevel
 
 
     /**
-     * 获取某场比赛中的全部市场开拓信息
-     * @param gameId
-     * @return
-     */
-    List<MarketDevelopInfo> findByEnterpriseBasicInfo_GameBasicInfo_Id(Long gameId);
-
-
-    /**
      * 获取某个企业处于某种开拓状态的市场
      * @param enterpriseId
      * @param marketStatus
