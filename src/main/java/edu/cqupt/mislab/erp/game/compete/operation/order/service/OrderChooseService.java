@@ -53,7 +53,6 @@ public interface OrderChooseService {
      * @param enterpriseId
      * @return 返回下一个进行选单操作的企业id
      */
-    @Deprecated
     Long enterpriseFinishCurrentChoice(Long enterpriseId);
 
 

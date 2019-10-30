@@ -91,11 +91,7 @@ public class OrderChooseController {
     WebResponseVo enterpriseDropOut(@Exist(repository = EnterpriseBasicInfoRepository.class)
                                              @RequestParam Long enterpriseId) {
 
-        boolean finish = orderChooseService.enterpriseFinishChoice(enterpriseId);
-
-        if(!finish) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "请先结束本轮的订单选取！");
-        }
+        orderChooseService.enterpriseFinishChoice(enterpriseId);
 
         return toSuccessResponseVoWithNoData();
     }

@@ -197,7 +197,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         // 如果是轮到这个用户选单 就必须先完成选单再退出订单会，除非只剩这一个企业了
         List<EnterpriseBasicInfo> enterpriseBasicInfoList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndFinishChoiceIsFalse(enterpriseBasicInfo.getGameBasicInfo().getId());
         if(isTurnOfEnterprise(enterpriseId) && enterpriseBasicInfoList.size() > 1) {
-            return false;
+            enterpriseFinishCurrentChoice(enterpriseId);
         }
 
         // 是否退出订单会 置为true
