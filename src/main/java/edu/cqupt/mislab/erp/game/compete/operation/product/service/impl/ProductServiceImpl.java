@@ -184,7 +184,7 @@ public class ProductServiceImpl implements ProductService {
             // 构建一个ProductMaterialVo
             ProductMaterialDisplayVo productMaterialDisplayVo = new ProductMaterialDisplayVo();
             // 产品构成-id（同ProductDevelopId
-            productMaterialDisplayVo.setId(productDevelopInfo.getId());
+            productMaterialDisplayVo.setProductTypeVo(new ProductTypeVo(productDevelopInfo.getId(), productDevelopInfo.getProductBasicInfo().getProductName()));
             // 产品构成-原材料map
             productMaterialDisplayVo.setMaterialMap(materialMap);
             // 产品构成-售价
