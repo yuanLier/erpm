@@ -26,7 +26,7 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessRes
  * @date 14:39 2019/4/23
  **/
 
-@Api
+@Api(tags = "用户中心-学生信息管理")
 @Validated
 @CrossOrigin
 @RestController

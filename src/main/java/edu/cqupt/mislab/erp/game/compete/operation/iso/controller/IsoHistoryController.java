@@ -23,7 +23,7 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessRes
  * @create 2019-05-12 21:57
  * @description
  */
-@Api(description = "历史数据-企业iso认证比率分析")
+@Api(tags = "历史数据-企业iso认证比率分析")
 @CrossOrigin
 @Validated
 @RestController

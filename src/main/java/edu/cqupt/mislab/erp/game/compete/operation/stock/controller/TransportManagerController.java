@@ -23,7 +23,7 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessRes
  * @create 2019-05-25 18:33
  * @description
  */
-@Api(description = "管理端-运输方式基本信息")
+@Api(tags = "管理端-运输方式基本信息")
 @CrossOrigin
 @Validated
 @RestController

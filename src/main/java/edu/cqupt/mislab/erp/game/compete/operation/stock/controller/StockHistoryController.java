@@ -24,7 +24,7 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessRes
  * @create 2019-05-25 21:44
  * @description
  */
-@Api(description = "历史数据-材料与产品库存变动分析")
+@Api(tags = "历史数据-材料与产品库存变动分析")
 @CrossOrigin
 @Validated
 @RestController

@@ -29,7 +29,7 @@ import java.util.List;
  * @date 22:28 2019/4/26
  **/
 
-@Api
+@Api(tags = "引导模块-企业成员管理")
 @Validated
 @CrossOrigin
 @RestController

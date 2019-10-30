@@ -24,7 +24,7 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessRes
  * @create 2019-06-03 22:36
  * @description
  */
-@Api(description = "历史数据-企业厂房占有率分析")
+@Api(tags = "历史数据-企业厂房占有率分析")
 @CrossOrigin
 @Validated
 @RestController

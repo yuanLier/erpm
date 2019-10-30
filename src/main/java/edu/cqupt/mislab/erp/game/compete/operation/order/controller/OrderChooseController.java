@@ -23,7 +23,7 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.*;
  * @create 2019-07-07 20:12
  * @description
  */
-@Api(description = "学生端-订单会")
+@Api(tags = "学生端-订单会")
 @CrossOrigin
 @Validated
 @RestController

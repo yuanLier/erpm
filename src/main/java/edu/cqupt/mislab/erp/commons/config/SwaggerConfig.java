@@ -32,7 +32,7 @@ public class SwaggerConfig {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo(description))
-                .groupName("user")
+                .groupName("用户管理")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("edu.cqupt.mislab.erp.user.controller"))
                 .paths(PathSelectors.any())
@@ -51,7 +51,7 @@ public class SwaggerConfig {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo(description))
-                .groupName("gama_manage")
+                .groupName("比赛管理")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("edu.cqupt.mislab.erp.game.manage.controller"))
                 .paths(PathSelectors.any())
@@ -70,7 +70,7 @@ public class SwaggerConfig {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo(description))
-                .groupName("gama_compete")
+                .groupName("比赛操作")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("edu.cqupt.mislab.erp.game.compete"))
                 .paths(PathSelectors.any())
@@ -81,7 +81,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("ERP电子沙盘模拟系统在线API文档")
                 .description(description)
-                .version("2.0")
+                .version("2.0.2")
                 .build();
     }
 }

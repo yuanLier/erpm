@@ -27,7 +27,7 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessRes
  * @description
  */
 
-@Api
+@Api(tags = "引导模块-成员报告管理")
 @Validated
 @CrossOrigin
 @RestController

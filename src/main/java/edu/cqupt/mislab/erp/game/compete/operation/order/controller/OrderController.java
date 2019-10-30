@@ -23,7 +23,7 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessRes
  *            --> 所以以下其实是销售管理即按订单交货之类的接口 你可爱的yyw留
  **/
 
-@Api(description = "学生端-订单管理")
+@Api(tags = "学生端-订单管理")
 @CrossOrigin
 @Validated
 @RestController

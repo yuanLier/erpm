@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @create 2019-07-09 21:56
  * @description 这是对外暴露的周期推进的接口，“进入下一周期”
  */
-@Api(description = "学生端-周期推进")
+@Api(tags = "学生端-周期推进")
 @CrossOrigin
 @Validated
 @RestController

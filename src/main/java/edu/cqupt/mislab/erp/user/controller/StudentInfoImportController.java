@@ -19,7 +19,7 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessRes
  * @create 2019-10-22 12:21
  * @description
  */
-@Api
+@Api(tags = "用户中心-学生信息收集模板下载与导入")
 @Validated
 @CrossOrigin
 @RestController

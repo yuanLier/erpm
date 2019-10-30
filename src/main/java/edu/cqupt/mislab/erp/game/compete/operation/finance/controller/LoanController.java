@@ -25,7 +25,7 @@ import static edu.cqupt.mislab.erp.commons.response.WebResponseUtil.toSuccessRes
  * @create 2019-07-11 21:55
  * @description
  */
-@Api(description = "学生端-贷款相关")
+@Api(tags = "学生端-贷款相关")
 @CrossOrigin
 @Validated
 @RestController
