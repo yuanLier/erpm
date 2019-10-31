@@ -247,9 +247,10 @@ public class FactoryManagementAdvance implements ModelAdvance {
                 // 设置为安装完成
                 prodlineDevelopInfo.setProdlineDevelopStatus(ProdlineDevelopStatus.DEVELOPED);
 
-                // 更新生产线的holding状态
+                // 更新生产线的holding状态，及开始拥有的周期
                 ProdlineHoldingInfo prodlineHoldingInfo = prodlineDevelopInfo.getProdlineHoldingInfo();
                 prodlineHoldingInfo.setProdlineHoldingStatus(ProdlineHoldingStatus.PRODUCING);
+                prodlineHoldingInfo.setBeginPeriod(prodlineHoldingInfo.getEnterpriseBasicInfo().getEnterpriseCurrentPeriod());
                 
                 // 保存修改
                 prodlineHoldingInfoRepository.save(prodlineHoldingInfo);

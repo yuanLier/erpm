@@ -231,6 +231,8 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
 
         // 将enable设为false，表示该厂房（且一定是自建的）已出售
         factoryHoldingInfo.setEnable(false);
+        // 更新厂房售出时间
+        factoryHoldingInfo.setEndPeriod(factoryHoldingInfo.getEnterpriseBasicInfo().getEnterpriseCurrentPeriod());
 
         // 保存修改
         factoryHoldingInfoRepository.save(factoryHoldingInfo);
@@ -249,15 +251,19 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
             return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "生产线运作中，无法出售，请先暂停生产");
         }
 
-        // 将生产线生产状态设置为已出售
+        // 将生产线生产状态设置为已出售，更新生产线售出时间
+        prodlineProduceInfo.setProdlineProduceStatus(ProdlineProduceStatus.SOLD);
         ProdlineHoldingInfo prodlineHoldingInfo = prodlineProduceInfo.getProdlineHoldingInfo();
         prodlineHoldingInfo.setProdlineHoldingStatus(ProdlineHoldingStatus.SOLD);
+        prodlineHoldingInfo.setEndPeriod(prodlineHoldingInfo.getEnterpriseBasicInfo().getEnterpriseCurrentPeriod());
+        // 保存修改
+        prodlineProduceInfoRepository.save(prodlineProduceInfo);
+        prodlineHoldingInfoRepository.save(prodlineHoldingInfo);
 
         // 由于生产线出售是当场到款，所以直接在这里更新余额
 
         // 计算不考虑残值的情况下，确认出售时生产线的剩余价值（该值 = 最初生产线价值 - 每期折旧价值*(企业当前周期-安装完成周期)）
-        Integer developedPeriod = prodlineDevelopInfoRepository.findByProdlineHoldingInfo_Id(prodlineHoldingInfo.getId()).getEndPeriod();
-        Double actualValue = prodlineHoldingInfo.getProdlineBasicInfo().getProdlineBasicInfo().getProdlineValue() - prodlineHoldingInfo.getProdlineBasicInfo().getProdlineBasicInfo().getProdlineDepreciation() * (prodlineHoldingInfo.getEnterpriseBasicInfo().getEnterpriseCurrentPeriod() - developedPeriod);
+        Double actualValue = prodlineHoldingInfo.getProdlineBasicInfo().getProdlineBasicInfo().getProdlineValue() - prodlineHoldingInfo.getProdlineBasicInfo().getProdlineBasicInfo().getProdlineDepreciation() * (prodlineHoldingInfo.getEnterpriseBasicInfo().getEnterpriseCurrentPeriod() - prodlineHoldingInfo.getBeginPeriod());
         // 则生产线实际售卖价值等于actualValue与生产线残值取其大
         Double changeAmount = Math.max(actualValue, prodlineHoldingInfo.getProdlineBasicInfo().getProdlineBasicInfo().getProdlineStumpcost());
         // 生产线出售所得金额到账
@@ -265,8 +271,7 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
         String changeOperating = FinanceOperationConstant.PRODLINE_SELL;
         financeService.updateFinanceInfo(enterpriseId, changeOperating, changeAmount, false, true);
 
-        // 保存修改
-        prodlineHoldingInfoRepository.save(prodlineHoldingInfo);
+
 
         return toSuccessResponseVoWithNoData();
     }
@@ -342,9 +347,10 @@ public class FactoryManagementServiceImpl implements FactoryManagementService {
             prodlineProduceInfo.setBeginPeriod(null);
             prodlineProduceInfo.setProducedPeriod(0);
             prodlineProduceInfo.setProdlineProduceStatus(ProdlineProduceStatus.NOT_USABLE);
+            prodlineProduceInfoRepository.save(prodlineProduceInfo);
             produceDisplayVoList.add(copyFieldsFromEntityToVo(prodlineProduceInfo, new ProdlineProduceDisplayVo()));
         }
-        List<ProdlineDevelopInfo> prodlineDevelopInfoList = prodlineDevelopInfoRepository.findByProdlineHoldingInfo_FactoryHoldingInfo_Id(factoryId);
+        List<ProdlineDevelopInfo> prodlineDevelopInfoList = prodlineDevelopInfoRepository.findByProdlineHoldingInfo_FactoryHoldingInfo_IdAndProdlineDevelopStatusIsNot(factoryId, ProdlineDevelopStatus.DEVELOPED);
         for(ProdlineDevelopInfo prodlineDevelopInfo : prodlineDevelopInfoList) {
             // 直接删除，不要怕；没修建完成的生产线是不会计入历史数据的，所以不会对生产线总数造成影响
             // 顺便这可能是整个系统唯一一个用到delete的地方了qvq

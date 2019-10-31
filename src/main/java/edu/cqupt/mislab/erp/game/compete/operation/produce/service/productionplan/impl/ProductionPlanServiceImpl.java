@@ -7,9 +7,7 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline.Prodline
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.entity.FactoryHoldingInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.factory.vo.FactoryProdlineTypeVo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineDevelopInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineProduceInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineProduceStatus;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.*;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.service.productionplan.ProductionPlanService;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
@@ -261,10 +259,10 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
      * @date 19:54 2019/3/22
      **/
     private FactoryDisplayVo castFactoryHoldingEntityToDisplayVo(FactoryHoldingInfo factoryHoldingInfo) {
-        // 获取厂房中的全部处于生产状态生产线信息（允许为空）
-        List<ProdlineProduceInfo> prodlineProduceInfoList = prodlineProduceInfoRepository.findByProdlineHoldingInfo_FactoryHoldingInfo_Id(factoryHoldingInfo.getId());
-        // 获取厂房中处于安装状态的生产线信息（允许为空）
-        List<ProdlineDevelopInfo> prodlineDevelopInfoList = prodlineDevelopInfoRepository.findByProdlineHoldingInfo_FactoryHoldingInfo_Id(factoryHoldingInfo.getId());
+        // 获取厂房中的全部有生产能力（即安装完成且未出售的）的生产线信息（允许为空）
+        List<ProdlineProduceInfo> prodlineProduceInfoList = prodlineProduceInfoRepository.findByProdlineHoldingInfo_FactoryHoldingInfo_IdAndProdlineHoldingInfo_ProdlineHoldingStatusIsNot(factoryHoldingInfo.getId(), ProdlineHoldingStatus.SOLD);
+        // 获取厂房中全部未完成安装的生产线信息（允许为空）
+        List<ProdlineDevelopInfo> prodlineDevelopInfoList = prodlineDevelopInfoRepository.findByProdlineHoldingInfo_FactoryHoldingInfo_IdAndProdlineDevelopStatusIsNot(factoryHoldingInfo.getId(), ProdlineDevelopStatus.DEVELOPED);
 
         // 将生产状态生产线转换为vo集
         List<ProdlineProduceDisplayVo> prodlineProduceDisplayVoList = EntityVoUtil.copyFieldsFromEntityToVo(prodlineProduceInfoList, new ProdlineProduceDisplayVo());

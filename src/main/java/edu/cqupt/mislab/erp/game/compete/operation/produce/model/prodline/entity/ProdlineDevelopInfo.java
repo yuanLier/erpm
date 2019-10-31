@@ -37,19 +37,19 @@ public class ProdlineDevelopInfo implements Serializable {
     private ProductDevelopInfo productDevelopInfo;
 
     @Basic
-    @Comment(comment = "开始修建的周期数")
+    @Comment(comment = "开始安装的周期数")
     private Integer beginPeriod;
 
     @Basic
-    @Comment(comment = "修建完毕的周期数")
+    @Comment(comment = "安装完毕的周期数")
     private Integer endPeriod;
 
     @Basic
-    @Comment(comment = "已经修建了多少个周期数，初始默认为0")
+    @Comment(comment = "已经安装了多少个周期数，初始默认为0")
     private Integer developedPeriod;
 
     @Basic(optional = false)
     @Enumerated(EnumType.STRING)
-    @Comment(comment = "修建的状态，需要在进行比赛初始化时手动进行转换设置")
+    @Comment(comment = "安装的状态，需要在进行比赛初始化时手动进行转换设置")
     private ProdlineDevelopStatus prodlineDevelopStatus;
 }

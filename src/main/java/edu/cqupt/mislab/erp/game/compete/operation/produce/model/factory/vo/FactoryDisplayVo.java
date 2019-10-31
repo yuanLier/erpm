@@ -39,9 +39,9 @@ public class FactoryDisplayVo {
     @ApiModelProperty("展示为厂房状态，实际为自建的厂房状态 / 租来的厂房状态（true为拥有中 / 租赁中，false为已出售 / 暂停租赁）")
     private boolean developStatus;
 
-    @ApiModelProperty("展示该厂房中的全部生产状态生产线信息")
+    @ApiModelProperty("展示该厂房中的全部有生产能力（即安装完成且未出售的）的生产线信息")
     private List<ProdlineProduceDisplayVo> prodlineProduceDisplayVoList;
 
-    @ApiModelProperty("展示该厂房中的全部修建状态生产线信息")
+    @ApiModelProperty("展示该厂房中的全部未完成安装的生产线信息")
     private List<ProdlineDevelopDisplayVo> prodlineDevelopDisplayVoList;
 }

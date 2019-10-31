@@ -8,9 +8,9 @@ package edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entit
 public enum  ProdlineDevelopStatus {
 
     //
-    DEVELOPING("修建中"),
-    DEVELOPPAUSE("修建暂停"),
-    DEVELOPED("修建成功");
+    DEVELOPING("安装中"),
+    DEVELOPPAUSE("安装暂停"),
+    DEVELOPED("安装成功");
 
     private String comment;
 

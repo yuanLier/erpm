@@ -1,6 +1,7 @@
 package edu.cqupt.mislab.erp.game.compete.operation.produce.dao.prodline;
 
 import edu.cqupt.mislab.erp.commons.basic.repository.BasicRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineHoldingStatus;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineProduceInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity.ProdlineProduceStatus;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -21,6 +22,15 @@ public interface ProdlineProduceInfoRepository extends JpaSpecificationExecutor,
      * @return
      */
     List<ProdlineProduceInfo> findByProdlineHoldingInfo_FactoryHoldingInfo_Id(Long factoryId);
+
+
+    /**
+     * 获取某个厂房中未处于某种状态的全部生产线
+     * @param factoryId
+     * @param prodlineHoldingStatus
+     * @return
+     */
+    List<ProdlineProduceInfo> findByProdlineHoldingInfo_FactoryHoldingInfo_IdAndProdlineHoldingInfo_ProdlineHoldingStatusIsNot(Long factoryId, ProdlineHoldingStatus prodlineHoldingStatus);
 
 
     /**

@@ -51,7 +51,7 @@ public interface ProductionPlanService {
 
 
     /**
-     * 获取一个企业全部的生产信息（即所有厂房及厂房内生产线），厂房包括自建的和租来的
+     * 获取一个企业全部的生产信息（即所有厂房及厂房内生产线），厂房包括自建的和租来的，生产线不包括已出售的
      * @param enterpriseId
      * @return
      */
