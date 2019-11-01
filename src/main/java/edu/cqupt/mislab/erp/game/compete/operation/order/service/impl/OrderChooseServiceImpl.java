@@ -172,7 +172,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         // 注 ：这里不需要考虑死循环，因为选择了结束选单就说明没有退出订单会，也就是说至少还有一个当前企业的getFinishAdvertising()为false
         // 所以最极端的情况就是只有当前企业没有退出订单会，那么下一个选单的企业就还是它，还是符合订单会的选单流程的
         while(nextEnterprise.getFinishChoice()) {
-            nextSequence = enterpriseBasicInfo.getSequence() % (int)(long)enterpriseAdInfoRepository.distinctByEnterpriseOfOneYear(year, enterpriseBasicInfo.getGameBasicInfo().getId()) + 1;
+            nextSequence = nextEnterprise.getSequence() % (int)(long)enterpriseAdInfoRepository.distinctByEnterpriseOfOneYear(year, enterpriseBasicInfo.getGameBasicInfo().getId()) + 1;
             nextEnterprise = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndSequence(gameId, nextSequence);
         }
 
@@ -193,6 +193,12 @@ public class OrderChooseServiceImpl implements OrderChooseService {
     public boolean enterpriseFinishChoice(Long enterpriseId) {
 
         EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findOne(enterpriseId);
+
+        // 判断该企业是否为订单会中最后一个企业
+        Long gameId = enterpriseBasicInfo.getGameBasicInfo().getId();
+        // 获取该年完成广告投放的企业
+        List<EnterpriseBasicInfo> finishList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndFinishAdvertisingIsTrue(gameId);
+
 
         // 如果是轮到这个用户选单 就必须先完成选单再退出订单会，除非只剩这一个企业了
         List<EnterpriseBasicInfo> enterpriseBasicInfoList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndFinishChoiceIsFalse(enterpriseBasicInfo.getGameBasicInfo().getId());
