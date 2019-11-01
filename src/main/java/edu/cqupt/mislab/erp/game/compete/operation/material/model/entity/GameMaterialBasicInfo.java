@@ -20,7 +20,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table
-public class GameMaterialInfo {
+public class GameMaterialBasicInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,7 +43,7 @@ public class GameMaterialInfo {
             return true;
         if(o == null||getClass() != o.getClass())
             return false;
-        GameMaterialInfo that = (GameMaterialInfo) o;
+        GameMaterialBasicInfo that = (GameMaterialBasicInfo) o;
         return Objects.equal(id,that.id);
     }
 

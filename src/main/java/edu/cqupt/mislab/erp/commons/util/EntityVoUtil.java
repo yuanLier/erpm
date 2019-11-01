@@ -75,6 +75,7 @@ public abstract class EntityVoUtil {
         detailInfoVo.setGameStatusEnum(gameBasicInfo.getGameStatus());
         detailInfoVo.setGameName(gameBasicInfo.getGameName());
         detailInfoVo.setCreatorName(gameBasicInfo.getUserStudentInfo().getStudentName());
+        detailInfoVo.setCreatorId(gameBasicInfo.getUserStudentInfo().getId());
         detailInfoVo.setGameCreateTime(gameBasicInfo.getGameCreateTime());
 
         if(gameBasicInfo.getEnterpriseBasicInfos() == null){

@@ -26,6 +26,9 @@ public class GameDetailInfoVo {
     @ApiModelProperty("比赛创建者的名字")
     private String creatorName;
 
+    @ApiModelProperty("比赛创建者的id")
+    private Long creatorId;
+
     @ApiModelProperty("该场比赛持续的年数")
     private Integer totalYear;
 

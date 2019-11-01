@@ -1,12 +1,9 @@
 package edu.cqupt.mislab.erp.game.compete.operation.product.service.impl;
 
 import edu.cqupt.mislab.erp.commons.util.EntityVoUtil;
+import edu.cqupt.mislab.erp.game.compete.operation.product.dao.GameProductMaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductMaterialBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductMaterialBasicInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.*;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductMaterialDisplayVo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
@@ -30,7 +27,7 @@ import java.util.Map;
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
-    private ProductMaterialBasicInfoRepository productMaterialBasicInfoRepository;
+    private GameProductMaterialBasicInfoRepository gameProductMaterialBasicInfoRepository;
 
     @Autowired
     private ProductDevelopInfoRepository productDevelopInfoRepository;
@@ -165,15 +162,14 @@ public class ProductServiceImpl implements ProductService {
         // 对该企业的每一个产品研发信息
         for (ProductDevelopInfo productDevelopInfo : productDevelopInfoList) {
 
-            // 取出产品的基本信息id
-            Long productBasicInfoId = productDevelopInfo.getProductBasicInfo().getId();
-            // 根据产品id查询该产品对应的所有的原材料构成情况
-            List<ProductMaterialBasicInfo> productMaterialBasicInfoList =
-                    productMaterialBasicInfoRepository.findByEnableIsTrueAndProductBasicInfo_Id(productBasicInfoId);
+            // 查询本场比赛中所使用的该产品对应的所有的原材料构成情况
+            List<GameProductMaterialBasicInfo> gameProductMaterialBasicInfoList =
+                    gameProductMaterialBasicInfoRepository.findByGameBasicInfo_IdAndProductMaterialBasicInfo_ProductBasicInfo_Id(productDevelopInfo.getEnterpriseBasicInfo().getGameBasicInfo().getId(), productDevelopInfo.getProductBasicInfo().getId());
 
             // 构建原料信息映射
             Map<String, Integer> materialMap = new HashMap<>();
-            for (ProductMaterialBasicInfo productMaterialBasicInfo : productMaterialBasicInfoList) {
+            for (GameProductMaterialBasicInfo gameProductMaterialBasicInfo : gameProductMaterialBasicInfoList) {
+                ProductMaterialBasicInfo productMaterialBasicInfo = gameProductMaterialBasicInfo.getProductMaterialBasicInfo();
                 // key-value ；原材料名称-所需要该材料的数量
                 String materialName = productMaterialBasicInfo.getMaterialBasicInfo().getMaterialName();
                 Integer materialNumber = productMaterialBasicInfo.getNumber();

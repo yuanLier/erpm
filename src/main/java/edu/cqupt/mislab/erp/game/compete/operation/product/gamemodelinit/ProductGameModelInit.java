@@ -3,14 +3,16 @@ package edu.cqupt.mislab.erp.game.compete.operation.product.gamemodelinit;
 import edu.cqupt.mislab.erp.game.compete.basic.GameModelInit;
 import edu.cqupt.mislab.erp.game.compete.basic.impl.GameModelInitService;
 import edu.cqupt.mislab.erp.game.compete.operation.material.gamemodelinit.MaterialGameModelInit;
+import edu.cqupt.mislab.erp.game.compete.operation.product.dao.GameProductMaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductBasicInfo;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductMaterialBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.*;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo.ProductDevelopInfoBuilder;
-import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.EnterpriseBasicInfo;
+import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,6 +32,10 @@ public class ProductGameModelInit implements GameModelInit {
     @Autowired private ProductBasicInfoRepository productBasicInfoRepository;
     @Autowired private ProductDevelopInfoRepository productDevelopInfoRepository;
 
+    @Autowired private ProductMaterialBasicInfoRepository productMaterialBasicInfoRepository;
+    @Autowired private GameProductMaterialBasicInfoRepository gameProductMaterialBasicInfoRepository;
+
+    @Autowired private GameBasicInfoRepository gameBasicInfoRepository;
     @Autowired private GameModelInitService gameModelInitService;
     @Autowired private MaterialGameModelInit materialGameModelInit;
 
@@ -53,7 +59,22 @@ public class ProductGameModelInit implements GameModelInit {
             }
 
             try{
+
                 log.info("开始初始化产品模块的比赛数据");
+
+                // 在比赛开始时初始化本场比赛中使用的产品材料基本信息
+                GameBasicInfo gameBasicInfo = gameBasicInfoRepository.findOne(gameId);
+
+                // 初始化当前设定下的产品材料基本信息
+                List<ProductMaterialBasicInfo> productMaterialBasicInfoList = productMaterialBasicInfoRepository.findNewestProductMaterialBasicInfos();
+                for(ProductMaterialBasicInfo productMaterialBasicInfo : productMaterialBasicInfoList) {
+                    gameProductMaterialBasicInfoRepository.save(
+                            GameProductMaterialBasicInfo.builder()
+                                    .gameBasicInfo(gameBasicInfo)
+                                    .productMaterialBasicInfo(productMaterialBasicInfo)
+                                    .build()
+                    );
+                }
 
                 //选取所有的产品基本数据信息
                 final List<ProductBasicInfo> productBasicInfos = productBasicInfoRepository.findNewestProductBasicInfos();

@@ -2,7 +2,10 @@ package edu.cqupt.mislab.erp.game.manage.modelinit;
 
 import edu.cqupt.mislab.erp.commons.basic.modelinit.ModelInit;
 import edu.cqupt.mislab.erp.commons.basic.modelinit.ModelInitService;
-import edu.cqupt.mislab.erp.game.manage.dao.*;
+import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.manage.dao.EnterpriseMemberInfoRepository;
+import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
+import edu.cqupt.mislab.erp.game.manage.dao.GameInitInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.*;
 import edu.cqupt.mislab.erp.user.dao.UserStudentRepository;
 import edu.cqupt.mislab.erp.user.model.entity.UserStudentInfo;

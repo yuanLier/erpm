@@ -4,7 +4,7 @@ import edu.cqupt.mislab.erp.game.compete.basic.GameModelInit;
 import edu.cqupt.mislab.erp.game.compete.basic.impl.GameModelInitService;
 import edu.cqupt.mislab.erp.game.compete.operation.material.dao.GameMaterialInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.material.dao.MaterialBasicInfoRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.GameMaterialInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.GameMaterialBasicInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.MaterialBasicInfo;
 import edu.cqupt.mislab.erp.game.manage.dao.GameBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.manage.model.entity.GameBasicInfo;
@@ -53,7 +53,7 @@ public class MaterialGameModelInit implements GameModelInit {
                 for(MaterialBasicInfo materialBasicInfo : materialBasicInfos){
 
                     gameMaterialInfoRepository.save(
-                            GameMaterialInfo.builder()
+                            GameMaterialBasicInfo.builder()
                                     .materialBasicInfo(materialBasicInfo)
                                     .gameBasicInfo(gameBasicInfo)
                                     .build()

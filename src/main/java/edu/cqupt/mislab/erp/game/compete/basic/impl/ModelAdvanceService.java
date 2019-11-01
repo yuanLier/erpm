@@ -100,14 +100,6 @@ public class ModelAdvanceService implements ApplicationContextAware {
             // 同时进行所有企业的周期推进
             for (EnterpriseBasicInfo enterprise : enterpriseBasicInfoList) {
                 periodAdvance(enterprise);
-
-                // 更新企业订单会相关记录
-                enterpriseBasicInfo.setAdvertising(true);
-                enterpriseBasicInfo.setFinishAdvertising(false);
-                enterpriseBasicInfo.setSequence(0);
-                enterpriseBasicInfo.setMyTurn(false);
-                enterpriseBasicInfo.setFinishChoice(false);
-                enterpriseBasicInfoRepository.save(enterpriseBasicInfo);
             }
 
             // 走到这里说明推进成功

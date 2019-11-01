@@ -11,9 +11,11 @@ import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.entity
 import edu.cqupt.mislab.erp.game.compete.operation.produce.model.prodline.vo.*;
 import edu.cqupt.mislab.erp.game.compete.operation.produce.service.productionplan.ProductionPlanService;
 import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductDevelopInfoRepository;
+import edu.cqupt.mislab.erp.game.compete.operation.product.dao.ProductMaterialBasicInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopInfo;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.entity.ProductDevelopStatusEnum;
 import edu.cqupt.mislab.erp.game.compete.operation.product.model.vo.ProductTypeVo;
+import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.MaterialStockInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.dao.ProductStockInfoRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.stock.model.entity.ProductStockInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,10 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
 
     @Autowired
     private ProductStockInfoRepository productStockInfoRepository;
+    @Autowired
+    private MaterialStockInfoRepository materialStockInfoRepository;
+    @Autowired
+    private ProductMaterialBasicInfoRepository productMaterialBasicInfoRepository;
 
     @Override
     public List<ProductTypeVo> getProducableProduct(Long enterpriseId) {
@@ -169,6 +175,9 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
         if(!ProductDevelopStatusEnum.DEVELOPED.equals(prodlineProduceInfo.getProductDevelopInfo().getProductDevelopStatus())) {
             return null;
         }
+
+        // todo 产品的材料组成需要比赛分离化
+        // todo 若生产该产品所需的材料库存数量不足，则不允许生产
 
         // 生产开始日期置为当前周期、生产结束日期置为null，已生产周期置为0，生产状态转为转产中
         prodlineProduceInfo.setBeginPeriod(prodlineProduceInfo.getProdlineHoldingInfo().getEnterpriseBasicInfo().getEnterpriseCurrentPeriod());

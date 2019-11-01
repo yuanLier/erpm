@@ -1,7 +1,7 @@
 package edu.cqupt.mislab.erp.game.compete.operation.material.dao;
 
 import edu.cqupt.mislab.erp.commons.basic.repository.BasicRepository;
-import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.GameMaterialInfo;
+import edu.cqupt.mislab.erp.game.compete.operation.material.model.entity.GameMaterialBasicInfo;
 
 import java.util.List;
 
@@ -10,12 +10,12 @@ import java.util.List;
  * @description
  **/
 
-public interface GameMaterialInfoRepository extends BasicRepository<GameMaterialInfo,Long> {
+public interface GameMaterialInfoRepository extends BasicRepository<GameMaterialBasicInfo,Long> {
 
     /**
      * 选取一场比赛的全部材料信息
      * @param gameId
      * @return
      */
-    List<GameMaterialInfo> findByGameBasicInfo_Id(long gameId);
+    List<GameMaterialBasicInfo> findByGameBasicInfo_Id(long gameId);
 }
