@@ -245,7 +245,7 @@ public class ModelAdvanceService implements ApplicationContextAware {
      */
     private void gameOverJudge(EnterpriseBasicInfo enterpriseBasicInfo) {
         // 获取当前比赛的全部存活中企业
-        List<EnterpriseBasicInfo> enterpriseBasicInfoList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndEnterpriseStatus(enterpriseBasicInfo.getId(), EnterpriseStatusEnum.PLAYING);
+        List<EnterpriseBasicInfo> enterpriseBasicInfoList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndEnterpriseStatus(enterpriseBasicInfo.getGameBasicInfo().getId(), EnterpriseStatusEnum.PLAYING);
         // 如果这个企业退出后，比赛中一个存活的企业都没有了
         if(enterpriseBasicInfoList.size() == 0) {
             // 比赛结束
