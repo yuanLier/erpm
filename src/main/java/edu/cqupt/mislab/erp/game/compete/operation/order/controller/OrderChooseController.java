@@ -76,6 +76,19 @@ public class OrderChooseController {
         return toSuccessResponseVoWithData(orderChooseService.enterpriseChooseOrder(enterpriseId, gameOrderId));
     }
 
+    @ApiOperation(value = "查看企业当前选取了哪些订单", notes = "当前指这场比赛的这一年的订单会中")
+    @PostMapping("/current")
+    WebResponseVo<List<GameOrderVo>> enterpriseChooseOrder(@Exist(repository = EnterpriseBasicInfoRepository.class)
+                                                                @RequestParam Long enterpriseId,
+                                                            @RequestParam Integer year) {
+
+        if(year < 1) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "年份应大于1");
+        }
+
+        return toSuccessResponseVoWithData(orderChooseService.getCurrentOrders(enterpriseId, year));
+    }
+
 
     @ApiOperation(value = "企业结束选单")
     @GetMapping("/finish")
@@ -111,6 +124,14 @@ public class OrderChooseController {
                                               @RequestParam Long enterpriseId) {
 
         return toSuccessResponseVoWithData(orderChooseService.isEnterpriseFinishChoice(enterpriseId));
+    }
+
+    @ApiOperation(value = "企业是否处于订单会中", notes = "注 ：指企业已经投放了广告且未退出订单会；该数据仅对比赛正处于的年份有效")
+    @GetMapping("/isIn")
+    WebResponseVo<Boolean> isEnterpriseInChoice(@Exist(repository = EnterpriseBasicInfoRepository.class)
+                                                    @RequestParam Long enterpriseId) {
+
+        return toSuccessResponseVoWithData(orderChooseService.isEnterpriseInChoice(enterpriseId));
     }
 
 }

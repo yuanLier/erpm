@@ -73,7 +73,12 @@ public class ModelAdvanceService implements ApplicationContextAware {
 
         // 若企业未处于比赛进行阶段，则不允许进行周期推进
         if (!EnterpriseStatusEnum.PLAYING.equals(enterpriseBasicInfo.getEnterpriseStatus())) {
-            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "企业未处于比赛进行阶段，无法推进周期！");
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "企业未处于比赛进行阶段，无法进行周期推进！");
+        }
+
+        // 如果企业没有退出订单会，不允许进行周期推进
+        if(!enterpriseBasicInfo.getFinishChoice()) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "企业尚未退出订单会，无法进行周期推进！");
         }
 
         // 判断下一周期是否为新的一年
@@ -99,8 +104,6 @@ public class ModelAdvanceService implements ApplicationContextAware {
 
             // 同时进行所有企业的周期推进
             for (EnterpriseBasicInfo enterprise : enterpriseBasicInfoList) {
-
-                log.warn("============================ "+enterprise.getId()+" =================================");
 
                 periodAdvance(enterprise);
 

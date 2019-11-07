@@ -153,6 +153,20 @@ public class OrderChooseServiceImpl implements OrderChooseService {
     }
 
     @Override
+    public List<GameOrderVo> getCurrentOrders(Long enterpriseId, Integer year) {
+
+        // 获取某场比赛处于某一年时，企业当前选取的全部订单
+        List<GameOrderInfo> gameOrderInfoList = gameOrderInfoRepository.findByEnterpriseBasicInfo_IdAndYear(enterpriseId, year);
+
+        List<GameOrderVo> gameOrderVoList = new ArrayList<>();
+        for(GameOrderInfo gameOrderInfo : gameOrderInfoList) {
+            gameOrderVoList.add(EntityVoUtil.copyFieldsFromEntityToVo(gameOrderInfo, new GameOrderVo()));
+        }
+
+        return gameOrderVoList;
+    }
+
+    @Override
     public Long enterpriseFinishCurrentChoice(Long enterpriseId) {
 
         // 获取当前企业
@@ -234,6 +248,14 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         return enterpriseBasicInfo.getFinishChoice();
     }
 
+    @Override
+    public boolean isEnterpriseInChoice(Long enterpriseId) {
+
+        EnterpriseBasicInfo enterpriseBasicInfo = enterpriseBasicInfoRepository.findOne(enterpriseId);
+
+        return enterpriseBasicInfo.getFinishAdvertising() && !enterpriseBasicInfo.getFinishChoice();
+    }
+
 
     /**
      * 获取当前周期所属的年数
@@ -250,7 +272,7 @@ public class OrderChooseServiceImpl implements OrderChooseService {
 
 
     /**
-     * 判断是否全部企业已经投放完毕，仅作为内部接口在每个企业广告投放完成后调用
+     * 判断是否全部企业已经投放完毕，顺便广播一下当前要等待的企业数（指没投订单也没退出的），仅作为内部接口在每个企业广告投放完成后调用
      * @param gameId
      * @param year
      * @return 若全部投放完毕，通知前端第一个选取的企业；否则不做操作
@@ -261,6 +283,9 @@ public class OrderChooseServiceImpl implements OrderChooseService {
         List<EnterpriseBasicInfo> finishList = enterpriseBasicInfoRepository.findByGameBasicInfo_IdAndFinishAdvertisingIsTrue(gameId);
         // 获取比赛中的全部企业（因为破产了的企业广告投放状态一定是true，所以不用区分企业状态
         List<EnterpriseBasicInfo> totalList = enterpriseBasicInfoRepository.findByGameBasicInfo_Id(gameId);
+
+        // 广播一下当前未完成广告投放的总企业数
+        webSocketMessagePublisher.publish(gameId, new TextMessage(ManageConstant.WAITING_AMOUNT + (totalList.size()-finishList.size())));
 
         // 若全部企业都投放完毕了
         if(finishList.size() == totalList.size()) {

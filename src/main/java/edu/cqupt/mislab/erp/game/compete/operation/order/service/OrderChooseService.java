@@ -49,6 +49,15 @@ public interface OrderChooseService {
 
 
     /**
+     * 查看企业当前（指这场比赛的这一年的订单会中）选取了哪些订单
+     * @param enterpriseId
+     * @param year
+     * @return
+     */
+    List<GameOrderVo> getCurrentOrders(Long enterpriseId, Integer year);
+
+
+    /**
      * 企业结束选单
      * @param enterpriseId
      * @return 返回下一个进行选单操作的企业id
@@ -78,4 +87,12 @@ public interface OrderChooseService {
      * @return
      */
     boolean isEnterpriseFinishChoice(Long enterpriseId);
+
+
+    /**
+     * 判断某一企业是否在订单会中（指投了广告且未退出订单会）
+     * @param enterpriseId
+     * @return
+     */
+    boolean isEnterpriseInChoice(Long enterpriseId);
 }

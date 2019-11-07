@@ -73,6 +73,13 @@ public interface ManageConstant {
 
     /**
      * @author yuanyiwen
+     * @description 订单会开始
+     * @date 16:04 2019/11/7
+     **/
+    String WAITING_AMOUNT = "未完成订单投放的企业数量 ： amount = ";
+
+    /**
+     * @author yuanyiwen
      * @description 企业广告投放完毕，通知第一个选取订单的企业
      * @date 18:39 2019/7/7
      **/
