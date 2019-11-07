@@ -49,6 +49,7 @@ public interface FinanceOperationConstant {
     String ORDER_DELIVERY = "按订单交货时所获得的金额";
     String ORDER_DELAY = "订单延期交货时每期所需要扣除的违约金额";
 
+
     String MATERIAL_PURCHASE = "生产部门采购原料所需要花费的金额";
     String MATERIAL_TRANSPORT = "材料运输过程中每周期所需要花费的金额";
     String MATERIAL_SELL = "原材料售卖所获得的金额";

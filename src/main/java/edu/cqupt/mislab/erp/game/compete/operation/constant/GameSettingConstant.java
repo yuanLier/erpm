@@ -18,4 +18,8 @@ public interface GameSettingConstant {
      */
     Double INIT_FINANCE = 100000D;
 
+    /***
+     * 一次性贷款的最大额度 todo 设置为管理员可改
+     */
+    Double MAX_LOAN_AMOUNT = 100000000D;
 }

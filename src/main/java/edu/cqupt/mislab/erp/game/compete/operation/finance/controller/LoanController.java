@@ -2,6 +2,7 @@ package edu.cqupt.mislab.erp.game.compete.operation.finance.controller;
 
 import edu.cqupt.mislab.erp.commons.response.WebResponseVo;
 import edu.cqupt.mislab.erp.commons.validators.annotations.Exist;
+import edu.cqupt.mislab.erp.game.compete.operation.constant.GameSettingConstant;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.dao.LoanEnterpriseRepository;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.dto.LoanEnterpriseDto;
 import edu.cqupt.mislab.erp.game.compete.operation.finance.model.dto.LoanSelectDto;
@@ -56,6 +57,10 @@ public class LoanController {
     @ApiOperation(value = "提交贷款")
     @PostMapping("submit")
     public WebResponseVo<LoanEnterpriseDisplayVo> submitEnterpriseLoan(@RequestBody LoanEnterpriseDto loanEnterpriseDto) {
+
+        if(loanEnterpriseDto != null && loanEnterpriseDto.getLoanAmount() > GameSettingConstant.MAX_LOAN_AMOUNT) {
+            return toFailResponseVoWithMessage(WebResponseVo.ResponseStatus.BAD_REQUEST, "提交失败！一次性贷款的申请额度不能大于" + GameSettingConstant.MAX_LOAN_AMOUNT + "哦");
+        }
 
         LoanEnterpriseDisplayVo loanEnterpriseDisplayVo = loanService.submitEnterpriseLoan(loanEnterpriseDto);
 
